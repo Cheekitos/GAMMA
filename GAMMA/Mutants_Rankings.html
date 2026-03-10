@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>S.T.A.L.K.E.R. GAMMA - Mutant Kill Rankings</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #111827;
+    color: #f3f4f6;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  a { color: #60a5fa; text-decoration: none; transition: color 0.2s; }
+  a:hover { color: #93c5fd; }
+
+  .rankings-container { max-width: 960px; margin: 0 auto; }
+
+  /* ── Header ── */
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .site-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #f3f4f6;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .site-title:hover { color: #fbbf24; }
+
+  /* ── Breadcrumb ── */
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    margin-bottom: 24px;
+  }
+  .breadcrumb a { color: #60a5fa; display: flex; align-items: center; gap: 4px; }
+  .breadcrumb-separator { color: #9ca3af; }
+
+  /* ── Page title ── */
+  .page-title {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+    color: #fbbf24;
+  }
+  .page-subtitle {
+    text-align: center;
+    color: #9ca3af;
+    margin-bottom: 24px;
+    font-size: 0.875rem;
+  }
+
+  /* ── TL;DR box ── */
+  .tldr-box {
+    background: #1f2937;
+    border: 1px solid #374151;
+    border-left: 4px solid #fbbf24;
+    border-radius: 6px;
+    padding: 18px 22px;
+    margin-bottom: 28px;
+  }
+  .tldr-box h2 {
+    color: #fbbf24;
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .tldr-box ul { padding-left: 1.25rem; list-style: disc; }
+  .tldr-box li { color: #d1d5db; font-size: 0.875rem; line-height: 1.6; margin-bottom: 5px; }
+  .tldr-box li b { color: #f9fafb; }
+
+  /* ── Section ── */
+  .rankings-section { margin-bottom: 36px; }
+  .section-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #fbbf24;
+    border-left: 3px solid #fbbf24;
+    padding-left: 10px;
+    margin-bottom: 16px;
+  }
+
+  /* ── Gigant toggle ── */
+  .toggle-bar {
+    background: #1f2937;
+    border: 1px solid #374151;
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .toggle-bar-label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #d1d5db;
+  }
+  .gigant-name { color: #fb923c; font-weight: 700; }
+
+  /* Switch */
+  .switch { position: relative; display: inline-block; width: 44px; height: 22px; flex-shrink: 0; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider {
+    position: absolute; cursor: pointer; inset: 0;
+    background: #374151; border-radius: 22px;
+    border: 1px solid #4b5563; transition: 0.25s;
+  }
+  .slider::before {
+    content: ''; position: absolute;
+    height: 16px; width: 16px; left: 2px; top: 2px;
+    background: #9ca3af; border-radius: 50%; transition: 0.25s;
+  }
+  input:checked + .slider { background: #064e3b; border-color: #059669; }
+  input:checked + .slider::before { transform: translateX(22px); background: #6ee7b7; }
+
+  .mode-pill {
+    font-size: 0.65rem; font-weight: 700;
+    letter-spacing: 0.07em; text-transform: uppercase;
+    padding: 2px 8px; border-radius: 3px;
+  }
+  .mode-all  { background: #064e3b; color: #6ee7b7; border: 1px solid #059669; }
+  .mode-excl { background: #451a03; color: #fdba74; border: 1px solid #c2410c; }
+
+  .excl-notice {
+    display: none;
+    background: #1c1008;
+    border: 1px solid #92400e;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 0.775rem;
+    color: #fdba74;
+    margin-bottom: 14px;
+  }
+  .excl-notice.visible { display: block; }
+
+  /* ── Tab nav ── */
+  .tab-nav {
+    display: flex;
+    gap: 2px;
+    border-bottom: 2px solid #374151;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    background: none; border: none;
+    padding: 8px 14px;
+    color: #9ca3af;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: inherit;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: color 0.15s;
+    font-weight: 600;
+  }
+  .tab-btn:hover { color: #e5e7eb; }
+  .tab-btn.active { color: #fbbf24; border-bottom-color: #fbbf24; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── Category header ── */
+  .cat-header {
+    background: #1f2937;
+    border: 1px solid #374151;
+    border-radius: 4px;
+    padding: 8px 14px;
+    margin: 20px 0 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .cat-name  { color: #f9fafb; font-size: 0.9375rem; font-weight: 700; }
+  .cat-cal   { color: #9ca3af; font-size: 0.8rem; }
+  .cat-count { color: #6b7280; font-size: 0.75rem; margin-left: auto; }
+
+  /* ── Tables ── */
+  .rankings-table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; margin-bottom: 8px; table-layout: fixed; }
+  .rankings-table th {
+    background: #1f2937;
+    color: #9ca3af;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 7px 10px;
+    text-align: center;
+    border-bottom: 2px solid #374151;
+    font-weight: 600;
+  }
+  .rankings-table th.r { text-align: center; }
+  .rankings-table th:nth-child(2) { text-align: left; }
+  .rankings-table th.ecol, .rankings-table td.ecol { width: 78px; }
+  .rankings-table th.col-rank,  .rankings-table td.col-rank  { width: 42px; }
+  .rankings-table th.col-score, .rankings-table td.col-score { width: 90px; }
+  .rankings-table th.col-tk,    .rankings-table td.col-tk    { width: 72px; }
+  .rankings-table th.col-notes, .rankings-table td.col-notes { /* fills remainder */ }
+  .rankings-table td { padding: 7px 10px; border-bottom: 1px solid #1f2937; vertical-align: middle; color: #d1d5db; }
+  .rankings-table td.r { text-align: right; }
+  .rankings-table tr:hover td { background: #1a2535; }
+  .rankings-table tr:last-child td { border-bottom: none; }
+
+  /* ── Cell styles ── */
+  .wname  { color: #f9fafb; font-weight: 600; white-space: nowrap; }
+  .ammo-t { color: #60a5fa; font-size: 0.75rem; }
+  .mono   { font-family: monospace; font-size: 0.75rem; color: #d1d5db; }
+  .c-hi   { font-family: monospace; font-size: 0.75rem; color: #4ade80; font-weight: 700; }
+  .c-mid  { font-family: monospace; font-size: 0.75rem; color: #a3e635; }
+  .c-lo   { font-family: monospace; font-size: 0.75rem; color: #fbbf24; }
+  .c-bad  { font-family: monospace; font-size: 0.75rem; color: #f87171; }
+  .c-na   { font-family: monospace; font-size: 0.75rem; color: #374151; font-style: italic; }
+
+  /* ── Rank ── */
+  .r1 { color: #fbbf24; font-weight: 700; font-family: monospace; }
+  .r2 { color: #d1d5db; font-weight: 600; font-family: monospace; }
+  .r3 { color: #d97706; font-weight: 600; font-family: monospace; }
+  .rn { color: #4b5563; font-family: monospace; }
+
+  /* ── Medals ── */
+  .medal { font-size: 15px; line-height: 1; }
+  tr.top1 .wname { color: #ffd700; }
+  tr.top2 .wname { color: #c0c0c0; }
+  tr.top3 .wname { color: #cd7f32; }
+
+  tr.top1 .wname { color: #ffd700; }
+  tr.top2 .wname { color: #c0c0c0; }
+  tr.top3 .wname { color: #cd7f32; }
+
+  /* ── Progress bar ── */
+  .bar-wrap {
+    width: 100%;
+    height: 3px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 2px;
+    margin-top: 5px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  #panel-speed   .bar-fill { background: linear-gradient(90deg, #fbbf24, #fb923c); }
+  #panel-cheap   .bar-fill { background: linear-gradient(90deg, #34d399, #6ee7b7); }
+  #panel-balance .bar-fill { background: linear-gradient(90deg, #60a5fa, #a78bfa); }
+
+  /* ── Badges ── */
+  .badge {
+    display: inline-block; padding: 2px 6px; border-radius: 3px;
+    font-size: 0.5005rem; font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase; white-space: nowrap; opacity: 0.9;
+    vertical-align: middle; margin-left: 3px;
+  }
+  .b-up   { background: #064e3b; color: #6ee7b7; border: 1px solid #059669; }
+  .b-down { background: #450a0a; color: #fca5a5; border: 1px solid #b91c1c; }
+  .b-same { background: #1f2937; color: #6b7280; border: 1px solid #374151; }
+
+  /* Toolkit type badges */
+  .tk-badge {
+    display: inline-block; padding: 2px 6px; border-radius: 3px;
+    font-size: 0.6rem; font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase; white-space: nowrap; margin-left: 4px;
+    opacity: 0.8;
+  }
+  .tk-A { background: #052e16; color: #4ade80; border: 1px solid #16a34a; }
+  .tk-B { background: #2a1200; color: #d4845a; border: 1px solid #92400e; }
+  .tk-C { background: #1a1200; color: #fbbf24; border: 1px solid #d97706; }
+  .tk-D { background: #2d0a0a; color: #f87171; border: 1px solid #dc2626; }
+
+  /* Toolkit toggle buttons */
+  .tk-toggle-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .tk-toggle-label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #d1d5db;
+  }
+  .tk-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 2px 7px; border-radius: 3px; cursor: pointer;
+    font-size: 0.625rem; font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase; border: 2px solid transparent;
+    transition: opacity 0.2s, filter 0.2s;
+    user-select: none;
+  }
+  .tk-btn.active { opacity: 0.8; }
+  .tk-btn.inactive { opacity: 0.35; filter: grayscale(0.5); }
+  .tk-btn-A { background: #052e16; color: #4ade80; border-color: #16a34a; }
+  .tk-btn-B { background: #2a1200; color: #d4845a; border-color: #92400e; }
+  .tk-btn-C { background: #1a1200; color: #fbbf24; border-color: #d97706; }
+  .tk-btn-D { background: #2d0a0a; color: #f87171; border-color: #dc2626; }
+
+  .toggle-bar-divider {
+    width: 1px; height: 20px; background: #374151; margin: 0 4px; flex-shrink: 0;
+  }
+
+  /* ── Special mention cards ── */
+  .special-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .special-card {
+    background: #1f2937; border: 1px solid #374151;
+    border-radius: 6px; padding: 14px 16px;
+  }
+  .special-card h4 { color: #f9fafb; font-size: 0.875rem; font-weight: 700; margin-bottom: 4px; }
+  .special-card .sc-meta { color: #60a5fa; font-size: 0.72rem; margin-bottom: 8px; font-family: monospace; }
+  .special-card p { color: #9ca3af; font-size: 0.8rem; line-height: 1.55; }
+  .sc-stat { color: #fbbf24; font-weight: 700; }
+
+  /* ── Note / method boxes ── */
+  .note-box {
+    background: #111827; border: 1px solid #374151; border-radius: 4px;
+    padding: 10px 14px; font-size: 0.8rem; color: #9ca3af;
+    margin-top: 8px; line-height: 1.55;
+  }
+  code {
+    background: #374151; color: #f3f4f6;
+    padding: 1px 4px; border-radius: 3px; font-size: 0.75rem;
+  }
+  .method-note {
+    background: #1f2937; border: 1px solid #374151;
+    border-top: 2px solid #fbbf24; border-radius: 6px;
+    padding: 14px 18px; font-size: 0.8rem; color: #9ca3af;
+    line-height: 1.6;
+  }
+  .method-note b { color: #f3f4f6; }
+  .section-divider { border: none; border-top: 1px solid #374151; margin: 28px 0; }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .cat-header { flex-direction: column; align-items: flex-start; gap: 6px; }
+    .cat-count { margin-left: 0; }
+    .rankings-table { font-size: 0.75rem; }
+    .rankings-table th, .rankings-table td { padding: 5px 7px; }
+    .ecol { display: none; }
+    .page-title { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+<div class="rankings-container">
+
+  <div class="page-header">
+    <span class="site-title">Cheeki's Mods Archive</span>
+  </div>
+
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <svg fill="currentColor" viewBox="0 0 20 20" width="14" height="14" style="flex-shrink:0">
+      <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+    </svg>
+    <a href="https://cheeki.zone">Archive</a>
+    <span class="breadcrumb-separator">›</span>
+    <a href="../index.html">GAMMA Tools</a>
+    <span class="breadcrumb-separator">›</span>
+    <span style="color:#d1d5db;">Mutant Rankings</span>
+  </nav>
+
+  <h1 class="page-title">STALKER GAMMA - Mutant Kill Rankings</h1>
+  <p class="page-subtitle">The more data I get the better these rankings get! Check this video to see how to help.</p>
+
+
+  <hr class="section-divider">
+
+  <div class="rankings-section">
+    <div class="section-title"></div>
+
+    <div class="toggle-bar">
+      <span class="toggle-bar-label" id="gigantLabel" style="cursor:pointer">Include <span class="gigant-name">Gigant</span> Data</span>
+      <div class="switch" id="gigantSwitch">
+        <input type="checkbox" id="gigantToggle" style="opacity:0;width:0;height:0;position:absolute">
+        <span class="slider"></span>
+      </div>
+      <span class="mode-pill mode-all" id="modePill">ALL ENEMIES</span>
+
+      <div class="toggle-bar-divider"></div>
+
+      <div class="tk-toggle-group">
+        <span class="tk-toggle-label">&#128295; Toolkit:</span>
+        <button type="button" class="tk-btn tk-btn-A active" id="tkBtn-A" onclick="toggleToolkit('A',event)">Type A</button>
+        <button type="button" class="tk-btn tk-btn-B active" id="tkBtn-B" onclick="toggleToolkit('B',event)">Type B</button>
+        <button type="button" class="tk-btn tk-btn-C active" id="tkBtn-C" onclick="toggleToolkit('C',event)">Type C</button>
+        <button type="button" class="tk-btn tk-btn-D active" id="tkBtn-D" onclick="toggleToolkit('D',event)">Type D</button>
+      </div>
+
+      <span style="color:#6b7280; font-size:0.775rem; margin-left:auto;">Toggling recalculates all 3 ranking tabs</span>
+    </div>
+
+
+    <div class="tab-nav">
+      <button class="tab-btn active" onclick="switchTab('speed',this)">⚡ Best</button>
+      <button class="tab-btn" onclick="switchTab('cheap',this)">💸 Cheapest</button>
+      <button class="tab-btn" onclick="switchTab('balance',this)">⚖️ Balanced</button>
+    </div>
+
+    <!-- Speed -->
+    <div class="tab-panel active" id="panel-speed">
+      <div class="cat-header">
+        <span class="cat-name">⚡ Best</span>
+        <span class="cat-cal">Weighted average TTK in seconds (lower is better)</span>
+        <span class="cat-count" id="count-speed">24 weapons</span>
+      </div>
+      <table class="rankings-table">
+        <thead>
+          <tr>
+            <th class="col-rank">#</th>
+            <th>Weapon</th>
+            <th class="r col-score">Avg TTK</th>
+            <th class="r ecol" id="th-sg">Gigant</th>
+            <th class="r ecol">Strong</th>
+            <th class="r ecol">Normal</th>
+            <th class="r ecol">Weak</th>
+            <th class="r col-tk">Toolkit</th>
+            <th class="col-notes">Notes</th>
+          </tr>
+        </thead>
+        <tbody id="body-speed"></tbody>
+      </table>
+      <div class="note-box">
+        Weights (with Gigant): <code>Gigant 25%</code> <code>Chimera Strong 25%</code> <code>Chimera Normal 25%</code> <code>Weak 25%</code>.
+      </div>
+    </div>
+
+    <!-- Cheap -->
+    <div class="tab-panel" id="panel-cheap">
+      <div class="cat-header">
+        <span class="cat-name">💸 Cheapest</span>
+        <span class="cat-cal">Weighted average cost per kill in roubles (lower is better)</span>
+        <span class="cat-count" id="count-cheap">24 weapons</span>
+      </div>
+      <table class="rankings-table">
+        <thead>
+          <tr>
+            <th class="col-rank">#</th>
+            <th>Weapon</th>
+            <th class="r col-score">Avg Cost/Kill</th>
+            <th class="r ecol" id="th-cg">Gigant</th>
+            <th class="r ecol">Strong</th>
+            <th class="r ecol">Normal</th>
+            <th class="r ecol">Weak</th>
+            <th class="r col-tk">Toolkit</th>
+            <th class="col-notes">Notes</th>
+          </tr>
+        </thead>
+        <tbody id="body-cheap"></tbody>
+      </table>
+      <div class="note-box">
+        The <code>23×75 Shrapnel</code> and <code>12×70 Buck</code> families are in a completely different cost bracket from everything else. 5.56 HP and 5.45 HP ammo, despite their fast kills, costs 3× more per kill than shotgun calibers.
+      </div>
+    </div>
+
+    <!-- Balance -->
+    <div class="tab-panel" id="panel-balance">
+      <div class="cat-header">
+        <span class="cat-name">⚖️ Balanced</span>
+        <span class="cat-cal">Normalized avg of TTK rank + Cost rank (lower score is better · 0 = perfect at both)</span>
+        <span class="cat-count" id="count-balance">24 weapons</span>
+      </div>
+      <table class="rankings-table">
+        <thead>
+          <tr>
+            <th class="col-rank">#</th>
+            <th>Weapon</th>
+            <th class="r col-score">Balance Score</th>
+            <th class="r ecol" id="th-bg">Gigant TTK</th>
+            <th class="r ecol">Strong TTK</th>
+            <th class="r ecol">Normal TTK</th>
+            <th class="r ecol">Weak TTK</th>
+            <th class="r col-tk">Toolkit</th>
+            <th class="col-notes">Notes</th>
+          </tr>
+        </thead>
+        <tbody id="body-balance"></tbody>
+      </table>
+      <div class="note-box">
+        Balance score = <code>(norm_TTK + norm_Cost) / 2</code> using min-max normalization across all weapons. Weapons within 2% of each other's score are shown as ties. A low score means the weapon ranks well in both TTK and cost simultaneously.
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <div class="rankings-section">
+    <div class="section-title">Key Findings & Special Mentions</div>
+    <div class="special-grid">
+
+      <div class="special-card">
+        <h4>🏆 KSG-23 — Best All-Rounder</h4>
+        <div class="sc-meta">23×75 Shrapnel · Type D Toolkit</div>
+        <p>Dominates the Balance tab and ranks top-3 in both TTK and Cost. The <span class="sc-stat">23×75 Shrapnel</span> caliber puts it in a completely different cost bracket from rifles and SMGs — roughly 3× cheaper per kill while still posting competitive kill times.</p>
+      </div>
+
+      <div class="special-card">
+        <h4>💣 OTs-14 Groza "Storm" — VOG-25 Wildcard</h4>
+        <div class="sc-meta">VOG-25 Grenade · Type D Toolkit · null Weak data</div>
+        <p>The grenade launcher variant operates on entirely different logic. Against Gigant and Chimera Strong it posts some of the fastest TTKs in the dataset. The <span class="sc-stat">Perfect</span> variant assumes every grenade lands — the <span class="sc-stat">Real</span> variant is the honest benchmark.</p>
+      </div>
+
+      <div class="special-card">
+        <h4>⚡ M249 SAW — Raw TTK King</h4>
+        <div class="sc-meta">5.56 HP · Type D Toolkit</div>
+        <p>Leads or ties for #1 on the Fastest Kill tab in nearly every Gigant-included scenario. Sustained <span class="sc-stat">high-RPM fire</span> with 5.56 HP makes it the benchmark other weapons are measured against — at the cost of expensive ammo and a heavy toolkit requirement.</p>
+      </div>
+
+      <div class="special-card">
+        <h4>⚠️ PP-19 Family — Avoid for Mutants</h4>
+        <div class="sc-meta">PP-19 Bizon (9×18) · PP-19 Vityaz · PP-19 Bizon (9×19)</div>
+        <p>All three rank at the bottom across every tab. Slow kill times, expensive cost-per-kill, and no compensating strengths vs mutants. The 9×18 and 9×19 variants are nearly identical in outcome. Fine for stalkers — bring something else into the field.</p>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ttks: [Gigant, Chimera Strong, Chimera Normal x2, Weak]
+// null = n/a (no data)
+const weapons = [
+  // VOG-25 Grenade
+  { name: 'OTs-14 Groza "Storm" (Perfect)', ammo: "VOG-25 Grenade",  toolkit: "D", note: "Assumes perfect aim and 100% Grenade DMG", ttks: [7.7,  3.9,  5.0,  0.2], costs: [8991,  5994, 5994, 2997] },
+  { name: 'OTs-14 Groza "Storm" (Real)',    ammo: "VOG-25 Grenade",  toolkit: "D", note: "Realistic use, 1/5 grenades does not full DMG", ttks: [10.6, 9.0,  10.4, 0.2], costs: [10489, 6993, 6993, 2997] },
+  // .338 Federal
+  { name: 'Remington 700 "Deer Hunter"',    ammo: ".338 Federal",    toolkit: "D", ttks: [25.6, 10.8, 8.6,  0.2],  costs: [4620,  2279, 1396, 550]  },
+  // 23x75 Shrapnel
+  { name: "KSG-23",                         ammo: "23x75 Shrapnel",  toolkit: "D", ttks: [6.8,  13.7, 8.9,  0.1],  costs: [2283,  2475, 1200, 275]  },
+  { name: "KS-23",                          ammo: "23x75 Shrapnel",  toolkit: "B", ttks: [17.6, 29.5, 30.1, 0.1],  costs: [2173,  2436, 1238, 275]  },
+  { name: 'TOZ-34 "Chimera Hunter"',        ammo: "23x75 Shrapnel",  toolkit: "B", ttks: [21.1, 24.2, 14.3, 0.1],  costs: [2063,  2063, 1037, 275]  },
+  // 12x70 Buck
+  { name: "KS-12",                          ammo: "12x70 Buck",      toolkit: "D", ttks: [12.2, 11.2, 11.0, 0.1],  costs: [2915,  2366, 1118, 138]  },
+  { name: "RAPTR",                          ammo: "12x70 Buck",      toolkit: "D", note: "Tends to jam a lot", ttks: [11.8, 12.0, 10.3, 0.1],  costs: [2933,  2497, 1127, 138]  },
+  { name: "Saiga-12 Tactical",              ammo: "12x70 Buck",      toolkit: "C", ttks: [20.2, 17.9, 19.3, 0.1],  costs: [2898,  2323, 1270, 138]  },
+  // 5.56 HP
+  { name: "M249 SAW",                       ammo: "5.56 HP",         toolkit: "D", ttks: [7.9,  5.0,  4.1,  0.2],  costs: [11823, 5397, 2205, 441]  },
+  { name: 'AK-105 "Swamp Thing"',           ammo: "5.56 HP",         toolkit: "C", ttks: [14.8, 12.7, 9.8,  0.3],  costs: [11378, 6174, 2279, 439]  },
+  // 5.45 HP
+  { name: "RPK-16 (DRUM)",                  ammo: "5.45 HP",         toolkit: "C", ttks: [8.4,  6.9,  7.0,  0.3],  costs: [9996,  5271, 2119, 392]  },
+  { name: "RPK-16 LMG",                     ammo: "5.45 HP",         toolkit: "C", ttks: [13.6, 6.7,  4.6,  0.3],  costs: [10496, 4910, 2014, 384]  },
+  { name: 'AKS-74U "Tactician"',            ammo: "5.45 HP",         toolkit: "C", ttks: [14.5, 7.9,  7.1,  0.4],  costs: [11344, 5334, 2107, 434]  },
+  // .45 Hydra
+  { name: "KRISS Vector",                   ammo: ".45 Hydra",       toolkit: "D", ttks: [14.8, 9.4,  11.7, 0.2],  costs: [8162,  4928, 2128, 420]  },
+  { name: "UMP45",                          ammo: ".45 Hydra",       toolkit: "C", ttks: [17.2, 17.1, 14.3, 0.2],  costs: [7924,  5404, 2049, 381]  },
+  { name: "Thompson Model 1921",            ammo: ".45 Hydra",       toolkit: "A", note: "No optics, No Silencer", ttks: [13.7, 14.0, 10.2, 0.3],  costs: [9100,  6216, 2352, 490]  },
+  { name: 'MP5A3 "Frasier"',               ammo: ".45 Hydra",       toolkit: "C", ttks: [19.8, 16.0, 10.4, 0.4],  costs: [8932,  5250, 2142, 420]  },
+  // 9x19 HP
+  { name: "KRISS Vector (9x19)",            ammo: "9x19 HP",         toolkit: "D", ttks: [25.8, 11.8, 11.7, 0.2],  costs: [9734,  4437, 1803, 317]  },
+  { name: "PP-19 Vityaz",                   ammo: "9x19 HP",         toolkit: "A", ttks: [32.6, 20.9, 23.9, 0.5],  costs: [11149, 5765, 2246, 411]  },
+  { name: "PP-19 Bizon (9x19)",             ammo: "9x19 HP",         toolkit: "A", ttks: [32.9, 19.8, 13.2, 0.4],  costs: [11253, 5720, 2215, 374]  },
+  // 7.62x25
+  { name: "PPSh-41",                        ammo: "7.62x25",         toolkit: "A", note: "No optics, No Silencer", ttks: [17.1, 16.5, 14.1, 0.4],  costs: [8119,  4699, 1923, 327]  },
+  { name: "PP-19 Bizon (7.62x25)",          ammo: "7.62x25",         toolkit: "A", ttks: [27.8, 19.9, 17.6, 0.5],  costs: [7326,  4302, 1786, 280]  },
+  // 9x18 HP
+  { name: "PP-19 Bizon",                    ammo: "9x18 HP",         toolkit: "A", ttks: [32.8, 19.1, 12.1, 0.6],  costs: [12038, 5790, 2446, 453]  },
+  // .357
+  { name: "Desert Eagle",                   ammo: ".357",            toolkit: "A", ttks: [30.6, 35.8, 27.6, 0.7],  costs: [8525,  6600, 2521, 481]  },
+  { name: 'Desert Eagle "Steppe"',          ammo: ".357",            toolkit: "A", note: "Nimble trade", ttks: [26.9, 30.02,24.8, 0.7],  costs: [8525,  6325, 2650, 481]  },
+];
+
+// Compute weighted average handling nulls - renormalize weights over available data
+function weightedAvg(values, baseWeights) {
+  let sumW = 0, sumVal = 0;
+  for (let i = 0; i < values.length; i++) {
+    if (values[i] !== null) {
+      sumW += baseWeights[i];
+      sumVal += baseWeights[i] * values[i];
+    }
+  }
+  return sumW > 0 ? sumVal / sumW : null;
+}
+
+// Active toolkit filter state
+const activeToolkits = { A: true, B: true, C: true, D: true };
+
+function toggleToolkit(type, e) {
+  e.stopPropagation();
+  e.preventDefault();
+  activeToolkits[type] = !activeToolkits[type];
+  const btn = document.getElementById('tkBtn-' + type);
+  btn.classList.toggle('active', activeToolkits[type]);
+  btn.classList.toggle('inactive', !activeToolkits[type]);
+  renderAll(!document.getElementById('gigantToggle').checked);
+}
+
+function getFilteredWeapons() {
+  return weapons.filter(w => activeToolkits[w.toolkit]);
+}
+
+function calcMetrics(w, excl) {
+  // Full weights: Gigant 25%, Chimera Strong 25%, Chimera Normal 25%, Weak 25%
+  // Excl weights: Gigant 0, Chimera Strong 40%, Chimera Normal 30%, Weak 30%
+  const W = excl ? [0, 0.40, 0.30, 0.30] : [0.25, 0.25, 0.25, 0.25];
+  const ttkVals  = excl ? [null, w.ttks[1],  w.ttks[2],  w.ttks[3]]  : w.ttks;
+  const costVals = excl ? [null, w.costs[1], w.costs[2], w.costs[3]] : w.costs;
+  return {
+    avgTTK:  weightedAvg(ttkVals,  W),
+    avgCost: weightedAvg(costVals, W),
+  };
+}
+
+// Filter weapons that have enough data to rank (at least Chimera Strong + Chimera Normal)
+function usableWeapons(excl) {
+  return getFilteredWeapons().filter(w => {
+    if (excl) {
+      return w.ttks[1] !== null && w.ttks[2] !== null;
+    } else {
+      return w.ttks[0] !== null || w.ttks[1] !== null || w.ttks[2] !== null;
+    }
+  });
+}
+
+function calcRankings(excl) {
+  const pool = usableWeapons(excl);
+  const c = pool.map(w => ({ ...w, ...calcMetrics(w, excl) })).filter(w => w.avgTTK !== null && w.avgCost !== null);
+  const byTTK  = [...c].sort((a,b) => a.avgTTK  - b.avgTTK);
+  const byCost = [...c].sort((a,b) => a.avgCost - b.avgCost);
+  const maxT = Math.max(...c.map(w=>w.avgTTK)),  minT = Math.min(...c.map(w=>w.avgTTK));
+  const maxC = Math.max(...c.map(w=>w.avgCost)), minC = Math.min(...c.map(w=>w.avgCost));
+  const byBal = [...c].map(w => ({
+    ...w,
+    balance: ((w.avgTTK-minT)/(maxT-minT) + (w.avgCost-minC)/(maxC-minC)) / 2
+  })).sort((a,b) => a.balance - b.balance);
+  return { byTTK, byCost, byBal, count: c.length };
+}
+
+let base = calcRankings(false);
+
+function baseRank(name, cat) {
+  const list = cat==='speed' ? base.byTTK : cat==='cheap' ? base.byCost : base.byBal;
+  return list.findIndex(w => w.name === name) + 1;
+}
+
+function rClass(r) { return r===1?'r1':r===2?'r2':r===3?'r3':'rn'; }
+function rLabel(r) { return '#'+r; }
+
+function valClass(val, allVals) {
+  const mn = Math.min(...allVals), mx = Math.max(...allVals);
+  const pct = mx===mn ? 0.5 : 1 - (val - mn)/(mx - mn);
+  if (pct >= 0.75) return 'c-hi';
+  if (pct >= 0.50) return 'c-mid';
+  if (pct >= 0.25) return 'c-lo';
+  return 'c-bad';
+}
+
+function fmtTTK(v)  { return v !== null ? v.toFixed(1)+'s' : '—'; }
+function fmtCost(v) { return v !== null ? Math.round(v).toLocaleString()+'r' : '—'; }
+
+function medalEmoji(rank) {
+  if (rank === 1) return '🥇';
+  if (rank === 2) return '🥈';
+  if (rank === 3) return '🥉';
+  return null;
+}
+
+function topClass(rank) {
+  if (rank === 1) return 'top1';
+  if (rank === 2) return 'top2';
+  if (rank === 3) return 'top3';
+  return '';
+}
+
+// Build tie groups: adjacent weapons within 2% of each other share a rank label
+function buildTieGroups(sorted, key) {
+  const groups = [];
+  let displayRank = 1;
+  let i = 0;
+  while (i < sorted.length) {
+    let j = i + 1;
+    // Extend group while each next item is within 2% of the immediately preceding item
+    while (j < sorted.length) {
+      const prev = sorted[j - 1][key];
+      const curr = sorted[j][key];
+      const pct = Math.abs(curr - prev) / (prev || 1);
+      if (pct <= 0.02) j++;
+      else break;
+    }
+    const count = j - i;
+    const label = count > 1 ? 'Tie' : '#' + displayRank;
+    for (let k = i; k < j; k++) groups.push({ sortedIdx: k, displayRank, label, tied: count > 1 });
+    displayRank += 1;
+    i = j;
+  }
+  return groups;
+}
+
+function render(bodyId, sorted, key, fmt, excl, cat, enemySrc) {
+  const isBalance = (cat === 'balance');
+  const tbody = document.getElementById(bodyId);
+  tbody.innerHTML = '';
+  const allVals = sorted.map(w => w[key]);
+
+  // Build rank labels (tie logic only for balance tab)
+  const tieGroups = isBalance ? buildTieGroups(sorted, key) : null;
+
+  sorted.forEach((w, i) => {
+    let rank, rankLabel;
+    if (isBalance) {
+      const tg = tieGroups[i];
+      rank = tg.displayRank;
+      rankLabel = tg.label;
+    } else {
+      rank = i + 1;
+      rankLabel = '#' + rank;
+    }
+    const tg = isBalance ? tieGroups[i] : null;
+
+    const br = excl ? baseRank(w.name, cat) : null;
+    const change = (excl && br > 0) ? br - rank : null;
+    let badge = '';
+    if (change !== null) {
+      if (change > 0)       badge = ` <span class="badge b-up">▲${change}</span>`;
+      else if (change < 0)  badge = ` <span class="badge b-down">▼${Math.abs(change)}</span>`;
+      else                  badge = ` <span class="badge b-same">–</span>`;
+    }
+
+    const src = enemySrc === 'ttk' ? w.ttks : w.costs;
+    let ecells = '';
+    [0,1,2,3].forEach(ei => {
+      if (excl && ei === 0) {
+        ecells += `<td class="c-na ecol" style="text-align:center">—</td>`;
+      } else if (src[ei] === null) {
+        ecells += `<td class="c-na ecol" style="text-align:center">n/a</td>`;
+      } else {
+        const v = src[ei];
+        const f = enemySrc === 'cost' ? Math.round(v).toLocaleString()+'r' : v.toFixed(1)+'s';
+        ecells += `<td class="mono ecol" style="text-align:center">${f}</td>`;
+      }
+    });
+
+    const vc = valClass(w[key], allVals);
+    const rCls = tg && tg.tied ? 'rn' : rClass(rank);
+    const tieLabel = tg && tg.tied ? `#${rank} <span style="color:#60a5fa;font-size:0.7rem;font-weight:600;">(tie)</span>` : rankLabel;
+
+    // Medal for top 3, rank label otherwise
+    const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : null;
+    const rankCell = medal
+      ? `<span style="font-size:15px">${medal}</span>`
+      : `<span class="${rCls}" style="${tg && tg.tied ? 'font-family:monospace;font-weight:700;color:#d97706;' : ''}">${tieLabel}</span>`;
+
+    // Progress bar: best weapon = ~100%, worst = ~5%
+    const maxVal = Math.max(...allVals);
+    const barPct = Math.max(5, Math.round((1 - (w[key] / maxVal)) * 95 + 5));
+
+    const tr = document.createElement('tr');
+    tr.className = rank === 1 ? 'top1' : rank === 2 ? 'top2' : rank === 3 ? 'top3' : '';
+
+    const tkLabel = { A: 'Type A', B: 'Type B', C: 'Type C', D: 'Type D' }[w.toolkit] || '';
+    const tkBadge = w.toolkit ? `<span class="tk-badge tk-${w.toolkit}">${tkLabel}</span>` : '';
+
+    tr.innerHTML = `
+      <td class="col-rank" style="text-align:center;vertical-align:middle">${rankCell}</td>
+      <td>
+        <span class="wname">${w.name}${badge}</span>
+        <div style="margin-top:2px"><span class="ammo-t">${w.ammo}</span></div>
+        <div class="bar-wrap"><div class="bar-fill" style="width:${barPct}%"></div></div>
+      </td>
+      <td class="${vc} col-score" style="text-align:center;vertical-align:middle">${fmt(w[key])}</td>
+      ${ecells}
+      <td class="col-tk" style="text-align:center;vertical-align:middle">${tkBadge}</td>
+      <td class="col-notes" style="color:#9ca3af;font-size:0.75rem;vertical-align:middle;font-style:italic">${w.note || ''}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function renderAll(excl) {
+  base = calcRankings(false);
+  const { byTTK, byCost, byBal, count } = calcRankings(excl);
+  render('body-speed',   byTTK,  'avgTTK',  v => v.toFixed(2)+'s',                   excl, 'speed',   'ttk');
+  render('body-cheap',   byCost, 'avgCost', v => Math.round(v).toLocaleString()+'r', excl, 'cheap',   'cost');
+  render('body-balance', byBal,  'balance', v => v.toFixed(3),                        excl, 'balance', 'ttk');
+
+  ['count-speed','count-cheap','count-balance'].forEach(id => {
+    document.getElementById(id).textContent = count + ' weapons';
+  });
+
+  // Gigant header strikethrough
+  ['th-sg','th-cg','th-bg'].forEach(id => {
+    const el = document.getElementById(id);
+    el.style.color = excl ? '#374151' : '';
+    el.style.textDecoration = excl ? 'line-through' : '';
+  });
+
+  const pill = document.getElementById('modePill');
+  if (excl) {
+    pill.textContent = 'GIGANT EXCLUDED';
+    pill.className = 'mode-pill mode-excl';
+  } else {
+    pill.textContent = 'ALL ENEMIES';
+    pill.className = 'mode-pill mode-all';
+  }
+}
+
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-'+tab).classList.add('active');
+  btn.classList.add('active');
+}
+
+document.getElementById('gigantToggle').addEventListener('change', function(e) {
+  e.stopPropagation();
+  renderAll(!this.checked);
+});
+
+// Wire gigant switch and label clicks in isolation
+document.getElementById('gigantSwitch').addEventListener('click', function(e) {
+  e.stopPropagation();
+  const cb = document.getElementById('gigantToggle');
+  cb.checked = !cb.checked;
+  renderAll(!cb.checked);
+});
+
+document.getElementById('gigantLabel').addEventListener('click', function(e) {
+  e.stopPropagation();
+  const cb = document.getElementById('gigantToggle');
+  cb.checked = !cb.checked;
+  renderAll(!cb.checked);
+});
+
+renderAll(false);
+// Set toggle to checked (include) by default
+document.getElementById('gigantToggle').checked = true;
+</script>
+</body>
+</html>

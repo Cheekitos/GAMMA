@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>S.T.A.L.K.E.R. GAMMA: Ammo Efficiency Analysis</title>
+<meta name="description" content="Cheapest ammo to buy, cheapest to craft, and the best disassemble to craft conversions in STALKER GAMMA.">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #111827;
+    color: #f3f4f6;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  a { color: #60a5fa; text-decoration: none; transition: color 0.2s; }
+  a:hover { color: #93c5fd; }
+
+  .rankings-container { max-width: 960px; margin: 0 auto; }
+
+  .page-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 8px; gap: 12px; flex-wrap: wrap;
+  }
+  .site-title { font-size: 1.5rem; font-weight: bold; color: #f3f4f6; }
+
+  .breadcrumb {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 0.875rem; margin-bottom: 24px;
+  }
+  .breadcrumb-separator { color: #9ca3af; }
+
+  .page-title {
+    font-size: 2rem; font-weight: bold; text-align: center;
+    margin-bottom: 10px; color: #fbbf24;
+  }
+  .page-subtitle {
+    text-align: center; color: #9ca3af; margin-bottom: 24px; font-size: 0.875rem;
+  }
+
+  /* ── TL;DR ── */
+  .tldr-box {
+    background: #1f2937; border: 1px solid #374151;
+    border-left: 4px solid #fbbf24; border-radius: 6px;
+    padding: 18px 22px; margin-bottom: 28px;
+  }
+  .tldr-box h2 {
+    color: #fbbf24; font-size: 0.875rem; font-weight: 700;
+    letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 10px;
+  }
+  .tldr-box ul { padding-left: 1.25rem; list-style: disc; }
+  .tldr-box li { color: #d1d5db; font-size: 0.875rem; line-height: 1.6; margin-bottom: 5px; }
+  .tldr-box li b { color: #f9fafb; }
+
+  /* ── Section ── */
+  .rankings-section { margin-bottom: 36px; }
+  .section-title {
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: #fbbf24;
+    border-left: 3px solid #fbbf24; padding-left: 10px; margin-bottom: 16px;
+  }
+  .section-intro { color: #6b7280; font-size: 0.875rem; margin-bottom: 14px; line-height: 1.55; }
+
+  /* ── Info cards ── */
+  .info-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  .info-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .info-card {
+    background: #1f2937; border: 1px solid #374151; border-radius: 6px; padding: 14px 16px;
+  }
+  .info-card h3 { color: #f9fafb; font-size: 0.875rem; font-weight: 700; margin-bottom: 4px; white-space: normal; overflow: visible; }
+  .info-card .card-sub { color: #6b7280; font-size: 0.72rem; margin-bottom: 10px; }
+  .info-card p { color: #9ca3af; font-size: 0.8rem; line-height: 1.5; margin-bottom: 8px; }
+  .info-card ul { padding-left: 1rem; list-style: disc; }
+  .info-card li { color: #d1d5db; font-size: 0.8125rem; margin-bottom: 4px; line-height: 1.5; }
+  .info-card li b { color: #f9fafb; }
+  .info-card.yellow-border { border-left: 3px solid #fbbf24; }
+  .pct     { color: #4ade80; font-weight: 700; }
+  .pct-med { color: #a3e635; font-weight: 600; }
+  .pct-low { color: #fbbf24; }
+
+  /* ── AP warning card ── */
+  .ap-card {
+    background: #1f2937; border: 1px solid #374151;
+    border-left: 4px solid #f87171; border-radius: 6px;
+    padding: 16px 18px;
+  }
+  .ap-card h3 { color: #f9fafb; font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+  .ap-card p { color: #9ca3af; font-size: 0.8rem; line-height: 1.55; margin-bottom: 10px; }
+  .ap-card ul { padding-left: 1rem; list-style: disc; }
+  .ap-card li { color: #d1d5db; font-size: 0.8125rem; margin-bottom: 5px; line-height: 1.5; }
+
+  /* ── Discovery alert ── */
+  .discovery-card {
+    background: #0f2a1a; border: 1px solid #059669;
+    border-left: 4px solid #4ade80; border-radius: 6px;
+    padding: 14px 16px; margin-bottom: 16px;
+  }
+  .discovery-card h3 { color: #4ade80; font-size: 0.875rem; font-weight: 700; margin-bottom: 6px; }
+  .discovery-card p { color: #d1d5db; font-size: 0.8rem; line-height: 1.55; margin-bottom: 6px; }
+  .discovery-card ul { padding-left: 1rem; list-style: disc; }
+  .discovery-card li { color: #d1d5db; font-size: 0.8125rem; margin-bottom: 4px; }
+
+  /* ── Dead-end warning ── */
+  .deadend-card {
+    background: #1a1a0f; border: 1px solid #b45309;
+    border-left: 4px solid #fbbf24; border-radius: 6px;
+    padding: 14px 16px; margin-bottom: 16px;
+  }
+  .deadend-card h3 { color: #fbbf24; font-size: 0.875rem; font-weight: 700; margin-bottom: 6px; }
+  .deadend-card p { color: #9ca3af; font-size: 0.8rem; line-height: 1.55; margin-bottom: 6px; }
+
+  /* ── Tables ── */
+  .rankings-table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; margin-bottom: 8px; }
+  .rankings-table th {
+    background: #1f2937; color: #9ca3af; font-size: 0.7rem;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 7px 10px; text-align: left;
+    border-bottom: 2px solid #374151; font-weight: 600;
+  }
+  .rankings-table td { padding: 7px 10px; border-bottom: 1px solid #1f2937; vertical-align: middle; color: #d1d5db; }
+  .rankings-table tbody tr:nth-child(even) td { background: #182030; }
+  .rankings-table tr:hover td { background: #1a2535; }
+
+  .cal        { color: #fbbf24; font-weight: 600; font-size: 0.8125rem; }
+  .ammo-type  { color: #60a5fa; font-size: 0.8rem; }
+  .price-best { color: #4ade80; font-weight: 700; }
+  .price-mid  { color: #d1d5db; }
+  .price-bad  { color: #f87171; }
+  .tier-1 { color: #4ade80; font-size: 0.75rem; font-weight: 600; }
+  .tier-2 { color: #a3e635; font-size: 0.75rem; }
+  .tier-3 { color: #fbbf24; font-size: 0.75rem; }
+  .tier-4 { color: #fb923c; font-size: 0.75rem; }
+  .tier-5 { color: #f87171; font-size: 0.75rem; }
+  .save-high    { color: #4ade80; font-weight: 700; }
+  .save-med     { color: #a3e635; }
+  .save-low     { color: #fbbf24; }
+  .save-trivial { color: #4b5563; }
+  .cpb { font-size: 0.75rem; color: #6b7280; list-style: none !important; padding-left: 0; }
+
+  /* ── Badges ── */
+  .badge {
+    display: inline-block; padding: 2px 6px; border-radius: 3px;
+    font-size: 0.65rem; font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase; white-space: nowrap;
+  }
+  .badge-mvp  { background: #064e3b; color: #6ee7b7; border: 1px solid #059669; }
+  .badge-good { background: #1e3a1e; color: #86efac; border: 1px solid #16a34a; }
+  .badge-ap   { background: #450a0a; color: #fca5a5; border: 1px solid #b91c1c; }
+
+  .verdict { color: #fbbf24; font-style: italic; font-size: 0.75rem; }
+  .verdict-cell { display: flex; align-items: center; gap: 5px; }
+  .verdict-buy {
+    display: inline-block;
+    background: #450a0a;
+    color: #f87171;
+    border: 1px solid #7f1d1d;
+    border-radius: 3px;
+    padding: 1px 5px;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .verdict-craft {
+    display: inline-block;
+    background: #052e16;
+    color: #4ade80;
+    border: 1px solid #166534;
+    border-radius: 3px;
+    padding: 1px 5px;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* ── Note box ── */
+  .note-box {
+    background: #111827; border: 1px solid #374151; border-radius: 4px;
+    padding: 10px 14px; font-size: 0.8rem; color: #9ca3af;
+    margin-top: 8px; line-height: 1.55;
+  }
+  .note-box b { color: #f3f4f6; }
+
+  /* ── Methodology ── */
+  .method-note {
+    background: #1f2937; border: 1px solid #374151;
+    border-top: 2px solid #fbbf24; border-radius: 6px;
+    padding: 14px 18px; font-size: 0.8rem; color: #9ca3af;
+    line-height: 1.6; margin-top: 8px;
+  }
+  .method-note b { color: #f3f4f6; }
+
+  /* ── Divider ── */
+  .section-divider { border: none; border-top: 1px solid #374151; margin: 28px 0; }
+
+  /* ── Compact price reference table ── */
+  .price-ref-table { width: 100%; border-collapse: collapse; font-size: 0.72rem; margin-bottom: 8px; }
+  .price-ref-table th {
+    background: #1f2937; color: #9ca3af; font-size: 0.65rem;
+    letter-spacing: 0.07em; text-transform: uppercase;
+    padding: 5px 8px; text-align: left;
+    border-bottom: 2px solid #374151; font-weight: 600;
+  }
+  .price-ref-table td { padding: 4px 8px; border-bottom: 1px solid #1a2230; vertical-align: middle; color: #d1d5db; }
+  .price-ref-table tbody tr:nth-child(even) td { background: #182030; }
+  .price-ref-table tr:hover td { background: #1a2535; }
+  .price-ref-table td.cell-best { color: #4ade80; font-weight: 700; }
+  .price-ref-table td.cell-bad  { color: #f87171; font-weight: 600; }
+  .price-ref-table td.cell-none { color: #374151; }
+
+  /* ── Interchangeable table ── */
+  .swap-section { margin-bottom: 36px; }
+  .swap-cluster { margin-bottom: 20px; }
+  .swap-cluster-header {
+    display: flex; align-items: center; gap: 10px;
+    background: #1f2937; border: 1px solid #374151;
+    border-left: 4px solid #4ade80; border-radius: 6px 6px 0 0;
+    padding: 10px 14px;
+  }
+  .swap-cluster-header.orange { border-left-color: #fb923c; }
+  .swap-cluster-header.blue   { border-left-color: #60a5fa; }
+  .swap-cluster-header.red    { border-left-color: #f87171; }
+  .swap-cluster-label {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: #9ca3af;
+  }
+  .swap-cluster-name { font-size: 0.875rem; font-weight: 700; color: #f9fafb; }
+  .swap-cluster-meta { font-size: 0.72rem; color: #6b7280; margin-left: auto; }
+  .swap-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+  .swap-table th {
+    background: #161e2b; color: #6b7280; font-size: 0.65rem;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 6px 10px; text-align: left;
+    border-bottom: 1px solid #374151; font-weight: 600;
+  }
+  .swap-table td { padding: 6px 10px; border-bottom: 1px solid #1a2230; vertical-align: middle; color: #d1d5db; }
+  .swap-table tr:hover td { background: #1a2535; }
+  .swap-table tr.oneway td { opacity: 0.75; }
+  .swap-table tr.oneway td:first-child { border-left: 3px solid #fb923c; padding-left: 8px; }
+  .swap-table tr.bidir td:first-child { border-left: 3px solid #4ade80; padding-left: 8px; }
+  .swap-targets { display: flex; flex-wrap: wrap; gap: 5px; }
+  .swap-tag {
+    display: inline-block; padding: 2px 7px; border-radius: 3px;
+    font-size: 0.72rem; font-weight: 600; white-space: nowrap;
+    opacity: 0.8;
+  }
+  .swap-tag-bidir { background: #052e16; color: #86efac; border: 1px solid #166534; }
+  .swap-tag-oneway { background: #1c1917; color: #d6d3d1; border: 1px solid #44403c; }
+  .swap-tag-t1 { background: #052e16; color: #4ade80;  border: 1px solid #166534; }
+  .swap-tag-t2 { background: #1a2e05; color: #a3e635;  border: 1px solid #4d7c0f; }
+  .swap-tag-t3 { background: #2d1b00; color: #fbbf24;  border: 1px solid #92400e; }
+  .swap-tag-t4 { background: #431407; color: #fb923c;  border: 1px solid #c2410c; }
+  .swap-tag-t5 { background: #2d0505; color: #f87171;  border: 1px solid #b91c1c; }
+
+  /* 1-for-1 Conversion tables: green → lime → yellow-lime → light yellow → yellow */
+  .swap-table .swap-tag-t1 { background: #052e16; color: #4ade80; border: 1px solid #166534; }
+  .swap-table .swap-tag-t2 { background: #1a2e05; color: #a3e635; border: 1px solid #4d7c0f; }
+  .swap-table .swap-tag-t3 { background: #1e2c00; color: #bef264; border: 1px solid #4d7c0f; }
+  .swap-table .swap-tag-t4 { background: #272400; color: #fde047; border: 1px solid #713f12; }
+  .swap-table .swap-tag-t5 { background: #2d1b00; color: #fbbf24; border: 1px solid #92400e; }
+  .badge-bidir { background: #052e16; color: #6ee7b7; border: 1px solid #059669; font-size: 0.65rem; padding: 2px 6px; border-radius: 3px; font-weight: 700; white-space: nowrap; }
+  .badge-oneway { background: #431407; color: #fdba74; border: 1px solid #c2410c; font-size: 0.65rem; padding: 2px 6px; border-radius: 3px; font-weight: 700; white-space: nowrap; }
+  .swap-legend { display: flex; gap: 16px; font-size: 0.75rem; color: #6b7280; margin-bottom: 12px; align-items: center; flex-wrap: wrap; }
+  .swap-legend span { display: flex; align-items: center; gap: 5px; }
+
+  /* ── Gain tiers (source ammo color + badge) ── */
+  .swap-table tr.separator td { border-bottom: 1px dashed #374151; padding: 0; height: 1px; background: transparent; }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .info-grid-3, .info-grid-2 { grid-template-columns: 1fr; }
+    .page-title { font-size: 1.5rem; }
+    .rankings-table { font-size: 0.75rem; }
+    .rankings-table th, .rankings-table td { padding: 5px 6px; }
+    .rankings-table th:nth-child(4), .rankings-table td:nth-child(4),
+    .rankings-table th:nth-child(5), .rankings-table td:nth-child(5) { display: none; }
+  }
+  @media (max-width: 480px) {
+    .rankings-table th:nth-child(6), .rankings-table td:nth-child(6) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="rankings-container">
+
+  <!-- Header -->
+  <div class="page-header">
+    <span class="site-title">Cheeki's Mods Archive</span>
+  </div>
+
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <svg fill="currentColor" viewBox="0 0 20 20" width="14" height="14" style="flex-shrink:0;color:#9ca3af;">
+      <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+    </svg>
+    <a href="https://cheeki.zone" style="color:#60a5fa;">Archive</a>
+    <span class="breadcrumb-separator">›</span>
+    <a href="../index.html" style="color:#60a5fa;">GAMMA Tools</a>
+    <span class="breadcrumb-separator">›</span>
+    <span style="color:#d1d5db;">Ammo Efficiency</span>
+  </nav>
+
+  <h1 class="page-title">STALKER GAMMA: Ammo Efficiency Analysis</h1>
+  <p class="page-subtitle">Cheapest to buy, best to disassemble and all worthy craft conversions</p>
+
+  <hr class="section-divider">
+
+  <!-- SECTION 0: Trader Price Comparison -->
+  <div class="rankings-section">
+    <div class="section-title">1. Ammo Prices by Trader</div>
+    <p class="section-intro">Ammo Box price per trader. <b style="color:#d1d5db;">W.pact</b> (Loner, Bandits, Duty, Military, Monolith, Renegades), <b style="color:#d1d5db;">NATO</b> (Clear Sky, Freedom, Mercenaries, UNISG), <b style="color:#d1d5db;">Butcher</b> that you can find in Garbage, and the ruble equivalent of the vodka trades with <b style="color:#d1d5db;">Spirit</b> in Yantar.</p>
+    <div style="display:flex;gap:16px;align-items:flex-start;">
+
+      <!-- LEFT HALF -->
+      <table class="price-ref-table" style="flex:1;min-width:0;">
+        <thead><tr><th>Caliber</th><th>Type</th><th>W.Pact</th><th>NATO</th><th>Butcher</th><th>Spirit</th></tr></thead>
+        <tbody>
+          <tr><td class="cal">9x18</td><td class="ammo-type">HP</td>      <td>1,320</td>                  <td>1,320</td>                  <td class="cell-best">840</td>  <td class="cell-none"></td></tr>
+          <tr><td class="cal">9x18</td><td class="ammo-type">FMJ</td>     <td>770</td>                    <td>770</td>                    <td class="cell-none"></td>   <td class="cell-best">493</td></tr>
+          <tr><td class="cal">9x18</td><td class="ammo-type">AP</td>      <td>1,650</td>                  <td>1,650</td>                  <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">9x19</td><td class="ammo-type">HP</td>      <td>1,546</td>                  <td>1,546</td>                  <td class="cell-best">984</td>  <td class="cell-none"></td></tr>
+          <tr><td class="cal">9x19</td><td class="ammo-type">FMJ</td>     <td>886</td>                    <td>886</td>                    <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">9x19</td><td class="ammo-type">AP</td>      <td>3,231</td>                  <td class="cell-best">2,423</td><td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">45ACP</td><td class="ammo-type">FMJ</td>    <td>1,306</td>                  <td>1,306</td>                  <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">45ACP</td><td class="ammo-type">HYDRA</td>  <td>1,959</td>                  <td>1,959</td>                  <td class="cell-best">1,620</td><td class="cell-none"></td></tr>
+          <tr><td class="cal">7.62x25</td><td class="ammo-type">LRNPC</td><td>1,203</td>                  <td>1,203</td>                  <td class="cell-best">765</td>  <td class="cell-none"></td></tr>
+          <tr><td class="cal">7.62x25</td><td class="ammo-type">PST</td>  <td>1,340</td>                  <td>1,340</td>                  <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">5.7x28</td><td class="ammo-type">SS195</td> <td>1,753</td>                  <td>1,753</td>                  <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">5.7x28</td><td class="ammo-type">SS190</td> <td class="cell-none"></td>   <td>3,575</td>                  <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">20x70</td><td class="ammo-type">Buck</td>   <td>825</td>                    <td>825</td>                    <td class="cell-best">525</td>  <td class="cell-none"></td></tr>
+          <tr><td class="cal">12x70</td><td class="ammo-type">Buck</td>   <td class="cell-bad">1,375</td> <td class="cell-bad">1,375</td> <td class="cell-best">875</td>  <td>1,313</td></tr>
+          <tr><td class="cal">12x76</td><td class="ammo-type">Slug</td>   <td>2,268</td>                  <td>2,268</td>                  <td class="cell-best">1,876</td><td class="cell-none"></td></tr>
+          <tr><td class="cal">12x76</td><td class="ammo-type">AP</td>     <td class="cell-none"></td>   <td>6,875</td>                  <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">9x21</td><td class="ammo-type">SP10</td>    <td>2,956</td>                  <td class="cell-none"></td>   <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">7.62x39</td><td class="ammo-type">FMJ</td>      <td>2,681</td>              <td class="cell-none"></td>   <td class="cell-none"></td>   <td class="cell-best">985</td></tr>
+          <tr><td class="cal">7.62x39</td><td class="ammo-type">M43 (AP)</td> <td>7,493</td>              <td class="cell-none"></td>   <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">357</td><td class="ammo-type">HP</td>       <td>3,575</td>                  <td>3,575</td>                  <td class="cell-best">2,275</td><td class="cell-none"></td></tr>
+          <tr><td class="cal">5.45x39</td><td class="ammo-type">HP</td>   <td>2,200</td>                  <td class="cell-none"></td>   <td class="cell-best">1,400</td><td class="cell-none"></td></tr>
+        </tbody>
+      </table>
+
+      <!-- RIGHT HALF -->
+      <table class="price-ref-table" style="flex:1;min-width:0;">
+        <thead><tr><th>Caliber</th><th>Type</th><th>W.Pact</th><th>NATO</th><th>Butcher</th><th>Spirit</th></tr></thead>
+        <tbody>
+          <tr><td class="cal">5.45x39</td><td class="ammo-type">FMJ</td>  <td>1,856</td>                  <td class="cell-none"></td>   <td class="cell-none"></td>   <td class="cell-best">985</td></tr>
+          <tr><td class="cal">5.45x39</td><td class="ammo-type">AP</td>   <td>7,012</td>                  <td class="cell-none"></td>   <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">5.56x45</td><td class="ammo-type">HP</td>   <td class="cell-none"></td>   <td>2,200</td>                  <td class="cell-best">1,400</td><td class="cell-none"></td></tr>
+          <tr><td class="cal">5.56x45</td><td class="ammo-type">FMJ</td>  <td class="cell-none"></td>   <td>2,062</td>                  <td class="cell-none"></td>   <td class="cell-best">985</td></tr>
+          <tr><td class="cal">5.56x45</td><td class="ammo-type">AP</td>   <td class="cell-none"></td>   <td>5,637</td>                  <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">9x39</td><td class="ammo-type">SP-5</td>    <td>2,268</td>                  <td class="cell-none"></td>   <td class="cell-none"></td>   <td class="cell-best">985</td></tr>
+          <tr><td class="cal">9x39</td><td class="ammo-type">SP-6</td>    <td>7,356</td>                  <td class="cell-none"></td>   <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">7.92x57</td><td class="ammo-type">FMJ</td>  <td>1,856</td>                  <td>1,856</td>                  <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">7.92x57</td><td class="ammo-type">AP</td>   <td>6,187</td>                  <td>6,187</td>                  <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">7.62x54</td><td class="ammo-type">7N1</td>  <td class="cell-best">3,093</td><td class="cell-none"></td>   <td>3,940</td>                  <td class="cell-none"></td></tr>
+          <tr><td class="cal">7.62x54</td><td class="ammo-type">7N14</td> <td>5,500</td>                  <td class="cell-none"></td>   <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">7.62x54</td><td class="ammo-type">AP</td>   <td>13,062</td>                 <td class="cell-none"></td>   <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">7.62x54R</td><td class="ammo-type">PP</td>  <td>6,875</td>                  <td class="cell-none"></td>   <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">12.7x55</td><td class="ammo-type">STs-130</td><td>4,125</td>               <td class="cell-none"></td>   <td class="cell-best">1,970</td><td class="cell-none"></td></tr>
+          <tr><td class="cal">12.7x55</td><td class="ammo-type">VPS</td>  <td>9,487</td>                  <td class="cell-none"></td>   <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">23x75</td><td class="ammo-type">Shrapnel</td>  <td>2,750</td>               <td class="cell-none"></td>   <td class="cell-best">2,100</td><td class="cell-none"></td></tr>
+          <tr><td class="cal">23x75</td><td class="ammo-type">Barrikada</td> <td>9,625</td>               <td class="cell-none"></td>   <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">338</td><td class="ammo-type">Federal</td>  <td class="cell-none"></td>   <td>5,500</td>                  <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">338</td><td class="ammo-type">Lapua</td>    <td class="cell-none"></td>   <td>17,531</td>                 <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">7.62x51</td><td class="ammo-type">Ball</td> <td class="cell-none"></td>   <td>4,125</td>                  <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">7.62x51</td><td class="ammo-type">AP</td>   <td class="cell-none"></td>   <td>10,312</td>                 <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- SECTION 0: Direct 1:1 Interchangeable Reference -->
+  <div class="rankings-section swap-section">
+    <div class="section-title">2. 1-for-1 Conversion</div>
+    <p class="section-intro">
+      Every ammo box that can be directly "turned" into something else. Dissasembling it gives you exactly the materials for the next one.
+      Ranked by <u>most money saved by craft</u> (but <b style="color:#d1d5db;">not by power or usefulness, you'd be the judge of what you need in your situation</b>).
+    </p>
+
+    <!-- ═══════════════════════════════════════════════════════
+         CLUSTER 1  PISTOL / HANDGUN  (Blue GP + HG)
+         ═══════════════════════════════════════════════════════ -->
+    <div class="swap-cluster">
+      <div class="swap-cluster-header blue">
+        <div>
+          <div class="swap-cluster-name">Pistol / Handgun</div>
+        </div>
+
+      </div>
+      <table class="swap-table">
+        <thead>
+          <tr>
+            <th>Starting Ammo</th>
+            <th>Target Ammo</th>
+            <th>Craft Path</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="bidir">
+            <td><span class="cal">9x18 FMJ</span></td>
+            <td><div class="swap-targets">
+              <span class="swap-tag swap-tag-t1">9x18 HP</span>
+              <span class="swap-tag swap-tag-t2">45ACP FMJ</span>
+              <span class="swap-tag swap-tag-t3">7.62x25 LRNPC</span>
+              <span class="swap-tag swap-tag-t5">9x19 FMJ</span>
+            </div></td>
+            <td><span class="badge-bidir">↔ Both Ways</span></td>
+          </tr>
+          <tr class="bidir">
+            <td><span class="cal">9x19 FMJ</span></td>
+            <td><div class="swap-targets">
+              <span class="swap-tag swap-tag-t1">9x18 HP</span>
+              <span class="swap-tag swap-tag-t2">45ACP FMJ</span>
+              <span class="swap-tag swap-tag-t3">7.62x25 LRNPC</span>
+              <span class="swap-tag swap-tag-t5">9x18 FMJ</span>
+            </div></td>
+            <td><span class="badge-bidir">↔ Both Ways</span></td>
+          </tr>
+          <tr class="bidir">
+            <td><span class="cal">7.62x25 LRNPC</span></td>
+            <td><div class="swap-targets">
+              <span class="swap-tag swap-tag-t1">9x18 HP</span>
+              <span class="swap-tag swap-tag-t2">45ACP FMJ</span>
+              <span class="swap-tag swap-tag-t3">9x19 FMJ</span>
+              <span class="swap-tag swap-tag-t5">9x18 FMJ</span>
+            </div></td>
+            <td><span class="badge-bidir">↔ Both Ways</span></td>
+          </tr>
+          <tr class="bidir">
+            <td><span class="cal">45ACP FMJ</span></td>
+            <td><div class="swap-targets">
+              <span class="swap-tag swap-tag-t1">9x18 HP</span>
+              <span class="swap-tag swap-tag-t2">7.62x25 LRNPC</span>
+              <span class="swap-tag swap-tag-t3">9x19 FMJ</span>
+              <span class="swap-tag swap-tag-t5">9x18 FMJ</span>
+            </div></td>
+            <td><span class="badge-bidir">↔ Both Ways</span></td>
+          </tr>
+          <tr class="bidir">
+            <td><span class="cal">9x18 HP</span></td>
+            <td><div class="swap-targets">
+              <span class="swap-tag swap-tag-t1">45ACP FMJ</span>
+              <span class="swap-tag swap-tag-t2">7.62x25 LRNPC</span>
+              <span class="swap-tag swap-tag-t3">9x19 FMJ</span>
+              <span class="swap-tag swap-tag-t5">9x18 FMJ</span>
+            </div></td>
+            <td><span class="badge-bidir">↔ Both Ways</span></td>
+          </tr>
+          <!-- separator -->
+          <tr class="oneway">
+            <td><span class="cal">7.62x25 PST</span></td>
+            <td><div class="swap-targets">
+              <span class="swap-tag swap-tag-t1">9x18 HP</span>
+              <span class="swap-tag swap-tag-t2">45ACP FMJ</span>
+              <span class="swap-tag swap-tag-t3">7.62x25 LRNPC</span>
+              <span class="swap-tag swap-tag-t4">9x19 FMJ</span>
+              <span class="swap-tag swap-tag-t5">9x18 FMJ</span>
+            </div></td>
+            <td><span class="badge-oneway">→ One-way</span></td>
+          </tr>
+          <tr class="oneway">
+            <td><span class="cal">9x19 HP</span></td>
+            <td><div class="swap-targets">
+              <span class="swap-tag swap-tag-t1">9x18 HP</span>
+              <span class="swap-tag swap-tag-t2">45ACP FMJ</span>
+              <span class="swap-tag swap-tag-t3">7.62x25 LRNPC</span>
+              <span class="swap-tag swap-tag-t4">9x19 FMJ</span>
+              <span class="swap-tag swap-tag-t5">9x18 FMJ</span>
+            </div></td>
+            <td><span class="badge-oneway">→ One-way</span></td>
+          </tr>
+          <tr class="oneway">
+            <td><span class="cal">5.7x28 SS195</span></td>
+            <td><div class="swap-targets">
+              <span class="swap-tag swap-tag-t1">9x18 HP</span>
+              <span class="swap-tag swap-tag-t2">45ACP FMJ</span>
+              <span class="swap-tag swap-tag-t3">7.62x25 LRNPC</span>
+              <span class="swap-tag swap-tag-t4">9x19 FMJ</span>
+              <span class="swap-tag swap-tag-t5">9x18 FMJ</span>
+            </div></td>
+            <td><span class="badge-oneway">→ One-way</span></td>
+          </tr>
+          <tr class="oneway">
+            <td><span class="cal">45ACP HYDRA</span></td>
+            <td><div class="swap-targets">
+              <span class="swap-tag swap-tag-t1">9x18 HP</span>
+              <span class="swap-tag swap-tag-t2">45ACP FMJ</span>
+              <span class="swap-tag swap-tag-t3">7.62x25 LRNPC</span>
+              <span class="swap-tag swap-tag-t4">9x19 FMJ</span>
+              <span class="swap-tag swap-tag-t5">9x18 FMJ</span>
+            </div></td>
+            <td><span class="badge-oneway">→ One-way</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         CLUSTER 2  SMALL RIFLE  (Green GP + AR)
+         ═══════════════════════════════════════════════════════ -->
+    <div class="swap-cluster">
+      <div class="swap-cluster-header" style="border-left-color:#4ade80;">
+        <div>
+          <div class="swap-cluster-name">Small Rifles / AR</div>
+        </div>
+
+      </div>
+      <table class="swap-table">
+        <thead>
+          <tr>
+            <th>Starting Ammo</th>
+            <th>Target Ammo</th>
+            <th>Craft Path</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="bidir">
+            <td><span class="cal">5.45x39 FMJ</span></td>
+            <td><div class="swap-targets">
+              <span class="swap-tag swap-tag-t1">9x39 SP-5</span>
+              <span class="swap-tag swap-tag-t2">5.45x39 HP</span>
+              <span class="swap-tag swap-tag-t2">5.56x45 HP</span>
+              <span class="swap-tag swap-tag-t5">5.56x45 FMJ</span>
+            </div></td>
+            <td><span class="badge-bidir">↔ Both Ways</span></td>
+          </tr>
+          <tr class="bidir">
+            <td><span class="cal">5.56x45 FMJ</span></td>
+            <td><div class="swap-targets">
+              <span class="swap-tag swap-tag-t1">9x39 SP-5</span>
+              <span class="swap-tag swap-tag-t2">5.45x39 HP</span>
+              <span class="swap-tag swap-tag-t2">5.56x45 HP</span>
+              <span class="swap-tag swap-tag-t5">5.45x39 FMJ</span>
+            </div></td>
+            <td><span class="badge-bidir">↔ Both Ways</span></td>
+          </tr>
+          <tr class="bidir">
+            <td><span class="cal">5.45x39 HP</span></td>
+            <td><div class="swap-targets">
+              <span class="swap-tag swap-tag-t1">9x39 SP-5</span>
+              <span class="swap-tag swap-tag-t2">5.56x45 HP</span>
+              <span class="swap-tag swap-tag-t3">5.56x45 FMJ</span>
+              <span class="swap-tag swap-tag-t5">5.45x39 FMJ</span>
+            </div></td>
+            <td><span class="badge-bidir">↔ Both Ways</span></td>
+          </tr>
+          <tr class="bidir">
+            <td><span class="cal">5.56x45 HP</span></td>
+            <td><div class="swap-targets">
+              <span class="swap-tag swap-tag-t1">9x39 SP-5</span>
+              <span class="swap-tag swap-tag-t2">5.45x39 HP</span>
+              <span class="swap-tag swap-tag-t3">5.56x45 FMJ</span>
+              <span class="swap-tag swap-tag-t5">5.45x39 FMJ</span>
+            </div></td>
+            <td><span class="badge-bidir">↔ Both Ways</span></td>
+          </tr>
+          <tr class="bidir">
+            <td><span class="cal">9x39 SP-5</span></td>
+            <td><div class="swap-targets">
+              <span class="swap-tag swap-tag-t1">5.45x39 HP</span>
+              <span class="swap-tag swap-tag-t1">5.56x45 HP</span>
+              <span class="swap-tag swap-tag-t3">5.56x45 FMJ</span>
+              <span class="swap-tag swap-tag-t5">5.45x39 FMJ</span>
+            </div></td>
+            <td><span class="badge-bidir">↔ Both Ways</span></td>
+          </tr>
+          <!-- separator -->
+          <tr class="oneway">
+            <td><span class="cal">7.62x39 FMJ</span></td>
+            <td><div class="swap-targets">
+              <span class="swap-tag swap-tag-t1">9x39 SP-5</span>
+              <span class="swap-tag swap-tag-t2">5.45x39 HP</span>
+              <span class="swap-tag swap-tag-t2">5.56x45 HP</span>
+              <span class="swap-tag swap-tag-t4">5.56x45 FMJ</span>
+              <span class="swap-tag swap-tag-t5">5.45x39 FMJ</span>
+            </div></td>
+            <td><span class="badge-oneway">→ One-way</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="note-box">
+        <b>⚠ Never buy 7.62x39 FMJ specifically to convert it.</b> It costs more than every single ammo it converts into  SP-5 is 2,268, 5.45x39 FMJ is 1,856, and so on. Only disassemble and convert it if it's ammo you looted in the field and don't plan to use.
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         CLUSTER 3  BIG RIFLE  (Red GP + RF)
+         ═══════════════════════════════════════════════════════ -->
+    <div class="swap-cluster">
+      <div class="swap-cluster-header red">
+        <div>
+          <div class="swap-cluster-name">Big Rifles</div>
+        </div>
+
+      </div>
+      <table class="swap-table">
+        <thead>
+          <tr>
+            <th>Starting Ammo</th>
+            <th>Target Ammo</th>
+            <th>Craft Path</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="bidir">
+            <td><span class="cal">7.92x57 FMJ</span></td>
+            <td><div class="swap-targets">
+              <span class="swap-tag swap-tag-t1">12.7x55 STs-130</span>
+              <span class="swap-tag swap-tag-t5">7.62x54 7N1</span>
+            </div></td>
+            <td><span class="badge-bidir">↔ Both Ways</span></td>
+          </tr>
+          <tr class="bidir">
+            <td><span class="cal">7.62x54 7N1</span></td>
+            <td><div class="swap-targets">
+              <span class="swap-tag swap-tag-t1">12.7x55 STs-130</span>
+              <span class="swap-tag swap-tag-t5">7.92x57 FMJ</span>
+            </div></td>
+            <td><span class="badge-bidir">↔ Both Ways</span></td>
+          </tr>
+          <tr class="bidir">
+            <td><span class="cal">12.7x55 STs-130</span></td>
+            <td><div class="swap-targets">
+              <span class="swap-tag swap-tag-t1">7.62x54 7N1</span>
+              <span class="swap-tag swap-tag-t5">7.92x57 FMJ</span>
+            </div></td>
+            <td><span class="badge-bidir">↔ Both Ways</span></td>
+          </tr>
+          <!-- separator -->
+          <tr class="oneway">
+            <td><span class="cal">7.62x51 Ball</span></td>
+            <td><div class="swap-targets">
+              <span class="swap-tag swap-tag-t1">12.7x55 STs-130</span>
+              <span class="swap-tag swap-tag-t3">7.62x54 7N1</span>
+              <span class="swap-tag swap-tag-t5">7.92x57 FMJ</span>
+            </div></td>
+            <td><span class="badge-oneway">→ One-way</span></td>
+          </tr>
+          <tr class="oneway">
+            <td><span class="cal">7.62x54 7N14</span></td>
+            <td><div class="swap-targets">
+              <span class="swap-tag swap-tag-t1">12.7x55 STs-130</span>
+              <span class="swap-tag swap-tag-t3">7.62x54 7N1</span>
+              <span class="swap-tag swap-tag-t5">7.92x57 FMJ</span>
+            </div></td>
+            <td><span class="badge-oneway">→ One-way</span></td>
+          </tr>
+          <tr class="oneway">
+            <td><span class="cal">7.62x54R PP</span></td>
+            <td><div class="swap-targets">
+              <span class="swap-tag swap-tag-t1">12.7x55 STs-130</span>
+              <span class="swap-tag swap-tag-t3">7.62x54 7N1</span>
+              <span class="swap-tag swap-tag-t5">7.92x57 FMJ</span>
+            </div></td>
+            <td><span class="badge-oneway">→ One-way</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note-box">
+      <b>⚠ AP ammo is never directly interchangeable, there's no "free swap".</b> All AP calibers yield AP bullet tips when disassembled, but every AP craft recipe costs far more than one box provides (2× to 7× the GP, casings, and tips).
+    </div>
+
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- SECTION 1: Disassemble → Craft Routes -->
+  <div class="rankings-section">
+    <div class="section-title">3. Best Disassemble → Craft Routes That Save Money</div>
+    <p class="section-intro">
+      All the prices for these calculations are based on the <b style="color:#d1d5db;">REGULAR (white) price</b> at traders you can see above, for simplicity sake. It means for example that the first craft of this list using 9x18 will be EVEN BETTER if you get the ammo at Butcher.
+    </p>
+    <table class="rankings-table">
+      <thead>
+        <tr>
+          <th>Source (buy this)</th>
+          <th>Target (craft this)</th>
+          <th>Boxes Needed</th>
+          <th>Craft Cost</th>
+          <th>Buy Cost</th>
+          <th>Savings</th>
+          <th>% Saved</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- THE BIG MISSING ROUTE -->
+        <tr>
+          <td class="cal">9x18 FMJ</td><td class="ammo-type">357 HP</td>
+          <td>2×</td><td>1,540</td><td>3,575</td>
+          <td class="save-high">+2,035</td><td><span class="save-high">57%</span></td>
+        </tr>
+        <tr><td class="cal">7.92x57 FMJ</td><td class="ammo-type">12.7x55 STs-130</td><td>1×</td><td>1,856</td><td>4,125</td><td class="save-high">+2,269</td><td><span class="save-high">55%</span></td></tr>
+        <tr>
+          <td class="cal">9x19 FMJ</td><td class="ammo-type">357 HP</td>
+          <td>2×</td><td>1,772</td><td>3,575</td>
+          <td class="save-high">+1,803</td><td><span class="save-high">50%</span></td>
+        </tr>
+        <tr><td class="cal">7.92x57 FMJ</td><td class="ammo-type">7.62x54R PP</td><td>2×</td><td>3,712</td><td>6,875</td><td class="save-high">+3,163</td><td><span class="save-high">46%</span></td></tr>
+        <tr><td class="cal">9x18 FMJ</td><td class="ammo-type">9x18 HP</td><td>1×</td><td>770</td><td>1,320</td><td class="save-high">+550</td><td><span class="save-high">42%</span></td></tr>
+        <tr><td class="cal">9x18 FMJ</td><td class="ammo-type">45ACP FMJ</td><td>1×</td><td>770</td><td>1,306</td><td class="save-high">+536</td><td><span class="save-high">41%</span></td></tr>
+        <tr><td class="cal">7.92x57 FMJ</td><td class="ammo-type">7.62x54 7N1</td><td>1×</td><td>1,856</td><td>3,093</td><td class="save-high">+1,237</td><td><span class="save-high">40%</span></td></tr>
+        <tr>
+          <td class="cal">20x70 Buck</td><td class="ammo-type">23x75 Shrapnel</td>
+          <td>2×</td><td>1,650</td><td>2,750</td>
+          <td class="save-high">+1,100</td><td><span class="save-high">40%</span></td>
+        </tr>
+        <tr><td class="cal">9x18 FMJ</td><td class="ammo-type">7.62x25 LRNPC</td><td>1×</td><td>770</td><td>1,203</td><td class="save-high">+433</td><td><span class="save-high">36%</span></td></tr>
+        <tr><td class="cal">9x19 FMJ</td><td class="ammo-type">9x18 HP</td><td>1×</td><td>886</td><td>1,320</td><td class="save-med">+434</td><td><span class="save-med">33%</span></td></tr>
+        <tr>
+          <td class="cal">7.62x25 LRNPC</td><td class="ammo-type">357 HP</td>
+          <td>2×</td><td>2,406</td><td>3,575</td>
+          <td class="save-med">+1,169</td><td><span class="save-med">33%</span></td>
+        </tr>
+        <tr><td class="cal">7.92x57 FMJ</td><td class="ammo-type">7.62x54 7N14</td><td>2×</td><td>3,712</td><td>5,500</td><td class="save-med">+1,788</td><td><span class="save-med">33%</span></td></tr>
+        <tr><td class="cal">9x19 FMJ</td><td class="ammo-type">45ACP FMJ</td><td>1×</td><td>886</td><td>1,306</td><td class="save-med">+420</td><td><span class="save-med">32%</span></td></tr>
+        <tr>
+          <td class="cal">45ACP FMJ</td><td class="ammo-type">357 HP</td>
+          <td>2×</td><td>2,612</td><td>3,575</td>
+          <td class="save-med">+963</td><td><span class="save-med">27%</span></td>
+        </tr>
+        <tr><td class="cal">9x19 FMJ</td><td class="ammo-type">7.62x25 LRNPC</td><td>1×</td><td>886</td><td>1,203</td><td class="save-med">+317</td><td><span class="save-med">26%</span></td></tr>
+        <tr>
+          <td class="cal">9x18 HP</td><td class="ammo-type">357 HP</td>
+          <td>2×</td><td>2,640</td><td>3,575</td>
+          <td class="save-med">+935</td><td><span class="save-med">26%</span></td>
+        </tr>
+        <tr>
+          <td class="cal">7.62x25 PST</td><td class="ammo-type">357 HP</td>
+          <td>2×</td><td>2,680</td><td>3,575</td>
+          <td class="save-med">+895</td><td><span class="save-med">25%</span></td>
+        </tr>
+        <tr><td class="cal">7.62x54 7N1</td><td class="ammo-type">12.7x55 STs-130</td><td>1×</td><td>3,093</td><td>4,125</td><td class="save-med">+1,032</td><td><span class="save-med">25%</span></td></tr>
+        <tr><td class="cal">9x18 FMJ</td><td class="ammo-type">45ACP HYDRA</td><td>2×</td><td>1,540</td><td>1,959</td><td class="save-med">+419</td><td><span class="save-med">21%</span></td></tr>
+        <tr><td class="cal">5.45x39 FMJ</td><td class="ammo-type">9x39 SP-5</td><td>1×</td><td>1,856</td><td>2,268</td><td class="save-low">+412</td><td><span class="save-low">18%</span></td></tr>
+        <tr><td class="cal">5.45x39 FMJ</td><td class="ammo-type">5.45x39 HP</td><td>1×</td><td>1,856</td><td>2,200</td><td class="save-low">+344</td><td><span class="save-low">16%</span></td></tr>
+        <tr><td class="cal">5.45x39 FMJ</td><td class="ammo-type">5.56x45 HP</td><td>1×</td><td>1,856</td><td>2,200</td><td class="save-low">+344</td><td><span class="save-low">16%</span></td></tr>
+        <tr><td class="cal">9x18 FMJ</td><td class="ammo-type">9x19 FMJ</td><td>1×</td><td>770</td><td>886</td><td class="save-low">+116</td><td><span class="save-low">13%</span></td></tr>
+        <tr>
+          <td class="cal">9x19 HP</td><td class="ammo-type">357 HP</td>
+          <td>2×</td><td>3,092</td><td>3,575</td>
+          <td class="save-low">+483</td><td><span class="save-low">14%</span></td>
+        </tr>
+        <tr><td class="cal">9x18 FMJ</td><td class="ammo-type">5.7x28 SS195</td><td>2×</td><td>1,540</td><td>1,753</td><td class="save-low">+213</td><td><span class="save-low">12%</span></td></tr>
+        <tr><td class="cal">7.62x54 7N1</td><td class="ammo-type">7.62x54R PP</td><td>2×</td><td>6,186</td><td>6,875</td><td class="save-low">+689</td><td><span class="save-low">10%</span></td></tr>
+        <tr><td class="cal">7.92x57 FMJ</td><td class="ammo-type">7.62x51 Ball</td><td>2×</td><td>3,712</td><td>4,125</td><td class="save-low">+413</td><td><span class="save-low">10%</span></td></tr>
+        <tr><td class="cal">5.45x39 FMJ</td><td class="ammo-type">5.56x45 FMJ</td><td>1×</td><td>1,856</td><td>2,062</td><td class="save-low">+206</td><td><span class="save-low">10%</span></td></tr>
+        <tr>
+          <td class="cal">9x19 FMJ</td><td class="ammo-type">45ACP HYDRA</td>
+          <td>2×</td><td>1,772</td><td>1,959</td>
+          <td class="save-low">+187</td><td><span class="save-low">10%</span></td>
+        </tr>
+        <tr><td class="cal">5.56x45 FMJ</td><td class="ammo-type">9x39 SP-5</td><td>1×</td><td>2,062</td><td>2,268</td><td class="save-low">+206</td><td><span class="save-low">9%</span></td></tr>
+        <tr><td class="cal">7.62x25 LRNPC</td><td class="ammo-type">9x18 HP</td><td>1×</td><td>1,203</td><td>1,320</td><td class="save-low">+117</td><td><span class="save-low">9%</span></td></tr>
+        <tr><td class="cal">7.62x25 LRNPC</td><td class="ammo-type">45ACP FMJ</td><td>1×</td><td>1,203</td><td>1,306</td><td class="save-low">+103</td><td><span class="save-low">8%</span></td></tr>
+        <tr>
+          <td class="cal">5.56x45 FMJ</td><td class="ammo-type">5.56x45 HP</td>
+          <td>1×</td><td>2,062</td><td>2,200</td>
+          <td class="save-low">+138</td><td><span class="save-low">6%</span></td>
+        </tr>
+        <tr>
+          <td class="cal">5.56x45 FMJ</td><td class="ammo-type">5.45x39 HP</td>
+          <td>1×</td><td>2,062</td><td>2,200</td>
+          <td class="save-low">+138</td><td><span class="save-low">6%</span></td>
+        </tr>
+        <tr><td class="cal">5.56x45 HP</td><td class="ammo-type">9x39 SP-5</td><td>1×</td><td>2,200</td><td>2,268</td><td class="save-trivial">+68</td><td><span class="save-trivial">3%</span></td></tr>
+        <tr><td class="cal">5.45x39 HP</td><td class="ammo-type">9x39 SP-5</td><td>1×</td><td>2,200</td><td>2,268</td><td class="save-trivial">+68</td><td><span class="save-trivial">3%</span></td></tr>
+        <tr>
+          <td class="cal">5.7x28 SS195</td><td class="ammo-type">357 HP</td>
+          <td>2×</td><td>3,506</td><td>3,575</td>
+          <td class="save-trivial">+69</td><td><span class="save-trivial">2%</span></td>
+        </tr>
+        <tr><td class="cal">45ACP FMJ</td><td class="ammo-type">9x18 HP</td><td>1×</td><td>1,306</td><td>1,320</td><td class="save-trivial">+14</td><td><span class="save-trivial">1%</span></td></tr>
+        <tr>
+          <td class="cal">9x18 FMJ</td><td class="ammo-type">9x19 HP</td>
+          <td>2×</td><td>1,540</td><td>1,546</td>
+          <td class="save-trivial">+6</td><td><span class="save-trivial">0%</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+  <hr class="section-divider">
+
+  <div class="rankings-section">
+    <div class="note-box">
+      <b>⚠ You can't craft AP ammo on a discount by buying from Traders.</b> AP bullet tips are a real bottleneck, as they only come from disassembling other AP ammo, and there is no cheap type you can buy from traders that could supply them. The only time you would disassemble and craft AP ammo is if you have big stacks of unused ammo you're not planning on using, and want to convert to something else.
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- SECTION 7: Full Price Table -->
+  <div class="rankings-section">
+    <div class="section-title">4. Buy or Craft? Final Summary</div>
+    <table class="rankings-table">
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>Caliber</th>
+          <th>Type</th>
+          <th>Tier</th>
+          <th>Box Qty</th>
+          <th>Box Price</th>
+          <th>Cost/Bullet</th>
+          <th>Verdict</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Pistol  grouped by caliber, HP→FMJ→AP order within each -->
+        <tr><td>Pistol</td><td class="cal">9x18</td><td class="ammo-type">FMJ</td><td class="tier-1">T1</td><td>15</td><td>770</td><td class="price-best">51</td><td><div class="verdict-cell"><span class="verdict-buy">Buy</span></div></td></tr>
+        <tr><td>Pistol</td><td class="cal">9x18</td><td class="ammo-type">HP</td><td class="tier-1">T1</td><td>15</td><td>1,320</td><td class="price-mid">88</td><td><div class="verdict-cell"><span class="verdict-craft">Craft</span><span class="verdict">from 9x18 FMJ</span></div></td></tr>
+        <tr><td>Pistol</td><td class="cal">9x18</td><td class="ammo-type">AP</td><td class="tier-1">T1</td><td>15</td><td>1,650</td><td class="price-mid">110</td><td><div class="verdict-cell"><span class="verdict-buy">Buy</span></div></td></tr>
+        <tr><td>Pistol</td><td class="cal">9x19</td><td class="ammo-type">FMJ</td><td class="tier-1">T1</td><td>15</td><td>886</td><td class="price-best">59</td><td><div class="verdict-cell"><span class="verdict-craft">Craft</span><span class="verdict">from 9x18 FMJ</span></div></td></tr>
+        <tr><td>Pistol</td><td class="cal">9x19</td><td class="ammo-type">HP</td><td class="tier-1">T1</td><td>15</td><td>1,546</td><td class="price-mid">103</td><td><div class="verdict-cell"><span class="verdict-buy">Buy</span></div></td></tr>
+        <tr><td>Pistol</td><td class="cal">9x19</td><td class="ammo-type">AP</td><td class="tier-2">T2</td><td>15</td><td>2,423</td><td class="price-mid">162</td><td><div class="verdict-cell"><span class="verdict-buy">Buy</span></div></td></tr>
+        <tr><td>Pistol</td><td class="cal">9x21</td><td class="ammo-type">SP10</td><td class="tier-3">T3</td><td>18</td><td>2,956</td><td class="price-bad">164</td><td><div class="verdict-cell"><span class="verdict-buy">Buy</span></div></td></tr>
+        <tr><td>Pistol</td><td class="cal">45ACP</td><td class="ammo-type">FMJ</td><td class="tier-1">T1</td><td>14</td><td>1,306</td><td class="price-mid">93</td><td><div class="verdict-cell"><span class="verdict-craft">Craft</span><span class="verdict">from 9x18 FMJ</span></div></td></tr>
+        <tr><td>Pistol</td><td class="cal">45ACP</td><td class="ammo-type">HYDRA</td><td class="tier-1">T1</td><td>14</td><td>1,959</td><td class="price-mid">140</td><td><div class="verdict-cell"><span class="verdict-craft">Craft</span><span class="verdict">from 9x18 FMJ</span></div></td></tr>
+        <tr><td>Pistol</td><td class="cal">5.7x28</td><td class="ammo-type">SS195</td><td class="tier-1">T1</td><td>20</td><td>1,753</td><td class="price-mid">88</td><td><div class="verdict-cell"><span class="verdict-craft">Craft</span><span class="verdict">from 9x18 FMJ</span></div></td></tr>
+        <tr><td>Pistol</td><td class="cal">5.7x28</td><td class="ammo-type">SS190</td><td class="tier-2">T2</td><td>20</td><td>3,575</td><td class="price-bad">179</td><td><div class="verdict-cell"><span class="verdict-buy">Buy</span></div></td></tr>
+        <tr><td>Pistol</td><td class="cal">7.62x25</td><td class="ammo-type">LRNPC</td><td class="tier-1">T1</td><td>16</td><td>1,203</td><td class="price-mid">75</td><td><div class="verdict-cell"><span class="verdict-craft">Craft</span><span class="verdict">from 9x18 FMJ</span></div></td></tr>
+        <tr><td>Pistol</td><td class="cal">7.62x25</td><td class="ammo-type">PST</td><td class="tier-1">T1</td><td>16</td><td>1,340</td><td class="price-mid">84</td><td><div class="verdict-cell"><span class="verdict-buy">Buy</span></div></td></tr>
+        <!-- Shotgun  grouped by caliber -->
+        <tr><td>Shotgun</td><td class="cal">20x70</td><td class="ammo-type">Buck</td><td class="tier-1">T1</td><td>10</td><td>825</td><td class="price-best">83</td><td><div class="verdict-cell"><span class="verdict-buy">Buy</span></div></td></tr>
+        <tr><td>Shotgun</td><td class="cal">12x70</td><td class="ammo-type">Buck</td><td class="tier-1">T1</td><td>10</td><td>1,375</td><td class="price-mid">138</td><td><div class="verdict-cell"><span class="verdict-buy">Buy</span></div></td></tr>
+        <tr><td>Shotgun</td><td class="cal">12x76</td><td class="ammo-type">Slug</td><td class="tier-2">T2</td><td>10</td><td>2,268</td><td class="price-bad">227</td><td><div class="verdict-cell"><span class="verdict-buy">Buy</span></div></td></tr>
+        <tr><td>Shotgun</td><td class="cal">12x76</td><td class="ammo-type">AP</td><td class="tier-3">T3</td><td>10</td><td>6,875</td><td class="price-bad">688</td><td><div class="verdict-cell"><span class="verdict-buy">Buy</span></div></td></tr>
+        <!-- Small Rifle  grouped by caliber, SP-5→SP-6, FMJ→HP→AP within each caliber -->
+        <tr><td>Small Rifle</td><td class="cal">5.45x39</td><td class="ammo-type">FMJ</td><td class="tier-2">T2</td><td>15</td><td>1,856</td><td class="price-best">124</td><td><div class="verdict-cell"><span class="verdict-buy">Buy</span></div></td></tr>
+        <tr><td>Small Rifle</td><td class="cal">5.45x39</td><td class="ammo-type">HP</td><td class="tier-3">T3</td><td>15</td><td>2,200</td><td class="price-mid">147</td><td><div class="verdict-cell"><span class="verdict-craft">Craft</span><span class="verdict">from 5.45x39 FMJ</span></div></td></tr>
+        <tr><td>Small Rifle</td><td class="cal">5.45x39</td><td class="ammo-type">AP</td><td class="tier-4">T4</td><td>15</td><td>7,012</td><td class="price-bad">468</td><td><div class="verdict-cell"><span class="verdict-buy">Buy</span></div></td></tr>
+        <tr><td>Small Rifle</td><td class="cal">5.56x45</td><td class="ammo-type">FMJ</td><td class="tier-2">T2</td><td>15</td><td>2,062</td><td class="price-best">138</td><td><div class="verdict-cell"><span class="verdict-craft">Craft</span><span class="verdict">from 5.45x39 FMJ</span></div></td></tr>
+        <tr><td>Small Rifle</td><td class="cal">5.56x45</td><td class="ammo-type">HP</td><td class="tier-3">T3</td><td>15</td><td>2,200</td><td class="price-mid">147</td><td><div class="verdict-cell"><span class="verdict-craft">Craft</span><span class="verdict">from 5.45x39 FMJ</span></div></td></tr>
+        <tr><td>Small Rifle</td><td class="cal">5.56x45</td><td class="ammo-type">AP</td><td class="tier-4">T4</td><td>15</td><td>5,637</td><td class="price-bad">376</td><td><div class="verdict-cell"><span class="verdict-buy">Buy</span></div></td></tr>
+        <tr><td>Small Rifle</td><td class="cal">7.62x39</td><td class="ammo-type">FMJ</td><td class="tier-1">T1</td><td>15</td><td>2,681</td><td class="price-mid">179</td><td><div class="verdict-cell"><span class="verdict-buy">Buy</span></div></td></tr>
+        <tr><td>Small Rifle</td><td class="cal">7.62x39</td><td class="ammo-type">M43 (AP)</td><td class="tier-5">T5</td><td>15</td><td>7,493</td><td class="price-bad">500</td><td><div class="verdict-cell"><span class="verdict-buy">Buy</span></div></td></tr>
+        <tr><td>Small Rifle</td><td class="cal">9x39</td><td class="ammo-type">SP-5</td><td class="tier-2">T2</td><td>14</td><td>2,268</td><td class="price-mid">162</td><td><div class="verdict-cell"><span class="verdict-craft">Craft</span><span class="verdict">from 5.45x39 FMJ</span></div></td></tr>
+        <tr><td>Small Rifle</td><td class="cal">9x39</td><td class="ammo-type">SP-6</td><td class="tier-5">T5</td><td>14</td><td>7,356</td><td class="price-bad">525</td><td><div class="verdict-cell"><span class="verdict-buy">Buy</span></div></td></tr>
+        <tr><td>Small Rifle</td><td class="cal">357</td><td class="ammo-type">HP</td><td class="tier-2">T2</td><td>13</td><td>3,575</td><td class="price-bad">275</td><td><div class="verdict-cell"><span class="verdict-craft">Craft</span><span class="verdict">from 9x18 FMJ</span></div></td></tr>
+        <!-- Big Rifle  grouped by caliber, FMJ→variants→AP order -->
+        <tr><td>Big Rifle</td><td class="cal">7.62x51</td><td class="ammo-type">Ball</td><td class="tier-4">T4</td><td>15</td><td>4,125</td><td class="price-mid">275</td><td><div class="verdict-cell"><span class="verdict-craft">Craft</span><span class="verdict">from 7.92x57 FMJ</span></div></td></tr>
+        <tr><td>Big Rifle</td><td class="cal">7.62x51</td><td class="ammo-type">AP</td><td class="tier-5">T5</td><td>15</td><td>10,312</td><td class="price-bad">688</td><td><div class="verdict-cell"><span class="verdict-buy">Buy</span></div></td></tr>
+        <tr><td>Big Rifle</td><td class="cal">7.62x54</td><td class="ammo-type">7N1</td><td class="tier-1">T1</td><td>10</td><td>3,093</td><td class="price-mid">309</td><td><div class="verdict-cell"><span class="verdict-craft">Craft</span><span class="verdict">from 7.92x57 FMJ</span></div></td></tr>
+        <tr><td>Big Rifle</td><td class="cal">7.62x54</td><td class="ammo-type">7N14</td><td class="tier-4">T4</td><td>10</td><td>5,500</td><td class="price-bad">550</td><td><div class="verdict-cell"><span class="verdict-craft">Craft</span><span class="verdict">from 7.92x57 FMJ</span></div></td></tr>
+        <tr><td>Big Rifle</td><td class="cal">7.62x54</td><td class="ammo-type">AP</td><td class="tier-5">T5</td><td>10</td><td>13,062</td><td class="price-bad">1,306</td><td><div class="verdict-cell"><span class="verdict-buy">Buy</span></div></td></tr>
+        <tr><td>Big Rifle</td><td class="cal">7.62x54R</td><td class="ammo-type">PP</td><td class="tier-4">T4</td><td>30</td><td>6,875</td><td class="price-best">229</td><td><div class="verdict-cell"><span class="verdict-craft">Craft</span><span class="verdict">from 7.92x57 FMJ</span></div></td></tr>
+        <tr><td>Big Rifle</td><td class="cal">7.92x57</td><td class="ammo-type">FMJ</td><td class="tier-1">T1</td><td>10</td><td>1,856</td><td class="price-best">186</td><td><div class="verdict-cell"><span class="verdict-buy">Buy</span></div></td></tr>
+        <tr><td>Big Rifle</td><td class="cal">7.92x57</td><td class="ammo-type">AP</td><td class="tier-2">T2</td><td>10</td><td>6,187</td><td class="price-bad">619</td><td><div class="verdict-cell"><span class="verdict-buy">Buy</span></div></td></tr>
+        <tr><td>Big Rifle</td><td class="cal">12.7x55</td><td class="ammo-type">STs-130</td><td class="tier-2">T2</td><td>10</td><td>4,125</td><td class="price-bad">413</td><td><div class="verdict-cell"><span class="verdict-craft">Craft</span><span class="verdict">from 7.92x57 FMJ</span></div></td></tr>
+        <tr><td>Big Rifle</td><td class="cal">12.7x55</td><td class="ammo-type">VPS</td><td class="tier-5">T5</td><td>10</td><td>9,487</td><td class="price-bad">949</td><td><div class="verdict-cell"><span class="verdict-buy">Buy</span></div></td></tr>
+        <tr><td>Big Rifle</td><td class="cal">23x75</td><td class="ammo-type">Shrapnel</td><td class="tier-2">T2</td><td>10</td><td>2,750</td><td class="price-mid">275</td><td><div class="verdict-cell"><span class="verdict-craft">Craft</span><span class="verdict">from 20x70 Buck</span></div></td></tr>
+        <tr><td>Big Rifle</td><td class="cal">23x75</td><td class="ammo-type">Barrikada</td><td class="tier-4">T4</td><td>10</td><td>9,625</td><td class="price-bad">963</td><td><div class="verdict-cell"><span class="verdict-buy">Buy</span></div></td></tr>
+        <tr><td>Big Rifle</td><td class="cal">338</td><td class="ammo-type">Federal</td><td class="tier-3">T3</td><td>10</td><td>5,500</td><td class="price-bad">550</td><td><div class="verdict-cell"><span class="verdict-buy">Buy</span></div></td></tr>
+        <tr><td>Big Rifle</td><td class="cal">338</td><td class="ammo-type">Lapua</td><td class="tier-4">T4</td><td>10</td><td>17,531</td><td class="price-bad">1,753</td><td><div class="verdict-cell"><span class="verdict-buy">Buy</span></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+</body>
+</html>
