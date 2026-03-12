@@ -1748,8 +1748,11 @@ async function stepExtractSplit(files) {
       if (!s.startsWith('[CN_DUMP]')) continue;
       if (s.includes('===')) continue;
       const data = s.slice('[CN_DUMP]'.length).trimStart();
-      if (data.toLowerCase().includes('mutant')) { mutantLines.push(data);  nm++; }
-      else                                        { stalkerLines.push(data); ns++; }
+      const parts = data.split('|');
+      const classField = parts.length >= 2 ? parts[1].trim().toLowerCase() : '';
+      const isMutant = classField === 'mutant';
+      if (isMutant) { mutantLines.push(data);  nm++; }
+      else          { stalkerLines.push(data); ns++; }
     }
     tLine(`  <span class="t-dim">${f.name}</span> <span class="t-green">→</span> <span class="t-hi">${ns}</span> <span class="t-dim">stalker</span>  <span class="t-hi">${nm}</span> <span class="t-dim">mutant</span>`);
   }
@@ -1813,8 +1816,11 @@ async function runSimpleExtract() {
       if (!s.startsWith('[CN_DUMP]')) continue;
       if (s.includes('===')) continue;
       const data = s.slice('[CN_DUMP]'.length).trimStart();
-      if (data.toLowerCase().includes('mutant')) { mutantLines.push(data);  nm++; }
-      else                                        { stalkerLines.push(data); ns++; }
+      const parts = data.split('|');
+      const classField = parts.length >= 2 ? parts[1].trim().toLowerCase() : '';
+      const isMutant = classField === 'mutant';
+      if (isMutant) { mutantLines.push(data);  nm++; }
+      else          { stalkerLines.push(data); ns++; }
     }
 
     tLine(`  <span class="t-dim">${f.name}</span>  <span class="t-green">→</span>  <span class="t-hi">${ns}</span> <span class="t-dim">stalker</span>  <span class="t-hi">${nm}</span> <span class="t-dim">mutant</span>`);
