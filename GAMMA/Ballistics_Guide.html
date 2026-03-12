@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>S.T.A.L.K.E.R. GAMMA: Ballistics & Damage Guide</title>
+<meta name="description" content="Complete ballistics guide for STALKER GAMMA: damage formula, AP penetration, ammo types, armor, faction resistances, and weapon mechanics.">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #111827;
+    color: #f3f4f6;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  a { color: #60a5fa; text-decoration: none; transition: color 0.2s; }
+  a:hover { color: #93c5fd; }
+
+  /* ── Container ── */
+  .guide-container { max-width: 960px; margin: 0 auto; }
+
+  /* ── Header ── */
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .site-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #f3f4f6;
+    text-decoration: none;
+    transition: color 0.3s;
+    cursor: pointer;
+  }
+  .site-title:hover { color: #fbbf24; }
+
+  /* ── Breadcrumb ── */
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    margin-bottom: 24px;
+    color: #9ca3af;
+  }
+  .breadcrumb a { color: #60a5fa; }
+  .breadcrumb-sep { color: #9ca3af; }
+
+  /* ── Page title ── */
+  .page-title {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+    color: #fbbf24;
+  }
+  .page-subtitle {
+    text-align: center;
+    color: #9ca3af;
+    margin-bottom: 28px;
+    font-size: 0.875rem;
+  }
+
+  /* ── Section ── */
+  .guide-section { margin-bottom: 36px; }
+  .section-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #fbbf24;
+    border-left: 3px solid #fbbf24;
+    padding-left: 10px;
+    margin-bottom: 16px;
+  }
+
+  /* ── Divider ── */
+  .section-divider { border: none; border-top: 1px solid #374151; margin: 28px 0; }
+
+  /* ── TL;DR ── */
+  .tldr-box {
+    background: #1f2937;
+    border: 1px solid #374151;
+    border-left: 4px solid #fbbf24;
+    border-radius: 6px;
+    padding: 18px 22px;
+    margin-bottom: 28px;
+  }
+  .tldr-box h2 {
+    color: #fbbf24;
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .tldr-box ul { padding-left: 1.25rem; list-style: disc; }
+  .tldr-box li { color: #d1d5db; font-size: 0.875rem; line-height: 1.6; margin-bottom: 5px; }
+  .tldr-box li b { color: #f9fafb; }
+
+  /* ── Note box ── */
+  .note-box {
+    background: #111827;
+    border: 1px solid #374151;
+    border-radius: 4px;
+    padding: 10px 14px;
+    font-size: 0.8rem;
+    color: #9ca3af;
+    margin-top: 8px;
+    line-height: 1.55;
+  }
+  .note-box code, code {
+    background: #374151;
+    color: #f3f4f6;
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-size: 0.75rem;
+  }
+  .note-box b { color: #f3f4f6; }
+
+  /* ── Info cards ── */
+  .info-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .info-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  .info-card {
+    background: #1f2937;
+    border: 1px solid #374151;
+    border-radius: 6px;
+    padding: 14px 16px;
+  }
+  .info-card h3 { color: #f9fafb; font-size: 0.875rem; font-weight: 700; margin-bottom: 4px; }
+  .info-card .card-sub { color: #6b7280; font-size: 0.72rem; margin-bottom: 10px; }
+  .info-card ul { padding-left: 1rem; list-style: disc; }
+  .info-card li { color: #d1d5db; font-size: 0.8125rem; margin-bottom: 4px; line-height: 1.5; }
+  .info-card li b { color: #f9fafb; }
+  .info-card.green-border { border-left: 3px solid #4ade80; }
+  .info-card.yellow-border { border-left: 3px solid #fbbf24; }
+  .info-card.red-border { border-left: 3px solid #ef4444; }
+  .info-card.blue-border { border-left: 3px solid #60a5fa; }
+
+  /* ── Tables ── */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; margin-bottom: 8px; }
+  .data-table th {
+    background: #1f2937;
+    color: #9ca3af;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 7px 10px;
+    text-align: left;
+    border-bottom: 2px solid #374151;
+    font-weight: 600;
+  }
+  .data-table td { padding: 7px 10px; border-bottom: 1px solid #1f2937; vertical-align: middle; color: #d1d5db; }
+  .data-table tr:hover td { background: #1a2535; }
+  .val-hi   { color: #4ade80; font-weight: 700; font-family: monospace; }
+  .val-mid  { color: #fbbf24; font-weight: 600; font-family: monospace; }
+  .val-lo   { color: #f87171; font-family: monospace; }
+  .val-mono { font-family: monospace; color: #d1d5db; }
+  .bold-cell { color: #f9fafb; font-weight: 600; }
+
+  /* ── Badges ── */
+  .badge {
+    display: inline-block; padding: 2px 6px; border-radius: 3px;
+    font-size: 0.65rem; font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase; white-space: nowrap;
+  }
+  .badge-mvp  { background: #064e3b; color: #6ee7b7; border: 1px solid #059669; }
+  .badge-good { background: #1e3a1e; color: #86efac; border: 1px solid #16a34a; }
+  .badge-warn { background: #450a0a; color: #fca5a5; border: 1px solid #b91c1c; }
+  .badge-info { background: #172554; color: #93c5fd; border: 1px solid #1d4ed8; }
+  .badge-int  { background: #1e1b4b; color: #c4b5fd; border: 1px solid #4338ca; }
+
+  /* ═══════════════════════════════════════
+     FORMULA SPLIT WIDGET
+  ═══════════════════════════════════════ */
+
+  .fw-widget {
+    display: grid;
+    grid-template-columns: 52% 48%;
+    background: #1f2937;
+    border: 1px solid #374151;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .fw-left { border-right: 1px solid #374151; }
+  .fw-left-header {
+    padding: 9px 14px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #4b5563;
+    border-bottom: 1px solid #2d3748;
+    background: #111827;
+  }
+
+  .fw-row {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 6px 14px 6px 0;
+    cursor: default;
+    border-left: 2px solid transparent;
+    transition: background 0.1s, border-color 0.1s;
+    user-select: none;
+  }
+  .fw-row:hover    { background: rgba(251,191,36,0.05); border-left-color: #fbbf24; }
+  .fw-row.fw-lit   { background: rgba(251,191,36,0.08); border-left-color: #fbbf24; }
+
+  .fw-op {
+    width: 28px;
+    text-align: center;
+    color: #4b5563;
+    font-family: 'SF Mono', monospace;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+  .fw-pill {
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.72rem;
+    font-weight: 600;
+    border: 1px solid;
+    flex-shrink: 0;
+    transition: box-shadow 0.1s;
+  }
+  .fw-row:hover  .fw-pill,
+  .fw-row.fw-lit .fw-pill { box-shadow: 0 0 0 1px currentColor; }
+
+  .fw-hint {
+    font-size: 0.7rem;
+    color: #4b5563;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.1s;
+  }
+  .fw-row:hover  .fw-hint,
+  .fw-row.fw-lit .fw-hint { color: #6b7280; }
+
+  /* sub-row for non-hoverable info lines */
+  .fw-subrow {
+    padding: 4px 14px 4px 42px;
+    font-size: 0.68rem;
+    color: #374151;
+    border-left: 2px solid transparent;
+    font-style: italic;
+    line-height: 1.4;
+  }
+  .fw-subrow b { color: #4b5563; font-style: normal; }
+
+  /* pill category colours */
+  .cat-weapon   { background: rgba(96,165,250,0.10); color: #93c5fd; border-color: rgba(96,165,250,0.28); }
+  .cat-ammo     { background: rgba(251,191,36,0.10); color: #fbbf24; border-color: rgba(251,191,36,0.28); }
+  .cat-location { background: rgba(192,132,252,0.10); color: #c084fc; border-color: rgba(192,132,252,0.28); }
+  .cat-env      { background: rgba(74,222,128,0.10); color: #4ade80; border-color: rgba(74,222,128,0.28); }
+  .cat-faction  { background: rgba(248,113,113,0.10); color: #f87171; border-color: rgba(248,113,113,0.28); }
+  .cat-global   { background: rgba(156,163,175,0.08); color: #9ca3af; border-color: rgba(156,163,175,0.22); }
+  .cat-special  { background: rgba(52,211,153,0.10); color: #34d399; border-color: rgba(52,211,153,0.28); }
+
+  /* right detail panel */
+  .fw-right {
+    padding: 18px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 0;
+  }
+  .fw-detail { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 9px; }
+
+  .fw-idle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 100%;
+    opacity: 1;
+    transition: opacity 0.15s;
+  }
+  .fw-idle-arrow {
+    font-size: 1.4rem;
+    color: #2d3748;
+    animation: fw-pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes fw-pulse { 0%,100%{transform:translateX(0);opacity:.5} 50%{transform:translateX(-4px);opacity:.9} }
+  .fw-idle span { font-size: 0.72rem; color: #374151; font-style: italic; }
+
+  .fw-info { display: none; flex-direction: column; gap: 9px; animation: fw-fade 0.18s ease; }
+  .fw-info.show { display: flex; }
+  @keyframes fw-fade { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:translateY(0)} }
+
+  .fw-info-name {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .fw-info-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    width: fit-content;
+  }
+  .fw-info-desc { font-size: 0.78rem; color: #9ca3af; line-height: 1.65; }
+  .fw-info-desc b { color: #f3f4f6; }
+
+  /* badge variants */
+  .badge-weapon   { background: rgba(96,165,250,0.14); color: #93c5fd; }
+  .badge-ammo     { background: rgba(251,191,36,0.14); color: #fbbf24; }
+  .badge-location { background: rgba(192,132,252,0.14); color: #c084fc; }
+  .badge-env      { background: rgba(74,222,128,0.14); color: #4ade80; }
+  .badge-faction  { background: rgba(248,113,113,0.14); color: #f87171; }
+  .badge-global   { background: rgba(156,163,175,0.10); color: #9ca3af; }
+  .badge-special  { background: rgba(52,211,153,0.14); color: #34d399; }
+
+  /* legend strip */
+  .fw-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+    padding: 8px 14px;
+    background: #111827;
+    border: 1px solid #1f2937;
+    border-radius: 4px;
+  }
+  .fw-legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.68rem; color: #4b5563; }
+  .fw-legend-dot { width: 7px; height: 7px; border-radius: 2px; flex-shrink: 0; }
+
+  .fw-footnote {
+    font-size: 0.72rem;
+    color: #4b5563;
+    margin-top: 10px;
+    font-style: italic;
+  }
+
+  /* ── Penetration tiers ── */
+  .pen-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .pen-card {
+    background: #1f2937;
+    border: 1px solid #374151;
+    border-radius: 6px;
+    padding: 14px 16px;
+  }
+  .pen-card .pc-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+  .pen-card .pc-cond { color: #9ca3af; font-size: 0.78rem; font-family: monospace; margin-bottom: 8px; }
+  .pen-card .pc-result { font-size: 0.8125rem; color: #d1d5db; line-height: 1.55; }
+  .pc-full   .pc-label { color: #4ade80; }
+  .pc-partial .pc-label { color: #fbbf24; }
+  .pc-none   .pc-label { color: #f87171; }
+  .pc-full   { border-top: 2px solid #4ade80; }
+  .pc-partial { border-top: 2px solid #fbbf24; }
+  .pc-none   { border-top: 2px solid #ef4444; }
+
+  /* ── Hit location visual ── */
+  .hitzones {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .hitzone-card {
+    background: #1f2937;
+    border: 1px solid #374151;
+    border-radius: 4px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.8125rem;
+  }
+  .hz-zone { color: #d1d5db; }
+  .hz-mult { font-family: monospace; font-weight: 700; }
+  .hz-crit { color: #4ade80; }
+  .hz-mid  { color: #fbbf24; }
+  .hz-low  { color: #f87171; }
+
+  /* ── Barrel condition bar ── */
+  .barrel-rows { display: flex; flex-direction: column; gap: 6px; }
+  .barrel-row {
+    display: grid;
+    grid-template-columns: 90px 1fr 150px;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.8rem;
+  }
+  .barrel-row .br-label { font-family: monospace; }
+  .barrel-bar-track { background: #1f2937; border-radius: 3px; height: 8px; overflow: hidden; }
+  .barrel-bar-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
+  .barrel-row .br-val { font-family: monospace; font-size: 0.75rem; text-align: right; }
+
+  /* ── Difficulty ── */
+  .diff-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .diff-card {
+    flex: 1;
+    min-width: 140px;
+    background: #1f2937;
+    border: 1px solid #374151;
+    border-radius: 6px;
+    padding: 10px 14px;
+    text-align: center;
+  }
+  .diff-card .dc-name { font-size: 0.75rem; color: #9ca3af; margin-bottom: 4px; }
+  .diff-card .dc-mult { font-size: 1.1rem; font-weight: 700; font-family: monospace; }
+  .dc-easy  .dc-mult { color: #4ade80; }
+  .dc-norm  .dc-mult { color: #a3e635; }
+  .dc-hard  .dc-mult { color: #fbbf24; }
+  .dc-max   .dc-mult { color: #f87171; }
+
+  @media (max-width: 768px) {
+    .info-grid-2, .info-grid-3, .pen-grid, .hitzones { grid-template-columns: 1fr; }
+    .page-title { font-size: 1.5rem; }
+    .diff-row { flex-direction: column; }
+    .barrel-row { grid-template-columns: 70px 1fr 130px; }
+    .fw-widget { grid-template-columns: 1fr; }
+    .fw-left { border-right: none; border-bottom: 1px solid #374151; }
+    .fw-right { padding: 14px; min-height: 140px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="guide-container">
+
+  <!-- Header -->
+  <div class="page-header">
+    <span class="site-title">Cheeki's Mods Archive</span>
+  </div>
+
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <svg fill="currentColor" viewBox="0 0 20 20" width="14" height="14" style="flex-shrink:0">
+      <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+    </svg>
+    <a href="https://cheeki.zone">Archive</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="../index.html">GAMMA Tools</a>
+    <span class="breadcrumb-sep">›</span>
+    <span style="color:#d1d5db;">Ballistics Guide</span>
+  </nav>
+
+  <h1 class="page-title">THE GAMMA DAMAGE MANIFESTO</h1>
+  <p class="page-subtitle">A complete and accurate (hopefully) overview of the ballistic mechanics</p>
+
+  <!-- TL;DR -->
+  <div class="tldr-box">
+    <h2>📋 TL;DR: The Basics</h2>
+    <ul>
+      <li><b>AP is king vs. armored stalkers.</b> If your bullet can't punch through armor, it pretty much deals no damage. AP ammo is required against anything with serious protection.</li>
+      <li><b>HP ammo for mutants.</b> Mutants skip the armor system entirely; damage is calculated directly, and HP rounds boost that raw damage significantly.</li>
+      <li><b>Keep your barrel above 70%.</b> Below that both damage and AP drop hard. At 50% barrel you're dealing 28% less damage with 28% less AP.</li>
+      <li><b>Suppressors are a hidden buff.</b> Both attached and integrated silencers give +7% to damage AND AP against NPCs.</li>
+    </ul>
+  </div>
+
+  <div class="guide-section">
+    <div class="section-title">1. Weapon Condition & Mechanics</div>
+
+    <!-- Barrel condition -->
+    <p style="color:#9ca3af; font-size:0.82rem; margin-bottom:12px;"><b style="color:#f9fafb;">Barrel condition</b> influences both your damage and AP (AP gate formula and damage formula). It is critical to keep your barrel above 70%.</p>
+
+    <div class="info-card" style="margin-bottom:16px;">
+      <h3>📉 Barrel Condition → Damage & AP Multiplier</h3>
+      <div class="card-sub">Both damage and AP rely on your weapon's barrel condition</div>
+      <div class="barrel-rows" style="margin-top:10px;">
+        <div class="barrel-row">
+          <span class="br-label" style="color:#4ade80;">70 – 100%</span>
+          <div class="barrel-bar-track"><div class="barrel-bar-fill" style="width:100%; background:#4ade80;"></div></div>
+          <span class="br-val" style="color:#4ade80;">No penalty</span>
+        </div>
+        <div class="barrel-row">
+          <span class="br-label" style="color:#fbbf24;">50 – 69%</span>
+          <div class="barrel-bar-track"><div class="barrel-bar-fill" style="width:72%; background:#fbbf24;"></div></div>
+          <span class="br-val" style="color:#fbbf24;">Up to -28% Dmg</span>
+        </div>
+        <div class="barrel-row">
+          <span class="br-label" style="color:#fb923c;">30 – 49%</span>
+          <div class="barrel-bar-track"><div class="barrel-bar-fill" style="width:44%; background:#fb923c;"></div></div>
+          <span class="br-val" style="color:#fb923c;">Up to -56% Dmg</span>
+        </div>
+        <div class="barrel-row">
+          <span class="br-label" style="color:#f87171;">20 – 29%</span>
+          <div class="barrel-bar-track"><div class="barrel-bar-fill" style="width:29%; background:#f87171;"></div></div>
+          <span class="br-val" style="color:#f87171;">Up to -71% Dmg</span>
+        </div>
+        <div class="barrel-row">
+          <span class="br-label" style="color:#ef4444;">10 – 19%</span>
+          <div class="barrel-bar-track"><div class="barrel-bar-fill" style="width:15%; background:#ef4444;"></div></div>
+          <span class="br-val" style="color:#ef4444;">Up to -85% Dmg</span>
+        </div>
+        <div class="barrel-row">
+          <span class="br-label" style="color:#991b1b;">0 – 9%</span>
+          <div class="barrel-bar-track"><div class="barrel-bar-fill" style="width:5%; background:#991b1b;"></div></div>
+          <span class="br-val" style="color:#991b1b;">Up to -99% Dmg</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reliability -->
+    <div class="info-grid-2" style="margin-bottom:16px;">
+      <div class="info-card">
+        <h3>🔢 What Weapon Stats Actually Mean</h3>
+        <div class="card-sub">Most UI values are misleading</div>
+        <ul>
+          <li><b>Accuracy</b>: ADS spread cone width. 0% = 1.5°, 100% = 0° (perfect)</li>
+          <li><b>Handling</b>: Reduces hip-fire inaccuracy when moving. Does nothing to ADS.</li>
+          <li><b>Damage</b>: Very vague scale, mostly for reference. Not the real damage.</li>
+          <li><b>Fire Rate</b>: Actually a reliable stat, it's the actual RPM.</li>
+          <li><b>Recoil Control</b>: Based on a formula that doesn't reflect in-game recoil. Ignore it.</li>
+          <li><b>Fire Rate upgrades</b>: Add flat +RPM, not a multiplier.</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h3>🔧 Reliability</h3>
+        <div class="card-sub">How Weapon Parts Break</div>
+        <ul>
+          <li>Every shot triggers a potential damage roll for a random part</li>
+          <li>A 90% reliability gun has a ~0.28% chance per shot to damage one of its parts</li>
+          <li>The part that breaks is chosen at random</li>
+          <li>The unlucky part will lose 5–12% of its current condition</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <hr class="section-divider">
+
+  <hr class="section-divider">
+
+  <div class="guide-section">
+    <div class="section-title">2. Special Mechanics</div>
+
+    <div class="info-grid-3" style="margin-bottom:16px;">
+      <div class="info-card yellow-border">
+        <h3>🔇 Silencer Bonus</h3>
+        <div class="card-sub">Hidden; not shown anywhere in UI</div>
+        <ul>
+          <li><b>+7% to both damage AND AP</b> against NPCs</li>
+          <li>Applies to both attached and integrated suppressors</li>
+        </ul>
+      </div>
+      <div class="info-card yellow-border">
+        <h3>🎯 Sniper Class Bonus</h3>
+        <div class="card-sub">Applied to all weapons in snipers[] table</div>
+        <ul>
+          <li>Flat <b>+0.05 AP</b> bonus on top of the ammo's own value</li>
+          <li>Applies to all sniper-class weapons in game code</li>
+        </ul>
+      </div>
+      <div class="info-card yellow-border">
+        <h3>⚡ Surrendered / Downed NPCs</h3>
+        <div class="card-sub">Finishing mechanics</div>
+        <ul>
+          <li>When an NPC is surrendering or wounded, any bullet deals <b>double damage</b></li>
+          <li>Ensures downed enemies don't frustratingly tank finishing shots</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Difficulty -->
+    <div class="section-title" style="margin-top:4px;">Difficulty Multipliers</div>
+    <p style="color:#9ca3af; font-size:0.82rem; margin-bottom:12px;">Both raw damage and AP are scaled by game difficulty on every hit.</p>
+    <div class="diff-row">
+      <div class="diff-card dc-easy">
+        <div class="dc-name">Rookie / Story</div>
+        <div class="dc-mult">×1.30</div>
+      </div>
+      <div class="diff-card dc-norm">
+        <div class="dc-name">Stalker (default)</div>
+        <div class="dc-mult">×1.05</div>
+      </div>
+      <div class="diff-card dc-hard">
+        <div class="dc-name">Veteran</div>
+        <div class="dc-mult">×0.90</div>
+      </div>
+      <div class="diff-card dc-max">
+        <div class="dc-name">Master</div>
+        <div class="dc-mult">×0.80</div>
+      </div>
+    </div>
+    <div class="note-box" style="margin-top:10px;">On Master, every bullet deals <b>20% less damage</b> and has <b>20% less AP</b> than on the default Stalker difficulty. Everything takes more shots than you expect.</div>
+  </div>
+
+  <hr class="section-divider">
+
+  <hr class="section-divider">
+
+  <div class="guide-section">
+    <div class="section-title">3. Faction Resistances</div>
+
+    <div style="margin-bottom:16px;">
+      <div class="info-card">
+        <h3>🛡️ Player Armor: BR Class & BR%</h3>
+        <div class="card-sub">How armor protects you</div>
+        <ul>
+          <li><b>BR Class</b>: AP resistance ceiling. Bullets with higher AP than your BR Class will penetrate your armor, results are painful.</li>
+          <li><b>BR%</b>: Flat damage reduction. Always applies, even on penetrating hits, but on a non-pen hit it stacks with BR Class.</li>
+          <li>Even when a bullet punches through, BR% still softens the hit. You will bleed on penetration (phrasing :o).</li>
+        </ul>
+      </div>
+    </div>
+
+    <p style="color:#9ca3af; font-size:0.82rem; margin-bottom:12px;">Some factions have extra resistances on top of their regular armor. Here's the breakdown:</p>
+
+    <table class="data-table">
+      <thead><tr><th>Faction</th><th>Damage Resist</th><th>AP Resist</th><th>Practical Effect</th></tr></thead>
+      <tbody>
+        <tr><td class="bold-cell">Most Stalkers / Loners</td><td class="val-hi">×1.00</td><td class="val-hi">×1.00</td><td>Baseline, no resistance</td></tr>
+        <tr><td class="bold-cell">Bandits</td><td class="val-hi">×1.00</td><td><span style="color:#a3e635; font-family:monospace;">×1.10</span></td><td>Slightly easier to penetrate than baseline</td></tr>
+        <tr><td class="bold-cell">Monolith</td><td class="val-mid">×0.80</td><td><span style="color:#a3e635; font-family:monospace;">×0.90</span></td><td>20% damage resist + 10% AP reduction</td></tr>
+        <tr><td class="bold-cell">UNISG (ISG)</td><td class="val-lo">×0.70</td><td class="val-lo">×0.65</td><td><b style="color:#f87171;">30% damage + 35% AP reduction.</b></td></tr>
+        <tr><td class="bold-cell">Sin (Greh)</td><td><span style="color:#f87171; font-weight:700; font-family:monospace;">×0.30</span></td><td><span style="color:#a3e635; font-family:monospace;">×0.90</span></td><td><b style="color:#f87171;">70% damage reduction.</b> AP mostly unaffected.</td></tr>
+        <tr><td class="bold-cell">Zombied</td><td><span style="color:#f87171; font-weight:700; font-family:monospace;">×0.30</span></td><td class="val-hi">×1.00</td><td><b style="color:#f87171;">70% damage reduction,</b> same as Sin</td></tr>
+      </tbody>
+    </table>
+
+  </div>
+
+  <hr class="section-divider">
+
+  <hr class="section-divider">
+
+  <div class="guide-section">
+    <div class="section-title">4. Hit Location Multipliers (vs. Stalkers)</div>
+    <p style="color:#9ca3af; font-size:0.82rem; margin-bottom:14px;">Every hit location has its own damage multiplier, and the gap between a headshot and a foot shot is enormous.</p>
+
+    <div class="hitzones">
+      <div class="hitzone-card"><span class="hz-zone">👁️ Head (eyes / eyelid)</span><span class="hz-mult hz-crit">×3.65</span></div>
+      <div class="hitzone-card"><span class="hz-zone">💀 Jaw</span><span class="hz-mult hz-crit">×3.00</span></div>
+      <div class="hitzone-card"><span class="hz-zone">🔴 Neck</span><span class="hz-mult hz-crit">×2.70</span></div>
+      <div class="hitzone-card"><span class="hz-zone">⬛ Default (unmapped bone)</span><span class="hz-mult hz-mid">×0.75</span></div>
+      <div class="hitzone-card"><span class="hz-zone">🫀 Pelvis / All Spine</span><span class="hz-mult hz-mid">×0.90</span></div>
+      <div class="hitzone-card"><span class="hz-zone">💪 Upper arm / Clavicle</span><span class="hz-mult hz-mid">×0.70</span></div>
+      <div class="hitzone-card"><span class="hz-zone">🦴 Forearm</span><span class="hz-mult hz-mid">×0.60</span></div>
+      <div class="hitzone-card"><span class="hz-zone">🦵 Thigh</span><span class="hz-mult hz-mid">×0.55</span></div>
+      <div class="hitzone-card"><span class="hz-zone">🦿 Calf</span><span class="hz-mult hz-mid">×0.45</span></div>
+      <div class="hitzone-card"><span class="hz-zone">✋ Hand / Fingers</span><span class="hz-mult hz-low">×0.40</span></div>
+      <div class="hitzone-card"><span class="hz-zone">👟 Foot / Toe</span><span class="hz-mult hz-low">×0.30</span></div>
+      <div class="hitzone-card" style="background:#1a2535; border-color:#374151;">
+        <span style="color:#6b7280; font-size:0.78rem;">Head = 12× the damage of a foot shot. Aim spine/pelvis (×0.90) when unsure (large hitboxes).</span>
+      </div>
+    </div>
+
+
+  </div>
+
+  <hr class="section-divider">
+
+  <hr class="section-divider">
+
+  <div class="guide-section">
+    <div class="section-title">5. Ammo Types & When to Use Them</div>
+
+    <div class="info-grid-3" style="margin-bottom:14px;">
+      <div class="info-card green-border">
+        <h3>🔴 AP: Armor Piercing</h3>
+        <div class="card-sub">Required vs. heavily armored NPCs</div>
+        <ul>
+          <li>The only effective option against exoskeletons</li>
+          <li>High penetration value; can fully punch through heavy armor</li>
+          <li>Expensive to buy and craft</li>
+        </ul>
+      </div>
+      <div class="info-card yellow-border">
+        <h3>⬛ FMJ: Full Metal Jacket</h3>
+        <div class="card-sub">Cheap all-rounder</div>
+        <ul>
+          <li>Default for lightly to moderately armored enemies</li>
+          <li>Good for breaking down armor before switching to AP</li>
+          <li>Flexible all-rounder</li>
+        </ul>
+      </div>
+      <div class="info-card red-border">
+        <h3>🩸 HP: Hollow Point</h3>
+        <div class="card-sub">Best against mutants</div>
+        <ul>
+          <li>High damage multiplier; hits much harder against unarmored targets</li>
+          <li>Near-useless against armor</li>
+          <li>When HP fails to penetrate, it suffers an <em>extra</em> damage penalty</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <hr class="section-divider">
+
+  <hr class="section-divider">
+
+  <div class="guide-section">
+    <div class="section-title">6. The AP Gate: Formula Breakdown</div>
+
+    <p style="color:#9ca3af; font-size:0.82rem; margin-bottom:14px;">Before any damage is applied, your bullet must pass a single check: can it punch through the target's armor? If it can't, damage drops to almost nothing; no other factor can compensate. This check happens first, every shot.</p>
+
+    <div class="fw-widget" id="fw-ap">
+      <div class="fw-left">
+        <div class="fw-left-header">⚙ AP Value Assembly (hover a factor)</div>
+
+        <div class="fw-row" data-key="base_kap">
+          <span class="fw-op">=</span>
+          <span class="fw-pill cat-ammo">ammo_kap × 10</span>
+          <span class="fw-hint">Ammo's base AP value</span>
+        </div>
+        <div class="fw-subrow">+ <b>leg shots:</b> small AP bonus (less for buckshot)</div>
+        <div class="fw-subrow">+ <b>head shots:</b> small AP bonus (less for buckshot)</div>
+        <div class="fw-subrow">+ <b>sniper-class weapon:</b> flat AP bonus</div>
+        <div class="fw-row" data-key="bone_ap_scale">
+          <span class="fw-op">×</span>
+          <span class="fw-pill cat-location">bone_ap_scale</span>
+          <span class="fw-hint">Armor density</span>
+        </div>
+        <div class="fw-row" data-key="barrel_condition_corrected">
+          <span class="fw-op">×</span>
+          <span class="fw-pill cat-weapon">barrel_cond</span>
+          <span class="fw-hint">Barrel wear</span>
+        </div>
+        <div class="fw-row" data-key="distance_falloff">
+          <span class="fw-op">÷</span>
+          <span class="fw-pill cat-env">distance_falloff</span>
+          <span class="fw-hint">AP drops with range</span>
+        </div>
+        <div class="fw-row" data-key="isg_res">
+          <span class="fw-op">×</span>
+          <span class="fw-pill cat-faction">isg_res</span>
+          <span class="fw-hint">Faction AP resistance</span>
+        </div>
+        <div class="fw-row" data-key="silencer_boost">
+          <span class="fw-op">×</span>
+          <span class="fw-pill cat-special">silencer_boost</span>
+          <span class="fw-hint">+7% with any suppressor</span>
+        </div>
+        <div class="fw-row" data-key="difficulty_mult">
+          <span class="fw-op">×</span>
+          <span class="fw-pill cat-global">difficulty_mult</span>
+          <span class="fw-hint">×0.80–×1.30 by mode</span>
+        </div>
+        <div class="fw-subrow">× <b>0.80</b> global post-calculation adjustment</div>
+      </div>
+
+      <div class="fw-right">
+        <div class="fw-detail" id="fw-ap-detail">
+          <div class="fw-idle" id="fw-ap-idle">
+            <div class="fw-idle-arrow">←</div>
+            <span>hover a factor to inspect it</span>
+          </div>
+          <div class="fw-info" id="fw-ap-info">
+            <div class="fw-info-name" id="fw-ap-name"></div>
+            <div class="fw-info-badge" id="fw-ap-badge"></div>
+            <div class="fw-info-desc" id="fw-ap-desc"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p style="color:#9ca3af; font-size:0.82rem; margin-bottom:14px;">Once the AP value is finalized, it's compared against the target bone armor value (the bone is the body part you hit) to determine which of three outcomes occurs:</p>
+
+    <div class="pen-grid">
+      <div class="pen-card pc-full">
+        <div class="pc-label">✅ Full Penetration</div>
+        <div class="pc-cond">AP equals or beats the armor</div>
+        <div class="pc-result">Full damage. The bullet passed straight through (no armor breaking).</div>
+      </div>
+      <div class="pen-card pc-partial">
+        <div class="pc-label">⚠️ Partial Penetration</div>
+        <div class="pc-cond">Some AP, but not enough</div>
+        <div class="pc-result">Reduced damage. You chip down the armor with every shot. Enough shots will break it to do full damage after.</div>
+      </div>
+      <div class="pen-card pc-none">
+        <div class="pc-label">🚫 No Penetration</div>
+        <div class="pc-cond">Low / No AP</div>
+        <div class="pc-result">Almost no damage (~0.25% of normal). Armor still slowly chips away, but at a very reduced pace.</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <hr class="section-divider">
+
+  <div class="guide-section">
+    <div class="section-title">7. The Damage Formula</div>
+
+    <p style="color:#9ca3af; font-size:0.82rem; margin-bottom:14px;">If the AP check passes, this is what determines how much damage actually lands, ordered from most to least impactful.</p>
+
+    <div class="fw-widget" id="fw-dmg">
+      <div class="fw-left">
+        <div class="fw-left-header">⚙ Raw Damage: most to least impact</div>
+
+        <div class="fw-row" data-key="hit_power">
+          <span class="fw-op">=</span>
+          <span class="fw-pill cat-weapon">hit_power</span>
+          <span class="fw-hint">Weapon base damage</span>
+        </div>
+        <div class="fw-row" data-key="bone_damage_mult">
+          <span class="fw-op">×</span>
+          <span class="fw-pill cat-location">bone_dmg_mult</span>
+          <span class="fw-hint">Where you hit · ×0.30–×3.65</span>
+        </div>
+        <div class="fw-row" data-key="k_hit">
+          <span class="fw-op">×</span>
+          <span class="fw-pill cat-ammo">k_hit</span>
+          <span class="fw-hint">Ammo type</span>
+        </div>
+        <div class="fw-row" data-key="barrel_condition_corrected">
+          <span class="fw-op">×</span>
+          <span class="fw-pill cat-weapon">barrel_cond</span>
+          <span class="fw-hint">Wear and tear</span>
+        </div>
+        <div class="fw-row" data-key="distance_falloff">
+          <span class="fw-op">÷</span>
+          <span class="fw-pill cat-env">distance_falloff</span>
+          <span class="fw-hint">Distance drop off</span>
+        </div>
+        <div class="fw-row" data-key="silencer_boost">
+          <span class="fw-op">×</span>
+          <span class="fw-pill cat-special">silencer_boost</span>
+          <span class="fw-hint">+7% with any suppressor</span>
+        </div>
+        <div class="fw-row" data-key="sin_res">
+          <span class="fw-op">×</span>
+          <span class="fw-pill cat-faction">sin_res</span>
+          <span class="fw-hint">Faction resistances</span>
+        </div>
+        <div class="fw-row" data-key="bone_ap_scale">
+          <span class="fw-op">×</span>
+          <span class="fw-pill cat-location">bone_ap_scale</span>
+          <span class="fw-hint">Armor tier</span>
+        </div>
+        <div class="fw-row" data-key="difficulty_mult">
+          <span class="fw-op">×</span>
+          <span class="fw-pill cat-global">difficulty_mult</span>
+          <span class="fw-hint">×0.80–×1.30</span>
+        </div>
+        <div class="fw-row" data-key="ammo_mult">
+          <span class="fw-op">×</span>
+          <span class="fw-pill cat-global">ammo_mult</span>
+          <span class="fw-hint">×1.0 for everything</span>
+        </div>
+        <div class="fw-row" data-key="global_bonus">
+          <span class="fw-op">×</span>
+          <span class="fw-pill cat-global">1.1</span>
+          <span class="fw-hint">Constant</span>
+        </div>
+      </div>
+
+      <div class="fw-right">
+        <div class="fw-detail" id="fw-dmg-detail">
+          <div class="fw-idle" id="fw-dmg-idle">
+            <div class="fw-idle-arrow">←</div>
+            <span>hover a factor to inspect it</span>
+          </div>
+          <div class="fw-info" id="fw-dmg-info">
+            <div class="fw-info-name" id="fw-dmg-name"></div>
+            <div class="fw-info-badge" id="fw-dmg-badge"></div>
+            <div class="fw-info-desc" id="fw-dmg-desc"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fw-legend">
+      <div class="fw-legend-item"><span class="fw-legend-dot" style="background:#93c5fd;"></span> Weapon stat</div>
+      <div class="fw-legend-item"><span class="fw-legend-dot" style="background:#fbbf24;"></span> Ammo property</div>
+      <div class="fw-legend-item"><span class="fw-legend-dot" style="background:#c084fc;"></span> Hit location</div>
+      <div class="fw-legend-item"><span class="fw-legend-dot" style="background:#4ade80;"></span> Environment</div>
+      <div class="fw-legend-item"><span class="fw-legend-dot" style="background:#f87171;"></span> Faction modifier</div>
+      <div class="fw-legend-item"><span class="fw-legend-dot" style="background:#9ca3af;"></span> Global constant</div>
+      <div class="fw-legend-item"><span class="fw-legend-dot" style="background:#34d399;"></span> Hidden mechanic</div>
+    </div>
+
+
+  </div>
+
+  <hr class="section-divider">
+
+  <hr class="section-divider">
+
+  <div class="guide-section">
+    <div class="section-title">8. Damage vs. Mutants (Separate System)</div>
+    <p style="color:#9ca3af; font-size:0.82rem; margin-bottom:14px;">Mutants damage formula is much simpler than stalkers and completely skips the armor system. HP ammo is king vs. Mutants.</p>
+
+    <div style="margin-bottom:14px;">
+      <div class="info-card blue-border" style="padding: 10px 16px;">
+        <span style="color:#f9fafb; font-weight:600; font-size:0.8125rem;">⚡ Melee Bonus</span>
+        <span style="color:#6b7280; font-size:0.8125rem;"> · Knives and axes only · </span>
+        <span style="color:#d1d5db; font-size:0.8125rem;">Melee weapons get <b>+50% damage</b> against mutants</span>
+      </div>
+    </div>
+
+    <table class="data-table">
+      <thead><tr><th>Mutant</th><th>Base Multiplier</th><th>Critical Zone</th><th>Crit Multiplier</th></tr></thead>
+      <tbody>
+        <tr><td class="bold-cell">Snork</td><td class="val-hi">×1.10</td><td>Legs</td><td class="val-hi">×2.00</td></tr>
+        <tr><td class="bold-cell">Boar</td><td class="val-mid">×0.95</td><td>None</td><td class="val-mono">No crit zone</td></tr>
+        <tr><td class="bold-cell">Flesh</td><td class="val-mid">×0.95</td><td>Spine</td><td class="val-mid">×1.30</td></tr>
+        <tr><td class="bold-cell">Bloodsucker</td><td class="val-mono">×0.85</td><td>Neck</td><td class="val-mid">×1.40</td></tr>
+        <tr><td class="bold-cell">Psysucker</td><td class="val-mono">×0.85</td><td>Neck</td><td class="val-mid">×1.60</td></tr>
+        <tr><td class="bold-cell">Lurker</td><td class="val-mono">×0.85</td><td>Head area</td><td class="val-hi">×1.50</td></tr>
+        <tr><td class="bold-cell">Gigant (Pseudogiant)</td><td class="val-mono">×0.85</td><td>Core</td><td class="val-hi">×2.00</td></tr>
+        <tr><td class="bold-cell">Chimera</td><td class="val-lo">×0.75</td><td>Head area</td><td class="val-hi">×2.00</td></tr>
+        <tr><td class="bold-cell">Zombie (mutant)</td><td class="val-lo">×0.80</td><td>Head</td><td class="val-hi">×2.00</td></tr>
+        <tr><td class="bold-cell">Fracture</td><td class="val-lo">×0.60</td><td>Spine</td><td class="val-mid">×2.20</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="section-divider">
+
+  <hr class="section-divider">
+
+  <div class="guide-section">
+    <div class="section-title">9. Why Isn't My Gun Doing Damage?</div>
+    <div class="info-grid-3">
+      <div class="info-card red-border">
+        <h3>❌ Wrong Ammo Type</h3>
+        <ul>
+          <li>HP and buckshot deal near-zero damage against armored enemies (until armor is broken down)</li>
+          <li>AP is required for anything with serious protection</li>
+          <li>FMJ works for light-medium armor and armor-breaking if no other option</li>
+        </ul>
+      </div>
+      <div class="info-card red-border">
+        <h3>❌ Faction Resistance</h3>
+        <ul>
+          <li><b>Sin / Zombied:</b> 70% flat damage reduction</li>
+          <li><b>UNISG:</b> 35% AP reduction + 30% damage reduction.</li>
+          <li><b>Monolith:</b> 20% damage, 10% AP reduction.</li>
+        </ul>
+      </div>
+      <div class="info-card red-border">
+        <h3>❌ Barrel Below 70%</h3>
+        <ul>
+          <li>A 50% barrel does 28% less damage AND has a 28% AP penalty</li>
+          <li>Highest-impact on something that can be easily maintained</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end guide-container -->
+
+<script>
+// Factor definitions for the interactive formula
+const factors = {
+  hit_power: {
+    name: "hit_power  [#1: Foundation]",
+    cat: "Weapon Stat", catKey: "weapon", color: "cat-weapon",
+    body: "First in the list because everything is derived from it, but not the biggest factor in how much damage you do overall (think of it as 3rd or 4th in actual impact).<br><br>What the damage stat in the weapon card refers to, somewhat. Feeds only the damage side of the formula; never touches the AP calculation."
+  },
+  k_hit: {
+    name: "k_hit  [#3: Ammo Choice]",
+    cat: "Ammo Property", catKey: "ammo", color: "cat-ammo",
+    body: "The ammo's <b>damage multiplier</b>. Ranges from 42% (buckshot pellets) to 300% (23×75 Barrikada), roughly a 7× spread across all ammo types. Switching ammo changes both your damage output and penetration ability in one go."
+  },
+  bone_damage_mult: {
+    name: "bone_dmg_mult  [#2: Aim]",
+    cat: "Hit Location", catKey: "location", color: "cat-location",
+    body: "Ranges from <b>×0.30 (feet) to ×3.65 (eyes/head)</b>. Headshots make a giant difference. Most center-mass shots land in the ×0.75–×0.90 range."
+  },
+  sin_res: {
+    name: "sin_res  [#7: Faction]",
+    cat: "Faction Modifier", catKey: "faction", color: "cat-faction",
+    body: "<b>Faction-based damage resistance</b> applied to every hit. Doesn't matter against most enemies, but drops to ×0.30 for Sin and Zombied: 70% of your damage is erased before anything else is calculated. Monolith ×0.80, ISG ×0.70. Against Sin or Zombied, this is the biggest single factor you're up against."
+  },
+  barrel_condition_corrected: {
+    name: "barrel_cond  [#4: Maintenance]",
+    cat: "Weapon Stat", catKey: "weapon", color: "cat-weapon",
+    body: "<b>Barrel wear cuts both damage and AP at the same time.</b> 70%+ has no penalty. At 50% you do almost 30% less damage. At 10% you drop to 14% damage.<br><br>A worn barrel punishes you twice, both for damage and penetration."
+  },
+  difficulty_mult: {
+    name: "difficulty_mult  [#9: Game Setting]",
+    cat: "Global Constant", catKey: "global", color: "cat-global",
+    body: "<b>Difficulty multiplier applied to both damage and AP.</b> Rookie = ×1.30 · Stalker = ×1.05 · Veteran = ×0.90 · <b>Master = ×0.80</b>.<br><br>On Master, every bullet deals 20% less damage and penetrates 20% less than on the default Stalker setting."
+  },
+  bone_ap_scale: {
+    name: "bone_ap_scale  [#8: Enemy Armor Tier]",
+    cat: "Hit Location", catKey: "location", color: "cat-location",
+    body: "How heavily <b>armored the enemy is</b>, applied as one value across their whole body. Ranges from ×0.70 against exoskeleton-tier enemies to ×0.90 for light armors.<br><br>Reduces your bullet's penetration before the armor check AND cuts raw damage if the bullet goes through. Heavier armor means harder to penetrate, and less damage when you do."
+  },
+  distance_falloff: {
+    name: "distance_falloff  [#5: Range]",
+    cat: "Environment", catKey: "env", color: "cat-env",
+    body: "How much <b>damage and AP drop off over distance</b>. Entirely ammo-dependent: pistol calibers and buckshot lose around 40% at 100m; rifle calibers lose only a few percent at typical distances.<br><br>Irrelevant for rifles under 150m, but significant for pistols and shotguns."
+  },
+  ammo_mult: {
+    name: "ammo_mult  [#10: Near-Constant]",
+    cat: "Global Constant", catKey: "global", color: "cat-global",
+    body: "A <b>hidden damage bonus</b> that defaults to ×1.0 for every ammo in the game, with one exception: <b>7.62×25 gets ×1.75</b> against both stalkers and mutants."
+  },
+  silencer_boost: {
+    name: "silencer_boost  [#6: Suppressor]",
+    cat: "Hidden Mechanic", catKey: "special", color: "cat-special",
+    body: "<b>+7% to both damage and AP</b> with any suppressor attached, including integrated ones."
+  },
+  global_bonus: {
+    name: "1.1  [#11: Constant, ignore]",
+    cat: "Global Constant", catKey: "global", color: "cat-global",
+    body: "A <b>flat ×1.1 applied to every hit</b>. No effect on any decision you make."
+  },
+  // AP formula factors
+  base_kap: {
+    name: "ammo_kap × 10",
+    cat: "Ammo Property", catKey: "ammo", color: "cat-ammo",
+    body: "The ammo's <b>base penetration value</b>. Combined with small bonuses from where you hit (leg shots and headshots add a little). Some weapons like sniper rifles get a flat bonus. Higher values mean more potential to punch through armor."
+  },
+  isg_res: {
+    name: "isg_res",
+    cat: "Faction Modifier", catKey: "faction", color: "cat-faction",
+    body: "<b>Faction-based AP resistances.</b> ISG = ×0.65 (35% less AP), Monolith = ×0.90, Bandits = ×1.10 (slightly easier to penetrate than baseline), Sin = ×0.90.<br><br>This explains why ISG in heavy armor feel so tanky: your AP is cut before it even hits their armor."
+  }
+};
+
+function initWidget(widgetId) {
+  const widget = document.getElementById(widgetId);
+  if (!widget) return;
+  const suffix = widgetId.replace('fw-', '');
+
+  const rows   = widget.querySelectorAll('.fw-row');
+  const idle   = document.getElementById(widgetId + '-idle');
+  const info   = document.getElementById(widgetId + '-info');
+  const nameEl = document.getElementById(widgetId + '-name');
+  const badgeEl= document.getElementById(widgetId + '-badge');
+  const descEl = document.getElementById(widgetId + '-desc');
+
+  let currentKey = null;
+
+  function show(key) {
+    if (key === currentKey) return;
+    currentKey = key;
+    const f = factors[key];
+
+    nameEl.textContent = f.name;
+    nameEl.className   = 'fw-info-name ' + f.color;
+    badgeEl.textContent= f.cat;
+    badgeEl.className  = 'fw-info-badge badge-' + f.catKey;
+    descEl.innerHTML   = f.body;
+
+    idle.style.display = 'none';
+    info.classList.remove('show');
+    // force reflow to re-trigger animation
+    void info.offsetWidth;
+    info.classList.add('show');
+  }
+
+  function reset() {
+    currentKey = null;
+    idle.style.display = '';
+    info.classList.remove('show');
+    rows.forEach(r => r.classList.remove('fw-lit'));
+  }
+
+  rows.forEach(row => {
+    const key = row.dataset.key;
+    if (!key || !factors[key]) return;
+    row.addEventListener('mouseenter', () => {
+      rows.forEach(r => r.classList.remove('fw-lit'));
+      row.classList.add('fw-lit');
+      show(key);
+    });
+  });
+
+  widget.querySelector('.fw-left').addEventListener('mouseleave', reset);
+}
+
+initWidget('fw-ap');
+initWidget('fw-dmg');
+</script>
+
+</body>
+</html>
+
+</div><!-- end guide-container -->
+</body>
+</html>
