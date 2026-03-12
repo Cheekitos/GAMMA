@@ -319,51 +319,22 @@
   <!-- Summary strip -->
   <div class="summary-strip">
     <div class="summary-card">
-      <span class="summary-val" id="total-contributors">1</span>
+      <span class="summary-val" id="total-contributors"></span>
       <div class="summary-lbl">Contributors</div>
     </div>
     <div class="summary-card">
-      <span class="summary-val" id="total-kills">2,094</span>
+      <span class="summary-val" id="total-kills"></span>
       <div class="summary-lbl">Total Kills</div>
     </div>
     <div class="summary-card">
-      <span class="summary-val" id="top-contributor">Cheekitos</span>
+      <span class="summary-val" id="top-contributor"></span>
       <div class="summary-lbl">Top Contributor</div>
     </div>
   </div>
 
   <!-- Podium: top 3 -->
   <div class="section-label">Top 3</div>
-  <div class="podium">
-
-    <!-- 2nd -->
-    <div class="podium-card rank-2">
-      <span class="podium-medal">🥈</span>
-      <div class="podium-rank">#2</div>
-      <div class="podium-name blank">open slot</div>
-      <span class="podium-kills blank">—</span>
-      <div class="podium-kills-label">kills</div>
-    </div>
-
-    <!-- 1st -->
-    <div class="podium-card rank-1">
-      <span class="podium-medal">🥇</span>
-      <div class="podium-rank">#1</div>
-      <div class="podium-name">Cheekitos</div>
-      <span class="podium-kills">2,094</span>
-      <div class="podium-kills-label">kills</div>
-    </div>
-
-    <!-- 3rd -->
-    <div class="podium-card rank-3">
-      <span class="podium-medal">🥉</span>
-      <div class="podium-rank">#3</div>
-      <div class="podium-name blank">open slot</div>
-      <span class="podium-kills blank">—</span>
-      <div class="podium-kills-label">kills</div>
-    </div>
-
-  </div>
+  <div class="podium" id="podium"></div>
 
   <hr class="section-divider">
 
@@ -378,92 +349,95 @@
         <th class="right">Kills</th>
       </tr>
     </thead>
-    <tbody>
-      <tr>
-        <td class="lb-rank-num">1</td>
-        <td class="lb-name">Cheekitos</td>
-        <td class="lb-bar-cell">
-          <div class="lb-bar-track">
-            <div class="lb-bar-fill top" style="width:100%"></div>
-          </div>
-        </td>
-        <td class="lb-kills">2,094</td>
-      </tr>
-      <tr>
-        <td class="lb-rank-num" style="color:#4b5563;">2</td>
-        <td style="color:#4b5563; font-style:italic;">—</td>
-        <td class="lb-bar-cell">
-          <div class="lb-bar-track"><div class="lb-bar-fill" style="width:0%"></div></div>
-        </td>
-        <td class="lb-kills" style="color:#374151;">—</td>
-      </tr>
-      <tr>
-        <td class="lb-rank-num" style="color:#4b5563;">3</td>
-        <td style="color:#4b5563; font-style:italic;">—</td>
-        <td class="lb-bar-cell">
-          <div class="lb-bar-track"><div class="lb-bar-fill" style="width:0%"></div></div>
-        </td>
-        <td class="lb-kills" style="color:#374151;">—</td>
-      </tr>
-      <tr>
-        <td class="lb-rank-num" style="color:#4b5563;">4</td>
-        <td style="color:#4b5563; font-style:italic;">—</td>
-        <td class="lb-bar-cell">
-          <div class="lb-bar-track"><div class="lb-bar-fill" style="width:0%"></div></div>
-        </td>
-        <td class="lb-kills" style="color:#374151;">—</td>
-      </tr>
-      <tr>
-        <td class="lb-rank-num" style="color:#4b5563;">5</td>
-        <td style="color:#4b5563; font-style:italic;">—</td>
-        <td class="lb-bar-cell">
-          <div class="lb-bar-track"><div class="lb-bar-fill" style="width:0%"></div></div>
-        </td>
-        <td class="lb-kills" style="color:#374151;">—</td>
-      </tr>
-      <tr>
-        <td class="lb-rank-num" style="color:#4b5563;">6</td>
-        <td style="color:#4b5563; font-style:italic;">—</td>
-        <td class="lb-bar-cell">
-          <div class="lb-bar-track"><div class="lb-bar-fill" style="width:0%"></div></div>
-        </td>
-        <td class="lb-kills" style="color:#374151;">—</td>
-      </tr>
-      <tr>
-        <td class="lb-rank-num" style="color:#4b5563;">7</td>
-        <td style="color:#4b5563; font-style:italic;">—</td>
-        <td class="lb-bar-cell">
-          <div class="lb-bar-track"><div class="lb-bar-fill" style="width:0%"></div></div>
-        </td>
-        <td class="lb-kills" style="color:#374151;">—</td>
-      </tr>
-      <tr>
-        <td class="lb-rank-num" style="color:#4b5563;">8</td>
-        <td style="color:#4b5563; font-style:italic;">—</td>
-        <td class="lb-bar-cell">
-          <div class="lb-bar-track"><div class="lb-bar-fill" style="width:0%"></div></div>
-        </td>
-        <td class="lb-kills" style="color:#374151;">—</td>
-      </tr>
-      <tr>
-        <td class="lb-rank-num" style="color:#4b5563;">9</td>
-        <td style="color:#4b5563; font-style:italic;">—</td>
-        <td class="lb-bar-cell">
-          <div class="lb-bar-track"><div class="lb-bar-fill" style="width:0%"></div></div>
-        </td>
-        <td class="lb-kills" style="color:#374151;">—</td>
-      </tr>
-      <tr>
-        <td class="lb-rank-num" style="color:#4b5563;">10</td>
-        <td style="color:#4b5563; font-style:italic;">—</td>
-        <td class="lb-bar-cell">
-          <div class="lb-bar-track"><div class="lb-bar-fill" style="width:0%"></div></div>
-        </td>
-        <td class="lb-kills" style="color:#374151;">—</td>
-      </tr>
-    </tbody>
+    <tbody id="lb-tbody"></tbody>
   </table>
 
 </div>
+
+<script>
+// ============================================================
+const CONTRIBUTORS = [
+  { name: "Cheekitos",     kills: 2094 },
+  { name: "Jeffersonpike", kills: 22   },
+  { name: "Vlad",          kills: 21   },
+  { name: "Firemoth",      kills: 18   },
+];
+// ============================================================
+
+(function render() {
+  const sorted = [...CONTRIBUTORS].sort((a, b) => b.kills - a.kills);
+  const totalKills = sorted.reduce((s, c) => s + c.kills, 0);
+  const top = sorted[0];
+  const TABLE_ROWS = 10;
+
+  // ── Summary strip ──
+  document.getElementById('total-contributors').textContent = sorted.length;
+  document.getElementById('total-kills').textContent = totalKills.toLocaleString();
+  document.getElementById('top-contributor').textContent = top ? top.name : '—';
+
+  // ── Podium ──
+  const medals  = ['🥇','🥈','🥉'];
+  const ranks   = ['rank-1','rank-2','rank-3'];
+  // podium display order: 2nd, 1st, 3rd
+  const podiumOrder = [1, 0, 2];
+  const podiumEl = document.getElementById('podium');
+  podiumEl.innerHTML = podiumOrder.map(i => {
+    const entry = sorted[i];
+    const rankNum = i + 1;
+    if (entry) {
+      return `
+        <div class="podium-card ${ranks[i]}">
+          <span class="podium-medal">${medals[i]}</span>
+          <div class="podium-rank">#${rankNum}</div>
+          <div class="podium-name">${entry.name}</div>
+          <span class="podium-kills">${entry.kills.toLocaleString()}</span>
+          <div class="podium-kills-label">kills</div>
+        </div>`;
+    } else {
+      return `
+        <div class="podium-card ${ranks[i]}">
+          <span class="podium-medal">${medals[i]}</span>
+          <div class="podium-rank">#${rankNum}</div>
+          <div class="podium-name blank">open slot</div>
+          <span class="podium-kills blank">—</span>
+          <div class="podium-kills-label">kills</div>
+        </div>`;
+    }
+  }).join('');
+
+  // ── Table ──
+  const maxKills = top ? top.kills : 1;
+  const tbody = document.getElementById('lb-tbody');
+  const rows = Math.max(sorted.length, TABLE_ROWS);
+  tbody.innerHTML = Array.from({ length: rows }, (_, i) => {
+    const entry = sorted[i];
+    if (entry) {
+      const pct = ((entry.kills / maxKills) * 100).toFixed(2);
+      const isTop = i === 0;
+      return `
+        <tr>
+          <td class="lb-rank-num">${i + 1}</td>
+          <td class="lb-name">${entry.name}</td>
+          <td class="lb-bar-cell">
+            <div class="lb-bar-track">
+              <div class="lb-bar-fill${isTop ? ' top' : ''}" style="width:${pct}%"></div>
+            </div>
+          </td>
+          <td class="lb-kills">${entry.kills.toLocaleString()}</td>
+        </tr>`;
+    } else {
+      return `
+        <tr>
+          <td class="lb-rank-num" style="color:#4b5563;">${i + 1}</td>
+          <td style="color:#4b5563; font-style:italic;">—</td>
+          <td class="lb-bar-cell">
+            <div class="lb-bar-track"><div class="lb-bar-fill" style="width:0%"></div></div>
+          </td>
+          <td class="lb-kills" style="color:#374151;">—</td>
+        </tr>`;
+    }
+  }).join('');
+})();
+</script>
 </body>
 </html>
