@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>S.T.A.L.K.E.R. GAMMA: Ammo Efficiency Analysis</title>
+<meta name="description" content="Cheapest ammo to buy, cheapest to craft, and the best disassemble to craft conversions in STALKER GAMMA.">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #111827;
+    color: #f3f4f6;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  a { color: #60a5fa; text-decoration: none; transition: color 0.2s; }
+  a:hover { color: #93c5fd; }
+
+  .rankings-container { max-width: 960px; margin: 0 auto; }
+
+  .page-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 8px; gap: 12px; flex-wrap: wrap;
+  }
+  .site-title { font-size: 1.5rem; font-weight: bold; color: #f3f4f6; }
+
+  .breadcrumb {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 0.875rem; margin-bottom: 24px;
+  }
+  .breadcrumb-separator { color: #9ca3af; }
+
+  .page-title {
+    font-size: 2rem; font-weight: bold; text-align: center;
+    margin-bottom: 10px; color: #fbbf24;
+  }
+  .page-subtitle {
+    text-align: center; color: #9ca3af; margin-bottom: 24px; font-size: 0.875rem;
+  }
+
+  /* ── TL;DR ── */
+  .tldr-box {
+    background: #1f2937; border: 1px solid #374151;
+    border-left: 4px solid #fbbf24; border-radius: 6px;
+    padding: 18px 22px; margin-bottom: 28px;
+  }
+  .tldr-box h2 {
+    color: #fbbf24; font-size: 0.875rem; font-weight: 700;
+    letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 10px;
+  }
+  .tldr-box ul { padding-left: 1.25rem; list-style: disc; }
+  .tldr-box li { color: #d1d5db; font-size: 0.875rem; line-height: 1.6; margin-bottom: 5px; }
+  .tldr-box li b { color: #f9fafb; }
+
+  /* ── Section ── */
+  .rankings-section { margin-bottom: 36px; }
+  .section-title {
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: #fbbf24;
+    border-left: 3px solid #fbbf24; padding-left: 10px; margin-bottom: 16px;
+  }
+  .section-intro { color: #6b7280; font-size: 0.875rem; margin-bottom: 14px; line-height: 1.55; }
+
+  /* ── Info cards ── */
+  .info-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  .info-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .info-card {
+    background: #1f2937; border: 1px solid #374151; border-radius: 6px; padding: 14px 16px;
+  }
+  .info-card h3 { color: #f9fafb; font-size: 0.875rem; font-weight: 700; margin-bottom: 4px; white-space: normal; overflow: visible; }
+  .info-card .card-sub { color: #6b7280; font-size: 0.72rem; margin-bottom: 10px; }
+  .info-card p { color: #9ca3af; font-size: 0.8rem; line-height: 1.5; margin-bottom: 8px; }
+  .info-card ul { padding-left: 1rem; list-style: disc; }
+  .info-card li { color: #d1d5db; font-size: 0.8125rem; margin-bottom: 4px; line-height: 1.5; }
+  .info-card li b { color: #f9fafb; }
+  .info-card.yellow-border { border-left: 3px solid #fbbf24; }
+  .pct     { color: #4ade80; font-weight: 700; }
+  .pct-med { color: #a3e635; font-weight: 600; }
+  .pct-low { color: #fbbf24; }
+
+  /* ── AP warning card ── */
+  .ap-card {
+    background: #1f2937; border: 1px solid #374151;
+    border-left: 4px solid #f87171; border-radius: 6px;
+    padding: 16px 18px;
+  }
+  .ap-card h3 { color: #f9fafb; font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+  .ap-card p { color: #9ca3af; font-size: 0.8rem; line-height: 1.55; margin-bottom: 10px; }
+  .ap-card ul { padding-left: 1rem; list-style: disc; }
+  .ap-card li { color: #d1d5db; font-size: 0.8125rem; margin-bottom: 5px; line-height: 1.5; }
+
+  /* ── Discovery alert ── */
+  .discovery-card {
+    background: #0f2a1a; border: 1px solid #059669;
+    border-left: 4px solid #4ade80; border-radius: 6px;
+    padding: 14px 16px; margin-bottom: 16px;
+  }
+  .discovery-card h3 { color: #4ade80; font-size: 0.875rem; font-weight: 700; margin-bottom: 6px; }
+  .discovery-card p { color: #d1d5db; font-size: 0.8rem; line-height: 1.55; margin-bottom: 6px; }
+  .discovery-card ul { padding-left: 1rem; list-style: disc; }
+  .discovery-card li { color: #d1d5db; font-size: 0.8125rem; margin-bottom: 4px; }
+
+  /* ── Dead-end warning ── */
+  .deadend-card {
+    background: #1a1a0f; border: 1px solid #b45309;
+    border-left: 4px solid #fbbf24; border-radius: 6px;
+    padding: 14px 16px; margin-bottom: 16px;
+  }
+  .deadend-card h3 { color: #fbbf24; font-size: 0.875rem; font-weight: 700; margin-bottom: 6px; }
+  .deadend-card p { color: #9ca3af; font-size: 0.8rem; line-height: 1.55; margin-bottom: 6px; }
+
+  /* ── Tables ── */
+  .rankings-table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; margin-bottom: 8px; }
+  .rankings-table th {
+    background: #1f2937; color: #9ca3af; font-size: 0.7rem;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 7px 10px; text-align: left;
+    border-bottom: 2px solid #374151; font-weight: 600;
+  }
+  .rankings-table td { padding: 7px 10px; border-bottom: 1px solid #1f2937; vertical-align: middle; color: #d1d5db; }
+  .rankings-table tbody tr:nth-child(even) td { background: #182030; }
+  .rankings-table tr:hover td { background: #1a2535; }
+
+  .cal        { color: #fbbf24; font-weight: 600; font-size: 0.8125rem; }
+  .ammo-type  { color: #60a5fa; font-size: 0.8rem; }
+  .price-best { color: #4ade80; font-weight: 700; }
+  .price-mid  { color: #d1d5db; }
+  .price-bad  { color: #f87171; }
+  .tier-1 { color: #4ade80; font-size: 0.75rem; font-weight: 600; }
+  .tier-2 { color: #a3e635; font-size: 0.75rem; }
+  .tier-3 { color: #fbbf24; font-size: 0.75rem; }
+  .tier-4 { color: #fb923c; font-size: 0.75rem; }
+  .tier-5 { color: #f87171; font-size: 0.75rem; }
+  .save-high    { color: #4ade80; font-weight: 700; }
+  .save-med     { color: #a3e635; }
+  .save-low     { color: #fbbf24; }
+  .save-trivial { color: #4b5563; }
+  .cpb { font-size: 0.75rem; color: #6b7280; list-style: none !important; padding-left: 0; }
+
+  /* ── Badges ── */
+  .badge {
+    display: inline-block; padding: 2px 6px; border-radius: 3px;
+    font-size: 0.65rem; font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase; white-space: nowrap;
+  }
+  .badge-mvp  { background: #064e3b; color: #6ee7b7; border: 1px solid #059669; }
+  .badge-good { background: #1e3a1e; color: #86efac; border: 1px solid #16a34a; }
+  .badge-ap   { background: #450a0a; color: #fca5a5; border: 1px solid #b91c1c; }
+
+  .verdict { color: #fbbf24; font-style: italic; font-size: 0.75rem; }
+  .verdict-cell { display: flex; align-items: center; gap: 5px; }
+  .verdict-buy {
+    display: inline-block;
+    background: #450a0a;
+    color: #f87171;
+    border: 1px solid #7f1d1d;
+    border-radius: 3px;
+    padding: 1px 5px;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .verdict-craft {
+    display: inline-block;
+    background: #052e16;
+    color: #4ade80;
+    border: 1px solid #166534;
+    border-radius: 3px;
+    padding: 1px 5px;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* ── Note box ── */
+  .note-box {
+    background: #111827; border: 1px solid #374151; border-radius: 4px;
+    padding: 10px 14px; font-size: 0.8rem; color: #9ca3af;
+    margin-top: 8px; line-height: 1.55;
+  }
+  .note-box b { color: #f3f4f6; }
+
+  /* ── Methodology ── */
+  .method-note {
+    background: #1f2937; border: 1px solid #374151;
+    border-top: 2px solid #fbbf24; border-radius: 6px;
+    padding: 14px 18px; font-size: 0.8rem; color: #9ca3af;
+    line-height: 1.6; margin-top: 8px;
+  }
+  .method-note b { color: #f3f4f6; }
+
+  /* ── Divider ── */
+  .section-divider { border: none; border-top: 1px solid #374151; margin: 28px 0; }
+
+  /* ── Compact price reference table ── */
+  .price-ref-table { width: 100%; border-collapse: collapse; font-size: 0.72rem; margin-bottom: 8px; }
+  .price-ref-table th {
+    background: #1f2937; color: #9ca3af; font-size: 0.65rem;
+    letter-spacing: 0.07em; text-transform: uppercase;
+    padding: 5px 8px; text-align: left;
+    border-bottom: 2px solid #374151; font-weight: 600;
+  }
+  .price-ref-table td { padding: 4px 8px; border-bottom: 1px solid #1a2230; vertical-align: middle; color: #d1d5db; }
+  .price-ref-table tbody tr:nth-child(even) td { background: #182030; }
+  .price-ref-table tr:hover td { background: #1a2535; }
+  .price-ref-table td.cell-best { color: #4ade80; font-weight: 700; }
+  .price-ref-table td.cell-bad  { color: #f87171; font-weight: 600; }
+  .price-ref-table td.cell-none { color: #374151; }
+
+  /* ── Interchangeable table ── */
+  .swap-section { margin-bottom: 36px; }
+  .swap-cluster { margin-bottom: 20px; }
+  .swap-cluster-header {
+    display: flex; align-items: center; gap: 10px;
+    background: #1f2937; border: 1px solid #374151;
+    border-left: 4px solid #4ade80; border-radius: 6px 6px 0 0;
+    padding: 10px 14px;
+  }
+  .swap-cluster-header.orange { border-left-color: #fb923c; }
+  .swap-cluster-header.blue   { border-left-color: #60a5fa; }
+  .swap-cluster-header.red    { border-left-color: #f87171; }
+  .swap-cluster-label {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: #9ca3af;
+  }
+  .swap-cluster-name { font-size: 0.875rem; font-weight: 700; color: #f9fafb; }
+  .swap-cluster-meta { font-size: 0.72rem; color: #6b7280; margin-left: auto; }
+  .swap-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+  .swap-table th {
+    background: #161e2b; color: #6b7280; font-size: 0.65rem;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 6px 10px; text-align: left;
+    border-bottom: 1px solid #374151; font-weight: 600;
+  }
+  .swap-table td { padding: 6px 10px; border-bottom: 1px solid #1a2230; vertical-align: middle; color: #d1d5db; }
+  .swap-table tr:hover td { background: #1a2535; }
+  .swap-table tr.oneway td { opacity: 0.75; }
+  .swap-table tr.oneway td:first-child { border-left: 3px solid #fb923c; padding-left: 8px; }
+  .swap-table tr.bidir td:first-child { border-left: 3px solid #4ade80; padding-left: 8px; }
+  .swap-targets { display: flex; flex-wrap: wrap; gap: 5px; }
+  .swap-tag {
+    display: inline-block; padding: 2px 7px; border-radius: 3px;
+    font-size: 0.72rem; font-weight: 600; white-space: nowrap;
+    opacity: 0.8;
+  }
+  .swap-tag-bidir { background: #052e16; color: #86efac; border: 1px solid #166534; }
+  .swap-tag-oneway { background: #1c1917; color: #d6d3d1; border: 1px solid #44403c; }
+  .swap-tag-t1 { background: #052e16; color: #4ade80;  border: 1px solid #166534; }
+  .swap-tag-t2 { background: #1a2e05; color: #a3e635;  border: 1px solid #4d7c0f; }
+  .swap-tag-t3 { background: #2d1b00; color: #fbbf24;  border: 1px solid #92400e; }
+  .swap-tag-t4 { background: #431407; color: #fb923c;  border: 1px solid #c2410c; }
+  .swap-tag-t5 { background: #2d0505; color: #f87171;  border: 1px solid #b91c1c; }
+
+  /* 1-for-1 Conversion tables: green → lime → yellow-lime → light yellow → yellow */
+  .swap-table .swap-tag-t1 { background: #052e16; color: #4ade80; border: 1px solid #166534; }
+  .swap-table .swap-tag-t2 { background: #1a2e05; color: #a3e635; border: 1px solid #4d7c0f; }
+  .swap-table .swap-tag-t3 { background: #1e2c00; color: #bef264; border: 1px solid #4d7c0f; }
+  .swap-table .swap-tag-t4 { background: #272400; color: #fde047; border: 1px solid #713f12; }
+  .swap-table .swap-tag-t5 { background: #2d1b00; color: #fbbf24; border: 1px solid #92400e; }
+  .badge-bidir { background: #052e16; color: #6ee7b7; border: 1px solid #059669; font-size: 0.65rem; padding: 2px 6px; border-radius: 3px; font-weight: 700; white-space: nowrap; }
+  .badge-oneway { background: #431407; color: #fdba74; border: 1px solid #c2410c; font-size: 0.65rem; padding: 2px 6px; border-radius: 3px; font-weight: 700; white-space: nowrap; }
+  .swap-legend { display: flex; gap: 16px; font-size: 0.75rem; color: #6b7280; margin-bottom: 12px; align-items: center; flex-wrap: wrap; }
+  .swap-legend span { display: flex; align-items: center; gap: 5px; }
+
+  /* ── Gain tiers (source ammo color + badge) ── */
+  .swap-table tr.separator td { border-bottom: 1px dashed #374151; padding: 0; height: 1px; background: transparent; }
+
+  /* ── Butcher / Spirit section ── */
+  .special-section-note {
+    background: #111827; border: 1px solid #374151;
+    border-left: 4px solid #fb923c; border-radius: 6px;
+    padding: 14px 18px; margin-bottom: 20px;
+    font-size: 0.8rem; color: #9ca3af; line-height: 1.6;
+  }
+  .special-section-note strong { color: #f3f4f6; }
+  .special-section-note .tag-butcher {
+    display: inline-block; background: #431407; color: #fdba74;
+    border: 1px solid #c2410c; border-radius: 3px;
+    padding: 1px 6px; font-size: 0.65rem; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase; margin-right: 4px;
+  }
+  .special-section-note .tag-spirit {
+    display: inline-block; background: #0c2a4a; color: #93c5fd;
+    border: 1px solid #1d4ed8; border-radius: 3px;
+    padding: 1px 6px; font-size: 0.65rem; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase; margin-right: 4px;
+  }
+  .special-sub-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 12px; border-radius: 4px 4px 0 0;
+    margin-top: 18px; margin-bottom: 0;
+    border: 1px solid #374151; border-bottom: none;
+  }
+  .special-sub-header.butcher { background: #1c1109; border-left: 4px solid #fb923c; }
+  .special-sub-header.spirit  { background: #0a1628; border-left: 4px solid #60a5fa; }
+  .special-sub-header span.label {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .special-sub-header.butcher span.label { color: #fb923c; }
+  .special-sub-header.spirit  span.label { color: #60a5fa; }
+  .special-sub-header span.desc { font-size: 0.78rem; color: #6b7280; }
+  .special-table {
+    width: 100%; border-collapse: collapse; font-size: 0.8125rem;
+    margin-bottom: 8px; border: 1px solid #374151; border-top: none;
+  }
+  .special-table th {
+    background: #1a1a1a; color: #9ca3af; font-size: 0.7rem;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 7px 10px; text-align: left;
+    border-bottom: 2px solid #374151; font-weight: 600;
+  }
+  .special-table td { padding: 7px 10px; border-bottom: 1px solid #1f2937; vertical-align: middle; color: #d1d5db; }
+  .special-table tbody tr:nth-child(even) td { background: #182030; }
+  .special-table tr:hover td { background: #1a2535; }
+  .price-source-butcher { color: #fb923c; font-weight: 700; }
+  .price-source-spirit  { color: #60a5fa; font-weight: 700; }
+  .save-high-new { color: #4ade80; font-weight: 700; }
+  .save-med-new  { color: #a3e635; font-weight: 600; }
+  .save-low-new  { color: #fbbf24; }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .info-grid-3, .info-grid-2 { grid-template-columns: 1fr; }
+    .page-title { font-size: 1.5rem; }
+    .rankings-table { font-size: 0.75rem; }
+    .rankings-table th, .rankings-table td { padding: 5px 6px; }
+    .rankings-table th:nth-child(4), .rankings-table td:nth-child(4),
+    .rankings-table th:nth-child(5), .rankings-table td:nth-child(5) { display: none; }
+  }
+  @media (max-width: 480px) {
+    .rankings-table th:nth-child(6), .rankings-table td:nth-child(6) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="rankings-container">
+
+  <!-- Header -->
+  <div class="page-header">
+    <span class="site-title">Cheeki's Mods Archive</span>
+  </div>
+
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <svg fill="currentColor" viewBox="0 0 20 20" width="14" height="14" style="flex-shrink:0;color:#9ca3af;">
+      <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+    </svg>
+    <a href="https://cheeki.zone" style="color:#60a5fa;">Archive</a>
+    <span class="breadcrumb-separator">›</span>
+    <a href="../index.html" style="color:#60a5fa;">GAMMA Tools</a>
+    <span class="breadcrumb-separator">›</span>
+    <span style="color:#d1d5db;">Ammo Efficiency</span>
+  </nav>
+
+  <h1 class="page-title">STALKER GAMMA: Ammo Efficiency Analysis</h1>
+  <p class="page-subtitle">Cheapest to buy, best to disassemble and all good craft conversion paths</p>
+
+  <div style="background:#1f2937;border:1px solid #374151;border-left:4px solid #fbbf24;border-radius:6px;padding:14px 18px;margin-bottom:24px;display:flex;gap:12px;align-items:flex-start;">
+    <span style="font-size:1.1rem;flex-shrink:0;">⚠️</span>
+    <div style="font-size:0.8rem;color:#9ca3af;line-height:1.6;">
+      <b style="color:#fbbf24;">Ammo crafting is around 90% efficient</b>, meaning that for 10 bullets disassembled, you'll get, on average: 9 gunpowder, 9 casings and 9 bullet tips. I didn't check from the game files, just disassembled 100k+ of all type of ammo. Actual math might be slightly different, but everything seems to behave the same.
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- SECTION 0: Trader Price Comparison -->
+  <div class="rankings-section">
+    <div class="section-title">1. Ammo Prices by Trader</div>
+    <p class="section-intro">Ammo Box price per trader. <b style="color:#d1d5db;">Warsaw Pact</b> (Loner, Bandits, Duty, Military, Monolith, Renegades), <b style="color:#d1d5db;">NATO</b> (Clear Sky, Freedom, Mercenaries, UNISG), <b style="color:#d1d5db;">Butcher</b> that you can find in Garbage, and the ruble equivalent of the vodka trades with <b style="color:#d1d5db;">Spirit</b> in Yantar.</p>
+    <div style="display:flex;gap:16px;align-items:flex-start;">
+
+      <!-- LEFT HALF -->
+      <table class="price-ref-table" style="flex:1;min-width:0;">
+        <thead><tr><th>Caliber</th><th>Type</th><th>W.Pact</th><th>NATO</th><th>Butcher</th><th>Spirit</th></tr></thead>
+        <tbody>
+          <tr><td class="cal">9x18</td><td class="ammo-type">HP</td>      <td>1,320</td>                  <td>1,320</td>                  <td class="cell-best">840</td>  <td class="cell-none"></td></tr>
+          <tr><td class="cal">9x18</td><td class="ammo-type">FMJ</td>     <td>770</td>                    <td>770</td>                    <td class="cell-none"></td>   <td class="cell-best">493</td></tr>
+          <tr><td class="cal">9x18</td><td class="ammo-type">AP</td>      <td>1,650</td>                  <td>1,650</td>                  <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">9x19</td><td class="ammo-type">HP</td>      <td>1,546</td>                  <td>1,546</td>                  <td class="cell-best">984</td>  <td class="cell-none"></td></tr>
+          <tr><td class="cal">9x19</td><td class="ammo-type">FMJ</td>     <td>886</td>                    <td>886</td>                    <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">9x19</td><td class="ammo-type">AP</td>      <td>3,231</td>                  <td class="cell-best">2,423</td><td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">45ACP</td><td class="ammo-type">FMJ</td>    <td>1,306</td>                  <td>1,306</td>                  <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">45ACP</td><td class="ammo-type">HYDRA</td>  <td>1,959</td>                  <td>1,959</td>                  <td class="cell-best">1,620</td><td class="cell-none"></td></tr>
+          <tr><td class="cal">7.62x25</td><td class="ammo-type">LRNPC</td><td>1,203</td>                  <td>1,203</td>                  <td class="cell-best">765</td>  <td class="cell-none"></td></tr>
+          <tr><td class="cal">7.62x25</td><td class="ammo-type">PST</td>  <td>1,340</td>                  <td>1,340</td>                  <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">5.7x28</td><td class="ammo-type">SS195</td> <td>1,753</td>                  <td>1,753</td>                  <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">5.7x28</td><td class="ammo-type">SS190</td> <td class="cell-none"></td>   <td>3,575</td>                  <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">20x70</td><td class="ammo-type">Buck</td>   <td>825</td>                    <td>825</td>                    <td class="cell-best">525</td>  <td class="cell-none"></td></tr>
+          <tr><td class="cal">12x70</td><td class="ammo-type">Buck</td>   <td class="cell-bad">1,375</td> <td class="cell-bad">1,375</td> <td class="cell-best">875</td>  <td>1,313</td></tr>
+          <tr><td class="cal">12x76</td><td class="ammo-type">Slug</td>   <td>2,268</td>                  <td>2,268</td>                  <td class="cell-best">1,876</td><td class="cell-none"></td></tr>
+          <tr><td class="cal">12x76</td><td class="ammo-type">AP</td>     <td class="cell-none"></td>   <td>6,875</td>                  <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">9x21</td><td class="ammo-type">SP10</td>    <td>2,956</td>                  <td class="cell-none"></td>   <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">7.62x39</td><td class="ammo-type">FMJ</td>      <td>2,681</td>              <td class="cell-none"></td>   <td class="cell-none"></td>   <td class="cell-best">985</td></tr>
+          <tr><td class="cal">7.62x39</td><td class="ammo-type">M43 (AP)</td> <td>7,493</td>              <td class="cell-none"></td>   <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">357</td><td class="ammo-type">HP</td>       <td>3,575</td>                  <td>3,575</td>                  <td class="cell-best">2,275</td><td class="cell-none"></td></tr>
+          <tr><td class="cal">5.45x39</td><td class="ammo-type">HP</td>   <td>2,200</td>                  <td class="cell-none"></td>   <td class="cell-best">1,400</td><td class="cell-none"></td></tr>
+        </tbody>
+      </table>
+
+      <!-- RIGHT HALF -->
+      <table class="price-ref-table" style="flex:1;min-width:0;">
+        <thead><tr><th>Caliber</th><th>Type</th><th>W.Pact</th><th>NATO</th><th>Butcher</th><th>Spirit</th></tr></thead>
+        <tbody>
+          <tr><td class="cal">5.45x39</td><td class="ammo-type">FMJ</td>  <td>1,856</td>                  <td class="cell-none"></td>   <td class="cell-none"></td>   <td class="cell-best">985</td></tr>
+          <tr><td class="cal">5.45x39</td><td class="ammo-type">AP</td>   <td>7,012</td>                  <td class="cell-none"></td>   <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">5.56x45</td><td class="ammo-type">HP</td>   <td class="cell-none"></td>   <td>2,200</td>                  <td class="cell-best">1,400</td><td class="cell-none"></td></tr>
+          <tr><td class="cal">5.56x45</td><td class="ammo-type">FMJ</td>  <td class="cell-none"></td>   <td>2,062</td>                  <td class="cell-none"></td>   <td class="cell-best">985</td></tr>
+          <tr><td class="cal">5.56x45</td><td class="ammo-type">AP</td>   <td class="cell-none"></td>   <td>5,637</td>                  <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">9x39</td><td class="ammo-type">SP-5</td>    <td>2,268</td>                  <td class="cell-none"></td>   <td class="cell-none"></td>   <td class="cell-best">985</td></tr>
+          <tr><td class="cal">9x39</td><td class="ammo-type">SP-6</td>    <td>7,356</td>                  <td class="cell-none"></td>   <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">7.92x57</td><td class="ammo-type">FMJ</td>  <td>1,856</td>                  <td>1,856</td>                  <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">7.92x57</td><td class="ammo-type">AP</td>   <td>6,187</td>                  <td>6,187</td>                  <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">7.62x54</td><td class="ammo-type">7N1</td>  <td class="cell-best">3,093</td><td class="cell-none"></td>   <td>3,940</td>                  <td class="cell-none"></td></tr>
+          <tr><td class="cal">7.62x54</td><td class="ammo-type">7N14</td> <td>5,500</td>                  <td class="cell-none"></td>   <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">7.62x54</td><td class="ammo-type">AP</td>   <td>13,062</td>                 <td class="cell-none"></td>   <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">7.62x54R</td><td class="ammo-type">PP</td>  <td>6,875</td>                  <td class="cell-none"></td>   <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">12.7x55</td><td class="ammo-type">STs-130</td><td>4,125</td>               <td class="cell-none"></td>   <td class="cell-best">1,970</td><td class="cell-none"></td></tr>
+          <tr><td class="cal">12.7x55</td><td class="ammo-type">VPS</td>  <td>9,487</td>                  <td class="cell-none"></td>   <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">23x75</td><td class="ammo-type">Shrapnel</td>  <td>2,750</td>               <td class="cell-none"></td>   <td class="cell-best">2,100</td><td class="cell-none"></td></tr>
+          <tr><td class="cal">23x75</td><td class="ammo-type">Barrikada</td> <td>9,625</td>               <td class="cell-none"></td>   <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">338</td><td class="ammo-type">Federal</td>  <td class="cell-none"></td>   <td>5,500</td>                  <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">338</td><td class="ammo-type">Lapua</td>    <td class="cell-none"></td>   <td>17,531</td>                 <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">7.62x51</td><td class="ammo-type">Ball</td> <td class="cell-none"></td>   <td>4,125</td>                  <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+          <tr><td class="cal">7.62x51</td><td class="ammo-type">AP</td>   <td class="cell-none"></td>   <td>10,312</td>                 <td class="cell-none"></td>   <td class="cell-none"></td></tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+
+
+  <hr class="section-divider">
+
+  <!-- SECTION 2: Disassemble → Craft Routes -->
+  <div class="rankings-section">
+    <div class="section-title">2. Best Disassemble → Craft Routes That Save Money</div>
+    <p class="section-intro">
+      All the prices for these calculations are based on the <b style="color:#d1d5db;">REGULAR (white) price</b> at traders you can see above. It's not much but it's honest work.
+    </p>
+    <table class="rankings-table">
+      <thead>
+        <tr>
+          <th>Source (buy this)</th>
+          <th>Target (craft this)</th>
+          <th>Boxes Needed</th>
+          <th>Craft Cost</th>
+          <th>Buy Cost</th>
+          <th>Savings</th>
+          <th>% Saved</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="cal">7.92x57 FMJ</td><td class="ammo-type">12.7x55 STs-130</td><td>2×</td><td>3,712</td><td>4,125</td><td class="save-low">+413</td><td><span class="save-low">10%</span></td></tr>
+        <tr><td class="cal">20x70 Buck</td><td class="ammo-type">23x75 Shrapnel</td><td>3×</td><td>2,475</td><td>2,750</td><td class="save-low">+275</td><td><span class="save-low">10%</span></td></tr>
+        <tr><td class="cal">7.62x25 LRNPC</td><td class="ammo-type">9x18 HP</td><td>1×</td><td>1,203</td><td>1,320</td><td class="save-low">+117</td><td><span class="save-low">9%</span></td></tr>
+        <tr><td class="cal">7.62x25 LRNPC</td><td class="ammo-type">45ACP FMJ</td><td>1×</td><td>1,203</td><td>1,306</td><td class="save-low">+103</td><td><span class="save-low">8%</span></td></tr>
+      </tbody>
+    </table>
+
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- SECTION 3: Butcher & Spirit Routes -->
+  <div class="rankings-section">
+    <div class="section-title">3. Butcher &amp; Spirit</div>
+
+    <!-- Butcher Routes -->
+    <div class="special-sub-header butcher">
+      <span class="label">Butcher</span>
+      <span class="desc">Buy from Butcher → disassemble → craft target ammo</span>
+    </div>
+    <table class="special-table">
+      <thead>
+        <tr>
+          <th>Source (Butcher price)</th>
+          <th>Target (craft this)</th>
+          <th>Boxes Needed</th>
+          <th>Craft Cost</th>
+          <th>Regular Buy</th>
+          <th>Savings vs Regular</th>
+          <th>% Saved</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="cal">20x70 Buck</td>
+          <td class="ammo-type">23x75 Shrapnel</td>
+          <td>3×</td>
+          <td class="price-source-butcher">1,575</td>
+          <td>2,750</td>
+          <td class="save-high-new">+1,175</td>
+          <td><span class="save-high-new">43%</span></td>
+        </tr>
+        <tr>
+          <td class="cal">7.62x25 LRNPC</td>
+          <td class="ammo-type">9x18 HP</td>
+          <td>1×</td>
+          <td class="price-source-butcher">765</td>
+          <td>1,320</td>
+          <td class="save-high-new">+555</td>
+          <td><span class="save-high-new">42%</span></td>
+        </tr>
+        <tr>
+          <td class="cal">7.62x25 LRNPC</td>
+          <td class="ammo-type">45ACP FMJ</td>
+          <td>1×</td>
+          <td class="price-source-butcher">765</td>
+          <td>1,306</td>
+          <td class="save-high-new">+541</td>
+          <td><span class="save-high-new">41%</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Spirit Routes -->
+    <div class="special-sub-header spirit" style="margin-top:22px;">
+      <span class="label">Spirit (Yantar)</span>
+      <span class="desc">Vodka trade → disassemble → craft target ammo</span>
+    </div>
+    <table class="special-table">
+      <thead>
+        <tr>
+          <th>Source (Spirit price)</th>
+          <th>Target (craft this)</th>
+          <th>Boxes Needed</th>
+          <th>Craft Cost</th>
+          <th>Regular Buy</th>
+          <th>Savings vs Regular</th>
+          <th>% Saved</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="cal">9x18 FMJ</td>
+          <td class="ammo-type">9x18 HP</td>
+          <td>2×</td>
+          <td class="price-source-spirit">986</td>
+          <td>1,320</td>
+          <td class="save-med-new">+334</td>
+          <td><span class="save-med-new">25%</span></td>
+        </tr>
+        <tr>
+          <td class="cal">9x18 FMJ</td>
+          <td class="ammo-type">45ACP FMJ</td>
+          <td>2×</td>
+          <td class="price-source-spirit">986</td>
+          <td>1,306</td>
+          <td class="save-med-new">+320</td>
+          <td><span class="save-med-new">25%</span></td>
+        </tr>
+        <tr>
+          <td class="cal">9x18 FMJ</td>
+          <td class="ammo-type">7.62x25 LRNPC</td>
+          <td>2×</td>
+          <td class="price-source-spirit">986</td>
+          <td>1,203</td>
+          <td class="save-low-new">+217</td>
+          <td><span class="save-low-new">18%</span></td>
+        </tr>
+        <tr>
+          <td class="cal">5.45x39 FMJ</td>
+          <td class="ammo-type">9x39 SP-5</td>
+          <td>2×</td>
+          <td class="price-source-spirit">1,970</td>
+          <td>2,268</td>
+          <td class="save-low-new">+298</td>
+          <td><span class="save-low-new">13%</span></td>
+        </tr>
+        <tr>
+          <td class="cal">5.45x39 FMJ</td>
+          <td class="ammo-type">5.45x39 HP</td>
+          <td>2×</td>
+          <td class="price-source-spirit">1,970</td>
+          <td>2,200</td>
+          <td class="save-low-new">+230</td>
+          <td><span class="save-low-new">10%</span></td>
+        </tr>
+        <tr>
+          <td class="cal">5.45x39 FMJ</td>
+          <td class="ammo-type">5.56x45 HP</td>
+          <td>2×</td>
+          <td class="price-source-spirit">1,970</td>
+          <td>2,200</td>
+          <td class="save-low-new">+230</td>
+          <td><span class="save-low-new">10%</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+
+  </div>
+
+
+
+</div>
+
+</body>
+</html>
