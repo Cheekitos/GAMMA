@@ -127,7 +127,7 @@
   .rankings-table tr:hover td { background: #1a2535; }
 
   .cal        { color: #fbbf24; font-weight: 600; font-size: 0.8125rem; }
-  .ammo-type  { color: #60a5fa; font-size: 0.8rem; }
+  .ammo-type  { color: #93c5fd; font-size: 0.8rem; }
   .price-best { color: #4ade80; font-weight: 700; }
   .price-mid  { color: #d1d5db; }
   .price-bad  { color: #f87171; }
@@ -390,13 +390,6 @@
   <h1 class="page-title">STALKER GAMMA: Ammo Efficiency Analysis</h1>
   <p class="page-subtitle">Cheapest to buy, best to disassemble and all good craft conversion paths</p>
 
-  <div style="background:#1f2937;border:1px solid #374151;border-left:4px solid #fbbf24;border-radius:6px;padding:14px 18px;margin-bottom:24px;display:flex;gap:12px;align-items:flex-start;">
-    <span style="font-size:1.1rem;flex-shrink:0;">⚠️</span>
-    <div style="font-size:0.8rem;color:#9ca3af;line-height:1.6;">
-      <b style="color:#fbbf24;">Ammo crafting is around 90% efficient</b>, meaning that for 10 bullets disassembled, you'll get, on average: 9 gunpowder, 9 casings and 9 bullet tips. The amount you get can vary widely though, so saying "by disassembling 2 boxes of this you can craft one box of that", while true on paper, might require more depending on your (bad) luck.
-    </div>
-  </div>
-
   <hr class="section-divider">
 
   <!-- SECTION 0: Trader Price Comparison -->
@@ -446,11 +439,11 @@
           <tr><td class="cal">9x39</td><td class="ammo-type">SP-6</td>    <td>7,356</td>                  <td class="cell-none"></td>   <td class="cell-none"></td>   <td class="cell-none"></td></tr>
           <tr><td class="cal">7.92x57</td><td class="ammo-type">FMJ</td>  <td>1,856</td>                  <td>1,856</td>                  <td class="cell-none"></td>   <td class="cell-none"></td></tr>
           <tr><td class="cal">7.92x57</td><td class="ammo-type">AP</td>   <td>6,187</td>                  <td>6,187</td>                  <td class="cell-none"></td>   <td class="cell-none"></td></tr>
-          <tr><td class="cal">7.62x54</td><td class="ammo-type">7N1</td>  <td class="cell-best">3,093</td><td class="cell-none"></td>   <td>3,940</td>                  <td class="cell-none"></td></tr>
+          <tr><td class="cal">7.62x54</td><td class="ammo-type">7N1</td>  <td class="cell-best">3,093</td><td class="cell-none"></td>   <td class="cell-none"></td>                  <td class="cell-none"></td></tr>
           <tr><td class="cal">7.62x54</td><td class="ammo-type">7N14</td> <td>5,500</td>                  <td class="cell-none"></td>   <td class="cell-none"></td>   <td class="cell-none"></td></tr>
           <tr><td class="cal">7.62x54</td><td class="ammo-type">AP</td>   <td>13,062</td>                 <td class="cell-none"></td>   <td class="cell-none"></td>   <td class="cell-none"></td></tr>
           <tr><td class="cal">7.62x54R</td><td class="ammo-type">PP</td>  <td>6,875</td>                  <td class="cell-none"></td>   <td class="cell-none"></td>   <td class="cell-none"></td></tr>
-          <tr><td class="cal">12.7x55</td><td class="ammo-type">STs-130</td><td>4,125</td>               <td class="cell-none"></td>   <td class="cell-best">1,970</td><td class="cell-none"></td></tr>
+          <tr><td class="cal">12.7x55</td><td class="ammo-type">STs-130</td><td>4,125</td>               <td class="cell-none"></td>   <td class="cell-none"></td><td class="cell-none"></td></tr>
           <tr><td class="cal">12.7x55</td><td class="ammo-type">VPS</td>  <td>9,487</td>                  <td class="cell-none"></td>   <td class="cell-none"></td>   <td class="cell-none"></td></tr>
           <tr><td class="cal">23x75</td><td class="ammo-type">Shrapnel</td>  <td>2,750</td>               <td class="cell-none"></td>   <td class="cell-best">2,100</td><td class="cell-none"></td></tr>
           <tr><td class="cal">23x75</td><td class="ammo-type">Barrikada</td> <td>9,625</td>               <td class="cell-none"></td>   <td class="cell-none"></td>   <td class="cell-none"></td></tr>
@@ -471,7 +464,7 @@
   <div class="rankings-section">
     <div class="section-title">2. Best Disassemble → Craft Routes That Save Money</div>
     <p class="section-intro">
-      All the prices for these calculations are based on the <b style="color:#d1d5db;">REGULAR (white) price</b> at traders you can see above. It's not much but it's honest work.
+      All the prices for these calculations are based on the <b style="color:#d1d5db;">REGULAR (white) price</b> at traders you can see above. I was convinced there would be more, but that's it apparently.
     </p>
     <table class="rankings-table">
       <thead>
@@ -499,6 +492,14 @@
   <div class="rankings-section">
     <div class="section-title">3. Butcher &amp; Spirit</div>
 
+
+    <!-- BUTCHER SUB-SECTION -->
+    <div class="special-sub-header butcher" style="margin-top:22px;">
+      <span class="label">Butcher (Garbage)</span>
+    </div>
+    <div style="background:#0a1628;border:1px solid #374151;border-left:4px solid #fb923c;border-radius:6px;padding:12px 16px;margin-bottom:14px;font-size:0.8rem;color:#9ca3af;line-height:1.6;">
+      Butcher has great prices and should be used as much as you can if you have access to him. Unfortunately his prices are not <em>so good</em> that it makes sense to buy ammo from him for the only purpose of disassembling / crafting into something else. So buy it and shoot it, that's it.
+    </div>
 
     <div class="special-sub-header spirit" style="margin-top:22px;">
       <span class="label">Spirit (Yantar)</span>
@@ -579,12 +580,103 @@
       All the interesting ammo to craft when you have a ton of weaker rounds lying around.
     </p>
 
-    <div class="wip-panel">
-      <div class="wip-icon">🔧</div>
-      <div>
-        <div class="wip-label">Work in Progress <span class="wip-dots"><span></span><span></span><span></span></span></div>
-        <div class="wip-text">Still grinding in game testing everything, should be ready soon-ish!</div>
+
+    <div style="margin-top: 28px; display: flex; flex-direction: column; gap: 22px;">
+
+      <div style="background:#1f2937;border:1px solid #374151;border-left:4px solid #fbbf24;border-radius:6px;padding:14px 18px;display:flex;gap:12px;align-items:flex-start;">
+        <span style="font-size:1.1rem;flex-shrink:0;"> </span>
+        <div style="font-size:0.8rem;color:#9ca3af;line-height:1.6;">
+          <b style="color:#fbbf24;">Ammo crafting is around 90% efficient</b>, meaning that for 10 bullets disassembled, you'll get, on average: 9 gunpowder, 9 casings and 9 bullet tips. The amount you get can vary widely though, so saying "by disassembling 2 boxes of this you can craft one box of that", while true on paper, might require more depending on your (bad) luck.
+        </div>
       </div>
+
+      <div style="background:#1f2937;border:1px solid #374151;border-left:4px solid #60a5fa;border-radius:6px;padding:14px 18px;display:flex;gap:12px;align-items:flex-start;">
+        <span style="font-size:1.1rem;flex-shrink:0;">📖</span>
+        <div style="font-size:0.8rem;color:#9ca3af;line-height:1.7;">
+          <b style="color:#d1d5db;">None of these crafts save money</b>, every path below is a loss on paper. The point is turning <em>ammo you looted and won't use</em> into something more useful or powerful, at the smallest theoretical cost possible.
+          <div style="margin-top:10px;color:#6b7280;font-size:0.825rem;border-top:1px solid #374151;padding-top:10px;">
+            <b style="color:#9ca3af;display:block;margin-bottom:6px;">How to read the table</b>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div>
+                <div style="margin-bottom:2px;"><span style="color:#9ca3af;">"</span><span style="color:#d1d5db;font-weight:600;">3×</span> <span class="cal" style="font-size:0.79rem;">9x18 FMJ</span> <span style="color:#9ca3af;margin:0 4px;">→</span> <span class="ammo-type" style="font-size:0.79rem;">45ACP HYDRA</span> <span style="color:#6b7280;margin-left:4px;">· 18% overpay</span><span style="color:#9ca3af;">"</span></div>
+                <div style="color:#6b7280;">Means 3 boxes of <span class="cal" style="font-size:0.79rem;">9x18 FMJ</span> can craft 1 box of <span class="ammo-type" style="font-size:0.79rem;">45ACP HYDRA</span>, at 18% above its regular purchase price.</div>
+              </div>
+              <div>
+                <div style="margin-bottom:2px;"><span style="color:#d1d5db;font-weight:600;">2×</span> <span class="cal" style="font-size:0.79rem;">9x18 AP</span> <span style="color:#6b7280;font-size:0.79rem;margin:0 3px;">+</span> <span style="color:#d1d5db;font-weight:600;">2×</span> <span class="cal" style="font-size:0.79rem;">9x18 FMJ</span> <span style="color:#9ca3af;margin:0 4px;">→</span> <span class="ammo-type" style="font-size:0.79rem;">5.7x28 SS190</span> <span style="color:#6b7280;margin-left:4px;">· 35% overpay</span></div>
+                <div style="color:#6b7280;">Means 2 boxes of <span class="cal" style="font-size:0.79rem;">9x18 AP</span> AND 2 boxes of <span class="cal" style="font-size:0.79rem;">9x18 FMJ</span> can craft 1 box of <span class="ammo-type" style="font-size:0.79rem;">5.7x28 SS190</span>, at 35% above its regular purchase price.</div>
+              </div>
+            </div>
+            <div style="margin-top:8px;color:#6b7280;">Only routes deemed "reasonable" are listed.</div>
+          </div>
+        </div>
+      </div>
+
+      <table class="rankings-table" style="margin-top:0; margin-bottom:0; table-layout:fixed; width:100%;">
+        <colgroup>
+          <col style="width:44px;">
+          <col>
+          <col style="width:44px;">
+          <col>
+          <col style="width:28px;">
+          <col>
+          <col style="width:100px;">
+        </colgroup>
+        <thead>
+          <tr>
+            <th style="text-align:right;">#</th>
+            <th>Source</th>
+            <th style="text-align:right;">+#</th>
+            <th>Additional Source</th>
+            <th style="text-align:center;">&#8594;</th>
+            <th>Target</th>
+            <th style="text-align:right;">Overpay</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <!-- PISTOL HP – FMJ -->
+          <tr><td colspan="7" style="background:#161e2b;color:#f9fafb;font-size:0.77rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:10px 10px 5px;border-left:3px solid #fbbf24;border-bottom:1px solid #374151;">Pistol HP – FMJ</td></tr>
+          <tr><td style="text-align:right;color:#d1d5db;font-size:0.75rem;">3×</td><td><span class="cal">9x18 or 9x19 FMJ</span></td><td style="text-align:right;color:#4b5563;">—</td><td></td><td style="text-align:center;color:#9ca3af;font-size:0.75rem;font-weight:600;">1×</td><td><span class="ammo-type">45ACP HYDRA</span></td><td style="text-align:right;color:#d1d5db;font-size:0.75rem;">+18%/+36%</td></tr>
+          <tr><td style="text-align:right;color:#d1d5db;font-size:0.75rem;">3×</td><td><span class="cal">45ACP FMJ</span></td><td style="text-align:right;color:#4b5563;">—</td><td></td><td style="text-align:center;color:#9ca3af;font-size:0.75rem;font-weight:600;">1×</td><td><span class="ammo-type">45ACP HYDRA</span></td><td style="text-align:right;color:#6b7280;font-size:0.75rem;">+100%</td></tr>
+
+          <!-- PISTOL AP -->
+          <tr><td colspan="7" style="background:#161e2b;color:#f9fafb;font-size:0.77rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:10px 10px 5px;border-left:3px solid #fbbf24;border-bottom:1px solid #374151;">Pistol AP</td></tr>
+          <tr><td style="text-align:right;color:#d1d5db;font-size:0.75rem;">2×</td><td><span class="cal">9x18 AP</span></td><td style="text-align:right;color:#d1d5db;font-size:0.75rem;">2×</td><td><span class="cal">9x18 FMJ</span></td><td style="text-align:center;color:#9ca3af;font-size:0.75rem;font-weight:600;">1×</td><td><span class="ammo-type">5.7x28 SS190</span></td><td style="text-align:right;color:#d1d5db;font-size:0.75rem;">+35%</td></tr>
+          <tr><td style="text-align:right;color:#d1d5db;font-size:0.75rem;">2×</td><td><span class="cal">9x18 AP</span></td><td style="text-align:right;color:#d1d5db;font-size:0.75rem;">2×</td><td><span class="cal">9x18 FMJ</span></td><td style="text-align:center;color:#9ca3af;font-size:0.75rem;font-weight:600;">1×</td><td><span class="ammo-type">9x21 SP10</span></td><td style="text-align:right;color:#d1d5db;font-size:0.75rem;">+64%</td></tr>
+
+          <tr><td style="text-align:right;color:#d1d5db;font-size:0.75rem;">4×</td><td><span class="cal">9x18 or 9x19 AP</span></td><td style="text-align:right;color:#4b5563;">—</td><td></td><td style="text-align:center;color:#9ca3af;font-size:0.75rem;font-weight:600;">1×</td><td><span class="ammo-type">5.7x28 SS190</span></td><td style="text-align:right;color:#6b7280;font-size:0.75rem;">+85%/+171%</td></tr>
+          <tr><td style="text-align:right;color:#d1d5db;font-size:0.75rem;">2×</td><td><span class="cal">9x18 AP</span></td><td style="text-align:right;color:#d1d5db;font-size:0.75rem;">2×</td><td><span class="cal">9x18 FMJ</span></td><td style="text-align:center;color:#9ca3af;font-size:0.75rem;font-weight:600;">1×</td><td><span class="ammo-type">9x19 AP</span></td><td style="text-align:right;color:#6b7280;font-size:0.75rem;">+100%</td></tr>
+
+          
+          <tr><td style="text-align:right;color:#d1d5db;font-size:0.75rem;">4×</td><td><span class="cal">9x18 or 9x19 AP</span></td><td style="text-align:right;color:#4b5563;">—</td><td></td><td style="text-align:center;color:#9ca3af;font-size:0.75rem;font-weight:600;">1×</td><td><span class="ammo-type">9x21 SP10</span></td><td style="text-align:right;color:#6b7280;font-size:0.75rem;">+123%/+228%</td></tr>
+
+          <!-- ASSAULT RIFLE HP – FMJ -->
+          <tr><td colspan="7" style="background:#161e2b;color:#f9fafb;font-size:0.77rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:10px 10px 5px;border-left:3px solid #fbbf24;border-bottom:1px solid #374151;">Assault Rifle HP – FMJ</td></tr>
+          <tr><td style="text-align:right;color:#d1d5db;font-size:0.75rem;">2×</td><td><span class="cal">5.45x39 FMJ</span></td><td style="text-align:right;color:#4b5563;">—</td><td></td><td style="text-align:center;color:#9ca3af;font-size:0.75rem;font-weight:600;">1×</td><td><span class="ammo-type">5.45x39 HP</span></td><td style="text-align:right;color:#d1d5db;font-size:0.75rem;">+69%</td></tr>
+          <tr><td style="text-align:right;color:#d1d5db;font-size:0.75rem;">2×</td><td><span class="cal">5.56x45 FMJ</span></td><td style="text-align:right;color:#4b5563;">—</td><td></td><td style="text-align:center;color:#9ca3af;font-size:0.75rem;font-weight:600;">1×</td><td><span class="ammo-type">5.56x45 HP</span></td><td style="text-align:right;color:#d1d5db;font-size:0.75rem;">+87%</td></tr>
+
+          <tr><td style="text-align:right;color:#d1d5db;font-size:0.75rem;">2×</td><td><span class="cal">7.62x39 FMJ</span></td><td style="text-align:right;color:#4b5563;">—</td><td></td><td style="text-align:center;color:#9ca3af;font-size:0.75rem;font-weight:600;">1×</td><td><span class="ammo-type">5.45x39 HP</span></td><td style="text-align:right;color:#6b7280;font-size:0.75rem;">+144%</td></tr>
+          <tr><td style="text-align:right;color:#d1d5db;font-size:0.75rem;">2×</td><td><span class="cal">7.62x39 FMJ</span></td><td style="text-align:right;color:#4b5563;">—</td><td></td><td style="text-align:center;color:#9ca3af;font-size:0.75rem;font-weight:600;">1×</td><td><span class="ammo-type">5.56x45 HP</span></td><td style="text-align:right;color:#6b7280;font-size:0.75rem;">+144%</td></tr>
+
+          <!-- RIFLE FMJ -->
+          <tr><td colspan="7" style="background:#161e2b;color:#f9fafb;font-size:0.77rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:10px 10px 5px;border-left:3px solid #fbbf24;border-bottom:1px solid #374151;">Rifle FMJ</td></tr>
+          <tr><td style="text-align:right;color:#d1d5db;font-size:0.75rem;">2×</td><td><span class="cal">7.92x57 FMJ</span></td><td style="text-align:right;color:#4b5563;">—</td><td></td><td style="text-align:center;color:#9ca3af;font-size:0.75rem;font-weight:600;">1×</td><td><span class="ammo-type">12.7x55 STs-130</span></td><td style="text-align:right;color:#d1d5db;font-size:0.75rem;">−10%</td></tr>
+          <tr><td style="text-align:right;color:#d1d5db;font-size:0.75rem;">4×</td><td><span class="cal">7.92x57 FMJ</span></td><td style="text-align:right;color:#4b5563;">—</td><td></td><td style="text-align:center;color:#9ca3af;font-size:0.75rem;font-weight:600;">1×</td><td><span class="ammo-type">7.62x54 R PP</span></td><td style="text-align:right;color:#d1d5db;font-size:0.75rem;">+8%</td></tr>
+          <tr><td style="text-align:right;color:#d1d5db;font-size:0.75rem;">2×</td><td><span class="cal">7.92x57 FMJ</span></td><td style="text-align:right;color:#4b5563;">—</td><td></td><td style="text-align:center;color:#9ca3af;font-size:0.75rem;font-weight:600;">1×</td><td><span class="ammo-type">7.62x54 7N1</span></td><td style="text-align:right;color:#d1d5db;font-size:0.75rem;">+20%</td></tr>
+          <tr><td style="text-align:right;color:#d1d5db;font-size:0.75rem;">4×</td><td><span class="cal">7.92x57 FMJ</span></td><td style="text-align:right;color:#4b5563;">—</td><td></td><td style="text-align:center;color:#9ca3af;font-size:0.75rem;font-weight:600;">1×</td><td><span class="ammo-type">7.62x54 7N14</span></td><td style="text-align:right;color:#d1d5db;font-size:0.75rem;">+35%</td></tr>
+          <tr><td style="text-align:right;color:#d1d5db;font-size:0.75rem;">2×</td><td><span class="cal">7.62x54 7N1</span></td><td style="text-align:right;color:#4b5563;">—</td><td></td><td style="text-align:center;color:#9ca3af;font-size:0.75rem;font-weight:600;">1×</td><td><span class="ammo-type">12.7x55 STs-130</span></td><td style="text-align:right;color:#d1d5db;font-size:0.75rem;">+50%</td></tr>
+
+
+
+
+        </tbody>
+      </table>
+      <div style="background:#1f2937; border:1px solid #374151; border-left:4px solid #6b7280; border-radius:6px; padding:12px 16px; margin-top:10px; font-size:0.8rem; color:#9ca3af; line-height:1.6;">
+        Crafts requiring more than 5 source boxes have been omitted. Most of those are high-end rifle AP paths (nonsense like 7× to 14× boxes to reach VPS or .338 Lapua)
+        <br><br>All Assault Rifle and Rifle AP ammo overpay percentages are prohibitive, you're burning good ammo to craft marginally different good ammo at a steep loss.
+      </div>
+
+    </div>
     </div>
   </div>
 
