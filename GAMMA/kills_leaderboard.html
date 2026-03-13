@@ -215,6 +215,32 @@
   .lb-name {
     color: #f3f4f6;
     font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* ── Social Links ── */
+  .social-links {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .social-icon {
+    color: #6b7280;
+    display: inline-flex;
+    transition: color 0.2s, transform 0.2s;
+  }
+  
+  .social-icon:hover { transform: scale(1.1); }
+  .social-icon.yt:hover { color: #ef4444; } /* YouTube Red */
+  .social-icon.tw:hover { color: #a855f7; } /* Twitch Purple */
+
+  .social-icon svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
   }
 
   .lb-kills {
@@ -288,12 +314,10 @@
 <body>
 <div class="container">
 
-  <!-- Site header -->
   <div class="page-header">
     <span class="site-title">Cheeki's Mods Archive</span>
   </div>
 
-  <!-- Breadcrumb -->
   <nav class="breadcrumb" aria-label="Breadcrumb">
     <svg fill="currentColor" viewBox="0 0 20 20" width="14" height="14" style="flex-shrink:0">
       <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
@@ -308,7 +332,6 @@
   <h1 class="page-title">Kill Data Contributors</h1>
   <p class="page-subtitle">S.T.A.L.K.E.R. GAMMA · Rankings by kills submitted</p>
 
-  <!-- Info -->
   <div class="info-box">
     Want to appear on this board? Use the <b>Cheeki Numbers Mod</b> for S.T.A.L.K.E.R. GAMMA, extract your kill logs using the provided tool and send them over.
     The more kills you submit, the better the weapon rankings data becomes, and the higher you climb.
@@ -316,7 +339,6 @@
     We'll see. Just help the weapon rankings get better because you're a nerd too.
   </div>
 
-  <!-- Summary strip -->
   <div class="summary-strip">
     <div class="summary-card">
       <span class="summary-val" id="total-contributors"></span>
@@ -332,13 +354,11 @@
     </div>
   </div>
 
-  <!-- Podium: top 3 -->
   <div class="section-label">Top 3</div>
   <div class="podium" id="podium"></div>
 
   <hr class="section-divider">
 
-  <!-- Full rankings table -->
   <div class="section-label">Full Rankings</div>
   <table class="lb-table">
     <thead>
@@ -358,8 +378,9 @@
 // ============================================================
 const CONTRIBUTORS = [
   { name: "Cheekitos",     kills: 2094 },
-  { name: "Nem",           kills: 416   },
+  { name: "Nem",           kills: 416  },
   { name: "Archvile",      kills: 48   },
+  { name: "DeadPain",      kills: 41,   youtube: "https://www.youtube.com/@DeadPain121", twitch: "https://www.twitch.tv/dead_pain" },
   { name: "Bigdaddy",      kills: 29   },
   { name: "Jeffersonpike", kills: 22   },
   { name: "Vlad",          kills: 21   },
@@ -418,10 +439,31 @@ const CONTRIBUTORS = [
     if (entry) {
       const pct = ((entry.kills / maxKills) * 100).toFixed(2);
       const isTop = i === 0;
+      
+      // Build social links
+      let socials = '';
+      if (entry.youtube || entry.twitch) {
+        socials += '<span class="social-links">';
+        if (entry.youtube) {
+          socials += `<a href="${entry.youtube}" target="_blank" rel="noopener noreferrer" class="social-icon yt" title="YouTube Channel">
+                        <svg viewBox="0 0 24 24"><path d="M21.582,6.186c-0.23-0.86-0.908-1.538-1.768-1.768C18.254,4,12,4,12,4S5.746,4,4.186,4.418 c-0.86,0.23-1.538,0.908-1.768,1.768C2,7.746,2,12,2,12s0,4.254,0.418,5.814c0.23,0.86,0.908,1.538,1.768,1.768 C5.746,20,12,20,12,20s6.254,0,7.814-0.418c0.86-0.23,1.538-0.908,1.768-1.768C22,16.254,22,12,22,12S22,7.746,21.582,6.186z M10,15.464V8.536L16,12L10,15.464z"/></svg>
+                      </a>`;
+        }
+        if (entry.twitch) {
+          socials += `<a href="${entry.twitch}" target="_blank" rel="noopener noreferrer" class="social-icon tw" title="Twitch Channel">
+                        <svg viewBox="0 0 24 24"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>
+                      </a>`;
+        }
+        socials += '</span>';
+      }
+
       return `
         <tr>
           <td class="lb-rank-num">${i + 1}</td>
-          <td class="lb-name">${entry.name}</td>
+          <td class="lb-name">
+            ${entry.name}
+            ${socials}
+          </td>
           <td class="lb-bar-cell">
             <div class="lb-bar-track">
               <div class="lb-bar-fill${isTop ? ' top' : ''}" style="width:${pct}%"></div>
