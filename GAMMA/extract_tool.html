@@ -1737,6 +1737,7 @@ async function stepExtractSplit(files) {
   tLine(`<span class="t-dim">  Scanning ${files.length} file(s) for [CN_DUMP] lines…</span>`);
 
   const stalkerLines = [], mutantLines = [];
+  const seen = new Set();
 
   for (let i = 0; i < files.length; i++) {
     const f    = files[i];
@@ -1748,6 +1749,8 @@ async function stepExtractSplit(files) {
       if (!s.startsWith('[CN_DUMP]')) continue;
       if (s.includes('===')) continue;
       const data = s.slice('[CN_DUMP]'.length).trimStart();
+      if (seen.has(data)) continue;
+      seen.add(data);
       const parts = data.split('|');
       const classField = parts.length >= 2 ? parts[1].trim().toLowerCase() : '';
       const isMutant = classField === 'mutant';
@@ -1804,6 +1807,7 @@ async function runSimpleExtract() {
 
   const stalkerLines = [];
   const mutantLines  = [];
+  const seen = new Set();
   let totalFiles = state.logFiles.length;
 
   for (let i = 0; i < totalFiles; i++) {
@@ -1816,6 +1820,8 @@ async function runSimpleExtract() {
       if (!s.startsWith('[CN_DUMP]')) continue;
       if (s.includes('===')) continue;
       const data = s.slice('[CN_DUMP]'.length).trimStart();
+      if (seen.has(data)) continue;
+      seen.add(data);
       const parts = data.split('|');
       const classField = parts.length >= 2 ? parts[1].trim().toLowerCase() : '';
       const isMutant = classField === 'mutant';
