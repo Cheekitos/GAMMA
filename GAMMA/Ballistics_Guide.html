@@ -675,7 +675,7 @@
       <div class="hitzone-card"><span class="hz-zone">✋ Hand / Fingers</span><span class="hz-mult hz-low">×0.40</span></div>
       <div class="hitzone-card"><span class="hz-zone">👟 Foot / Toe</span><span class="hz-mult hz-low">×0.30</span></div>
       <div class="hitzone-card" style="background:#1a2535; border-color:#374151;">
-        <span style="color:#6b7280; font-size:0.78rem;">Head = 12× the damage of a foot shot. Aim spine/pelvis (×0.90) when unsure (large hitboxes).</span>
+        <span style="color:#6b7280; font-size:0.78rem;">Head = 12× the damage of a foot shot, 4× the damage of a torso shot.</span>
       </div>
     </div>
 
@@ -726,7 +726,145 @@
   <hr class="section-divider">
 
   <div class="guide-section">
-    <div class="section-title">6. The AP Gate: Formula Breakdown</div>
+    <div class="section-title">6. Distance Drop-off &amp; Air Resistance</div>
+    <p style="color:#9ca3af; font-size:0.82rem; margin-bottom:16px;">
+      This section is about the <b style="color:#f3f4f6;">damage drop-off</b> with distance (not gravity pulling your bullets down). It is the earliest modifier applied in the damage pipeline, before the AP gate check and the damage formula. It influences your ability to penetrate armor <b style="color:#f3f4f6;">and</b> your raw damage at exactly the same rate.
+    </p>
+
+    <!-- Single full-width panel -->
+    <div class="info-card yellow-border" style="margin-bottom:16px; color:#9ca3af; font-size:0.8rem; line-height:1.55;">
+      <p style="margin:0; display:flex; align-items:flex-start; gap:8px;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px; height:16px; flex-shrink:0; margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span>The drop-off penalty is a <b style="color:#f3f4f6;">fixed</b> ammo property. No weapon upgrade influences it.<br>
+        The <b style="color:#f3f4f6;">Flatness</b> upgrade you can do <u>increases bullet speed and accuracy</u>, it does <b style="color:#f3f4f6;">not</b> reduce this damage drop-off at all.</span>
+      </p>
+    </div>
+
+
+    <!-- Simplified illustrative table -->
+    <div style="font-size:0.72rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:#9ca3af; margin-bottom:8px;">
+      Damage &amp; AP retention (%) by distance
+    </div>
+    <table class="data-table" style="margin-bottom:6px;">
+      <thead>
+        <tr>
+          <th>Distance</th>
+          <th style="color:#4ade80;">
+            air_res 0.25
+            <span style="font-weight:400; text-transform:none; letter-spacing:0; display:block; font-size:0.68rem; color:#6b7280; margin-top:2px;">5.45x39 · 7.62x54 · 7.62x51</span>
+          </th>
+          <th style="color:#fbbf24;">
+            air_res 0.30
+            <span style="font-weight:400; text-transform:none; letter-spacing:0; display:block; font-size:0.68rem; color:#6b7280; margin-top:2px;">5.7x28 · 7.62x39</span>
+          </th>
+          <th style="color:#fb923c;">
+            air_res 0.63
+            <span style="font-weight:400; text-transform:none; letter-spacing:0; display:block; font-size:0.68rem; color:#6b7280; margin-top:2px;">9x39 SP-5 · SP-6</span>
+          </th>
+          <th style="color:#f87171;">
+            air_res 0.80
+            <span style="font-weight:400; text-transform:none; letter-spacing:0; display:block; font-size:0.68rem; color:#6b7280; margin-top:2px;">9x18 · .357 · 9x21 SP10</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="bold-cell">25 m</td>
+          <td class="val-hi">98.2%</td>
+          <td class="val-hi">97.7%</td>
+          <td class="val-mid">92.3%</td>
+          <td class="val-mid">85.7%</td>
+        </tr>
+        <tr>
+          <td class="bold-cell">50 m</td>
+          <td class="val-hi">96.5%</td>
+          <td class="val-hi">95.5%</td>
+          <td class="val-mid">85.6%</td>
+          <td class="val-mid">75.0%</td>
+        </tr>
+        <tr>
+          <td class="bold-cell">100 m</td>
+          <td class="val-hi">93.2%</td>
+          <td class="val-mid">91.4%</td>
+          <td class="val-lo">74.9%</td>
+          <td class="val-lo">60.0%</td>
+        </tr>
+        <tr>
+          <td class="bold-cell">200 m</td>
+          <td class="val-mid">87.2%</td>
+          <td class="val-mid">84.2%</td>
+          <td class="val-lo">59.9%</td>
+          <td class="val-lo">42.9%</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="note-box" style="margin-top:6px; background:#1f2937;">
+      <b>AIR_RES</b> is basically how much friction a bullet has. The higher, the bigger the damage drop-off.
+      <br><br>
+      A 9x18 pistol round at 200m hits with less than 43% of its base damage and 43% of its base AP.
+      Enough for example to not penetrate an armor it would punch through at close range, and do effectively 0 damage.
+      Or simply do 57% less damage against an unarmored enemy or mutant.
+      <br><br>
+      <b>Fun facts:</b>
+      <ul style="padding-left:1.1rem; margin-top:8px; list-style:disc;">
+        <li style="margin-bottom:4px;">5.56 retains slightly more damage than 5.45 (−5.3% vs −6.8% at 100m). Small difference, but technically NATO rifles have better range.</li>
+        <li>Small "good" calibers vary a lot: 5.7x28mm of the P90/MP7 will perform almost as good as Assault-rifle ammo like 5.45, while the 9x21mm SP10 of the Veresk has the same drop-off as an 9x18mm Makarov, the worst caliber in the game.</li>
+      </ul>
+    </div>
+
+    <!-- Collapsible air resistance breakdown -->
+    <details style="margin-top:10px;">
+      <summary style="cursor:pointer; list-style:none; display:flex; align-items:center; gap:8px; padding:10px 14px; background:#1f2937; border:1px solid #fbbf2466; border-radius:6px; font-size:0.8rem; font-weight:600; color:#9ca3af; user-select:none;">
+        <svg class="air-res-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:14px; height:14px; flex-shrink:0; transition:transform 0.2s;"><polyline points="9 18 15 12 9 6"/></svg>
+        See the full Ammo Air Resistance Breakdown
+      </summary>
+      <div style="margin-top:6px; background:#111827; border:1px solid #374151; border-radius:6px; overflow:hidden;">
+        <table style="width:100%; border-collapse:collapse; font-size:0.78rem;">
+          <thead>
+            <tr style="background:#1f2937; border-bottom:1px solid #374151;">
+              <th style="padding:8px 14px; text-align:left; color:#6b7280; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; font-size:0.68rem; white-space:nowrap;">air_res</th>
+              <th style="padding:8px 14px; text-align:center; color:#6b7280; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; font-size:0.68rem; white-space:nowrap;">Dmg loss at 100m</th>
+              <th style="padding:8px 14px; text-align:left; color:#6b7280; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; font-size:0.68rem;">Ammo sections</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid #1f2937;"><td style="padding:7px 14px; color:#4ade80; font-family:monospace; font-weight:700;">0.01</td><td style="padding:7px 14px; text-align:center; color:#4ade80; font-weight:700; font-family:monospace;">−0.2%</td><td style="padding:7px 14px; color:#9ca3af; line-height:1.8;"><code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_gauss</code></td></tr>
+            <tr style="border-bottom:1px solid #1f2937; background:#0d1117;"><td style="padding:7px 14px; color:#4ade80; font-family:monospace; font-weight:700;">0.05</td><td style="padding:7px 14px; text-align:center; color:#4ade80; font-weight:700; font-family:monospace;">−1.2%</td><td style="padding:7px 14px; color:#9ca3af; line-height:1.8;"><code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_338_federal</code></td></tr>
+            <tr style="border-bottom:1px solid #1f2937;"><td style="padding:7px 14px; color:#4ade80; font-family:monospace; font-weight:700;">0.10</td><td style="padding:7px 14px; text-align:center; color:#4ade80; font-weight:700; font-family:monospace;">−2.4%</td><td style="padding:7px 14px; color:#9ca3af; line-height:1.8;"><code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_pkm_100</code></td></tr>
+            <tr style="border-bottom:1px solid #1f2937; background:#0d1117;"><td style="padding:7px 14px; color:#60a5fa; font-family:monospace; font-weight:700;">0.15</td><td style="padding:7px 14px; text-align:center; color:#60a5fa; font-weight:700; font-family:monospace;">−3.8%</td><td style="padding:7px 14px; color:#9ca3af; line-height:1.8;"><code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_23_eco</code></td></tr>
+            <tr style="border-bottom:1px solid #1f2937;"><td style="padding:7px 14px; color:#60a5fa; font-family:monospace; font-weight:700;">0.20</td><td style="padding:7px 14px; text-align:center; color:#60a5fa; font-weight:700; font-family:monospace;">−5.3%</td><td style="padding:7px 14px; color:#9ca3af; line-height:1.8;"><code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_5.56x45_ap</code> · <code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_5.56x45_fmj</code> · <code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_5.56x45_ss190</code></td></tr>
+            <tr style="border-bottom:1px solid #1f2937; background:#0d1117;"><td style="padding:7px 14px; color:#60a5fa; font-family:monospace; font-weight:700;">0.25</td><td style="padding:7px 14px; text-align:center; color:#60a5fa; font-weight:700; font-family:monospace;">−6.8%</td><td style="padding:7px 14px; color:#9ca3af; line-height:1.8;"><code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_5.45x39_ap</code> · <code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_5.45x39_ep</code> · <code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_5.45x39_fmj</code> · <code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_7.62x51_ap</code> · <code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_7.62x51_fmj</code> · <code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_7.62x54_7h1</code> · <code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_7.62x54_7h14</code> · <code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_7.62x54_ap</code> · <code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_7.92x33_ap</code> · <code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_7.92x33_fmj</code></td></tr>
+            <tr style="border-bottom:1px solid #1f2937;"><td style="padding:7px 14px; color:#60a5fa; font-family:monospace; font-weight:700;">0.30</td><td style="padding:7px 14px; text-align:center; color:#60a5fa; font-weight:700; font-family:monospace;">−8.6%</td><td style="padding:7px 14px; color:#9ca3af; line-height:1.8;"><code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_5.7x28_ss190</code> · <code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_5.7x28_ss195</code> · <code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_7.62x39_ap</code> · <code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_7.62x39_fmj</code></td></tr>
+            <tr style="border-bottom:1px solid #1f2937; background:#0d1117;"><td style="padding:7px 14px; color:#60a5fa; font-family:monospace; font-weight:700;">0.35</td><td style="padding:7px 14px; text-align:center; color:#60a5fa; font-weight:700; font-family:monospace;">−10.4%</td><td style="padding:7px 14px; color:#9ca3af; line-height:1.8;"><code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_7.62x25_p</code> · <code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_7.62x25_ps</code> · <code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_magnum_300</code> · <code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_50_bmg</code></td></tr>
+            <tr style="border-bottom:1px solid #1f2937;"><td style="padding:7px 14px; color:#fbbf24; font-family:monospace; font-weight:700;">0.63</td><td style="padding:7px 14px; text-align:center; color:#fbbf24; font-weight:700; font-family:monospace;">−25.1%</td><td style="padding:7px 14px; color:#9ca3af; line-height:1.8;"><code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_9x39_ap</code> · <code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_9x39_pab9</code></td></tr>
+            <tr style="border-bottom:1px solid #1f2937; background:#0d1117;"><td style="padding:7px 14px; color:#f87171; font-family:monospace; font-weight:700;">0.75</td><td style="padding:7px 14px; text-align:center; color:#f87171; font-weight:700; font-family:monospace;">−34.9%</td><td style="padding:7px 14px; color:#9ca3af; line-height:1.8;"><code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_9x19_ap</code> · <code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_9x19_fmj</code> · <code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_9x19_pbp</code> · <code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_12.7x55_ap</code> · <code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_12.7x55_fmj</code></td></tr>
+            <tr style="border-bottom:1px solid #1f2937;"><td style="padding:7px 14px; color:#f87171; font-family:monospace; font-weight:700;">0.80</td><td style="padding:7px 14px; text-align:center; color:#f87171; font-weight:700; font-family:monospace;">−40.0%</td><td style="padding:7px 14px; color:#9ca3af; line-height:1.8;"><code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_357_hp_mag</code> · <code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_4.6x30_fmj</code> · <code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_9x18_ap</code> · <code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_9x18_fmj</code> · <code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_9x18_pmm</code> · <code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_9x21_sp10</code> · <code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_12x76_dart</code> · <code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_12x76_zhekan</code></td></tr>
+            <tr style="border-bottom:1px solid #1f2937; background:#0d1117;"><td style="padding:7px 14px; color:#f87171; font-family:monospace; font-weight:700;">0.82</td><td style="padding:7px 14px; text-align:center; color:#f87171; font-weight:700; font-family:monospace;">−42.3%</td><td style="padding:7px 14px; color:#9ca3af; line-height:1.8;"><code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_11.43x23_fmj</code> · <code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_11.43x23_hydro</code></td></tr>
+            <tr style="border-bottom:1px solid #1f2937;"><td style="padding:7px 14px; color:#f87171; font-family:monospace; font-weight:700;">0.85</td><td style="padding:7px 14px; text-align:center; color:#f87171; font-weight:700; font-family:monospace;">−45.9%</td><td style="padding:7px 14px; color:#9ca3af; line-height:1.8;"><code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_23x75_barrikada</code></td></tr>
+            <tr style="border-bottom:1px solid #1f2937; background:#0d1117;"><td style="padding:7px 14px; color:#f87171; font-family:monospace; font-weight:700;">0.90</td><td style="padding:7px 14px; text-align:center; color:#f87171; font-weight:700; font-family:monospace;">−52.9%</td><td style="padding:7px 14px; color:#9ca3af; line-height:1.8;"><code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_23x75_shrapnel</code></td></tr>
+            <tr><td style="padding:7px 14px; color:#f87171; font-family:monospace; font-weight:700;">1.00</td><td style="padding:7px 14px; text-align:center; color:#f87171; font-weight:700; font-family:monospace;">−71.4%</td><td style="padding:7px 14px; color:#9ca3af; line-height:1.8;"><code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_12x70_buck</code> · <code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_12x76_bull</code> · <code style="background:#374151; color:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:0.72rem;">ammo_20x70_buck</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+    <script>
+      (function() {
+        var details = document.currentScript.previousElementSibling;
+        var chevron = details.querySelector('.air-res-chevron');
+        details.addEventListener('toggle', function() {
+          chevron.style.transform = details.open ? 'rotate(90deg)' : 'rotate(0deg)';
+        });
+      })();
+    </script>
+
+  </div>
+
+  <hr class="section-divider">
+
+  <hr class="section-divider">
+
+  <div class="guide-section">
+    <div class="section-title">7. The AP Gate: Formula Breakdown</div>
 
     <p style="color:#9ca3af; font-size:0.82rem; margin-bottom:14px;">Before any damage is applied, your bullet must pass a single check: can it punch through the target's armor? If it can't, damage drops to almost nothing; no other factor can compensate. This check happens first, every shot.</p>
 
@@ -816,7 +954,7 @@
   <hr class="section-divider">
 
   <div class="guide-section">
-    <div class="section-title">7. The Damage Formula</div>
+    <div class="section-title">8. The Damage Formula</div>
 
     <p style="color:#9ca3af; font-size:0.82rem; margin-bottom:14px;">If the AP check passes, this is what determines how much damage actually lands, ordered from most to least impactful.</p>
 
@@ -911,10 +1049,8 @@
 
   <hr class="section-divider">
 
-  <hr class="section-divider">
-
   <div class="guide-section">
-    <div class="section-title">8. Damage vs. Mutants (Separate System)</div>
+    <div class="section-title">9. Damage vs. Mutants (Separate System)</div>
     <p style="color:#9ca3af; font-size:0.82rem; margin-bottom:14px;">Mutants damage formula is much simpler than stalkers and completely skips the armor system. HP ammo is king vs. Mutants.</p>
 
     <div style="margin-bottom:14px;">
@@ -944,10 +1080,8 @@
 
   <hr class="section-divider">
 
-  <hr class="section-divider">
-
   <div class="guide-section">
-    <div class="section-title">9. Why Isn't My Gun Doing Damage?</div>
+    <div class="section-title">10. Why Isn't My Gun Doing Damage?</div>
     <div class="info-grid-3">
       <div class="info-card red-border">
         <h3>❌ Wrong Ammo Type</h3>
