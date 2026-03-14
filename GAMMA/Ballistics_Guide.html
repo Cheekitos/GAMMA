@@ -408,30 +408,31 @@
 
   /* ── Difficulty ── */
   .diff-row {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
   }
   .diff-card {
-    flex: 1;
-    min-width: 140px;
     background: #1f2937;
     border: 1px solid #374151;
     border-radius: 6px;
-    padding: 10px 14px;
+    padding: 14px 16px;
     text-align: center;
   }
-  .diff-card .dc-name { font-size: 0.75rem; color: #9ca3af; margin-bottom: 4px; }
-  .diff-card .dc-mult { font-size: 1.1rem; font-weight: 700; font-family: monospace; }
+  .diff-card .dc-name { font-size: 0.75rem; color: #9ca3af; margin-bottom: 6px; }
+  .diff-card .dc-mult { font-size: 1.25rem; font-weight: 700; font-family: monospace; margin-bottom: 6px; }
+  .diff-card .dc-desc { font-size: 0.72rem; color: #6b7280; line-height: 1.4; }
+  .dc-easy  { border-top: 2px solid #4ade80; }
+  .dc-norm  { border-top: 2px solid #a3e635; }
+  .dc-hard  { border-top: 2px solid #fbbf24; }
   .dc-easy  .dc-mult { color: #4ade80; }
   .dc-norm  .dc-mult { color: #a3e635; }
   .dc-hard  .dc-mult { color: #fbbf24; }
-  .dc-max   .dc-mult { color: #f87171; }
 
   @media (max-width: 768px) {
     .info-grid-2, .info-grid-3, .pen-grid, .hitzones { grid-template-columns: 1fr; }
     .page-title { font-size: 1.5rem; }
-    .diff-row { flex-direction: column; }
+    .diff-row { grid-template-columns: 1fr; }
     .barrel-row { grid-template-columns: 70px 1fr 130px; }
     .fw-widget { grid-template-columns: 1fr; }
     .fw-left { border-right: none; border-bottom: 1px solid #374151; }
@@ -586,21 +587,21 @@
       <div class="diff-card dc-easy">
         <div class="dc-name">Rookie / Story</div>
         <div class="dc-mult">×1.30</div>
+        <div class="dc-desc">+30% damage &amp; AP on every hit</div>
       </div>
       <div class="diff-card dc-norm">
         <div class="dc-name">Stalker (default)</div>
         <div class="dc-mult">×1.05</div>
+        <div class="dc-desc">Baseline with a slight buff</div>
       </div>
       <div class="diff-card dc-hard">
         <div class="dc-name">Veteran</div>
         <div class="dc-mult">×0.90</div>
-      </div>
-      <div class="diff-card dc-max">
-        <div class="dc-name">Master</div>
-        <div class="dc-mult">×0.80</div>
+        <div class="dc-desc">−10% damage &amp; AP on every hit</div>
       </div>
     </div>
-    <div class="note-box" style="margin-top:10px;">On Master, every bullet deals <b>20% less damage</b> and has <b>20% less AP</b> than on the default Stalker difficulty. Everything takes more shots than you expect.</div>
+    </div>
+    <div class="note-box" style="margin-top:10px;">On Veteran, every bullet deals <b>~10% less damage</b> and has <b>~10% less AP</b> than on the default Stalker difficulty.</div>
   </div>
 
   <hr class="section-divider">
@@ -1142,7 +1143,7 @@ const factors = {
   difficulty_mult: {
     name: "difficulty_mult  [#9: Game Setting]",
     cat: "Global Constant", catKey: "global", color: "cat-global",
-    body: "<b>Difficulty multiplier applied to both damage and AP.</b> Rookie = ×1.30 · Stalker = ×1.05 · Veteran = ×0.90 · <b>Master = ×0.80</b>.<br><br>On Master, every bullet deals 20% less damage and penetrates 20% less than on the default Stalker setting."
+    body: "<b>Difficulty multiplier applied to both damage and AP.</b> Rookie = ×1.30 · Stalker = ×1.05 · Veteran = ×0.90.<br><br>On Veteran, every bullet deals 10% less damage and penetrates 10% less than on the default Stalker setting."
   },
   bone_ap_scale: {
     name: "bone_ap_scale  [#8: Enemy Armor Tier]",
