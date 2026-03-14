@@ -516,6 +516,70 @@
     .ref-row, .config-row, .extract-grid { grid-template-columns: 1fr; }
     .mode-toggle { grid-template-columns: 1fr; }
   }
+
+  /* ── Old-format warning modal ── */
+  #old-format-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  #old-format-modal.show {
+    display: flex;
+    animation: fadeIn 0.2s ease forwards;
+  }
+  .modal-box {
+    background: #1f2937;
+    border: 1px solid #fbbf24;
+    border-top: 3px solid #fbbf24;
+    border-radius: 8px;
+    padding: 28px 28px 24px;
+    max-width: 460px;
+    width: 100%;
+  }
+  .modal-icon {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 12px;
+  }
+  .modal-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #fbbf24;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .modal-body {
+    color: #d1d5db;
+    font-size: 0.875rem;
+    line-height: 1.65;
+    margin-bottom: 22px;
+  }
+  .modal-body strong { color: #f3f4f6; }
+  .modal-close {
+    width: 100%;
+    padding: 10px;
+    background: rgba(251,191,36,0.08);
+    border: 1px solid #fbbf24;
+    border-radius: 6px;
+    color: #fbbf24;
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .modal-close:hover {
+    background: rgba(251,191,36,0.15);
+    color: #f9fafb;
+  }
 </style>
 </head>
 <body>
@@ -649,6 +713,19 @@
     <div id="warnings"></div>
   </div>
 
+</div>
+
+<!-- Old-format warning modal -->
+<div id="old-format-modal" onclick="closeOldFormatModal(event)">
+  <div class="modal-box">
+    <span class="modal-icon">⚠️</span>
+    <div class="modal-title">Older Mod Version Detected</div>
+    <div class="modal-body">
+      You can still send me these results, but you're playing with an <strong>older version of the mod</strong> please update it!<br><br>
+      Your logs are missing the <strong>Difficulty</strong> column, which was added in a newer release. Everything has been extracted normally, but updating will give more accurate data.
+    </div>
+    <button class="modal-close" onclick="closeOldFormatModal()">OK</button>
+  </div>
 </div>
 
 <script>
@@ -1738,6 +1815,7 @@ async function stepExtractSplit(files) {
 
   const stalkerLines = [], mutantLines = [];
   const seen = new Set();
+  let hasOldFormat = false;
 
   for (let i = 0; i < files.length; i++) {
     const f    = files[i];
@@ -1751,11 +1829,9 @@ async function stepExtractSplit(files) {
       const data = s.slice('[CN_DUMP]'.length).trimStart();
       if (seen.has(data)) continue;
       seen.add(data);
-      const parts = data.split('|');
-      const classField = parts.length >= 2 ? parts[1].trim().toLowerCase() : '';
-      const isMutant = classField === 'mutant';
-      if (isMutant) { mutantLines.push(data);  nm++; }
-      else          { stalkerLines.push(data); ns++; }
+      if (isOldFormat(data)) hasOldFormat = true;
+      if (isMutantLine(data)) { mutantLines.push(data);  nm++; }
+      else                    { stalkerLines.push(data); ns++; }
     }
     tLine(`  <span class="t-dim">${f.name}</span> <span class="t-green">→</span> <span class="t-hi">${ns}</span> <span class="t-dim">stalker</span>  <span class="t-hi">${nm}</span> <span class="t-dim">mutant</span>`);
   }
@@ -1767,7 +1843,57 @@ async function stepExtractSplit(files) {
     tLine(`  <span class="t-red">✗  No [CN_DUMP] lines found. Make sure you pressed O in-game.</span>`);
   }
 
+  if (hasOldFormat) {
+    setTimeout(showOldFormatModal, 400);
+  }
+
   return { stalkerLines, mutantLines };
+}
+
+// ══════════════════════════════════════════════════════════════
+//  MUTANT DETECTION  (mirrors is_mutant() in 01_Extract.py)
+//
+//  Old format (no Difficulty column):
+//    Faction Rank | Armor | Weapon ID | …   → class is parts[1]
+//  New format (Difficulty prepended):
+//    Difficulty | Faction Rank | Armor | …  → class is parts[2]
+//
+//  Format is auto-detected: if parts[0] is a known difficulty value
+//  the new format is assumed.
+//  Checking the whole line for "mutant" is intentionally avoided
+//  because weapon names like "CMMG MK47 MUTANT" would cause false matches.
+// ══════════════════════════════════════════════════════════════
+const _DIFFICULTY_VALUES = new Set(['novice', 'stalker', 'veteran', 'master']);
+
+function isMutantLine(data) {
+  const parts = data.split('|');
+  if (parts.length < 2) {
+    // Malformed line — fall back to whole-line check
+    return data.toLowerCase().includes('mutant');
+  }
+  const newFormat = _DIFFICULTY_VALUES.has(parts[0].trim().toLowerCase());
+  const classIndex = newFormat ? 2 : 1;
+  if (parts.length <= classIndex) {
+    return data.toLowerCase().includes('mutant');
+  }
+  return parts[classIndex].trim().toLowerCase() === 'mutant';
+}
+
+/** Returns true if a data line uses the old format (no Difficulty column). */
+function isOldFormat(data) {
+  const parts = data.split('|');
+  if (parts.length < 2) return false;
+  return !_DIFFICULTY_VALUES.has(parts[0].trim().toLowerCase());
+}
+
+function showOldFormatModal() {
+  document.getElementById('old-format-modal').classList.add('show');
+}
+
+function closeOldFormatModal(e) {
+  // Called directly by button, or via backdrop click (target must be the overlay itself)
+  if (e && e.target.id !== 'old-format-modal' && e.currentTarget.id !== 'old-format-modal') return;
+  document.getElementById('old-format-modal').classList.remove('show');
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -1809,6 +1935,7 @@ async function runSimpleExtract() {
   const mutantLines  = [];
   const seen = new Set();
   let totalFiles = state.logFiles.length;
+  let hasOldFormat = false;
 
   for (let i = 0; i < totalFiles; i++) {
     const f    = state.logFiles[i];
@@ -1822,11 +1949,9 @@ async function runSimpleExtract() {
       const data = s.slice('[CN_DUMP]'.length).trimStart();
       if (seen.has(data)) continue;
       seen.add(data);
-      const parts = data.split('|');
-      const classField = parts.length >= 2 ? parts[1].trim().toLowerCase() : '';
-      const isMutant = classField === 'mutant';
-      if (isMutant) { mutantLines.push(data);  nm++; }
-      else          { stalkerLines.push(data); ns++; }
+      if (isOldFormat(data)) hasOldFormat = true;
+      if (isMutantLine(data)) { mutantLines.push(data);  nm++; }
+      else                    { stalkerLines.push(data); ns++; }
     }
 
     tLine(`  <span class="t-dim">${f.name}</span>  <span class="t-green">→</span>  <span class="t-hi">${ns}</span> <span class="t-dim">stalker</span>  <span class="t-hi">${nm}</span> <span class="t-dim">mutant</span>`);
@@ -1873,117 +1998,13 @@ async function runSimpleExtract() {
   exResults.classList.add('fade-in');
   exResults.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
+  if (hasOldFormat) {
+    setTimeout(showOldFormatModal, 400);
+  }
+
   btn.disabled = false;
   btn.textContent = '⬇  Extract Data';
 }
 </script>
-
-<!-- ── Maintenance Overlay ── -->
-<style>
-  #maintenance-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(10, 14, 20, 0.72);
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
-  }
-
-  /* Gray out & lock all page content beneath */
-  body > .app {
-    pointer-events: none;
-    user-select: none;
-    filter: grayscale(1) brightness(0.45);
-  }
-
-  #maintenance-box {
-    background: #1f2937;
-    border: 1px solid #fbbf24;
-    border-radius: 10px;
-    padding: 36px 44px;
-    max-width: 440px;
-    width: 90%;
-    text-align: center;
-    box-shadow: 0 0 60px rgba(251, 191, 36, 0.15), 0 8px 32px rgba(0,0,0,0.6);
-    animation: maint-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-  }
-
-  @keyframes maint-pop {
-    from { opacity: 0; transform: scale(0.88) translateY(12px); }
-    to   { opacity: 1; transform: scale(1) translateY(0); }
-  }
-
-  #maintenance-box .maint-icon {
-    font-size: 2.8rem;
-    display: block;
-    margin-bottom: 14px;
-    animation: wrench-wobble 2s ease-in-out infinite;
-  }
-
-  @keyframes wrench-wobble {
-    0%, 100% { transform: rotate(-12deg); }
-    50%       { transform: rotate(12deg); }
-  }
-
-  #maintenance-box h2 {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: #fbbf24;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-
-  #maintenance-box p {
-    font-size: 0.9375rem;
-    color: #d1d5db;
-    line-height: 1.6;
-    margin-bottom: 22px;
-  }
-
-  #maintenance-box p strong {
-    color: #f3f4f6;
-  }
-
-  .maint-pulse {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: #6b7280;
-  }
-
-  .maint-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #fbbf24;
-    animation: pulse-dot 1.4s ease-in-out infinite;
-  }
-
-  @keyframes pulse-dot {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50%       { opacity: 0.3; transform: scale(0.7); }
-  }
-</style>
-
-<div id="maintenance-overlay">
-  <div id="maintenance-box">
-    <span class="maint-icon">🔧</span>
-    <h2>Down for Maintenance</h2>
-    <p>Fixing some issues with the <strong>latest mod update</strong>, brb. Keep playing and saving your logs, you'll be able to extract / send me the data soon!</p>
-    <div class="maint-pulse">
-      <div class="maint-dot"></div>
-      Working on it
-    </div>
-  </div>
-</div>
-
 </body>
 </html>
