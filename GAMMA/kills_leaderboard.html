@@ -101,14 +101,14 @@
     grid-template-columns: 1fr 1fr 1fr;
     gap: 10px;
     align-items: end;
-    margin-bottom: 32px;
+    margin-bottom: 24px;
   }
 
   .podium-card {
     background: #1f2937;
     border: 1px solid #374151;
     border-radius: 8px;
-    padding: 20px 16px 16px;
+    padding: 15px 12px 12px;
     text-align: center;
     position: relative;
     transition: border-color 0.2s;
@@ -117,45 +117,45 @@
   .podium-card.rank-1 {
     border-color: #d97706;
     background: rgba(251,191,36,0.06);
-    padding-top: 28px;
+    padding-top: 21px;
   }
   .podium-card.rank-2 { border-color: #6b7280; }
   .podium-card.rank-3 { border-color: #78350f; }
 
   .podium-medal {
-    font-size: 2rem;
+    font-size: 1.5rem;
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
   }
 
   .podium-rank {
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
   }
   .rank-1 .podium-rank { color: #fbbf24; }
   .rank-2 .podium-rank { color: #9ca3af; }
   .rank-3 .podium-rank { color: #92400e; }
 
   .podium-name {
-    font-size: 1rem;
+    font-size: 1.05rem;
     font-weight: 700;
     color: #f9fafb;
-    margin-bottom: 8px;
-    min-height: 1.5rem;
+    margin-bottom: 4px;
+    min-height: 1.1rem;
   }
 
   .podium-name.blank {
     color: #374151;
     font-style: italic;
     font-weight: 400;
-    font-size: 0.875rem;
+    font-size: 0.8rem;
   }
 
   .podium-kills {
-    font-size: 1.6rem;
+    font-size: 1.2rem;
     font-weight: 700;
     font-variant-numeric: tabular-nums;
     display: block;
@@ -165,10 +165,10 @@
   .rank-2 .podium-kills { color: #9ca3af; }
   .rank-3 .podium-kills { color: #b45309; }
 
-  .podium-kills.blank { color: #374151; font-size: 1.1rem; font-weight: 400; font-style: italic; }
+  .podium-kills.blank { color: #374151; font-size: 0.875rem; font-weight: 400; font-style: italic; }
 
   .podium-kills-label {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: #6b7280;
@@ -266,11 +266,9 @@
   .lb-bar-fill {
     height: 100%;
     border-radius: 3px;
-    background: #4ade80;
     transition: width 0.4s ease;
+    /* color set inline per-row via JS */
   }
-
-  .lb-bar-fill.top { background: #fbbf24; }
 
   /* ── Stat summary ── */
   .summary-strip {
@@ -377,16 +375,16 @@
 <script>
 // ============================================================
 const CONTRIBUTORS = [
-  { name: "Cheekitos",     kills: 2094 },
-  { name: "Nem",           kills: 416  },
-  { name: "Archvile",      kills: 48   },
+  { name: "Cheekitos",     kills: 2094  },
+  { name: "Nem",           kills: 416   },
+  { name: "Archvile",      kills: 48    },
   { name: "DeadPain",      kills: 104,   youtube: "https://www.youtube.com/@DeadPain121", twitch: "https://www.twitch.tv/dead_pain" },
-  { name: "Bigdaddy",      kills: 29   },
-  { name: "Jeffersonpike", kills: 22   },
+  { name: "Bigdaddy",      kills: 29    },
+  { name: "Jeffersonpike", kills: 22    },
   { name: "Vlad",          kills: 270   },
-  { name: "Firemoth",      kills: 18   },
-  { name: "LemonadeDog",   kills: 14   },
-  { name: "Spacecheese",   kills: 6   },
+  { name: "Firemoth",      kills: 18    },
+  { name: "LemonadeDog",   kills: 14    },
+  { name: "Spacecheese",   kills: 6     },
   { name: "Yaro",          kills: 189   },
   { name: "Boalition",     kills: 152   },
   { name: "JK",            kills: 190   },
@@ -404,7 +402,19 @@ const CONTRIBUTORS = [
   document.getElementById('total-kills').textContent = totalKills.toLocaleString();
   document.getElementById('top-contributor').textContent = top ? top.name : '—';
 
-  // ── Podium ──
+  // ── Bar colour helper: rank 0 (top) = yellow #fbbf24, rank n-1 (bottom) = light green #4ade80 ──
+  // Uses rank position so the gradient is spread evenly and always visible.
+  const totalEntries = sorted.length;
+  function barColor(rankIndex) {
+    const t = totalEntries > 1 ? 1 - (rankIndex / (totalEntries - 1)) : 1;
+    const r = Math.round(251 * t + 74  * (1 - t));
+    const g = Math.round(191 * t + 222 * (1 - t));
+    const b = Math.round(36  * t + 128 * (1 - t));
+    const toHex = n => n.toString(16).padStart(2, '0');
+    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+  }
+
+  // ── Podium (top 3) ──
   const medals  = ['🥇','🥈','🥉'];
   const ranks   = ['rank-1','rank-2','rank-3'];
   // podium display order: 2nd, 1st, 3rd
@@ -442,8 +452,8 @@ const CONTRIBUTORS = [
     const entry = sorted[i];
     if (entry) {
       const pct = ((entry.kills / maxKills) * 100).toFixed(2);
-      const isTop = i === 0;
-      
+      const col = barColor(i); // i is rank index
+
       // Build social links
       let socials = '';
       if (entry.youtube || entry.twitch) {
@@ -470,10 +480,10 @@ const CONTRIBUTORS = [
           </td>
           <td class="lb-bar-cell">
             <div class="lb-bar-track">
-              <div class="lb-bar-fill${isTop ? ' top' : ''}" style="width:${pct}%"></div>
+              <div class="lb-bar-fill" style="width:${pct}%; background:${col};"></div>
             </div>
           </td>
-          <td class="lb-kills">${entry.kills.toLocaleString()}</td>
+          <td class="lb-kills" style="color:${col};">${entry.kills.toLocaleString()}</td>
         </tr>`;
     } else {
       return `
