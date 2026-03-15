@@ -580,6 +580,46 @@
     background: rgba(251,191,36,0.15);
     color: #f9fafb;
   }
+
+  /* ── Insufficient data modal (red accent) ── */
+  #insufficient-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  #insufficient-modal.show {
+    display: flex;
+    animation: fadeIn 0.2s ease forwards;
+  }
+  #insufficient-modal .modal-box {
+    border-color: #f87171;
+    border-top-color: #f87171;
+  }
+  #insufficient-modal .modal-title { color: #f87171; }
+  #insufficient-modal .modal-close {
+    background: rgba(248,113,113,0.08);
+    border-color: #f87171;
+    color: #f87171;
+  }
+  #insufficient-modal .modal-close:hover {
+    background: rgba(248,113,113,0.18);
+    color: #f9fafb;
+  }
+  .kills-counter {
+    display: inline-block;
+    background: rgba(248,113,113,0.12);
+    border: 1px solid #f87171;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-weight: 700;
+    color: #fca5a5;
+    font-variant-numeric: tabular-nums;
+  }
 </style>
 </head>
 <body>
@@ -721,10 +761,25 @@
     <span class="modal-icon">⚠️</span>
     <div class="modal-title">Older Mod Version Detected</div>
     <div class="modal-body">
-      You can still send me these results, but you're playing with an <strong>older version of the mod</strong> please update it!<br><br>
-      Your logs are missing the <strong>Difficulty</strong> column, which was added in a newer release. Everything has been extracted normally, but updating will give more accurate data.
+      You're playing with an <strong>older version of the mod</strong>, please update it!<br><br>
+      You can still send me these results, but updating will give more accurate data.<br><br>
+      Thank you!
     </div>
-    <button class="modal-close" onclick="closeOldFormatModal()">OK</button>
+    <button class="modal-close" onclick="closeOldFormatModal()">OK!</button>
+  </div>
+</div>
+
+<!-- Insufficient data modal -->
+<div id="insufficient-modal" onclick="closeInsufficientModal(event)">
+  <div class="modal-box">
+    <span class="modal-icon">💀</span>
+    <div class="modal-title">Insufficient Data</div>
+    <div class="modal-body">
+      Please save enough logs to reach at least <strong>100 kills</strong> before sending me your files!<br><br>
+      You currently have <span class="kills-counter" id="insufficient-count">0</span> / 100 kills in your files.<br><br>
+      Good hunting Stalker!
+    </div>
+    <button class="modal-close" onclick="closeInsufficientModal()">Back to the Zone!</button>
   </div>
 </div>
 
@@ -1843,6 +1898,13 @@ async function stepExtractSplit(files) {
     tLine(`  <span class="t-red">✗  No [CN_DUMP] lines found. Make sure you pressed O in-game.</span>`);
   }
 
+  const totalKills = stalkerLines.length + mutantLines.length;
+  if (totalKills > 0 && totalKills < MIN_KILLS) {
+    tLine(`  <span class="t-red">✗  Only ${totalKills} kill(s) found — minimum is ${MIN_KILLS}. Keep hunting!</span>`);
+    setTimeout(() => showInsufficientModal(totalKills), 400);
+    throw new Error(`Insufficient data: ${totalKills} kills (need ${MIN_KILLS})`);
+  }
+
   if (hasOldFormat) {
     setTimeout(showOldFormatModal, 400);
   }
@@ -1894,6 +1956,18 @@ function closeOldFormatModal(e) {
   // Called directly by button, or via backdrop click (target must be the overlay itself)
   if (e && e.target.id !== 'old-format-modal' && e.currentTarget.id !== 'old-format-modal') return;
   document.getElementById('old-format-modal').classList.remove('show');
+}
+
+const MIN_KILLS = 100;
+
+function showInsufficientModal(count) {
+  document.getElementById('insufficient-count').textContent = count;
+  document.getElementById('insufficient-modal').classList.add('show');
+}
+
+function closeInsufficientModal(e) {
+  if (e && e.target.id !== 'insufficient-modal' && e.currentTarget.id !== 'insufficient-modal') return;
+  document.getElementById('insufficient-modal').classList.remove('show');
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -1965,6 +2039,15 @@ async function runSimpleExtract() {
     tLine(`\n  <span class="t-red">✗  No [CN_DUMP] lines found. Make sure you pressed O in-game.</span>`);
     btn.disabled = false;
     btn.textContent = '⬇  Extract Data';
+    return;
+  }
+
+  const totalKills = stalkerLines.length + mutantLines.length;
+  if (totalKills < MIN_KILLS) {
+    tLine(`\n  <span class="t-red">✗  Only ${totalKills} kill(s) found — minimum is ${MIN_KILLS}. Keep hunting!</span>`);
+    btn.disabled = false;
+    btn.textContent = '⬇  Extract Data';
+    showInsufficientModal(totalKills);
     return;
   }
 
