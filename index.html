@@ -113,7 +113,6 @@
     transform: translateY(-2px);
   }
 
-
   .card.disabled {
     opacity: 0.45;
     cursor: not-allowed;
@@ -197,10 +196,10 @@
     from { opacity:0; transform:translateY(-12px); }
     to   { opacity:1; transform:translateY(0); }
   }
-  .modal-title { font-size:1rem; font-weight:700; color:#fbbf24; margin-bottom:10px; }
+  .modal-title { font-size:1.1rem; font-weight:700; color:#fbbf24; margin-bottom:14px; }
   .modal-body  { font-size:0.875rem; color:#d1d5db; line-height:1.6; margin-bottom:20px; }
   .modal-ok {
-    display:block; width:100%; padding:9px 0;
+    display:block; width:100%; padding:10px 0;
     background:#fbbf24; color:#111827; font-weight:700;
     font-size:0.875rem; border:none; border-radius:6px;
     cursor:pointer; transition:background 0.2s;
@@ -325,19 +324,23 @@
   <div class="modal">
     <div class="modal-title">Before You Continue</div>
     <div class="modal-body">
-      <p style="color:#f9fafb; margin-bottom:18px;">I will update the leaderboards once a week, on Sundays.</p>
-      <p style="color:#f9fafb; font-weight:700; margin-bottom:8px;">Feel free to send me files anytime, but:</p>
+      <p style="margin-bottom:4px;">Leaderboard updates once a week, on Sundays.</p>
+      
+      <p style="font-size:0.75rem; margin-bottom:18px;">
+        Next update will be in <span id="countdown" style="color:#fbbf24; font-weight:700;">--:--:--:--</span>
+      </p>
+
+      <p style="color:#f9fafb; font-weight:700; margin-bottom:8px;">You can send me your files anytime, but:</p>
+      
       <ul style="padding-left:16px; display:flex; flex-direction:column; gap:6px; margin-bottom:18px;">
-        <li>Please save <strong style="text-decoration:underline;">multiple gaming sessions</strong> and send me batches of them.</li>
-        <li>The collecting process will take a couple weeks, there's no rush.</li>
-        <li>Thanks to all participating in this very nerdy project :)</li>
+        <li>Please save <b><u>multiple gaming sessions</u></b> and send them in batches</li>
+        <li>No more than one submission per week</li>
+        <li>You can drop multiple logs in the tool at once</li>
       </ul>
-      <div style="text-align:center;">
-        <span style="font-size:0.75rem; color:#9ca3af; text-transform:uppercase; letter-spacing:0.08em;">Next update in</span><br>
-        <span id="countdown" style="font-size:1.05rem; font-weight:700; color:#fbbf24; letter-spacing:0.04em;">--:--:--:--</span>
-      </div>
+      
+      <p>Thanks to all participating in this very nerdy project :)</p>
     </div>
-    <button class="modal-ok" id="extractOkBtn">Got it - take me there</button>
+    <button class="modal-ok" id="extractOkBtn">Go to the Extract Tool</button>
   </div>
 </div>
 
