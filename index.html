@@ -178,6 +178,34 @@
     .hero-title { font-size: 1.5rem; }
     .card-grid  { grid-template-columns: 1fr; }
   }
+
+  /* Modal */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.65); z-index: 1000;
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: #1f2937; border: 1px solid #374151;
+    border-top: 4px solid #fbbf24; border-radius: 10px;
+    padding: 28px 32px; max-width: 420px; width: 90%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    animation: modal-in 0.18s ease;
+  }
+  @keyframes modal-in {
+    from { opacity:0; transform:translateY(-12px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  .modal-title { font-size:1rem; font-weight:700; color:#fbbf24; margin-bottom:10px; }
+  .modal-body  { font-size:0.875rem; color:#d1d5db; line-height:1.6; margin-bottom:20px; }
+  .modal-ok {
+    display:block; width:100%; padding:9px 0;
+    background:#fbbf24; color:#111827; font-weight:700;
+    font-size:0.875rem; border:none; border-radius:6px;
+    cursor:pointer; transition:background 0.2s;
+  }
+  .modal-ok:hover { background:#f59e0b; }
 </style>
 </head>
 <body>
@@ -248,7 +276,7 @@
   <div class="section-label">Cheeki Numbers Mod</div>
   <div class="card-grid">
 
-    <a class="card" href="GAMMA/extract_tool.html">
+    <a class="card" href="GAMMA/extract_tool.html" onclick="openExtractModal(event)">
       <div class="card-title">Logs Extract Tool</div>
       <p class="card-desc">Extract your kill data from logs and contribute to the weapons rankings.</p>
       <span class="card-tag tag-mod">Tool</span>
@@ -288,9 +316,73 @@
   </div>
 
   <footer class="footer">
-    Cheeki's Mods Archive - <a href="https://linktr.ee/cheekibreekii" target="_blank" class="text-blue-400 hover:underline">Check me Out!</a>
+    Cheeki's Mods Archive - <a href="https://linktr.ee/cheekibreekii" target="_blank" rel="noopener noreferrer">Check me Out!</a>
   </footer>
 
 </div>
+
+<div class="modal-overlay" id="extractModal">
+  <div class="modal">
+    <div class="modal-title">Before You Continue</div>
+    <div class="modal-body">
+      <p style="color:#f9fafb; margin-bottom:18px;">I will update the leaderboards once a week, on Sundays.</p>
+      <p style="color:#f9fafb; font-weight:700; margin-bottom:8px;">Feel free to send me files anytime, but:</p>
+      <ul style="padding-left:16px; display:flex; flex-direction:column; gap:6px; margin-bottom:18px;">
+        <li>Please save <strong style="text-decoration:underline;">multiple gaming sessions</strong> and send me batches of them.</li>
+        <li>The collecting process will take a couple weeks, there's no rush.</li>
+        <li>Thanks to all participating in this very nerdy project :)</li>
+      </ul>
+      <div style="text-align:center;">
+        <span style="font-size:0.75rem; color:#9ca3af; text-transform:uppercase; letter-spacing:0.08em;">Next update in</span><br>
+        <span id="countdown" style="font-size:1.05rem; font-weight:700; color:#fbbf24; letter-spacing:0.04em;">--:--:--:--</span>
+      </div>
+    </div>
+    <button class="modal-ok" id="extractOkBtn">Got it - take me there</button>
+  </div>
+</div>
+
+<script>
+  function getNextSunday() {
+    var now = new Date();
+    var day = now.getDay(); // 0 = Sunday
+    var daysUntil = day === 0 ? 7 : 7 - day;
+    var next = new Date(now);
+    next.setDate(now.getDate() + daysUntil);
+    next.setHours(0, 0, 0, 0);
+    return next;
+  }
+
+  function updateCountdown() {
+    var now = new Date();
+    var target = getNextSunday();
+    var diff = target - now;
+
+    var days    = Math.floor(diff / (1000 * 60 * 60 * 24));
+    var hours   = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    var pad = function(n) { return n < 10 ? '0' + n : n; };
+    document.getElementById('countdown').textContent =
+      days + 'd ' + pad(hours) + 'h ' + pad(minutes) + 'm ' + pad(seconds) + 's';
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+  function openExtractModal(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    document.getElementById('extractModal').classList.add('active');
+    return false;
+  }
+  document.getElementById('extractOkBtn').addEventListener('click', function () {
+    document.getElementById('extractModal').classList.remove('active');
+    window.location.href = 'GAMMA/extract_tool.html';
+  });
+  document.getElementById('extractModal').addEventListener('click', function (e) {
+    if (e.target === this) this.classList.remove('active');
+  });
+</script>
 </body>
 </html>
