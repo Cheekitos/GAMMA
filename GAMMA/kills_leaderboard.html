@@ -402,18 +402,20 @@ const CONTRIBUTORS = [
   { name: "MRgoodwine",      kills: 312   },
   { name: "DeadZone",        kills: 118   },
   { name: "Vedmahel",        kills: 272   },
-  
+  { name: "Fantasy",         kills: 1565  },
+  { name: "Cheekitos",       kills: 3724,  organizer: true },
 ];
 // ============================================================
 
 (function render() {
-  const sorted = [...CONTRIBUTORS].sort((a, b) => b.kills - a.kills);
-  const totalKills = sorted.reduce((s, c) => s + c.kills, 0);
+  const organizer = CONTRIBUTORS.find(c => c.organizer);
+  const sorted = [...CONTRIBUTORS].filter(c => !c.organizer).sort((a, b) => b.kills - a.kills);
+  const totalKills = CONTRIBUTORS.reduce((s, c) => s + c.kills, 0); // includes organizer in total
   const top = sorted[0];
   const TABLE_ROWS = 10;
 
   // ── Summary strip ──
-  document.getElementById('total-contributors').textContent = sorted.length;
+  document.getElementById('total-contributors').textContent = CONTRIBUTORS.length;
   document.getElementById('total-kills').textContent = totalKills.toLocaleString();
   document.getElementById('top-contributor').textContent = top ? top.name : '—';
 
@@ -460,13 +462,14 @@ const CONTRIBUTORS = [
   }).join('');
 
   // ── Table ──
-  const maxKills = top ? top.kills : 1;
+  const maxKills = Math.max(top ? top.kills : 0, organizer ? organizer.kills : 0);
+  const sqrtMax = Math.sqrt(maxKills);
   const tbody = document.getElementById('lb-tbody');
   const rows = Math.max(sorted.length, TABLE_ROWS);
   tbody.innerHTML = Array.from({ length: rows }, (_, i) => {
     const entry = sorted[i];
     if (entry) {
-      const pct = ((entry.kills / maxKills) * 100).toFixed(2);
+      const pct = ((Math.sqrt(entry.kills) / sqrtMax) * 100).toFixed(2);
       const col = barColor(i); // i is rank index
 
       // Build social links
@@ -512,6 +515,23 @@ const CONTRIBUTORS = [
         </tr>`;
     }
   }).join('');
+  // ── Organizer row (pinned to bottom, grayed out) ──
+  if (organizer) {
+    const orgPct = ((Math.sqrt(organizer.kills) / sqrtMax) * 100).toFixed(2);
+    tbody.innerHTML += `
+      <tr>
+        <td class="lb-rank-num" style="color:#4b5563;">—</td>
+        <td class="lb-name" style="color:#6b7280;">
+          ${organizer.name}
+        </td>
+        <td class="lb-bar-cell">
+          <div class="lb-bar-track">
+            <div class="lb-bar-fill" style="width:${orgPct}%; background:#4b5563;"></div>
+          </div>
+        </td>
+        <td class="lb-kills" style="color:#4b5563;">${organizer.kills.toLocaleString()}</td>
+      </tr>`;
+  }
 })();
 </script>
 </body>
