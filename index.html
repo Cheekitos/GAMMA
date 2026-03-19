@@ -148,6 +148,7 @@
   .tag-enemies  { background: rgba(239,68,68,0.15);  color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); }
   .tag-mod      { background: rgba(74,222,128,0.12); color: #86efac; border: 1px solid rgba(74,222,128,0.3); }
   .tag-community{ background: rgba(56,189,248,0.12); color: #7dd3fc; border: 1px solid rgba(56,189,248,0.3); }
+  .tag-closing  { background: rgba(239,68,68,0.18);  color: #fca5a5; border: 1px solid rgba(239,68,68,0.5); }
 
   /* ── Info box ── */
   .info-box {
@@ -232,15 +233,21 @@
   <div class="card-grid">
 
     <a class="card" href="GAMMA/Mutants_Rankings.html">
-      <div class="card-title">Mutant Rankings</div>
+      <div class="card-title">🦴 Mutant Rankings</div>
       <p class="card-desc">Best Weapons to Hunt Mutants</p>
       <span class="card-tag tag-enemies">Rankings</span>
     </a>
 
     <a class="card" href="GAMMA/Stalkers_Rankings.html">
-      <div class="card-title">Stalker Rankings</div>
+      <div class="card-title">🎯 Stalker Rankings</div>
       <p class="card-desc">Best Weapons against NPCs</p>
       <span class="card-tag tag-enemies">Rankings</span>
+    </a>
+
+    <a class="card" href="GAMMA/kills_leaderboard.html">
+      <div class="card-title">🏆 Leaderboard</div>
+      <p class="card-desc">All the people making this project possible!</p>
+      <span class="card-tag tag-community">Community</span>
     </a>
 
   </div>
@@ -277,27 +284,22 @@
 
     <a class="card" href="GAMMA/extract_tool.html" onclick="openExtractModal(event)">
       <div class="card-title">Logs Extract Tool</div>
-      <p class="card-desc">Extract your kill data from logs and contribute to the weapons rankings.</p>
-      <span class="card-tag tag-mod">Tool</span>
-    </a>
-
-    <a class="card" href="GAMMA/kills_leaderboard.html">
-      <div class="card-title">Kill Data Leaderboard</div>
-      <p class="card-desc">Community rankings by kills submitted. The more you contribute, the better the data gets.</p>
-      <span class="card-tag tag-community">Community</span>
+      <p class="card-desc">This tool is not necessary anymore, use it to send me your last legacy log files, and update the mod!</p>
+      <span class="card-tag tag-closing">Closing Soon</span>
     </a>
 
   </div>
   <div class="info-box" style="margin-top:16px;">
-   <span style="font-size:1.4em;">Get the mod <a href="https://drive.google.com/file/d/1SXAAwPv91aQeyglTWWvINBQutInCqKTz" target="_blank" rel="noopener noreferrer">here</a> to help the project!</span>
+   <span style="font-size:1.7em;">Get the mod <a href="https://drive.google.com/file/d/1djYCtXwFRoB3BWAaJdjsGRB-B89kzGAW/" target="_blank" rel="noopener noreferrer">here</a> to help the project!</span>
     <ul style="margin-top:10px; padding-left:18px; display:flex; flex-direction:column; gap:5px;">
-      <li>Install at the bottom of your GAMMA modlist</li>
-      <li>You can turn off everything in MCM except the last section (mod will run in the background)</li>
-      <li>Every time you're done playing and leave the game, go to <code style="background:#111827;padding:1px 5px;border-radius:3px;font-size:0.8rem;">YOUR DRIVE:\Your Anomaly Folder\appdata\logs</code></li>
-      <li>Rename the <code style="background:#111827;padding:1px 5px;border-radius:3px;font-size:0.8rem;">.log</code> file so it doesn't get overwritten next time you launch the game</li>
-      <li>After gathering a couple files, drop them into the extractor tool above and send me the results at <a href="mailto:cheekitos@proton.me">cheekitos@proton.me</a></li>
-      <li>Make it to the ranking pages and help finetune the best weapons rankings!</li>
-      <li>(Full guide can be found in <a href="https://youtu.be/nmAGffCVS8E" target="_blank" rel="noopener noreferrer">this video</a>)</li>
+      <li>Install the mod at the bottom of your GAMMA modlist</li>
+      <li>Go to Main Menu → Mod Configuration Menu → Cheeki Numbers → Make sure <strong style="color:#f9fafb;">Enable Mod</strong> and <strong style="color:#f9fafb;">Enable File Log</strong> at the top are turned on.</li>
+      <li>Everything else outside these 2 options can be turned off, the mod will run in the background without displaying anything in-game.</li>
+      <li>Your data will be saved automatically in <code style="background:#111827;padding:1px 5px;border-radius:3px;font-size:0.8rem;">YOUR DRIVE:\YOUR GAMMA FOLDER\overwrite\cheeki_numbers.log</code></li>
+      <li>All gaming sessions will be saved inside this single file, it <u>does not get overwritten</u> like the previous versions of the mod.</li>
+      <li>After a decent amount of kills (100+), send it to me at <a href="mailto:cheekitos@proton.me">cheekitos@proton.me</a> and make it to the leaderboard!</li>
+      <li>Make sure to <u>delete the file or rename it</u> or save it in a different folder, so next round of kills you send me is new.</li>
+      <li>(I recommend keeping your kill files, I have some cool extra features coming soon where you will be able to use them to track personal data)</li>
     </ul>
     <div style="margin-top:12px; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.35); border-radius:6px; padding:10px 14px; display:flex; gap:10px; align-items:flex-start;">
       <span style="font-size:1.1em; flex-shrink:0;">⚠️</span>
@@ -307,10 +309,10 @@
           <li>Do not use companions</li>
           <li>Do not equip artifacts with on-hit effects</li>
           <li>Avoid mods that modify the ballistic system (special ammo, weapons, etc.)</li>
-		  <li>AO Engine 100% causes issues with the mod.</li>
-          <li>PLEASE DO NOT spawn squads just to mow them down. Anything that will not reflect the damage your weapon is actually doing in real gameplay conditions defeats the purpose of the whole project.</li>
+          <li>PLEASE DO NOT spawn squads just to mow them down.</li>
+          <li>Anything that will not reflect the damage your weapon is actually doing in real gameplay conditions defeats the purpose of the whole project.</li>
+          <li><u>AO Engine</u> does not work with the mod</li>
         </ul>
-        <span style="color:#9ca3af; display:block; margin-top:6px;">If you don't plan on sending me your logs ignore this :)</span>
       </div>
     </div>
   </div>
@@ -331,21 +333,18 @@
         Next update will be in <span id="countdown" style="color:#fbbf24; font-weight:700;">--:--:--:--</span>
       </p>
 
-      <p style="color:#f9fafb; font-weight:700; margin-bottom:8px;">You can send me your files anytime, but:</p>
-      
       <ul style="padding-left:16px; display:flex; flex-direction:column; gap:6px; margin-bottom:18px;">
-        <li>Please save <b><u>multiple gaming sessions</u></b> and send them in batches</li>
-        <li>No more than one submission per week</li>
-        <li>You can drop multiple logs in the tool at once</li>
+        <li>The mod received a <strong style="color:#f9fafb;">NEW UPDATE</strong> that makes sending me data <u>much easier</u>!</li>
+        <li>Use the tool to send me your last legacy logs, and <strong style="color:#f9fafb;">update to the new version</strong>.</li>
       </ul>
-      
+
       <p>Thanks to all participating in this very nerdy project :)</p>
     </div>
     <button class="modal-ok" id="extractOkBtn">Go to the Extract Tool</button>
   </div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
   function getNextSunday() {
     var now = new Date();
     var day = now.getDay(); // 0 = Sunday
