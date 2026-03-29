@@ -133,15 +133,15 @@
   }
 
   .card-tag {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
     font-size: 0.65rem;
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     padding: 2px 8px;
     border-radius: 3px;
-    align-self: flex-start;
-    margin-top: 4px;
   }
   .tag-weapons  { background: rgba(99,102,241,0.18); color: #a5b4fc; border: 1px solid rgba(99,102,241,0.3); }
   .tag-ammo     { background: rgba(234,179,8,0.15);  color: #fde047; border: 1px solid rgba(234,179,8,0.3); }
@@ -179,33 +179,45 @@
     .card-grid  { grid-template-columns: 1fr; }
   }
 
-  /* Modal */
-  .modal-overlay {
-    display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,0.65); z-index: 1000;
-    align-items: center; justify-content: center;
+  /* ── WIP Badge ── */
+  .wip-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 3px;
+    background: rgba(251,191,36,0.1);
+    color: #fbbf24;
+    border: 1px solid rgba(251,191,36,0.4);
+    align-self: flex-start;
   }
-  .modal-overlay.active { display: flex; }
-  .modal {
-    background: #1f2937; border: 1px solid #374151;
-    border-top: 4px solid #fbbf24; border-radius: 10px;
-    padding: 28px 32px; max-width: 420px; width: 90%;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-    animation: modal-in 0.18s ease;
+
+  .wip-dots {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
   }
-  @keyframes modal-in {
-    from { opacity:0; transform:translateY(-12px); }
-    to   { opacity:1; transform:translateY(0); }
+
+  .wip-dots span {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #fbbf24;
+    animation: wip-pulse 1.2s ease-in-out infinite;
   }
-  .modal-title { font-size:1.1rem; font-weight:700; color:#fbbf24; margin-bottom:14px; }
-  .modal-body  { font-size:0.875rem; color:#d1d5db; line-height:1.6; margin-bottom:20px; }
-  .modal-ok {
-    display:block; width:100%; padding:10px 0;
-    background:#fbbf24; color:#111827; font-weight:700;
-    font-size:0.875rem; border:none; border-radius:6px;
-    cursor:pointer; transition:background 0.2s;
+
+  .wip-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .wip-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes wip-pulse {
+    0%, 80%, 100% { opacity: 0.2; transform: scale(0.8); }
+    40%            { opacity: 1;   transform: scale(1); }
   }
-  .modal-ok:hover { background:#f59e0b; }
+
 </style>
 </head>
 <body>
@@ -235,18 +247,24 @@
     <a class="card" href="GAMMA/Mutants_Rankings.html">
       <div class="card-title">🦴 Mutant Rankings</div>
       <p class="card-desc">Best Weapons to Hunt Mutants</p>
-      <span class="card-tag tag-enemies">Rankings</span>
+      <div style="display:inline-flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:4px;">
+        <span class="card-tag tag-enemies">Rankings</span>
+        <span class="wip-badge">WIP <span class="wip-dots"><span></span><span></span><span></span></span></span>
+      </div>
     </a>
 
     <a class="card" href="GAMMA/Stalkers_Rankings.html">
       <div class="card-title">🎯 Stalker Rankings</div>
       <p class="card-desc">Best Weapons against NPCs</p>
-      <span class="card-tag tag-enemies">Rankings</span>
+      <div style="display:inline-flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:4px;">
+        <span class="card-tag tag-enemies">Rankings</span>
+        <span class="wip-badge">WIP <span class="wip-dots"><span></span><span></span><span></span></span></span>
+      </div>
     </a>
 
     <a class="card" href="GAMMA/kills_leaderboard.html">
       <div class="card-title">🏆 Leaderboard</div>
-      <p class="card-desc">All the people making this project possible!</p>
+      <p class="card-desc">All the people making this project possible! Next update in <span style="color:#e5e7eb;" id="countdown">--d --h --m --s</span></p>
       <span class="card-tag tag-community">Community</span>
     </a>
 
@@ -272,7 +290,10 @@
     <a class="card" href="GAMMA/drop_chances.html">
       <div class="card-title">Weapons Drop Chances</div>
       <p class="card-desc">Weapon drop chances per faction &amp; rank, for every NPC in the game.</p>
-      <span class="card-tag tag-weapons">Guide</span>
+      <div style="display:inline-flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:4px;">
+        <span class="card-tag tag-weapons">Guide</span>
+        <span class="wip-badge">WIP <span class="wip-dots"><span></span><span></span><span></span></span></span>
+      </div>
     </a>
 
   </div>
@@ -280,25 +301,16 @@
   <hr class="section-divider">
 
   <div class="section-label">Cheeki Numbers Mod</div>
-  <div class="card-grid">
-
-    <a class="card" href="GAMMA/extract_tool.html" onclick="openExtractModal(event)">
-      <div class="card-title">Logs Extract Tool</div>
-      <p class="card-desc">This tool is not necessary anymore, use it to send me your last legacy log files, and update the mod!</p>
-      <span class="card-tag tag-closing">Closing Soon</span>
-    </a>
-
-  </div>
-  <div class="info-box" style="margin-top:16px;">
-   <span style="font-size:1.7em;">Get the mod <a href="https://drive.google.com/file/d/11tofFEkMj0OSOkCsM_k-HKfp_dofd_4m/" target="_blank" rel="noopener noreferrer">here</a> to help the project!</span>
+  <div class="info-box">
+   <span style="color:#fbbf24; font-weight:700; font-size:2em;">→</span> <span style="font-size:2em; font-weight:700;">Get the mod <a href="https://drive.google.com/file/d/11tofFEkMj0OSOkCsM_k-HKfp_dofd_4m/" target="_blank" rel="noopener noreferrer">here</a> to help the project!</span>
     <ul style="margin-top:10px; padding-left:18px; display:flex; flex-direction:column; gap:5px;">
       <li>Install the mod at the bottom of your GAMMA modlist</li>
       <li>Go to Main Menu → Mod Configuration Menu → Cheeki Numbers → Make sure <strong style="color:#f9fafb;">Enable Mod</strong> and <strong style="color:#f9fafb;">Enable File Log</strong> at the top are turned on.</li>
-      <li>Everything else outside these 2 options can be turned off, the mod will run in the background without displaying anything in-game.</li>
+      <li>Everything else can be turned off, the mod will run in the background without displaying anything in-game.</li>
       <li>Your data will be saved automatically in <code style="background:#111827;padding:1px 5px;border-radius:3px;font-size:0.8rem;">YOUR DRIVE:\YOUR GAMMA FOLDER\overwrite\cheeki_numbers.log</code></li>
-      <li>All gaming sessions will be saved inside this single file, it <u>does not get overwritten</u> like the previous versions of the mod.</li>
-      <li>After a decent amount of kills (100+), send it to me at <a href="mailto:cheekitos@proton.me">cheekitos@proton.me</a> and make it to the leaderboard!</li>
-      <li>Make sure to <u>delete the file or rename it</u> or save it in a different folder, so next round of kills you send me is new.</li>
+      <li>All your gaming sessions will be saved inside this single file, it <u>does not get overwritten</u>.</li>
+      <li>Send it to me at <a href="mailto:cheekitos@proton.me">cheekitos@proton.me</a> and make it to the leaderboard! <strong style="color:#f9fafb;">NO MORE THAN ONE SUBMISSION PER WEEK PLEASE!</strong></li>
+      <li>Make sure to <u>rename the file</u> or save it in a different folder, so next round of kills you send me is fresh and new.</li>
       <li>(I recommend keeping your kill files, I have some cool extra features coming soon where you will be able to use them to track personal data)</li>
     </ul>
     <div style="margin-top:12px; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.35); border-radius:6px; padding:10px 14px; display:flex; gap:10px; align-items:flex-start;">
@@ -323,31 +335,11 @@
 
 </div>
 
-<div class="modal-overlay" id="extractModal">
-  <div class="modal">
-    <div class="modal-title">Before You Continue</div>
-    <div class="modal-body">
-      <p style="margin-bottom:4px;">Leaderboard updates once a week, on Sundays.</p>
-      
-      <p style="font-size:0.75rem; margin-bottom:18px;">
-        Next update will be in <span id="countdown" style="color:#fbbf24; font-weight:700;">--:--:--:--</span>
-      </p>
-
-      <ul style="padding-left:16px; display:flex; flex-direction:column; gap:6px; margin-bottom:18px;">
-        <li>The mod received a <strong style="color:#f9fafb;">NEW UPDATE</strong> that makes sending me data <u>much easier</u>!</li>
-        <li>Use the tool to send me your last legacy logs, and <strong style="color:#f9fafb;">update to the new version</strong>.</li>
-      </ul>
-
-      <p>Thanks to all participating in this very nerdy project :)</p>
-    </div>
-    <button class="modal-ok" id="extractOkBtn">Go to the Extract Tool</button>
-  </div>
-</div>
-
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
   function getNextSunday() {
     var now = new Date();
-    var day = now.getDay(); // 0 = Sunday
+    var day = now.getDay();
+    // If today is Sunday (0), next Sunday is 7 days away. Otherwise, it's 7 - current day.
     var daysUntil = day === 0 ? 7 : 7 - day;
     var next = new Date(now);
     next.setDate(now.getDate() + daysUntil);
@@ -359,33 +351,26 @@
     var now = new Date();
     var target = getNextSunday();
     var diff = target - now;
-
+    
     var days    = Math.floor(diff / (1000 * 60 * 60 * 24));
     var hours   = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     var minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
     var seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
+    
+    // Adds a leading zero to numbers under 10
     var pad = function(n) { return n < 10 ? '0' + n : n; };
-    document.getElementById('countdown').textContent =
-      days + 'd ' + pad(hours) + 'h ' + pad(minutes) + 'm ' + pad(seconds) + 's';
+    
+    // Updates the HTML element with the id 'countdown'
+    var countdownElement = document.getElementById('countdown');
+    if (countdownElement) {
+        countdownElement.innerText = days + 'd ' + pad(hours) + 'h ' + pad(minutes) + 'm ' + pad(seconds) + 's';
+    }
   }
 
+  // Run the function immediately so it doesn't show --d for a second
   updateCountdown();
+  // Set it to update every 1000 milliseconds (1 second)
   setInterval(updateCountdown, 1000);
-
-  function openExtractModal(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    document.getElementById('extractModal').classList.add('active');
-    return false;
-  }
-  document.getElementById('extractOkBtn').addEventListener('click', function () {
-    document.getElementById('extractModal').classList.remove('active');
-    window.location.href = 'GAMMA/extract_tool.html';
-  });
-  document.getElementById('extractModal').addEventListener('click', function (e) {
-    if (e.target === this) this.classList.remove('active');
-  });
 </script>
 </body>
 </html>
