@@ -1449,5 +1449,132 @@ document.getElementById('mergeLabel').addEventListener('click',toggleMerge);
 renderAll(false);
 document.getElementById('exoToggle').checked=true;
 </script>
+
+<!-- ── Maintenance Overlay ── -->
+<style>
+  #maintenance-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10, 14, 20, 0.72);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+  }
+
+  body > .rankings-container {
+    pointer-events: none;
+    user-select: none;
+    filter: grayscale(1) brightness(0.45);
+    transition: filter 0.4s, opacity 0.4s;
+  }
+
+  body.overlay-dismissed > .rankings-container {
+    pointer-events: auto;
+    user-select: auto;
+    filter: none;
+  }
+
+  #maintenance-box {
+    background: #1f2937;
+    border: 1px solid #fbbf24;
+    border-radius: 10px;
+    padding: 36px 44px;
+    max-width: 460px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 0 60px rgba(251, 191, 36, 0.15), 0 8px 32px rgba(0,0,0,0.6);
+    animation: maint-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  @keyframes maint-pop {
+    from { opacity: 0; transform: scale(0.88) translateY(12px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  #maintenance-box .maint-icon {
+    font-size: 2.8rem;
+    display: block;
+    margin-bottom: 14px;
+    animation: wrench-wobble 2s ease-in-out infinite;
+  }
+
+  @keyframes wrench-wobble {
+    0%, 100% { transform: rotate(-12deg); }
+    50%       { transform: rotate(12deg); }
+  }
+
+  #maintenance-box h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #fbbf24;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  #maintenance-box p {
+    font-size: 0.9375rem;
+    color: #d1d5db;
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  #maintenance-box p strong {
+    color: #f3f4f6;
+  }
+
+  #maint-ok-btn {
+    display: inline-block;
+    padding: 9px 32px;
+    background: rgba(251,191,36,0.1);
+    border: 1px solid #fbbf24;
+    border-radius: 6px;
+    color: #fbbf24;
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  #maint-ok-btn:hover {
+    background: rgba(251,191,36,0.22);
+    color: #fff;
+  }
+
+  #maintenance-overlay.hiding {
+    animation: overlay-fade-out 0.25s ease forwards;
+  }
+
+  @keyframes overlay-fade-out {
+    to { opacity: 0; pointer-events: none; }
+  }
+</style>
+
+<div id="maintenance-overlay">
+  <div id="maintenance-box">
+    <span class="maint-icon">🔧</span>
+    <h2>Work In Progress</h2>
+    <p>I'm currently reworking all the pages, don't worry if you don't see the rankings updating for now, it's coming soon with some extra cool features! You can still <strong>submit your kills</strong> and make it to the leaderboard in the meantime!</p>
+    <button id="maint-ok-btn" onclick="dismissOverlay()">See the Rankings</button>
+  </div>
+</div>
+
+<script>
+  function dismissOverlay() {
+    const overlay = document.getElementById('maintenance-overlay');
+    overlay.classList.add('hiding');
+    overlay.addEventListener('animationend', () => {
+      overlay.remove();
+      document.body.classList.add('overlay-dismissed');
+    }, { once: true });
+  }
+</script>
+
 </body>
 </html>
