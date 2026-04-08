@@ -518,30 +518,142 @@
       </div>
     </div>
 
-    <!-- Reliability -->
-    <div class="info-grid-2" style="margin-bottom:16px;">
+    <!-- Weapon Stats & Upgrades -->
+    <div style="margin-bottom:16px;">
       <div class="info-card">
-        <h3>🔢 What Weapon Stats & Upgrades Mean</h3>
-        <div class="card-sub">Most UI values are misleading</div>
-        <ul>
-          <li><b>Accuracy</b>: ADS spread cone width. 0% = 1.5°, 100% = 0° (perfect)</li>
-          <li><b>Handling</b>: Reduces hip-fire inaccuracy when moving. Does nothing to ADS.</li>
-          <li><b>Damage</b>: For reference only, gets drowned in a lot of other variables.</li>
-          <li><b>Fire Rate</b>: Actually a reliable stat, it's the actual RPM.</li>
-          <li><b>Recoil Control</b>: Based on a formula that doesn't reflect in-game recoil. Ignore it.</li>
-          <li><b>Fire Rate upgrades</b>: Add flat +RPM, not a multiplier.</li>
-        </ul>
+        <h3 style="margin-bottom:2px;">🔢 What Weapon Stats &amp; Upgrades Mean</h3>
+        <div style="margin-bottom:14px;"></div>
+
+        <!-- legend -->
+        <div style="display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
+          <span class="badge badge-info" style="font-size:0.65rem; padding:3px 8px;">STAT CARD</span>
+          <span style="color:#6b7280; font-size:0.75rem; align-self:center;">= What the weapon description shows</span>
+          <span class="badge badge-good" style="font-size:0.65rem; padding:3px 8px; margin-left:8px;">UPGRADE</span>
+          <span style="color:#6b7280; font-size:0.75rem; align-self:center;">= What the upgrade at the technician does</span>
+        </div>
+
+        <!-- stat rows -->
+        <div style="display:flex; flex-direction:column; gap:0; border:1px solid #374151; border-radius:6px; overflow:hidden;">
+
+          <!-- Accuracy -->
+          <div style="display:grid; grid-template-columns:90px 1fr; border-bottom:1px solid #374151;">
+            <div style="padding:10px 12px; background:#161f2e; border-right:1px solid #374151; display:flex; align-items:center;">
+              <span style="color:#f9fafb; font-weight:700; font-size:0.8rem;">Accuracy</span>
+            </div>
+            <div style="padding:8px 14px; display:flex; flex-direction:column; gap:5px;">
+              <div style="display:flex; gap:8px; align-items:baseline;">
+                <span class="badge badge-info" style="flex-shrink:0;">STAT CARD</span>
+                <span style="color:#d1d5db; font-size:0.8rem;">Aim cone when Aiming Down Sights (ADS). Higher the better, 100% being perfect accuracy.</span>
+              </div>
+              <div style="display:flex; gap:8px; align-items:baseline;">
+                <span class="badge badge-good" style="flex-shrink:0;">UPGRADE</span>
+                <span style="color:#d1d5db; font-size:0.8rem;">Improves the dispersion cone, both ADS and hip-firing.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Handling -->
+          <div style="display:grid; grid-template-columns:90px 1fr; border-bottom:1px solid #374151;">
+            <div style="padding:10px 12px; background:#161f2e; border-right:1px solid #374151; display:flex; align-items:center;">
+              <span style="color:#f9fafb; font-weight:700; font-size:0.8rem;">Handling</span>
+            </div>
+            <div style="padding:8px 14px; display:flex; flex-direction:column; gap:5px;">
+              <div style="display:flex; gap:8px; align-items:baseline;">
+                <span class="badge badge-info" style="flex-shrink:0;">STAT CARD</span>
+                <span style="color:#9ca3af; font-size:0.8rem; font-style:italic;">Means nothing.</span>
+              </div>
+              <div style="display:flex; gap:8px; align-items:baseline;">
+                <span class="badge badge-good" style="flex-shrink:0;">UPGRADE</span>
+                <span style="color:#d1d5db; font-size:0.8rem;">Improves hip-fire accuracy.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recoil -->
+          <div style="display:grid; grid-template-columns:90px 1fr; border-bottom:1px solid #374151;">
+            <div style="padding:10px 12px; background:#161f2e; border-right:1px solid #374151; display:flex; align-items:center;">
+              <span style="color:#f9fafb; font-weight:700; font-size:0.8rem;">Recoil</span>
+            </div>
+            <div style="padding:8px 14px; display:flex; flex-direction:column; gap:5px;">
+              <div style="display:flex; gap:8px; align-items:baseline;">
+                <span class="badge badge-info" style="flex-shrink:0;">STAT CARD</span>
+                <span style="color:#9ca3af; font-size:0.8rem; font-style:italic;">Arbitrary formula result, doesn't mean much.</span>
+              </div>
+              <div style="display:flex; gap:8px; align-items:baseline;">
+                <span class="badge badge-good" style="flex-shrink:0;">UPGRADE</span>
+                <span style="color:#d1d5db; font-size:0.8rem;">Decreases the camera <b style="color:#f9fafb;">climb</b> when shooting, but not the camera shake.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fire Rate -->
+          <div style="display:grid; grid-template-columns:90px 1fr; border-bottom:1px solid #374151;">
+            <div style="padding:10px 12px; background:#161f2e; border-right:1px solid #374151; display:flex; align-items:center;">
+              <span style="color:#f9fafb; font-weight:700; font-size:0.8rem;">Fire Rate</span>
+            </div>
+            <div style="padding:8px 14px; display:flex; flex-direction:column; gap:5px;">
+              <div style="display:flex; gap:8px; align-items:baseline;">
+                <span class="badge badge-info" style="flex-shrink:0;">STAT CARD</span>
+                <span style="color:#d1d5db; font-size:0.8rem;">Weapon RPM.</span>
+              </div>
+              <div style="display:flex; gap:8px; align-items:baseline;">
+                <span class="badge badge-good" style="flex-shrink:0;">UPGRADE</span>
+                <span style="color:#d1d5db; font-size:0.8rem;">Flat RPM increase (60% upgrade means generally +60 RPM).</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Reliability -->
+          <div style="display:grid; grid-template-columns:90px 1fr;">
+            <div style="padding:10px 12px; background:#161f2e; border-right:1px solid #374151; display:flex; align-items:center;">
+              <span style="color:#f9fafb; font-weight:700; font-size:0.8rem;">Reliability</span>
+            </div>
+            <div style="padding:8px 14px; display:flex; flex-direction:column; gap:5px;">
+              <div style="display:flex; gap:8px; align-items:baseline;">
+                <span class="badge badge-info" style="flex-shrink:0;">STAT CARD</span>
+                <span style="color:#d1d5db; font-size:0.8rem;">Chance for weapon parts to take damage when firing.</span>
+              </div>
+              <div style="display:flex; gap:8px; align-items:baseline;">
+                <span class="badge badge-good" style="flex-shrink:0;">UPGRADE</span>
+                <span style="color:#d1d5db; font-size:0.8rem;">Reduces how fast weapon parts break down.</span>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- end stat rows -->
+
+        <!-- Standalone values -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px;">
+          <div style="background:#111827; border:1px solid #1f2937; border-radius:5px; padding:10px 12px;">
+            <div style="margin-bottom:7px;"><span class="badge badge-info" style="font-size:0.65rem;">STAT CARD</span> <span style="color:#6b7280; font-size:0.72rem; margin-left:4px;">No upgrade paths for these </span></div>
+            <ul style="padding-left:1rem; list-style:disc;">
+              <li style="color:#9ca3af; font-size:0.78rem; margin-bottom:3px;"><b style="color:#d1d5db;">Damage:</b> For reference only, not your "true" dmg as it gets drowned in a lot of other variables.</li>
+              <li style="color:#9ca3af; font-size:0.78rem; margin-bottom:3px;"><b style="color:#d1d5db;">Max range:</b> Distance at which the bullet despawns.</li>
+              <li style="color:#9ca3af; font-size:0.78rem;"><b style="color:#d1d5db;">Muzzle velocity:</b> Weapon bullet speed.</li>
+            </ul>
+          </div>
+          <div style="background:#111827; border:1px solid #1f2937; border-radius:5px; padding:10px 12px;">
+            <div style="margin-bottom:7px;"><span class="badge badge-good" style="font-size:0.65rem;">UPGRADE</span> <span style="color:#6b7280; font-size:0.72rem; margin-left:4px;">Does not appear in weapons cards</span></div>
+            <ul style="padding-left:1rem; list-style:disc;">
+              <li style="color:#9ca3af; font-size:0.78rem;"><b style="color:#d1d5db;">Flatness:</b> Increases bullet speed and accuracy, but does not influence damage drop-off.</li>
+            </ul>
+          </div>
+        </div>
+
       </div>
-      <div class="info-card">
-        <h3>🔧 Reliability</h3>
-        <div class="card-sub">How Weapon Parts Break</div>
-        <ul>
-          <li>Every shot triggers a potential damage roll for a random part</li>
-          <li>A 90% reliability gun has a ~0.28% chance per shot to damage one of its parts</li>
-          <li>The part that breaks is chosen at random</li>
-          <li>The unlucky part will lose 5–12% of its current condition</li>
-        </ul>
-      </div>
+    </div>
+
+    <!-- Reliability detail -->
+    <div class="info-card" style="margin-bottom:16px;">
+      <h3>🔧 How Reliability works</h3>
+
+      <ul>
+        <li>Every shot you take triggers a potential damage roll for a random weapon part</li>
+        <li>For example, a weapon in perfect condition has a ~0.3% chance per shot to damage one of its parts</li>
+		<li>This increases <b>dramatically</b> the more damaged your weapon is</li>
+        <li>The part that breaks is chosen at random</li>
+        <li>The unlucky part will lose 5–12% of its current condition</li>
+      </ul>
     </div>
 
   </div>
@@ -613,7 +725,7 @@
     <div style="margin-bottom:16px;">
       <div class="info-card">
         <h3>🛡️ Player Armor: BR Class & BR%</h3>
-        <div class="card-sub">How armor protects you</div>
+
         <ul>
           <li><b>BR Class</b>: AP resistance ceiling. Bullets with higher AP than your BR Class will penetrate your armor, results are painful.</li>
           <li><b>BR%</b>: Flat damage reduction. Always applies, even on penetrating hits, but on a non-pen hit it stacks with BR Class.</li>
@@ -631,7 +743,7 @@
         <tr><td class="bold-cell">Bandits</td><td style="color:#f3f4f6; font-family:monospace;">×1.00</td><td style="color:#4ade80; font-family:monospace;">×1.10</td><td>Slightly easier to penetrate than baseline</td></tr>
         <tr><td class="bold-cell">Monolith</td><td style="color:#f87171; font-family:monospace;">×0.80</td><td style="color:#f87171; font-family:monospace;">×0.90</td><td>20% damage resist + 10% AP reduction</td></tr>
         <tr><td class="bold-cell">UNISG (ISG)</td><td style="color:#f87171; font-family:monospace;">×0.70</td><td style="color:#f87171; font-family:monospace;">×0.65</td><td><b style="color:#f87171;">30% damage + 35% AP reduction.</b></td></tr>
-        <tr><td class="bold-cell">Sin (Greh)</td><td style="color:#f87171; font-family:monospace;">×0.30</td><td style="color:#f3f4f6; font-family:monospace;">×1.00</td><td><b style="color:#f87171;">70% damage reduction.</b></td></tr>
+        <tr><td class="bold-cell">Sin</td><td style="color:#f87171; font-family:monospace;">×0.30</td><td style="color:#f87171; font-family:monospace;">×0.90</td><td><b style="color:#f87171;">70% damage reduction + 10% AP reduction.</b></td></tr>
         <tr><td class="bold-cell">Zombied</td><td style="color:#f87171; font-family:monospace;">×0.30</td><td style="color:#f3f4f6; font-family:monospace;">×1.00</td><td><b style="color:#f87171;">70% damage reduction,</b> same as Sin</td></tr>
       </tbody>
     </table>
@@ -944,7 +1056,7 @@
       <div class="pen-card pc-none">
         <div class="pc-label">🚫 No Penetration</div>
         <div class="pc-cond">Low / No AP</div>
-        <div class="pc-result">Almost no damage (~0.25% of normal). Armor still slowly chips away, but at a very reduced pace.</div>
+        <div class="pc-result">You do a tiny "concussion" amount of dmg. Armor still chips away, but at a very reduced pace.</div>
       </div>
     </div>
   </div>
