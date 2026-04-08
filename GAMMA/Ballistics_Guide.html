@@ -438,6 +438,45 @@
     .fw-left { border-right: none; border-bottom: 1px solid #374151; }
     .fw-right { padding: 14px; min-height: 140px; }
   }
+
+  /* barrel condition chart */
+  .bc-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    margin-bottom: 10px;
+  }
+  .bc-legend span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.72rem;
+    color: #9ca3af;
+  }
+  .bc-swatch {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    flex-shrink: 0;
+    font-style: normal;
+  }
+  #bc-tooltip {
+    position: absolute;
+    background: #1f2937;
+    border: 1px solid #374151;
+    border-radius: 5px;
+    padding: 6px 10px;
+    font-size: 0.72rem;
+    color: #f3f4f6;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .1s;
+    white-space: nowrap;
+    z-index: 10;
+    top: 0;
+    left: 0;
+  }
 </style>
 </head>
 <body>
@@ -482,38 +521,19 @@
     <p style="color:#9ca3af; font-size:0.82rem; margin-bottom:12px;"><b style="color:#f9fafb;">Barrel condition</b> influences both your damage and AP (AP gate formula and damage formula). It is critical to keep your barrel above 70%.</p>
 
     <div class="info-card" style="margin-bottom:16px;">
-      <h3>📉 Barrel Condition → Damage & AP Multiplier</h3>
+      <h3>📉 Barrel Condition Penalties</h3>
       <div class="card-sub">Both damage and AP rely on your weapon's barrel condition</div>
-      <div class="barrel-rows" style="margin-top:10px;">
-        <div class="barrel-row">
-          <span class="br-label" style="color:#4ade80;">70 – 100%</span>
-          <div class="barrel-bar-track"><div class="barrel-bar-fill" style="width:100%; background:#4ade80;"></div></div>
-          <span class="br-val" style="color:#4ade80;">No penalty</span>
+      <div style="margin-top:12px;">
+        <div class="bc-legend">
+          <span><i class="bc-swatch" style="background:rgba(74,222,128,0.2);border:1px solid rgba(74,222,128,0.4);"></i>70%+: No penalty</span>
+          <span><i class="bc-swatch" style="background:rgba(251,146,60,0.25);border:1px solid rgba(251,146,60,0.5);"></i>Degraded</span>
+          <span><i class="bc-swatch" style="background:rgba(239,68,68,0.25);border:1px solid rgba(239,68,68,0.5);"></i>Severe</span>
+          <span><i class="bc-swatch" style="background:rgba(185,28,28,0.35);border:1px solid rgba(185,28,28,0.6);"></i>Less than 50% dmg</span>
+          <span><i class="bc-swatch" style="background:rgba(80,10,10,0.55);border:1px solid rgba(120,20,20,0.7);"></i>Unusable</span>
         </div>
-        <div class="barrel-row">
-          <span class="br-label" style="color:#fbbf24;">50 – 69%</span>
-          <div class="barrel-bar-track"><div class="barrel-bar-fill" style="width:72%; background:#fbbf24;"></div></div>
-          <span class="br-val" style="color:#fbbf24;">Up to -28% Dmg</span>
-        </div>
-        <div class="barrel-row">
-          <span class="br-label" style="color:#fb923c;">30 – 49%</span>
-          <div class="barrel-bar-track"><div class="barrel-bar-fill" style="width:44%; background:#fb923c;"></div></div>
-          <span class="br-val" style="color:#fb923c;">Up to -56% Dmg</span>
-        </div>
-        <div class="barrel-row">
-          <span class="br-label" style="color:#f87171;">20 – 29%</span>
-          <div class="barrel-bar-track"><div class="barrel-bar-fill" style="width:29%; background:#f87171;"></div></div>
-          <span class="br-val" style="color:#f87171;">Up to -71% Dmg</span>
-        </div>
-        <div class="barrel-row">
-          <span class="br-label" style="color:#ef4444;">10 – 19%</span>
-          <div class="barrel-bar-track"><div class="barrel-bar-fill" style="width:15%; background:#ef4444;"></div></div>
-          <span class="br-val" style="color:#ef4444;">Up to -85% Dmg</span>
-        </div>
-        <div class="barrel-row">
-          <span class="br-label" style="color:#991b1b;">0 – 9%</span>
-          <div class="barrel-bar-track"><div class="barrel-bar-fill" style="width:5%; background:#991b1b;"></div></div>
-          <span class="br-val" style="color:#991b1b;">Up to -99% Dmg</span>
+        <div style="position:relative; width:100%; height:210px;">
+          <canvas id="bc-canvas" role="img" aria-label="Line chart: barrel condition on x-axis from 100% down to 0%, damage multiplier on y-axis. Damage stays at 100% above 70% barrel, drops to 72% at 50%, 44% at 30%, and near 0% at 0%.">Damage multiplier: 100% at 70%+ barrel, ~72% at 50%, ~44% at 30%, ~15% at 10%.</canvas>
+          <div id="bc-tooltip"></div>
         </div>
       </div>
     </div>
@@ -1222,6 +1242,146 @@
   </div>
 
 </div><!-- end guide-container -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+(function() {
+  function calcDmg(pct) {
+    var x = pct / 100;
+    return Math.min(1, (130 - 1.12 * x) * (x * 1.12) / 100) * 100;
+  }
+
+  var pts = [];
+  for (var i = 0; i <= 100; i++) {
+    pts.push({ x: i, y: Math.round(calcDmg(i) * 10) / 10 });
+  }
+
+  var zonePlugin = {
+    id: 'bcZones',
+    beforeDatasetsDraw: function(chart) {
+      var ctx = chart.ctx;
+      var xA = chart.scales.x;
+      var yA = chart.scales.y;
+      var yT = yA.top, yB = yA.bottom;
+
+      var zones = [
+        [0,  14,  'rgba(80,10,10,0.45)'],
+        [14, 35,  'rgba(185,28,28,0.30)'],
+        [35, 52,  'rgba(239,68,68,0.22)'],
+        [52, 70,  'rgba(251,146,60,0.20)'],
+        [70, 100, 'rgba(74,222,128,0.12)']
+      ];
+      zones.forEach(function(z) {
+        var px1 = Math.min(xA.getPixelForValue(z[0]), xA.getPixelForValue(z[1]));
+        var px2 = Math.max(xA.getPixelForValue(z[0]), xA.getPixelForValue(z[1]));
+        ctx.fillStyle = z[2];
+        ctx.fillRect(px1, yT, px2 - px1, yB - yT);
+      });
+
+      var thresholds = [
+        [70, '#4ade80'],
+        [52, '#fb923c'],
+        [35, '#f87171'],
+        [14, '#ef4444']
+      ];
+      thresholds.forEach(function(t) {
+        var px = xA.getPixelForValue(t[0]);
+        ctx.save();
+        ctx.strokeStyle = t[1];
+        ctx.lineWidth = 1;
+        ctx.globalAlpha = 0.5;
+        ctx.setLineDash([3, 4]);
+        ctx.beginPath();
+        ctx.moveTo(px, yT);
+        ctx.lineTo(px, yB);
+        ctx.stroke();
+        ctx.restore();
+      });
+    }
+  };
+
+  var canvas = document.getElementById('bc-canvas');
+  if (!canvas) return;
+  var tooltip = document.getElementById('bc-tooltip');
+
+  new Chart(canvas, {
+    type: 'line',
+    data: {
+      datasets: [{
+        data: pts,
+        clip: false,
+        borderColor: '#fbbf24',
+        borderWidth: 2,
+        pointRadius: 0,
+        pointHoverRadius: 4,
+        pointHoverBackgroundColor: '#fbbf24',
+        pointHoverBorderColor: '#111827',
+        pointHoverBorderWidth: 2,
+        tension: 0.3,
+        fill: { target: 'origin', above: 'rgba(251,191,36,0.07)' }
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          enabled: false,
+          external: function(context) {
+            var t = context.tooltip;
+            if (!t || t.opacity === 0) { tooltip.style.opacity = 0; return; }
+            var dp = t.dataPoints[0];
+            var cond = dp.parsed.x;
+            var dmg = dp.parsed.y;
+            var valColor = cond >= 70 ? '#4ade80' : cond >= 52 ? '#fb923c' : cond >= 35 ? '#f87171' : cond >= 14 ? '#ef4444' : '#7f1d1d';
+            var suffix = cond >= 70 ? ' &nbsp;<span style="color:#4ade80;">No penalty</span>' : '';
+            tooltip.innerHTML = '<b style="color:#f9fafb;">' + cond + '% barrel</b> &rarr; <span style="color:' + valColor + ';">' + dmg.toFixed(1) + '% dmg/AP</span>' + suffix;
+            var left = t.caretX + 12;
+            if (left + 240 > canvas.offsetWidth) left = t.caretX - 244;
+            tooltip.style.left = left + 'px';
+            tooltip.style.top = (t.caretY - 18) + 'px';
+            tooltip.style.opacity = 1;
+          }
+        }
+      },
+      scales: {
+        x: {
+          type: 'linear',
+          min: 0,
+          max: 100,
+          reverse: true,
+          ticks: {
+            color: '#6b7280',
+            font: { size: 10 },
+            callback: function(v) { return v + '%'; },
+            stepSize: 10,
+            maxRotation: 0
+          },
+          grid: { color: 'rgba(55,65,81,0.5)', lineWidth: 0.5 },
+          border: { color: '#374151' },
+          title: { display: true, text: 'Barrel condition', color: '#6b7280', font: { size: 11 } }
+        },
+        y: {
+          min: 0,
+          max: 100,
+          ticks: {
+            color: '#6b7280',
+            font: { size: 10 },
+            callback: function(v) { return v + '%'; },
+            stepSize: 20
+          },
+          grid: { color: 'rgba(55,65,81,0.5)', lineWidth: 0.5 },
+          border: { color: '#374151' },
+          title: { display: true, text: 'Dmg & AP multiplier', color: '#6b7280', font: { size: 11 } }
+        }
+      }
+    },
+    plugins: [zonePlugin]
+  });
+})();
+</script>
 
 <script>
 // Factor definitions for the interactive formula
