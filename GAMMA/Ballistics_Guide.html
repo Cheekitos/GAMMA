@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>S.T.A.L.K.E.R. GAMMA: Ballistics & Damage Guide</title>
-<meta name="description" content="Complete ballistics guide for STALKER GAMMA: damage formula, AP penetration, ammo types, armor, faction resistances, and weapon mechanics.">
+<meta name="description" content="Ballistics guide for STALKER GAMMA">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -521,12 +521,12 @@
     <!-- Reliability -->
     <div class="info-grid-2" style="margin-bottom:16px;">
       <div class="info-card">
-        <h3>🔢 What Weapon Stats Actually Mean</h3>
+        <h3>🔢 What Weapon Stats & Upgrades Mean</h3>
         <div class="card-sub">Most UI values are misleading</div>
         <ul>
           <li><b>Accuracy</b>: ADS spread cone width. 0% = 1.5°, 100% = 0° (perfect)</li>
           <li><b>Handling</b>: Reduces hip-fire inaccuracy when moving. Does nothing to ADS.</li>
-          <li><b>Damage</b>: For reference only, not what the game actually uses.</li>
+          <li><b>Damage</b>: For reference only, gets drowned in a lot of other variables.</li>
           <li><b>Fire Rate</b>: Actually a reliable stat, it's the actual RPM.</li>
           <li><b>Recoil Control</b>: Based on a formula that doesn't reflect in-game recoil. Ignore it.</li>
           <li><b>Fire Rate upgrades</b>: Add flat +RPM, not a multiplier.</li>
@@ -564,10 +564,10 @@
       </div>
       <div class="info-card yellow-border">
         <h3>🎯 Sniper Class Bonus</h3>
-        <div class="card-sub">Applied to all weapons in snipers[] table</div>
+        <div class="card-sub">Applied to most sniper rifles</div>
         <ul>
-          <li>Flat <b>+0.05 AP</b> bonus on top of the ammo's own value</li>
-          <li>Applies to all sniper-class weapons in game code</li>
+          <li>Flat <b>+5 AP</b> bonus on top of the ammo's value</li>
+          <li>Applies to most snipers in game</li>
         </ul>
       </div>
       <div class="info-card yellow-border">
@@ -585,12 +585,12 @@
     <p style="color:#9ca3af; font-size:0.82rem; margin-bottom:12px;">Both raw damage and AP are scaled by game difficulty on every hit.</p>
     <div class="diff-row">
       <div class="diff-card dc-easy">
-        <div class="dc-name">Rookie / Story</div>
+        <div class="dc-name">Novice</div>
         <div class="dc-mult">×1.30</div>
         <div class="dc-desc">+25% damage &amp; AP on every hit</div>
       </div>
       <div class="diff-card dc-norm">
-        <div class="dc-name">Stalker (default)</div>
+        <div class="dc-name">Stalker</div>
         <div class="dc-mult">×1.05</div>
         <div class="dc-desc">Baseline</div>
       </div>
@@ -663,17 +663,17 @@
     <p style="color:#9ca3af; font-size:0.82rem; margin-bottom:14px;">Every hit location has its own damage multiplier, and the gap between a headshot and a foot shot is enormous.</p>
 
     <div class="hitzones">
-      <div class="hitzone-card"><span class="hz-zone">👁️ Head (eyes / eyelid)</span><span class="hz-mult hz-crit">×3.65</span></div>
+      <div class="hitzone-card"><span class="hz-zone">👁️ Head (eye level)</span><span class="hz-mult hz-crit">×3.65</span></div>
       <div class="hitzone-card"><span class="hz-zone">💀 Jaw</span><span class="hz-mult hz-crit">×3.00</span></div>
       <div class="hitzone-card"><span class="hz-zone">🔴 Neck</span><span class="hz-mult hz-crit">×2.70</span></div>
       <div class="hitzone-card"><span class="hz-zone">⬛ Default (unmapped bone)</span><span class="hz-mult hz-mid">×0.75</span></div>
-      <div class="hitzone-card"><span class="hz-zone">🫀 Pelvis / All Spine</span><span class="hz-mult hz-mid">×0.90</span></div>
+      <div class="hitzone-card"><span class="hz-zone">🫀 Pelvis / Spine</span><span class="hz-mult hz-mid">×0.90</span></div>
       <div class="hitzone-card"><span class="hz-zone">💪 Upper arm / Clavicle</span><span class="hz-mult hz-mid">×0.70</span></div>
       <div class="hitzone-card"><span class="hz-zone">🦴 Forearm</span><span class="hz-mult hz-mid">×0.60</span></div>
       <div class="hitzone-card"><span class="hz-zone">🦵 Thigh</span><span class="hz-mult hz-mid">×0.55</span></div>
       <div class="hitzone-card"><span class="hz-zone">🦿 Calf</span><span class="hz-mult hz-mid">×0.45</span></div>
-      <div class="hitzone-card"><span class="hz-zone">✋ Hand / Fingers</span><span class="hz-mult hz-low">×0.40</span></div>
-      <div class="hitzone-card"><span class="hz-zone">👟 Foot / Toe</span><span class="hz-mult hz-low">×0.30</span></div>
+      <div class="hitzone-card"><span class="hz-zone">✋ Hand</span><span class="hz-mult hz-low">×0.40</span></div>
+      <div class="hitzone-card"><span class="hz-zone">👟 Foot</span><span class="hz-mult hz-low">×0.30</span></div>
       <div class="hitzone-card" style="background:#1a2535; border-color:#374151;">
         <span style="color:#6b7280; font-size:0.78rem;">Head = 12× the damage of a foot shot, 4× the damage of a torso shot.</span>
       </div>
@@ -1081,7 +1081,7 @@
   <hr class="section-divider">
 
   <div class="guide-section">
-    <div class="section-title">10. Why Isn't My Gun Doing Damage?</div>
+    <div class="section-title">10. Damage Cheat Sheet</div>
     <div class="info-grid-3">
       <div class="info-card red-border">
         <h3>❌ Wrong Ammo Type</h3>
