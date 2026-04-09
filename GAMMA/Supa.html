@@ -464,6 +464,31 @@
     font-size: 0.68rem;
     color: #4b5563;
   }
+
+  /* ── Toast notification ── */
+  #submit-toast {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%) translateY(12px);
+    background: #1a2e1a;
+    border: 1px solid #4ade80;
+    color: #4ade80;
+    font-size: 0.88rem;
+    font-weight: 600;
+    padding: 13px 24px;
+    border-radius: 10px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+    z-index: 9999;
+    white-space: nowrap;
+  }
+  #submit-toast.toast-visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 </style>
 </head>
 <body>
@@ -842,10 +867,28 @@ async function submitRawLog(rawText, nickname) {
       .insert({ nickname: nickname || 'anonymous', log_content: rawText });
     if (error) throw error;
     showSubmitBanner('Log submitted, thanks ' + (nickname || 'anonymous') + '! 🙏');
+    showToast('Data submitted successfully, thank you!');
   } catch (e) {
     showSubmitBanner('Submission failed: ' + e.message, true);
     if (btn) { btn.disabled = false; }
   }
+}
+
+function showToast(msg) {
+  const existing = document.getElementById('submit-toast');
+  if (existing) existing.remove();
+  const toast = document.createElement('div');
+  toast.id = 'submit-toast';
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  // trigger fade in
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => { toast.classList.add('toast-visible'); });
+  });
+  setTimeout(() => {
+    toast.classList.remove('toast-visible');
+    setTimeout(() => toast.remove(), 400);
+  }, 3000);
 }
 
 function showSubmitBanner(msg, isError = false) {
