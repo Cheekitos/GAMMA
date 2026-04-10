@@ -630,6 +630,7 @@
 
 
   <div class="error-box" id="error-box"></div>
+  <div id="submit-banner" style="display:none;border-radius:6px;padding:10px 14px;font-size:0.82rem;margin-bottom:12px;"></div>
 
   <div id="results">
     <button class="reset-btn" id="reset-btn">↩ Upload a different file</button>
@@ -1728,7 +1729,15 @@ function processFiles(files, submitToSupabase, nickname) {
       return;
     }
     document.getElementById('error-box').style.display = 'none';
-    if (submitToSupabase) submitRawLog(combined, nickname);
+    if (submitToSupabase) {
+      const lastSubmit = localStorage.getItem('last_log_submit');
+      if (lastSubmit && Date.now() - parseInt(lastSubmit) < SUBMIT_COOLDOWN_MS) {
+        const unlockAt = parseInt(lastSubmit) + SUBMIT_COOLDOWN_MS;
+        startRateLimitCountdown(unlockAt);
+        return; // blocked — don't render stats
+      }
+      submitRawLog(combined, nickname);
+    }
     const stats = computeStats(raw);
     renderStats(stats);
   }).catch(err => showError(err.message));
@@ -1776,17 +1785,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     btnSubmit.addEventListener('click', () => {
       if (!window._stagedFiles) return;
-
-      // Rate limit check — must happen before anything else
-      const lastSubmit = localStorage.getItem('last_log_submit');
-      if (lastSubmit && Date.now() - parseInt(lastSubmit) < SUBMIT_COOLDOWN_MS) {
-        const unlockAt = parseInt(lastSubmit) + SUBMIT_COOLDOWN_MS;
-        const banner = document.getElementById('submit-banner');
-        if (banner) banner.style.display = 'block';
-        startRateLimitCountdown(unlockAt);
-        return;
-      }
-
       const nicknameInput = document.getElementById('nickname-input');
       const nickname = nicknameInput ? nicknameInput.value.trim() : '';
       if (!nickname) {
