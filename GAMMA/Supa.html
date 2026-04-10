@@ -1776,6 +1776,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     btnSubmit.addEventListener('click', () => {
       if (!window._stagedFiles) return;
+
+      // Rate limit check — must happen before anything else
+      const lastSubmit = localStorage.getItem('last_log_submit');
+      if (lastSubmit && Date.now() - parseInt(lastSubmit) < SUBMIT_COOLDOWN_MS) {
+        const unlockAt = parseInt(lastSubmit) + SUBMIT_COOLDOWN_MS;
+        const banner = document.getElementById('submit-banner');
+        if (banner) banner.style.display = 'block';
+        startRateLimitCountdown(unlockAt);
+        return;
+      }
+
       const nicknameInput = document.getElementById('nickname-input');
       const nickname = nicknameInput ? nicknameInput.value.trim() : '';
       if (!nickname) {
