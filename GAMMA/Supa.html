@@ -934,11 +934,17 @@ function initSupabase() {
   }
 }
 
-const SUBMIT_COOLDOWN_MS = 1 * 60 * 1000; // 1 minute (testing)
+const SUBMIT_COOLDOWN_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 async function submitRawLog(rawText, nickname) {
   if (!_supabase) {
     showSubmitBanner('Supabase is not configured. Add your URL and key to the HTML file.', true);
+    return;
+  }
+
+  // File size cap (1 MB)
+  if (rawText.length > 1 * 1024 * 1024) {
+    showSubmitBanner('File too large to submit (max 1 MB). You can still check your stats using the other button.', true);
     return;
   }
 
@@ -1786,7 +1792,7 @@ document.addEventListener('DOMContentLoaded', function () {
     btnSubmit.addEventListener('click', () => {
       if (!window._stagedFiles) return;
       const nicknameInput = document.getElementById('nickname-input');
-      const nickname = nicknameInput ? nicknameInput.value.trim() : '';
+      const nickname = nicknameInput ? nicknameInput.value.trim().replace(/[<>"'&]/g, '') : '';
       if (!nickname) {
         nicknameInput.focus();
         nicknameInput.style.borderColor = '#ef4444';
