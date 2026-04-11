@@ -989,7 +989,6 @@ function showToast(msg) {
   }, 5000);
 }
 
-let _bannerTimeout = null;
 function showSubmitBanner(msg, isError = false, isHTML = false) {
   const el = document.getElementById('submit-banner');
   if (!el) return;
@@ -998,8 +997,6 @@ function showSubmitBanner(msg, isError = false, isHTML = false) {
   el.style.borderColor   = isError ? 'rgba(239,68,68,0.35)'   : 'rgba(74,222,128,0.3)';
   el.style.color         = isError ? '#fca5a5'                : '#86efac';
   el.style.display       = 'block';
-  if (_bannerTimeout) clearTimeout(_bannerTimeout);
-  _bannerTimeout = setTimeout(() => { el.style.display = 'none'; _bannerTimeout = null; }, 5000);
 }
 
 function startRateLimitCountdown(unlockAt) {
@@ -1022,7 +1019,6 @@ function startRateLimitCountdown(unlockAt) {
   }
   tick();
   intervalId = setInterval(tick, 1000);
-  setTimeout(() => clearInterval(intervalId), 5000);
 }
 
 
