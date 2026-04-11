@@ -417,7 +417,7 @@ const CONTRIBUTORS = [
   { name: "Vlad Prznic",     kills: 585   },
   { name: "ChemZ",           kills: 1285  },
   { name: "Jötunn",          kills: 952   },
-  { name: "Zlaya",           kills: 756   },
+  { name: "Zlaya",           kills: 1421  },
   { name: "Patrick",         kills: 104   },
   { name: "Dr_ASnight",      kills: 664   },
   { name: "RuinsC66",        kills: 1308  },
@@ -436,13 +436,10 @@ const CONTRIBUTORS = [
   const top = sorted[0];
   const TABLE_ROWS = 10;
 
-  // ── Summary strip ──
   document.getElementById('total-contributors').textContent = CONTRIBUTORS.length;
   document.getElementById('total-kills').textContent = totalKills.toLocaleString();
   document.getElementById('top-contributor').textContent = top ? top.name : '—';
 
-  // ── Bar colour helper: rank 0 (top) = yellow #fbbf24, rank n-1 (bottom) = light green #4ade80 ──
-  // Uses rank position so the gradient is spread evenly and always visible.
   const totalEntries = sorted.length;
   function barColor(rankIndex) {
     const t = totalEntries > 1 ? 1 - (rankIndex / (totalEntries - 1)) : 1;
@@ -453,10 +450,8 @@ const CONTRIBUTORS = [
     return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
   }
 
-  // ── Podium (top 3) ──
   const medals  = ['🥇','🥈','🥉'];
   const ranks   = ['rank-1','rank-2','rank-3'];
-  // podium display order: 2nd, 1st, 3rd
   const podiumOrder = [1, 0, 2];
   const podiumEl = document.getElementById('podium');
   podiumEl.innerHTML = podiumOrder.map(i => {
@@ -483,7 +478,6 @@ const CONTRIBUTORS = [
     }
   }).join('');
 
-  // ── Table ──
   const maxKills = Math.max(top ? top.kills : 0, organizer ? organizer.kills : 0);
   const sqrtMax = Math.sqrt(maxKills);
   const tbody = document.getElementById('lb-tbody');
