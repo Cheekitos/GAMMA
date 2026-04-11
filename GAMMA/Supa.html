@@ -598,7 +598,7 @@
     <div id="upload-zone">
       <span class="upload-icon">📂</span>
       <div class="upload-title">Drop your log file(s) here</div>
-      <div class="upload-hint">or click to browse · supports multiple files</div>
+      <div class="upload-hint">or click to browse · multiple files supported</div>
       <div id="files-ready-label" style="display:none;margin-top:10px;font-size:0.8rem;font-weight:700;color:#4ade80;"></div>
     </div>
     <div id="upload-actions">
@@ -616,7 +616,7 @@
       </div>
       <button id="btn-submit-check" class="action-btn action-btn-primary" disabled>
         <span class="action-btn-icon">📤</span>
-        <span class="action-btn-title">Submit my data &amp; check my stats</span>
+        <span class="action-btn-title">Submit Data &amp; Check Stats (Once a week Limit)</span>
         <span class="action-btn-sub">Share your logs to help build the community rankings!</span>
       </button>
       <button id="btn-check-only" class="action-btn action-btn-secondary" disabled>
@@ -934,7 +934,7 @@ function initSupabase() {
   }
 }
 
-const SUBMIT_COOLDOWN_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+const SUBMIT_COOLDOWN_MS = 1 * 60 * 1000; // 1 minute (testing)
 
 async function submitRawLog(rawText, nickname) {
   if (!_supabase) {
