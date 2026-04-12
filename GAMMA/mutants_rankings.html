@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BEST WEAPONS - Mutant Rankings</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #111827; color: #f3f4f6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; line-height: 1.6; min-height: 100vh; padding: 20px; }
+  a { color: #60a5fa; text-decoration: none; transition: color 0.2s; }
+  a:hover { color: #93c5fd; }
+  .rankings-container { max-width: 960px; margin: 0 auto; }
+  .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; gap: 12px; flex-wrap: wrap; }
+  .site-title { font-size: 1.5rem; font-weight: bold; color: #f3f4f6; text-decoration: none; transition: color 0.3s; }
+  .site-title:hover { color: #fbbf24; }
+  .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 0.875rem; margin-bottom: 24px; }
+  .breadcrumb a { color: #60a5fa; display: flex; align-items: center; gap: 4px; }
+  .breadcrumb-separator { color: #9ca3af; }
+  .page-title { font-size: 2rem; font-weight: bold; text-align: center; margin-bottom: 10px; color: #fbbf24; }
+  .page-subtitle { text-align: center; color: #9ca3af; margin-bottom: 24px; font-size: 0.875rem; }
+  .rankings-section { margin-bottom: 36px; }
+
+  .toggle-bar { background: #1f2937; border: 1px solid #374151; border-radius: 6px; padding: 12px 16px; margin-bottom: 5px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .toggle-bar-label { font-size: 0.8125rem; font-weight: 600; color: #d1d5db; }
+  .gigant-name { color: #55a870; font-weight: 700; }
+  .switch { position: relative; display: inline-block; width: 44px; height: 22px; flex-shrink: 0; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider { position: absolute; cursor: pointer; inset: 0; background: #374151; border-radius: 22px; border: 1px solid #4b5563; transition: 0.25s; }
+  .slider::before { content: ''; position: absolute; height: 16px; width: 16px; left: 2px; top: 2px; background: #9ca3af; border-radius: 50%; transition: 0.25s; }
+  input:checked + .slider { background: #041e0e; border-color: #0a6030; }
+  input:checked + .slider::before { transform: translateX(22px); background: #55a870; }
+  #gigantSwitch .slider { background: #1c1008; border-color: #c2410c; }
+  #gigantSwitch .slider::before { background: #fdba74; }
+  #gigantSwitch input:checked + .slider { background: #041e0e; border-color: #0a6030; }
+  #gigantSwitch input:checked + .slider::before { background: #55a870; }
+  .mode-pill { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; padding: 2px 8px; border-radius: 3px; }
+  .mode-all  { background: #041e0e; color: #55a870; border: 1px solid #0a6030; }
+  .mode-excl { background: #1c1008; color: #fdba74; border: 1px solid #c2410c; }
+  .tab-nav { display: flex; gap: 2px; border-bottom: 2px solid #374151; margin-bottom: 16px; flex-wrap: wrap; }
+  .tab-btn { background: none; border: none; padding: 8px 14px; color: #9ca3af; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; font-family: inherit; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: color 0.15s; font-weight: 600; }
+  .tab-btn:hover { color: #e5e7eb; }
+  .tab-btn.active { color: #fbbf24; border-bottom-color: #fbbf24; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+  .cat-header { background: #1f2937; border: 1px solid #374151; border-radius: 4px; padding: 8px 14px; margin: 20px 0 8px 0; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .cat-name  { color: #f9fafb; font-size: 0.9375rem; font-weight: 700; }
+  .cat-cal   { color: #9ca3af; font-size: 0.8rem; }
+  .cat-count { color: #6b7280; font-size: 0.75rem; margin-left: auto; }
+  .rankings-table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; margin-bottom: 8px; table-layout: fixed; }
+  .rankings-table th { background: #1f2937; color: #9ca3af; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 7px 16px; line-height: 1.25; text-align: center; border-bottom: 2px solid #374151; font-weight: 600; }
+  .rankings-table th.ecol { padding-left: 6px; padding-right: 6px; }
+  .rankings-table th.col-weapon { text-align: left; }
+  .rankings-table th.ecol,      .rankings-table td.ecol      { width: 62px; }
+  .rankings-table th.col-rank,  .rankings-table td.col-rank  { width: 42px; }
+  .rankings-table th.col-weapon,.rankings-table td.col-weapon { width: 210px; }
+  .rankings-table th.col-score, .rankings-table td.col-score { width: 90px; }
+  .rankings-table th.col-tttk,  .rankings-table td.col-tttk  { width: 72px; }
+  .rankings-table th.col-tk,    .rankings-table td.col-tk    { width: 68px; }
+  .rankings-table td { padding: 7px 16px; border-bottom: 1px solid #1f2937; vertical-align: middle; color: #d1d5db; }
+  .rankings-table tr:hover td { background: #1a2535; }
+  .rankings-table tr:last-child td { border-bottom: none; }
+  .wname  { color: #f9fafb; font-weight: 600; white-space: nowrap; }
+  .ammo-t { color: #60a5fa; font-size: 0.75rem; }
+  .mono  { font-family: monospace; font-size: 0.75rem; color: #d1d5db; }
+  .c-hi  { font-family: monospace; font-size: 0.75rem; color: #4ade80; font-weight: 700; }
+  .c-mid { font-family: monospace; font-size: 0.75rem; color: #a3e635; }
+  .c-lo  { font-family: monospace; font-size: 0.75rem; color: #fbbf24; }
+  .c-bad { font-family: monospace; font-size: 0.75rem; color: #f87171; }
+  .c-na  { font-family: monospace; font-size: 0.75rem; color: #374151; font-style: italic; }
+  .c-warn{ font-family: monospace; font-size: 0.75rem; color: #fb923c; }
+  .kills-sub { display: block; font-size: 0.60rem; color: #374151; font-family: monospace; }
+  .r1 { color: #fbbf24; font-weight: 700; font-family: monospace; }
+  .r2 { color: #d1d5db; font-weight: 600; font-family: monospace; }
+  .r3 { color: #d97706; font-weight: 600; font-family: monospace; }
+  .rn { color: #4b5563; font-family: monospace; }
+  tr.top1 .wname { color: #ffd700; }
+  tr.top2 .wname { color: #c0c0c0; }
+  tr.top3 .wname { color: #cd7f32; }
+  .bar-wrap { width: 100%; height: 3px; background: rgba(255,255,255,0.06); border-radius: 2px; margin-top: 5px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 2px; transition: width 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+  #panel-speed   .bar-fill { background: linear-gradient(90deg,#fbbf24,#fb923c); }
+  #panel-cheap   .bar-fill { background: linear-gradient(90deg,#34d399,#6ee7b7); }
+  #panel-balance .bar-fill { background: linear-gradient(90deg,#60a5fa,#a78bfa); }
+
+  .b-lowconf { background: #1c1008; color: #fdba74; border: 1px solid #c2410c; font-size: 0.425rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; display: inline-block; padding: 1px 5px; border-radius: 3px; vertical-align: middle; margin-left: 7px; opacity: 0.80; }
+  .tk-badge { display: inline-block; padding: 2px 6px; border-radius: 3px; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; margin-left: 4px; opacity: 0.8; }
+  .tk-A { background: #041a0c; color: #3a9a58; border: 1px solid #0e6e2e; }
+  .tk-B { background: #1e0d00; color: #a86840; border: 1px solid #6a3008; }
+  .tk-C { background: #140d00; color: #c09020; border: 1px solid #8a5800; }
+  .tk-D { background: #1e0606; color: #c05858; border: 1px solid #8a1818; }
+  .tk-unknown { background: #1f2937; color: #4b5563; border: 1px solid #374151; }
+  .tk-toggle-group { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .tk-toggle-label { font-size: 0.8125rem; font-weight: 600; color: #d1d5db; }
+  .tk-btn { display: inline-flex; align-items: center; gap: 5px; padding: 2px 7px; border-radius: 3px; cursor: pointer; font-size: 0.625rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border: 2px solid transparent; transition: opacity 0.2s, filter 0.2s; user-select: none; font-family: inherit; background: none; }
+  .tk-btn.active   { opacity: 0.8; }
+  .tk-btn.inactive { opacity: 0.35; filter: grayscale(0.5); }
+  .tk-btn-A { background:#041a0c; color:#3a9a58; border-color:#0e6e2e; }
+  .tk-btn-B { background:#1e0d00; color:#a86840; border-color:#6a3008; }
+  .tk-btn-C { background:#140d00; color:#c09020; border-color:#8a5800; }
+  .tk-btn-D { background:#1e0606; color:#c05858; border-color:#8a1818; }
+  .toggle-bar-divider { width:1px; height:20px; background:#374151; margin:0 4px; flex-shrink:0; }
+  code { background: #374151; color: #f3f4f6; padding: 1px 4px; border-radius: 3px; font-size: 0.75rem; }
+
+  /* ── Weapon stat tooltip ── */
+  .wname { cursor: default; }
+  .wname.has-stats { cursor: pointer; border-bottom: 1px dotted #4b5563; }
+  #stat-tooltip {
+    position: fixed; z-index: 9999; pointer-events: none;
+    background: #0f172a; border: 1px solid #374151; border-radius: 7px;
+    padding: 10px 13px; min-width: 170px; max-width: 240px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.04);
+    opacity: 0; transition: opacity 0.12s ease;
+    font-size: 0.75rem; line-height: 1.5;
+  }
+  #stat-tooltip.visible { opacity: 1; }
+  .tt-title { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: #6b7280; margin-bottom: 8px; }
+  .tt-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 2px 0; border-bottom: 1px solid #1f2937; }
+  .tt-row:last-child { border-bottom: none; }
+  .tt-label { color: #6b7280; font-size: 0.7rem; }
+  .tt-val { font-family: monospace; font-size: 0.72rem; color: #d1d5db; font-weight: 600; }
+  .tt-kpm-hi  { color: #4ade80; font-weight: 700; }
+  .tt-kpm-mid { color: #a3e635; font-weight: 700; }
+  .tt-kpm-lo  { color: #9ca3af; }
+  .tt-kpm-bad { color: #fb923c; font-weight: 700; }
+  .tt-row-nd  { border-bottom: none; }
+  .tt-row-nd + .tt-row-nd { border-top: 1px solid #1f2937; }
+  .tt-row-sep { border-top: 1px solid #374151 !important; margin-top: 4px; padding-top: 4px; }
+  .tt-note { font-size: 0.65rem; color: #4b5563; font-style: italic; margin-top: 6px; }
+
+  .insuff-section { margin-top: 36px; }
+  .insuff-header { background: #1a1a1a; border: 1px solid #374151; border-radius: 6px 6px 0 0; padding: 10px 16px; display: flex; align-items: center; gap: 10px; }
+  .insuff-title { color: #6b7280; font-size: 0.9375rem; font-weight: 700; }
+  .insuff-subtitle { color: #4b5563; font-size: 0.8rem; }
+  .insuff-count { color: #4b5563; font-size: 0.75rem; margin-left: auto; }
+  .insuff-body { background: #111827; border: 1px solid #374151; border-top: none; border-radius: 0 0 6px 6px; padding: 12px 16px; display: flex; flex-wrap: wrap; gap: 8px; min-height: 44px; }
+  .insuff-tag { display: inline-flex; align-items: center; gap: 6px; background: #1f2937; border: 1px solid #374151; border-radius: 4px; padding: 4px 10px; font-size: 0.75rem; color: #6b7280; }
+  .insuff-tag .it-name  { color: #9ca3af; font-weight: 600; }
+  .insuff-tag .it-ammo  { color: #4b5563; font-size: 0.68rem; }
+  .insuff-tag .it-kills { color: #4b5563; font-size: 0.68rem; font-family: monospace; }
+  .insuff-empty { color: #374151; font-style: italic; font-size: 0.8rem; padding: 4px 0; }
+
+  /* ── Methodology box ── */
+  .method-box { background: #1f2937; border: 1px solid #374151; border-radius: 6px; margin-bottom: 20px; overflow: hidden; }
+  .method-toggle { width: 100%; background: none; border: none; padding: 11px 16px; display: flex; align-items: center; gap: 10px; cursor: pointer; font-family: inherit; color: #d1d5db; text-align: left; }
+  .method-toggle:hover { background: rgba(255,255,255,0.03); }
+  .method-toggle-title { font-size: 0.8125rem; font-weight: 700; color: #9ca3af; letter-spacing: 0.06em; text-transform: uppercase; flex: 1; }
+  .method-toggle-icon { font-size: 0.75rem; color: #4b5563; transition: transform 0.2s; flex-shrink: 0; }
+  .method-toggle-icon.open { transform: rotate(180deg); }
+  .method-body { display: none; padding: 14px 16px 16px 16px; border-top: 1px solid #374151; }
+  .method-body.open { display: block; }
+  .method-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 14px; }
+  .method-card { background: #111827; border: 1px solid #374151; border-radius: 5px; padding: 11px 13px; }
+  .method-card-title { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 5px; }
+  .method-card-sub { font-size: 0.7rem; color: #6b7280; font-style: italic; margin-bottom: 7px; }
+  .method-card-body { font-size: 0.75rem; color: #9ca3af; line-height: 1.55; }
+  .method-card-body code { background: #1f2937; color: #d1d5db; padding: 1px 5px; border-radius: 3px; font-size: 0.7rem; }
+  .method-card.mc-ttk   .method-card-title { color: #60a5fa; }
+  .method-card.mc-stk   .method-card-title { color: #4ade80; }
+  .method-card.mc-rstk  .method-card-title { color: #34d399; }
+  .method-card.mc-tttk  .method-card-title { color: #fbbf24; }
+  .method-card.mc-mttk  .method-card-title { color: #c084fc; }
+  .method-divider { border: none; border-top: 1px solid #374151; margin: 14px 0 12px 0; }
+  .method-tabs-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 12px; }
+  .method-tab-card { background: #111827; border: 1px solid #374151; border-radius: 5px; padding: 10px 13px; }
+  .method-tab-card-title { font-size: 0.75rem; font-weight: 700; margin-bottom: 5px; }
+  .method-tab-card-body { font-size: 0.75rem; color: #9ca3af; line-height: 1.55; }
+  .method-tab-card-body code { background: #1f2937; color: #d1d5db; padding: 1px 5px; border-radius: 3px; font-size: 0.7rem; }
+  .mc-best  .method-tab-card-title { color: #fbbf24; }
+  .mc-cheap .method-tab-card-title { color: #34d399; }
+  .mc-bal   .method-tab-card-title { color: #60a5fa; }
+  .method-note { background: #1f2937; border: 1px solid #374151; border-top: 2px solid #fbbf24; border-radius: 6px; padding: 14px 18px; font-size: 0.8rem; color: #9ca3af; line-height: 1.6; margin-top: 12px; }
+  .method-note b { color: #f3f4f6; }
+
+  /* ── Weapon coverage progress bars ── */
+  .coverage-bar-wrap { margin-top: 10px; margin-bottom: 0; display: flex; flex-direction: column; gap: 5px; width: 100%; }
+  .coverage-row { display: flex; align-items: center; gap: 8px; }
+  .coverage-track { position: relative; flex: 1; height: 22px; background: #111827; border-radius: 4px; overflow: hidden; box-shadow: inset 0 0 0 1px #374151; }
+  .coverage-fill { height: calc(100% - 4px); margin: 2px; border-radius: 3px; transition: width 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+  .coverage-fill-reliable { background: linear-gradient(90deg,#34d399,#6ee7b7); }
+  .coverage-fill-ranked   { background: linear-gradient(90deg,#60a5fa,#a78bfa); }
+  .coverage-fill-total    { background: linear-gradient(90deg,#fbbf24,#fb923c); }
+  .coverage-text-over { position: absolute; inset: 0; display: flex; align-items: center; justify-content: flex-end; padding: 0 10px; pointer-events: none; }
+  .coverage-text-over .cov-cnt { font-size: 0.68rem; font-family: monospace; font-weight: 700; color: #e5e7eb; text-shadow: 0 0 6px #000, 0 0 3px #000, 1px 1px 0 rgba(0,0,0,0.9); }
+  .cov-lbl { position: absolute; top: 50%; transform: translateY(-50%); padding-left: 8px; font-size: 0.612rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: #e5e7eb; text-shadow: 0 0 6px #000, 0 0 3px #000, 1px 1px 0 rgba(0,0,0,0.9); white-space: nowrap; pointer-events: none; transition: left 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+
+  .warn-banner { background: rgba(31,41,55,0.5); border: 1px solid #374151; border-left: 4px solid #fbbf24; border-radius: 6px; padding: 10px 16px; margin: 0 0 28px 0; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .warn-banner-text { font-size: 0.8125rem; color: #9ca3af; line-height: 1.6; text-align: center; width: 100%; }
+  .warn-banner-text a { color: #fbbf24; text-decoration: underline; text-decoration-color: rgba(251,191,36,0.35); transition: color 0.2s; }
+  .warn-banner-text a:hover { color: #fde68a; }
+
+  @media (max-width: 768px) {
+    .cat-header { flex-direction: column; align-items: flex-start; gap: 6px; }
+    .cat-count { margin-left: 0; }
+    .rankings-table { font-size: 0.75rem; }
+    .rankings-table th, .rankings-table td { padding: 5px 7px; }
+    .ecol, .col-tttk { display: none; }
+    .page-title { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+<div id="stat-tooltip" role="tooltip" aria-hidden="true"></div>
+<div class="rankings-container">
+  <div class="page-header"><span class="site-title">Cheeki's Mods Archive</span></div>
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <svg fill="currentColor" viewBox="0 0 20 20" width="14" height="14" style="flex-shrink:0"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
+    <a href="https://cheeki.zone">Archive</a><span class="breadcrumb-separator">›</span>
+    <a href="../index.html">GAMMA Tools</a><span class="breadcrumb-separator">›</span>
+    <span style="color:#d1d5db;">Mutant Rankings</span>
+  </nav>
+  <h1 class="page-title">BEST WEAPONS - Mutant Rankings</h1>
+  <p class="page-subtitle">Best Weapons against Mutants</p>
+
+  <div class="warn-banner">
+    <p class="warn-banner-text">More data = More Reliable Results. <b>Help the project <a href="../index.html">here</a></b> &nbsp;<span style="color:#6b7280;">|</span>&nbsp; <span id="why-low-reliable" style="text-decoration:underline;cursor:pointer;color:#9ca3af;transition:color 0.2s;" onmouseover="this.style.color='#f9fafb'" onmouseout="this.style.color='#9ca3af'" onclick="openMethodology()">Why so little reliable results?</span></p>
+    <div class="coverage-bar-wrap">
+      <div class="coverage-row">
+        <div class="coverage-track">
+          <div class="coverage-fill coverage-fill-reliable" id="cov-fill-reliable" style="width:0%"></div>
+          <span class="cov-lbl" id="cov-lbl-reliable" style="left:0%;color:#34d399"><span id="cov-pct-reliable">0%</span> reliable data</span>
+          <div class="coverage-text-over">
+            <span class="cov-cnt" id="cov-cnt-reliable" style="color:#9ca3af;"><span id="cov-num-reliable" style="color:#34d399;font-weight:700;">0</span> / 168 weapons</span>
+          </div>
+        </div>
+      </div>
+      <div class="coverage-row">
+        <div class="coverage-track">
+          <div class="coverage-fill coverage-fill-ranked" id="cov-fill-ranked" style="width:0%"></div>
+          <span class="cov-lbl" id="cov-lbl-ranked" style="left:0%;color:#60a5fa"><span id="cov-pct-ranked">0%</span> in rankings</span>
+          <div class="coverage-text-over">
+            <span class="cov-cnt" id="cov-cnt-ranked" style="color:#9ca3af;"><span id="cov-num-ranked" style="color:#60a5fa;font-weight:700;">0</span> / 168 weapons</span>
+          </div>
+        </div>
+      </div>
+      <div class="coverage-row">
+        <div class="coverage-track">
+          <div class="coverage-fill coverage-fill-total" id="cov-fill-total" style="width:0%"></div>
+          <span class="cov-lbl" id="cov-lbl-total" style="left:0%;color:#fbbf24"><span id="cov-pct-total">0%</span> submitted</span>
+          <div class="coverage-text-over">
+            <span class="cov-cnt" id="cov-cnt-total" style="color:#9ca3af;"><span id="cov-num-total" style="color:#fbbf24;font-weight:700;">0</span> / 168 weapons</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rankings-section">
+    <div class="toggle-bar">
+      <span class="toggle-bar-label" id="gigantLabel" style="cursor:pointer">Include <span class="gigant-name">PseudoGiant</span> Data</span>
+      <div class="switch" id="gigantSwitch"><input type="checkbox" id="gigantToggle" style="opacity:0;width:0;height:0;position:absolute"><span class="slider"></span></div>
+      <span class="mode-pill mode-all" id="modePill">ALL ARMOR</span>
+      <div class="toggle-bar-divider"></div>
+      <span class="toggle-bar-label" id="mergeLabel" style="cursor:pointer">Merge Ammo Variants</span>
+      <div class="switch" id="mergeSwitch"><input type="checkbox" id="mergeToggle" style="opacity:0;width:0;height:0;position:absolute"><span class="slider"></span></div>
+      <div class="toggle-bar-divider"></div>
+      <div class="tk-toggle-group">
+        <span class="tk-toggle-label">🔧 Toolkit:</span>
+        <button type="button" class="tk-btn tk-btn-A active" id="tkBtn-A" onclick="toggleToolkit('A',event)">Type A</button>
+        <button type="button" class="tk-btn tk-btn-B active" id="tkBtn-B" onclick="toggleToolkit('B',event)">Type B</button>
+        <button type="button" class="tk-btn tk-btn-C active" id="tkBtn-C" onclick="toggleToolkit('C',event)">Type C</button>
+        <button type="button" class="tk-btn tk-btn-D active" id="tkBtn-D" onclick="toggleToolkit('D',event)">Type D</button>
+      </div>
+    </div>
+    <div class="tab-nav">
+      <button class="tab-btn active" onclick="switchTab('speed',this)">⚡ Best</button>
+      <button class="tab-btn" onclick="switchTab('cheap',this)">💸 Cheapest</button>
+      <button class="tab-btn" onclick="switchTab('balance',this)">⚖️ Balanced</button>
+    </div>
+
+    <!-- Best tab -->
+    <div class="tab-panel active" id="panel-speed">
+      <div class="cat-header">
+        <span class="cat-name">⚡ Best</span>
+        <span class="cat-cal">Weighted avg <b>Master TTK</b> across mutant size classes (lower is better)</span>
+        <span class="cat-count" id="count-speed">- weapons</span>
+      </div>
+      <table class="rankings-table"><thead><tr>
+        <th class="col-rank">#</th><th class="col-weapon">Weapon</th>
+        <th class="col-score" style="text-align:center">Master<br>TTK</th>
+        <th class="col-tttk"  style="text-align:center">Avg<br>TTTK</th>
+        <th class="ecol" id="th-sg" style="text-align:center">Giant</th>
+        <th class="ecol" id="th-sst" style="text-align:center">Strong</th>
+        <th class="ecol" id="th-sm" style="text-align:center">Medium</th>
+        <th class="ecol" id="th-ss" style="text-align:center">Small</th>
+        <th class="col-tk" style="text-align:center">Toolkit</th>
+        <th class="col-notes">Notes</th>
+      </tr></thead><tbody id="body-speed"></tbody></table>
+    </div>
+
+    <!-- Cheapest tab -->
+    <div class="tab-panel" id="panel-cheap">
+      <div class="cat-header">
+        <span class="cat-name">💸 Cheapest</span>
+        <span class="cat-cal">Weighted average cost per kill in roubles (lower is better)</span>
+        <span class="cat-count" id="count-cheap">- weapons</span>
+      </div>
+      <table class="rankings-table"><thead><tr>
+        <th class="col-rank">#</th><th class="col-weapon">Weapon</th>
+        <th class="col-score" style="text-align:center">Avg Cost/<br>Kill</th>
+        <th class="col-tttk"  style="text-align:center">Master<br>TTK</th>
+        <th class="ecol" id="th-cg" style="text-align:center">Giant</th>
+        <th class="ecol" id="th-cst" style="text-align:center">Strong</th>
+        <th class="ecol" id="th-cm" style="text-align:center">Medium</th>
+        <th class="ecol" id="th-cs" style="text-align:center">Small</th>
+        <th class="col-tk" style="text-align:center">Toolkit</th>
+        <th class="col-notes">Notes</th>
+      </tr></thead><tbody id="body-cheap"></tbody></table>
+    </div>
+
+    <!-- Balanced tab -->
+    <div class="tab-panel" id="panel-balance">
+      <div class="cat-header">
+        <span class="cat-name">⚖️ Balanced</span>
+        <span class="cat-cal">Weighted Master TTK 60% + Cost 40% (lower is better)</span>
+        <span class="cat-count" id="count-balance">- weapons</span>
+      </div>
+      <table class="rankings-table"><thead><tr>
+        <th class="col-rank">#</th><th class="col-weapon">Weapon</th>
+        <th class="col-score" style="text-align:center">Balance<br>Score</th>
+        <th class="col-tttk"  style="text-align:center">Avg Cost/<br>Kill</th>
+        <th class="ecol" id="th-bg" style="text-align:center">Giant</th>
+        <th class="ecol" id="th-bst" style="text-align:center">Strong</th>
+        <th class="ecol" id="th-bm" style="text-align:center">Medium</th>
+        <th class="ecol" id="th-bs" style="text-align:center">Small</th>
+        <th class="col-tk" style="text-align:center">Toolkit</th>
+        <th class="col-notes">Notes</th>
+      </tr></thead><tbody id="body-balance"></tbody></table>
+    </div>
+
+    <div class="insuff-section">
+      <div class="insuff-header">
+        <span class="insuff-title">⚠ Insufficient Data</span>
+        <span class="insuff-subtitle">Under 5 kills in any active size class, or under 50 total = excluded from rankings</span>
+        <span class="insuff-count" id="insuff-count"></span>
+      </div>
+      <div class="insuff-body" id="insuff-body"></div>
+    </div>
+  </div>
+
+  <div class="method-box">
+    <button class="method-toggle" onclick="toggleMethod(this)" aria-expanded="false">
+      <span class="method-toggle-title">📋 How these rankings work</span>
+      <span class="method-toggle-icon">▼</span>
+    </button>
+    <div class="method-body">
+      <div style="font-size:0.75rem;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;">Pre-Processing</div>
+      <div class="method-card" style="border-top:2px solid #374151;margin-bottom:12px;">
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:7px;">
+          <li style="font-size:0.75rem;color:#9ca3af;line-height:1.55;"><span style="color:#d1d5db;font-weight:700;">● Data Cleaning:</span> Every log players send is checked for duplicate entries and outlier data (non-vanilla ballistics, artifact on-hit effects...). Anything suspicious is skipped before being added to the database.</li>
+          <li style="font-size:0.75rem;color:#9ca3af;line-height:1.55;border-top:1px solid #1f2937;padding-top:7px;"><span style="color:#d1d5db;font-weight:700;">● Minimum Sample Size:</span> Each weapon needs enough kills recorded to enter the rankings pool (combination of mutant size / weapon / ammo). Anything below a reliable threshold is dropped.</li>
+          <li style="font-size:0.75rem;color:#9ca3af;line-height:1.55;border-top:1px solid #1f2937;padding-top:7px;"><span style="color:#d1d5db;font-weight:700;">● IQR Outlier Removal:</span> Statistical freaks and big outliers are automatically removed to not skew the data (mutant that ran away after being shot and shows as a 40s kill when the average for that bucket is 3s, for example).</li>
+          <li style="font-size:0.75rem;color:#9ca3af;line-height:1.55;border-top:1px solid #1f2937;padding-top:7px;"><span style="color:#d1d5db;font-weight:700;">● Distance Merging:</span> All range entries (Close / Medium / Long) for a given weapon + ammo + size class are kill-weighted into a single entry, since range matters less for mutant encounters than for NPCs.</li>
+        </ul>
+      </div>
+
+      <div class="method-grid" style="margin-top:12px;">
+        <div class="method-card mc-ttk">
+          <div class="method-card-title">TTK</div>
+          <div class="method-card-sub">Time To Kill / What happens in-game</div>
+          <div class="method-card-body">Time from first shot to kill shot, measured in-game. Big melting pot of accuracy, fire rate, player skill and aim, enemy behavior etc. Very noisy by essence, but a real gameplay measurement.</div>
+        </div>
+        <div class="method-card mc-stk">
+          <div class="method-card-title">STK</div>
+          <div class="method-card-sub">Standardized TTK / Theoretical limit of the weapon</div>
+          <div class="method-card-body">Theoretical minimum kill time if every bullet hits, with reload time taken into account. This is the "weapon's ceiling" and a stat anchor to dampen a bit the very noisy TTK.</div>
+        </div>
+        <div class="method-card mc-tttk">
+          <div class="method-card-title">TTTK</div>
+          <div class="method-card-sub">True TTK / Recoil &amp; Accuracy</div>
+          <div class="method-card-body">Takes recorded accuracy and asks how long it realistically takes to land enough hits to kill. Allows weapons with good recoil to shine, balancing skill and weapon performance metrics.</div>
+        </div>
+        <div class="method-card mc-mttk">
+          <div class="method-card-title">Master TTK</div>
+          <div class="method-card-sub">Final Metric / The Ranking Scale</div>
+          <div class="method-card-body">Weighted mix of all the previous data points. Aims at being a good representation of a weapon performance by balancing in-game recorded data, weapons "on-paper" stats, and players variable skill level.</div>
+        </div>
+      </div>
+
+      <hr class="method-divider">
+
+      <div style="font-size:0.75rem;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#9ca3af;margin-bottom:8px;">Mutant Class Weights</div>
+      <div style="display:grid;grid-template-columns:7fr 3fr;gap:12px;">
+      <div class="method-card" style="border-top:2px solid #374151;min-width:0;">
+        <div class="method-card-body">
+          All mutant classes have the same weight in the rankings. <span class="gigant-name">PseudoGiants</span> are toggled off by default as they use different ammo damage multipliers.
+          <div style="margin-top:10px;display:flex;flex-direction:column;gap:5px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;height:6px;background:#1f2937;border-radius:3px;overflow:hidden;"><div style="width:25%;height:100%;background:#c084fc;border-radius:3px;"></div></div>
+              <span style="font-size:0.7rem;font-family:monospace;color:#c084fc;width:28px;text-align:right;">25%</span>
+              <span style="font-size:0.7rem;color:#6b7280;">PseudoGiant</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;height:6px;background:#1f2937;border-radius:3px;overflow:hidden;"><div style="width:25%;height:100%;background:#fbbf24;border-radius:3px;"></div></div>
+              <span style="font-size:0.7rem;font-family:monospace;color:#fbbf24;width:28px;text-align:right;">25%</span>
+              <span style="font-size:0.7rem;color:#6b7280;">Strong</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;height:6px;background:#1f2937;border-radius:3px;overflow:hidden;"><div style="width:25%;height:100%;background:#60a5fa;border-radius:3px;"></div></div>
+              <span style="font-size:0.7rem;font-family:monospace;color:#60a5fa;width:28px;text-align:right;">25%</span>
+              <span style="font-size:0.7rem;color:#6b7280;">Medium</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;height:6px;background:#1f2937;border-radius:3px;overflow:hidden;"><div style="width:25%;height:100%;background:#fb923c;border-radius:3px;"></div></div>
+              <span style="font-size:0.7rem;font-family:monospace;color:#fb923c;width:28px;text-align:right;">25%</span>
+              <span style="font-size:0.7rem;color:#6b7280;">Small</span>
+            </div>
+          </div>
+          <div style="margin-top:8px;font-size:0.7rem;color:#6b7280;">When <span class="gigant-name">PseudoGiant</span> is excluded, remaining weights are renormalized: Small 33%, Medium 33%, Strong 33%.</div>
+        </div>
+      </div>
+      <div class="method-card" style="border-top:2px solid #374151;min-width:0;">
+        <div class="method-card-body">
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
+            <div>
+              <div style="font-size:0.65rem;font-weight:700;color:#fb923c;margin-bottom:4px;">Small</div>
+              <div style="font-size:0.62rem;color:#6b7280;line-height:1.6;">Flesh<br>Cat<br>Dog<br>Zombie<br>Tushkano...</div>
+            </div>
+            <div style="border-left:1px solid #1f2937;padding-left:6px;">
+              <div style="font-size:0.65rem;font-weight:700;color:#60a5fa;margin-bottom:4px;">Medium</div>
+              <div style="font-size:0.62rem;color:#6b7280;line-height:1.6;">Boar<br>Pseudodog<br>Snork<br>Lurker<br>Fracture...</div>
+            </div>
+            <div style="border-left:1px solid #1f2937;padding-left:6px;">
+              <div style="font-size:0.65rem;font-weight:700;color:#fbbf24;margin-bottom:4px;">Strong</div>
+              <div style="font-size:0.62rem;color:#6b7280;line-height:1.6;">Bloodsucker<br>Burer<br>Chimera<br>Controller...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+
+      <hr class="method-divider">
+
+      <div class="method-tabs-row">
+        <div class="method-tab-card mc-best">
+          <div class="method-tab-card-title">⚡ Best</div>
+          <div class="method-card-sub">Lowest Master TTK</div>
+          <div class="method-tab-card-body">Ranks by weighted average Master TTK across all active size classes. Lower is better. The <span style="color:#fb923c;font-size:0.68rem;font-weight:700;">Low Data</span> badge appears when total active kills are under 125 and any active class is under 25 kills.</div>
+        </div>
+        <div class="method-tab-card mc-cheap">
+          <div class="method-tab-card-title">💸 Cheapest</div>
+          <div class="method-card-sub">Lowest cost/kill</div>
+          <div class="method-tab-card-body">Average roubles spent per kill. Cheap and fast will be ranked at the top. Secondary column shows Master TTK so you can see what you're trading in speed for money.</div>
+        </div>
+        <div class="method-tab-card mc-bal">
+          <div class="method-tab-card-title">⚖️ Balanced</div>
+          <div class="method-card-sub">Real efficiency</div>
+          <div class="method-tab-card-body">Normalises each weapon's Master TTK and Cost as a weighted score: <code>TTK × 60% + Cost × 40%</code>. TTK has higher weight as kill speed is the primary combat variable. Ties (within 2%) are grouped.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════
+// WEAPON DATA
+// Format:
+// Faction | Armor | Weapon | Ammo | N kills | HTK x.x | Cost xxxx | TTK x.xxs | STK x.xxs | TTTK x.xxs | xx% Acc | Distance | x% Overkill (ignored) | Toolkit | FireRate | Damage | MagSize | Reload Time
+// Faction: always Mutant
+// Armor: Small | Medium | Strong | Gigant (maps to PseudoGiant internally)
+// Distance: any value accepted — all distances are merged automatically
+// Flat stats (FireRate/MagSize/Reload) stored per weapon+ammo
+// ══════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════
+const CN_RAW = `
+Mutant | Small | AEK-971 | 5.45x39 FMJ | 6 kills | HTK 7.06 | Cost 876 | TTK 1.23s | STK 0.41s | TTTK 0.84s | 59% Acc | Close Range | 0% Overkill | C | 900 | 37.0 | 30.0 | 3.3
+
+Mutant | Medium | AK-105 "Shakal" | 5.45x39 FMJ | 7 kills | HTK 8.7 | Cost 1079 | TTK 1.58s | STK 0.66s | TTTK 0.85s | 86% Acc | Close Range | 0% Overkill | C | 700 | 40.0 | 45.0 | 4.1
+
+Mutant | Small | AK-105 "Shakal" | 5.45x39 HP | 6 kills | HTK 1.63 | Cost 240 | TTK 0.33s | STK 0.06s | TTTK 0.20s | 62% Acc | Close Range | 0% Overkill | C | 700 | 40.0 | 45.0 | 4.1
+Mutant | Small | AK-105 "Shakal" | 5.45x39 HP | 6 kills | HTK 2.17 | Cost 320 | TTK 2.19s | STK 0.10s | TTTK 0.20s | 84% Acc | Medium Range | 0% Overkill | C | 700 | 40.0 | 45.0 | 4.1
+Mutant | Medium | AK-105 "Shakal" | 5.45x39 HP | 9 kills | HTK 5.44 | Cost 799 | TTK 1.16s | STK 0.38s | TTTK 0.47s | 83% Acc | Close Range | 0% Overkill | C | 700 | 40.0 | 45.0 | 4.1
+
+Mutant | Small | AK-74 "PMC" | 5.45x39 HP | 29 kills | HTK 3.0 | Cost 441 | TTK 0.70s | STK 0.18s | TTTK 0.62s | 43% Acc | Close Range | 0% Overkill | C | 650 | 37.0 | 45.0 | 4.3
+Mutant | Small | AK-74 "PMC" | 5.45x39 HP | 12 kills | HTK 3.26 | Cost 480 | TTK 2.66s | STK 0.21s | TTTK 0.40s | 65% Acc | Medium Range | 0% Overkill | C | 650 | 37.0 | 45.0 | 4.3
+Mutant | Strong | AK-74 "PMC" | 5.45x39 HP | 6 kills | HTK 7.07 | Cost 1039 | TTK 6.00s | STK 0.56s | TTTK 0.61s | 82% Acc | Medium Range | 0% Overkill | C | 650 | 37.0 | 45.0 | 4.3
+Mutant | Medium | AK-74 "PMC" | 5.45x39 HP | 25 kills | HTK 4.0 | Cost 588 | TTK 0.52s | STK 0.28s | TTTK 0.56s | 63% Acc | Close Range | 0% Overkill | C | 650 | 37.0 | 45.0 | 4.3
+Mutant | Medium | AK-74 "PMC" | 5.45x39 HP | 6 kills | HTK 5.5 | Cost 808 | TTK 1.47s | STK 0.42s | TTTK 0.54s | 83% Acc | Medium Range | 0% Overkill | C | 650 | 37.0 | 45.0 | 4.3
+
+Mutant | Small | AK-74M | 5.45x39 HP | 7 kills | HTK 2.17 | Cost 320 | TTK 0.43s | STK 0.12s | TTTK 0.44s | 60% Acc | Close Range | 0% Overkill | C | 600 | 37.0 | 30.0 | 4.3
+
+Mutant | Strong | AK-74M "Venom" | 5.45x39 HP | 10 kills | HTK 9.24 | Cost 1359 | TTK 1.75s | STK 0.82s | TTTK 1.10s | 82% Acc | Medium Range | 0% Overkill | C | 600 | 37.0 | 45.0 | 4.3
+Mutant | Medium | AK-74M "Venom" | 5.45x39 HP | 6 kills | HTK 4.35 | Cost 639 | TTK 0.43s | STK 0.33s | TTTK 0.60s | 69% Acc | Close Range | 0% Overkill | C | 600 | 37.0 | 45.0 | 4.3
+
+Mutant | Small | AMB-17 | 9x39 SP-5 | 12 kills | HTK 2.17 | Cost 331 | TTK 0.56s | STK 0.09s | TTTK 0.17s | 79% Acc | Close Range | 0% Overkill | D | 800 | 48.0 | 30.0 | 4.1
+
+Mutant | Small | APS Stechkin | 9x19 HP | 14 kills | HTK 2.17 | Cost 226 | TTK 0.44s | STK 0.11s | TTTK 0.36s | 50% Acc | Close Range | 0% Overkill | A | 650 | 17.0 | 20.0 | 3.6
+Mutant | Strong | APS Stechkin | 9x19 HP | 10 kills | HTK 5.44 | Cost 566 | TTK 7.54s | STK 0.41s | TTTK 1.04s | 72% Acc | Close Range | 0% Overkill | A | 650 | 17.0 | 20.0 | 3.6
+
+Mutant | Small | Armsel Protecta | 12x70 buckshot shells | 16 kills | HTK 1.0 | Cost 138 | TTK 0.05s | STK 0.00s | TTTK 0.39s | 100% Acc | Close Range | 0% Overkill | B | 155 | 189.0 | 12.0 | 12.8
+Mutant | Strong | Armsel Protecta | 12x70 buckshot shells | 6 kills | HTK 6.0 | Cost 828 | TTK 8.54s | STK 1.94s | TTTK 2.90s | 70% Acc | Close Range | 0% Overkill | B | 155 | 189.0 | 12.0 | 12.8
+Mutant | Medium | Armsel Protecta | 12x70 buckshot shells | 8 kills | HTK 2.5 | Cost 345 | TTK 1.33s | STK 0.58s | TTTK 1.16s | 75% Acc | Close Range | 0% Overkill | B | 155 | 189.0 | 12.0 | 12.8
+
+Mutant | Small | CMMG MK47 MUTANT | 7.62x39 FMJ | 15 kills | HTK 4.35 | Cost 779 | TTK 1.09s | STK 0.31s | TTTK 0.52s | 71% Acc | Close Range | 0% Overkill | D | 650 | 45.0 | 30.0 | 3.8
+Mutant | Medium | CMMG MK47 MUTANT | 7.62x39 FMJ | 16 kills | HTK 5.44 | Cost 973 | TTK 2.89s | STK 0.41s | TTTK 0.76s | 60% Acc | Close Range | 0% Overkill | D | 650 | 45.0 | 30.0 | 3.8
+
+Mutant | Small | Colt M1911 | .45 ACP Hydra-shock HP | 12 kills | HTK 2.0 | Cost 280 | TTK 0.87s | STK 0.26s | TTTK 0.26s | 100% Acc | Close Range | 0% Overkill | A | 230 | 27.0 | 7.0 | 3.3
+Mutant | Small | Colt M1911 | .45 ACP Hydra-shock HP | 10 kills | HTK 1.5 | Cost 210 | TTK 3.06s | STK 0.13s | TTTK 0.65s | 88% Acc | Medium Range | 0% Overkill | A | 230 | 27.0 | 7.0 | 3.3
+Mutant | Medium | Colt M1911 | .45 ACP Hydra-shock HP | 14 kills | HTK 3.5 | Cost 490 | TTK 2.22s | STK 0.65s | TTTK 0.91s | 75% Acc | Close Range | 0% Overkill | A | 230 | 27.0 | 7.0 | 3.3
+
+Mutant | Small | Coonan .357 Magnum Compact | .357 HP | 23 kills | HTK 1.0 | Cost 275 | TTK 0.05s | STK 0.00s | TTTK 0.28s | 100% Acc | Close Range | 0% Overkill | A | 215 | 104.0 | 6.0 | 2.4
+Mutant | Small | Coonan .357 Magnum Compact | .357 HP | 9 kills | HTK 2.0 | Cost 550 | TTK 1.69s | STK 0.28s | TTTK 0.55s | 100% Acc | Medium Range | 0% Overkill | A | 215 | 104.0 | 6.0 | 2.4
+Mutant | Medium | Coonan .357 Magnum Compact | .357 HP | 32 kills | HTK 2.5 | Cost 688 | TTK 2.04s | STK 0.42s | TTTK 0.56s | 100% Acc | Close Range | 0% Overkill | A | 215 | 104.0 | 6.0 | 2.4
+Mutant | Medium | Coonan .357 Magnum Compact | .357 HP | 7 kills | HTK 1.0 | Cost 275 | TTK 0.05s | STK 0.00s | TTTK 0.28s | 50% Acc | Medium Range | 0% Overkill | A | 215 | 104.0 | 6.0 | 2.4
+
+Mutant | Small | Desert Eagle | .357 HP | 20 kills | HTK 2.0 | Cost 550 | TTK 0.57s | STK 0.55s | TTTK 0.55s | 60% Acc | Close Range | 0% Overkill | A | 110 | 104.0 | 9.0 | 3.2
+Mutant | Small | Desert Eagle | .357 HP | 16 kills | HTK 2.0 | Cost 550 | TTK 1.98s | STK 0.55s | TTTK 0.82s | 100% Acc | Medium Range | 0% Overkill | A | 110 | 104.0 | 9.0 | 3.2
+Mutant | Medium | Desert Eagle | .357 HP | 16 kills | HTK 3.0 | Cost 825 | TTK 1.38s | STK 1.09s | TTTK 1.91s | 60% Acc | Close Range | 0% Overkill | A | 110 | 104.0 | 9.0 | 3.2
+Mutant | Medium | Desert Eagle | .357 HP | 7 kills | HTK 1.0 | Cost 275 | TTK 0.05s | STK 0.00s | TTTK 0.55s | 100% Acc | Medium Range | 0% Overkill | A | 110 | 104.0 | 9.0 | 3.2
+
+Mutant | Small | Desert Eagle "Steppe Eagle" | .357 HP | 11 kills | HTK 1.0 | Cost 275 | TTK 0.05s | STK 0.00s | TTTK 0.51s | 100% Acc | Close Range | 0% Overkill | A | 117 | 104.0 | 11.0 | 3.2
+
+Mutant | Small | FNP-45 | .45 ACP Hydra-shock HP | 12 kills | HTK 2.5 | Cost 350 | TTK 0.93s | STK 0.35s | TTTK 0.71s | 88% Acc | Close Range | 0% Overkill | A | 253 | 27.0 | 15.0 | 4.9
+Mutant | Small | FNP-45 | .45 ACP Hydra-shock HP | 7 kills | HTK 1.0 | Cost 140 | TTK 0.71s | STK 0.00s | TTTK 0.24s | 67% Acc | Medium Range | 0% Overkill | A | 253 | 27.0 | 15.0 | 4.9
+
+Mutant | Small | FNX-45 | .45 ACP Hydra-shock HP | 18 kills | HTK 1.63 | Cost 228 | TTK 0.66s | STK 0.13s | TTTK 0.46s | 60% Acc | Close Range | 0% Overkill | A | 290 | 27.0 | 15.0 | 4.9
+Mutant | Small | FNX-45 | .45 ACP Hydra-shock HP | 9 kills | HTK 3.26 | Cost 457 | TTK 1.48s | STK 0.47s | TTTK 0.47s | 100% Acc | Medium Range | 0% Overkill | A | 290 | 27.0 | 15.0 | 4.9
+Mutant | Medium | FNX-45 | .45 ACP Hydra-shock HP | 21 kills | HTK 4.35 | Cost 609 | TTK 2.66s | STK 0.69s | TTTK 0.92s | 67% Acc | Close Range | 0% Overkill | A | 290 | 27.0 | 15.0 | 4.9
+
+Mutant | Small | Fort-21 | .45 ACP Hydra-shock HP | 12 kills | HTK 2.17 | Cost 304 | TTK 1.59s | STK 0.19s | TTTK 0.28s | 88% Acc | Close Range | 0% Overkill | A | 370 | 21.0 | 16.0 | 4.0
+Mutant | Strong | Fort-21 | .45 ACP Hydra-shock HP | 8 kills | HTK 3.8 | Cost 533 | TTK 7.26s | STK 0.46s | TTTK 1.15s | 66% Acc | Close Range | 0% Overkill | A | 370 | 21.0 | 16.0 | 4.0
+
+Mutant | Small | G36K | 5.56x45 HP | 7 kills | HTK 2.17 | Cost 320 | TTK 0.76s | STK 0.10s | TTTK 0.10s | 100% Acc | Close Range | 0% Overkill | C | 700 | 35.0 | 30.0 | 4.0
+Mutant | Medium | G36K | 5.56x45 HP | 12 kills | HTK 4.89 | Cost 719 | TTK 2.06s | STK 0.33s | TTTK 0.58s | 88% Acc | Close Range | 0% Overkill | C | 700 | 35.0 | 30.0 | 4.0
+
+Mutant | Small | Galil ACE-21 | 7.62x51 NATO ball | 12 kills | HTK 4.35 | Cost 1196 | TTK 1.45s | STK 0.29s | TTTK 0.42s | 63% Acc | Close Range | 0% Overkill | C | 700 | 33.0 | 35.0 | 4.1
+Mutant | Medium | Galil ACE-21 | 7.62x51 NATO ball | 9 kills | HTK 4.35 | Cost 1196 | TTK 0.54s | STK 0.29s | TTTK 0.66s | 56% Acc | Close Range | 0% Overkill | C | 700 | 33.0 | 35.0 | 4.1
+
+Mutant | Small | Glock 19 "Hornet" | 9x19 HP | 113 kills | HTK 3.26 | Cost 339 | TTK 0.51s | STK 0.11s | TTTK 0.28s | 63% Acc | Close Range | 0% Overkill | A | 1200 | 21.0 | 40.0 | 4.0
+Mutant | Small | Glock 19 "Hornet" | 9x19 HP | 25 kills | HTK 3.26 | Cost 339 | TTK 1.85s | STK 0.11s | TTTK 0.22s | 67% Acc | Medium Range | 0% Overkill | A | 1200 | 21.0 | 40.0 | 4.0
+Mutant | Strong | Glock 19 "Hornet" | 9x19 HP | 63 kills | HTK 7.61 | Cost 792 | TTK 1.53s | STK 0.33s | TTTK 0.88s | 50% Acc | Close Range | 0% Overkill | A | 1200 | 21.0 | 40.0 | 4.0
+Mutant | Strong | Glock 19 "Hornet" | 9x19 HP | 10 kills | HTK 5.98 | Cost 622 | TTK 4.91s | STK 0.25s | TTTK 1.15s | 29% Acc | Medium Range | 0% Overkill | A | 1200 | 21.0 | 40.0 | 4.0
+Mutant | Medium | Glock 19 "Hornet" | 9x19 HP | 75 kills | HTK 5.44 | Cost 566 | TTK 0.66s | STK 0.22s | TTTK 0.38s | 63% Acc | Close Range | 0% Overkill | A | 1200 | 21.0 | 40.0 | 4.0
+Mutant | Medium | Glock 19 "Hornet" | 9x19 HP | 6 kills | HTK 8.7 | Cost 905 | TTK 3.12s | STK 0.38s | TTTK 0.66s | 67% Acc | Medium Range | 0% Overkill | A | 1200 | 21.0 | 40.0 | 4.0
+
+Mutant | Small | Howa Type 20 | 5.56x45 FMJ | 7 kills | HTK 4.35 | Cost 600 | TTK 13.46s | STK 0.22s | TTTK 0.30s | 75% Acc | Medium Range | 0% Overkill | D | 900 | 35.0 | 30.0 | 4.1
+
+Mutant | Small | Howa Type 20 | 5.56x45 HP | 13 kills | HTK 3.26 | Cost 480 | TTK 0.53s | STK 0.15s | TTTK 0.15s | 75% Acc | Close Range | 0% Overkill | D | 900 | 35.0 | 30.0 | 4.1
+Mutant | Small | Howa Type 20 | 5.56x45 HP | 6 kills | HTK 3.26 | Cost 480 | TTK 0.78s | STK 0.15s | TTTK 0.41s | 78% Acc | Medium Range | 0% Overkill | D | 900 | 35.0 | 30.0 | 4.1
+Mutant | Strong | Howa Type 20 | 5.56x45 HP | 12 kills | HTK 4.89 | Cost 719 | TTK 6.70s | STK 0.26s | TTTK 0.81s | 58% Acc | Close Range | 0% Overkill | D | 900 | 35.0 | 30.0 | 4.1
+Mutant | Strong | Howa Type 20 | 5.56x45 HP | 7 kills | HTK 6.52 | Cost 959 | TTK 3.03s | STK 0.37s | TTTK 0.66s | 71% Acc | Medium Range | 0% Overkill | D | 900 | 35.0 | 30.0 | 4.1
+
+Mutant | Small | Ithaca M37 Trenchgun | 12x70 buckshot shells | 8 kills | HTK 1.0 | Cost 138 | TTK 0.05s | STK 0.00s | TTTK 0.24s | 100% Acc | Close Range | 0% Overkill | B | 124 | 198.0 | 5.0 | 6.3
+
+Mutant | Small | KS-23 | "Shrapnel-25" 23x75 | 29 kills | HTK 1.0 | Cost 275 | TTK 0.05s | STK 0.00s | TTTK 0.00s | 100% Acc | Close Range | 0% Overkill | B | 84 | 300.0 | 4.0 | 5.5
+Mutant | Strong | KS-23 | "Shrapnel-25" 23x75 | 25 kills | HTK 1.0 | Cost 275 | TTK 0.05s | STK 0.00s | TTTK 0.71s | 100% Acc | Close Range | 0% Overkill | B | 84 | 300.0 | 4.0 | 5.5
+Mutant | Medium | KS-23 | "Shrapnel-25" 23x75 | 39 kills | HTK 1.0 | Cost 275 | TTK 0.05s | STK 0.00s | TTTK 0.00s | 100% Acc | Close Range | 0% Overkill | B | 84 | 300.0 | 4.0 | 5.5
+
+Mutant | Small | KS-23 Shortie | "Shrapnel-25" 23x75 | 13 kills | HTK 2.0 | Cost 550 | TTK 2.05s | STK 0.71s | TTTK 0.71s | 60% Acc | Close Range | 0% Overkill | B | 84 | 282.0 | 4.0 | 5.5
+Mutant | Small | KS-23 Shortie | "Shrapnel-25" 23x75 | 10 kills | HTK 2.0 | Cost 550 | TTK 1.76s | STK 0.71s | TTTK 0.71s | 100% Acc | Medium Range | 0% Overkill | B | 84 | 282.0 | 4.0 | 5.5
+Mutant | Medium | KS-23 Shortie | "Shrapnel-25" 23x75 | 15 kills | HTK 1.0 | Cost 275 | TTK 0.05s | STK 0.00s | TTTK 0.00s | 100% Acc | Close Range | 0% Overkill | B | 84 | 282.0 | 4.0 | 5.5
+
+Mutant | Small | KSG-23 | "Shrapnel-25" 23x75 | 34 kills | HTK 1.09 | Cost 299 | TTK 0.05s | STK 0.06s | TTTK 0.06s | 100% Acc | Close Range | 0% Overkill | D | 91 | 300.0 | 11.0 | 11.0
+Mutant | Small | KSG-23 | "Shrapnel-25" 23x75 | 10 kills | HTK 1.09 | Cost 299 | TTK 1.62s | STK 0.06s | TTTK 0.06s | 100% Acc | Medium Range | 0% Overkill | D | 91 | 300.0 | 11.0 | 11.0
+Mutant | Strong | KSG-23 | "Shrapnel-25" 23x75 | 26 kills | HTK 3.26 | Cost 897 | TTK 3.50s | STK 1.49s | TTTK 1.50s | 100% Acc | Close Range | 0% Overkill | D | 91 | 300.0 | 11.0 | 11.0
+Mutant | Gigant | KSG-23 | "Shrapnel-25" 23x75 | 11 kills | HTK 6.52 | Cost 1794 | TTK 9.56s | STK 3.64s | TTTK 4.34s | 100% Acc | Close Range | 0% Overkill | D | 91 | 300.0 | 11.0 | 11.0
+Mutant | Medium | KSG-23 | "Shrapnel-25" 23x75 | 34 kills | HTK 1.09 | Cost 299 | TTK 0.51s | STK 0.06s | TTTK 0.06s | 100% Acc | Close Range | 0% Overkill | D | 91 | 300.0 | 11.0 | 11.0
+
+Mutant | Small | M1014 | 12x70 buckshot shells | 9 kills | HTK 1.09 | Cost 150 | TTK 0.05s | STK 0.01s | TTTK 0.01s | 100% Acc | Close Range | 0% Overkill | C | 350 | 198.0 | 10.0 | 12.0
+Mutant | Medium | M1014 | 12x70 buckshot shells | 10 kills | HTK 3.26 | Cost 450 | TTK 3.87s | STK 0.39s | TTTK 0.57s | 100% Acc | Close Range | 0% Overkill | C | 350 | 198.0 | 10.0 | 12.0
+
+Mutant | Medium | M4A1 "Butcher" | 5.56x45 FMJ | 6 kills | HTK 9.79 | Cost 1351 | TTK 1.41s | STK 0.55s | TTTK 0.72s | 90% Acc | Close Range | 0% Overkill | C | 950 | 34.0 | 60.0 | 3.1
+
+Mutant | Small | Mossberg 590A1 | 12x70 buckshot shells | 19 kills | HTK 2.0 | Cost 276 | TTK 1.07s | STK 0.67s | TTTK 0.67s | 100% Acc | Close Range | 0% Overkill | B | 90 | 198.0 | 9.0 | 10.3
+Mutant | Medium | Mossberg 590A1 | 12x70 buckshot shells | 14 kills | HTK 2.0 | Cost 276 | TTK 2.27s | STK 0.67s | TTTK 0.67s | 100% Acc | Close Range | 0% Overkill | B | 90 | 198.0 | 9.0 | 10.3
+
+Mutant | Small | Mossberg 590A1 | 12x76 slug shells | 19 kills | HTK 1.0 | Cost 227 | TTK 0.05s | STK 0.00s | TTTK 0.00s | 100% Acc | Close Range | 0% Overkill | B | 90 | 198.0 | 9.0 | 10.3
+Mutant | Medium | Mossberg 590A1 | 12x76 slug shells | 6 kills | HTK 2.5 | Cost 568 | TTK 3.22s | STK 1.00s | TTTK 1.33s | 88% Acc | Close Range | 0% Overkill | B | 90 | 198.0 | 9.0 | 10.3
+
+Mutant | Small | MP-412 Rex | .357 HP | 49 kills | HTK 2.0 | Cost 550 | TTK 0.82s | STK 0.38s | TTTK 0.38s | 100% Acc | Close Range | 0% Overkill | A | 160 | 104.0 | 6.0 | 3.7
+Mutant | Small | MP-412 Rex | .357 HP | 25 kills | HTK 1.0 | Cost 275 | TTK 0.05s | STK 0.00s | TTTK 0.00s | 100% Acc | Medium Range | 0% Overkill | A | 160 | 104.0 | 6.0 | 3.7
+Mutant | Medium | MP-412 Rex | .357 HP | 25 kills | HTK 3.0 | Cost 825 | TTK 1.87s | STK 0.75s | TTTK 0.75s | 100% Acc | Close Range | 0% Overkill | A | 160 | 104.0 | 6.0 | 3.7
+
+Mutant | Small | MP5A3 | 9x19 HP | 24 kills | HTK 2.17 | Cost 226 | TTK 0.11s | STK 0.09s | TTTK 0.38s | 50% Acc | Close Range | 0% Overkill | A | 800 | 21.0 | 30.0 | 4.2
+Mutant | Medium | MP5A3 | 9x19 HP | 16 kills | HTK 5.44 | Cost 566 | TTK 0.86s | STK 0.33s | TTTK 0.57s | 63% Acc | Close Range | 0% Overkill | A | 800 | 21.0 | 30.0 | 4.2
+
+Mutant | Small | MP5A3 "Frasier" | .45 ACP FMJ | 8 kills | HTK 2.17 | Cost 204 | TTK 0.53s | STK 0.10s | TTTK 0.32s | 71% Acc | Close Range | 0% Overkill | C | 730 | 27.0 | 30.0 | 4.2
+Mutant | Strong | MP5A3 "Frasier" | .45 ACP FMJ | 6 kills | HTK 8.15 | Cost 767 | TTK 11.39s | STK 0.58s | TTTK 2.88s | 36% Acc | Close Range | 0% Overkill | C | 730 | 27.0 | 30.0 | 4.2
+Mutant | Medium | MP5A3 "Frasier" | .45 ACP FMJ | 20 kills | HTK 3.26 | Cost 307 | TTK 1.36s | STK 0.19s | TTTK 0.73s | 38% Acc | Close Range | 0% Overkill | C | 730 | 27.0 | 30.0 | 4.2
+
+Mutant | Small | MP5A3 "Frasier" | .45 ACP Hydra-shock HP | 295 kills | HTK 2.17 | Cost 304 | TTK 0.27s | STK 0.10s | TTTK 0.28s | 50% Acc | Close Range | 0% Overkill | C | 730 | 27.0 | 30.0 | 4.2
+Mutant | Small | MP5A3 "Frasier" | .45 ACP Hydra-shock HP | 94 kills | HTK 2.17 | Cost 304 | TTK 0.78s | STK 0.10s | TTTK 0.18s | 67% Acc | Medium Range | 0% Overkill | C | 730 | 27.0 | 30.0 | 4.2
+Mutant | Strong | MP5A3 "Frasier" | .45 ACP Hydra-shock HP | 161 kills | HTK 5.44 | Cost 761 | TTK 2.11s | STK 0.36s | TTTK 1.08s | 67% Acc | Close Range | 0% Overkill | C | 730 | 27.0 | 30.0 | 4.2
+Mutant | Strong | MP5A3 "Frasier" | .45 ACP Hydra-shock HP | 15 kills | HTK 5.0 | Cost 700 | TTK 1.90s | STK 0.33s | TTTK 1.39s | 40% Acc | Medium Range | 0% Overkill | C | 730 | 27.0 | 30.0 | 4.2
+Mutant | Gigant | MP5A3 "Frasier" | .45 ACP Hydra-shock HP | 10 kills | HTK 34.8 | Cost 4872 | TTK 12.96s | STK 2.77s | TTTK 3.76s | 80% Acc | Close Range | 0% Overkill | C | 730 | 27.0 | 30.0 | 4.2
+Mutant | Gigant | MP5A3 "Frasier" | .45 ACP Hydra-shock HP | 7 kills | HTK 16.31 | Cost 2284 | TTK 5.35s | STK 1.26s | TTTK 2.26s | 83% Acc | Medium Range | 0% Overkill | C | 730 | 27.0 | 30.0 | 4.2
+Mutant | Medium | MP5A3 "Frasier" | .45 ACP Hydra-shock HP | 193 kills | HTK 4.35 | Cost 609 | TTK 0.62s | STK 0.28s | TTTK 0.54s | 56% Acc | Close Range | 0% Overkill | C | 730 | 27.0 | 30.0 | 4.2
+Mutant | Medium | MP5A3 "Frasier" | .45 ACP Hydra-shock HP | 42 kills | HTK 4.35 | Cost 609 | TTK 2.04s | STK 0.28s | TTTK 0.46s | 69% Acc | Medium Range | 0% Overkill | C | 730 | 27.0 | 30.0 | 4.2
+
+Mutant | Small | MP5SD6 | 9x19 HP | 6 kills | HTK 2.17 | Cost 226 | TTK 0.39s | STK 0.09s | TTTK 0.17s | 60% Acc | Close Range | 0% Overkill | A | 800 | 21.0 | 40.0 | 4.2
+Mutant | Strong | MP5SD6 | 9x19 HP | 6 kills | HTK 7.61 | Cost 792 | TTK 2.62s | STK 0.50s | TTTK 1.87s | 34% Acc | Close Range | 0% Overkill | A | 800 | 21.0 | 40.0 | 4.2
+Mutant | Medium | MP5SD6 | 9x19 HP | 9 kills | HTK 7.61 | Cost 792 | TTK 1.88s | STK 0.50s | TTTK 0.74s | 63% Acc | Close Range | 0% Overkill | A | 800 | 21.0 | 40.0 | 4.2
+
+Mutant | Small | OTs-02 Kiparis | 9x18 HP | 39 kills | HTK 3.0 | Cost 264 | TTK 0.77s | STK 0.14s | TTTK 0.35s | 56% Acc | Close Range | 0% Overkill | A | 850 | 18.0 | 30.0 | 3.5
+Mutant | Medium | OTs-02 Kiparis | 9x18 HP | 25 kills | HTK 8.7 | Cost 766 | TTK 1.05s | STK 0.54s | TTTK 0.85s | 69% Acc | Close Range | 0% Overkill | A | 850 | 18.0 | 30.0 | 3.5
+
+Mutant | Small | OTs-02 Kiparis | 9x19 HP | 32 kills | HTK 3.26 | Cost 339 | TTK 1.19s | STK 0.16s | TTTK 0.43s | 62% Acc | Close Range | 0% Overkill | A | 850 | 18.0 | 30.0 | 3.5
+Mutant | Small | OTs-02 Kiparis | 9x19 HP | 15 kills | HTK 3.26 | Cost 339 | TTK 0.94s | STK 0.16s | TTTK 0.16s | 100% Acc | Medium Range | 0% Overkill | A | 850 | 18.0 | 30.0 | 3.5
+Mutant | Strong | OTs-02 Kiparis | 9x19 HP | 14 kills | HTK 5.98 | Cost 622 | TTK 1.34s | STK 0.35s | TTTK 0.93s | 54% Acc | Close Range | 0% Overkill | A | 850 | 18.0 | 30.0 | 3.5
+Mutant | Medium | OTs-02 Kiparis | 9x19 HP | 24 kills | HTK 6.52 | Cost 679 | TTK 0.72s | STK 0.39s | TTTK 0.51s | 80% Acc | Close Range | 0% Overkill | A | 850 | 18.0 | 30.0 | 3.5
+
+Mutant | Small | OTs-14 Groza "Storm" | 5.45x39 FMJ | 20 kills | HTK 2.0 | Cost 248 | TTK 0.24s | STK 0.08s | TTTK 0.16s | 82% Acc | Close Range | 0% Overkill | D | 750 | 37.0 | 60.0 | 3.9
+Mutant | Strong | OTs-14 Groza "Storm" | 5.45x39 FMJ | 18 kills | HTK 6.0 | Cost 744 | TTK 2.32s | STK 0.40s | TTTK 1.68s | 42% Acc | Close Range | 0% Overkill | D | 750 | 37.0 | 60.0 | 3.9
+
+Mutant | Small | OTs-14 Groza "Storm" | 5.45x39 HP | 110 kills | HTK 2.0 | Cost 294 | TTK 0.25s | STK 0.08s | TTTK 0.24s | 50% Acc | Close Range | 0% Overkill | D | 750 | 37.0 | 60.0 | 3.9
+Mutant | Small | OTs-14 Groza "Storm" | 5.45x39 HP | 38 kills | HTK 2.0 | Cost 294 | TTK 0.57s | STK 0.08s | TTTK 0.16s | 67% Acc | Medium Range | 0% Overkill | D | 750 | 37.0 | 60.0 | 3.9
+Mutant | Strong | OTs-14 Groza "Storm" | 5.45x39 HP | 50 kills | HTK 6.0 | Cost 882 | TTK 2.23s | STK 0.40s | TTTK 1.08s | 48% Acc | Close Range | 0% Overkill | D | 750 | 37.0 | 60.0 | 3.9
+Mutant | Strong | OTs-14 Groza "Storm" | 5.45x39 HP | 12 kills | HTK 3.5 | Cost 514 | TTK 0.75s | STK 0.20s | TTTK 0.72s | 37% Acc | Medium Range | 0% Overkill | D | 750 | 37.0 | 60.0 | 3.9
+Mutant | Medium | OTs-14 Groza "Storm" | 5.45x39 HP | 53 kills | HTK 3.0 | Cost 441 | TTK 0.75s | STK 0.16s | TTTK 0.49s | 50% Acc | Close Range | 0% Overkill | D | 750 | 37.0 | 60.0 | 3.9
+Mutant | Medium | OTs-14 Groza "Storm" | 5.45x39 HP | 9 kills | HTK 4.0 | Cost 588 | TTK 1.19s | STK 0.24s | TTTK 0.32s | 63% Acc | Medium Range | 0% Overkill | D | 750 | 37.0 | 60.0 | 3.9
+
+Mutant | Small | PP-19 Bizon | 9x18 HP | 17 kills | HTK 2.17 | Cost 191 | TTK 0.24s | STK 0.11s | TTTK 0.21s | 80% Acc | Close Range | 0% Overkill | A | 650 | 18.0 | 64.0 | 4.7
+Mutant | Strong | PP-19 Bizon | 9x18 HP | 9 kills | HTK 7.61 | Cost 670 | TTK 2.52s | STK 0.61s | TTTK 1.50s | 56% Acc | Close Range | 0% Overkill | A | 650 | 18.0 | 64.0 | 4.7
+Mutant | Medium | PP-19 Bizon | 9x18 HP | 13 kills | HTK 8.7 | Cost 766 | TTK 1.92s | STK 0.71s | TTTK 1.10s | 76% Acc | Close Range | 0% Overkill | A | 650 | 18.0 | 64.0 | 4.7
+
+Mutant | Small | PP-19-01 Vityaz | 9x19 HP | 44 kills | HTK 2.17 | Cost 226 | TTK 0.53s | STK 0.09s | TTTK 0.25s | 67% Acc | Close Range | 0% Overkill | A | 800 | 21.0 | 30.0 | 4.8
+Mutant | Small | PP-19-01 Vityaz | 9x19 HP | 15 kills | HTK 4.0 | Cost 416 | TTK 2.04s | STK 0.22s | TTTK 0.45s | 70% Acc | Medium Range | 0% Overkill | A | 800 | 21.0 | 30.0 | 4.8
+Mutant | Strong | PP-19-01 Vityaz | 9x19 HP | 12 kills | HTK 5.98 | Cost 622 | TTK 0.84s | STK 0.37s | TTTK 0.78s | 56% Acc | Close Range | 0% Overkill | A | 800 | 21.0 | 30.0 | 4.8
+Mutant | Strong | PP-19-01 Vityaz | 9x19 HP | 8 kills | HTK 9.79 | Cost 1018 | TTK 7.48s | STK 0.66s | TTTK 1.31s | 65% Acc | Medium Range | 0% Overkill | A | 800 | 21.0 | 30.0 | 4.8
+Mutant | Medium | PP-19-01 Vityaz | 9x19 HP | 38 kills | HTK 6.26 | Cost 652 | TTK 0.66s | STK 0.40s | TTTK 0.62s | 72% Acc | Close Range | 0% Overkill | A | 800 | 21.0 | 30.0 | 4.8
+
+Mutant | Small | PP-2000 | 9x19 HP | 9 kills | HTK 3.0 | Cost 312 | TTK 0.63s | STK 0.20s | TTTK 0.30s | 57% Acc | Close Range | 0% Overkill | A | 600 | 21.0 | 45.0 | 2.4
+Mutant | Small | PP-2000 | 9x19 HP | 10 kills | HTK 3.0 | Cost 312 | TTK 0.97s | STK 0.20s | TTTK 0.35s | 67% Acc | Medium Range | 0% Overkill | A | 600 | 21.0 | 45.0 | 2.4
+Mutant | Medium | PP-2000 | 9x19 HP | 10 kills | HTK 5.44 | Cost 566 | TTK 1.27s | STK 0.44s | TTTK 0.87s | 64% Acc | Close Range | 0% Overkill | A | 600 | 21.0 | 45.0 | 2.4
+
+Mutant | Small | PPSh-41 | 7.62x25 LRNPC | 6 kills | HTK 2.0 | Cost 152 | TTK 0.13s | STK 0.07s | TTTK 0.14s | 94% Acc | Close Range | 0% Overkill | A | 880 | 21.0 | 71.0 | 6.1
+Mutant | Medium | PPSh-41 | 7.62x25 LRNPC | 12 kills | HTK 7.5 | Cost 570 | TTK 0.98s | STK 0.44s | TTTK 0.68s | 74% Acc | Close Range | 0% Overkill | A | 880 | 21.0 | 71.0 | 6.1
+
+Mutant | Small | RAPTR | 12x70 buckshot shells | 15 kills | HTK 2.17 | Cost 300 | TTK 0.54s | STK 0.31s | TTTK 0.60s | 100% Acc | Close Range | 0% Overkill | D | 225 | 198.0 | 20.0 | 4.6
+Mutant | Strong | RAPTR | 12x70 buckshot shells | 30 kills | HTK 3.26 | Cost 450 | TTK 1.82s | STK 0.60s | TTTK 1.18s | 71% Acc | Close Range | 0% Overkill | D | 225 | 198.0 | 20.0 | 4.6
+Mutant | Medium | RAPTR | 12x70 buckshot shells | 9 kills | HTK 1.09 | Cost 150 | TTK 0.42s | STK 0.02s | TTTK 0.02s | 100% Acc | Close Range | 0% Overkill | D | 225 | 198.0 | 20.0 | 4.6
+
+Mutant | Small | RAPTR | 12x76 slug shells | 14 kills | HTK 1.09 | Cost 247 | TTK 0.05s | STK 0.02s | TTTK 0.61s | 50% Acc | Close Range | 0% Overkill | D | 225 | 198.0 | 20.0 | 4.6
+Mutant | Strong | RAPTR | 12x76 slug shells | 27 kills | HTK 4.35 | Cost 987 | TTK 1.33s | STK 0.89s | TTTK 1.18s | 64% Acc | Close Range | 0% Overkill | D | 225 | 198.0 | 20.0 | 4.6
+Mutant | Medium | RAPTR | 12x76 slug shells | 14 kills | HTK 2.17 | Cost 494 | TTK 0.84s | STK 0.31s | TTTK 0.60s | 71% Acc | Close Range | 0% Overkill | D | 225 | 198.0 | 20.0 | 4.6
+
+Mutant | Small | Remington 870 | 12x70 buckshot shells | 35 kills | HTK 1.0 | Cost 138 | TTK 0.05s | STK 0.00s | TTTK 0.00s | 100% Acc | Close Range | 0% Overkill | B | 86 | 198.0 | 8.0 | 7.3
+Mutant | Strong | Remington 870 | 12x70 buckshot shells | 9 kills | HTK 2.0 | Cost 276 | TTK 3.34s | STK 0.70s | TTTK 0.70s | 100% Acc | Close Range | 0% Overkill | B | 86 | 198.0 | 8.0 | 7.3
+Mutant | Medium | Remington 870 | 12x70 buckshot shells | 20 kills | HTK 2.0 | Cost 276 | TTK 4.38s | STK 0.70s | TTTK 1.05s | 100% Acc | Close Range | 0% Overkill | B | 86 | 198.0 | 8.0 | 7.3
+
+Mutant | Small | Rifle Dynamics RD-74N ISG Tactical | 5.45x39 FMJ | 8 kills | HTK 2.71 | Cost 338 | TTK 0.67s | STK 0.15s | TTTK 0.33s | 88% Acc | Close Range | 0% Overkill | D | 720 | 40.0 | 30.0 | 4.1
+
+Mutant | Small | RPK-16 LMG | 5.45x39 HP | 21 kills | HTK 1.09 | Cost 160 | TTK 0.05s | STK 0.01s | TTTK 0.27s | 50% Acc | Close Range | 0% Overkill | C | 750 | 37.0 | 60.0 | 6.0
+Mutant | Small | RPK-16 LMG | 5.45x39 HP | 15 kills | HTK 2.17 | Cost 320 | TTK 0.82s | STK 0.09s | TTTK 0.27s | 50% Acc | Medium Range | 0% Overkill | C | 750 | 37.0 | 60.0 | 6.0
+Mutant | Strong | RPK-16 LMG | 5.45x39 HP | 29 kills | HTK 6.52 | Cost 959 | TTK 2.97s | STK 0.44s | TTTK 1.06s | 50% Acc | Close Range | 0% Overkill | C | 750 | 37.0 | 60.0 | 6.0
+Mutant | Strong | RPK-16 LMG | 5.45x39 HP | 19 kills | HTK 4.35 | Cost 639 | TTK 1.90s | STK 0.27s | TTTK 0.71s | 43% Acc | Medium Range | 0% Overkill | C | 750 | 37.0 | 60.0 | 6.0
+Mutant | Medium | RPK-16 LMG | 5.45x39 HP | 35 kills | HTK 5.0 | Cost 735 | TTK 0.50s | STK 0.32s | TTTK 0.55s | 56% Acc | Close Range | 0% Overkill | C | 750 | 37.0 | 60.0 | 6.0
+Mutant | Medium | RPK-16 LMG | 5.45x39 HP | 12 kills | HTK 4.35 | Cost 639 | TTK 1.36s | STK 0.27s | TTTK 0.53s | 50% Acc | Medium Range | 0% Overkill | C | 750 | 37.0 | 60.0 | 6.0
+
+Mutant | Small | Saiga-12 | 12x70 buckshot shells | 20 kills | HTK 2.08 | Cost 288 | TTK 0.66s | STK 0.26s | TTTK 0.28s | 100% Acc | Close Range | 0% Overkill | C | 250 | 198.0 | 6.0 | 7.8
+Mutant | Medium | Saiga-12 | 12x70 buckshot shells | 35 kills | HTK 2.17 | Cost 300 | TTK 1.35s | STK 0.28s | TTTK 0.48s | 100% Acc | Close Range | 0% Overkill | C | 250 | 198.0 | 6.0 | 7.8
+
+Mutant | Small | Saiga-12 Tactical | 12x70 buckshot shells | 92 kills | HTK 1.09 | Cost 150 | TTK 0.05s | STK 0.02s | TTTK 0.02s | 100% Acc | Close Range | 0% Overkill | C | 250 | 198.0 | 8.0 | 7.8
+Mutant | Small | Saiga-12 Tactical | 12x70 buckshot shells | 10 kills | HTK 1.63 | Cost 225 | TTK 2.65s | STK 0.15s | TTTK 0.28s | 100% Acc | Medium Range | 0% Overkill | C | 250 | 198.0 | 8.0 | 7.8
+Mutant | Strong | Saiga-12 Tactical | 12x70 buckshot shells | 53 kills | HTK 3.26 | Cost 450 | TTK 2.08s | STK 0.54s | TTTK 0.80s | 100% Acc | Close Range | 0% Overkill | C | 250 | 198.0 | 8.0 | 7.8
+Mutant | Medium | Saiga-12 Tactical | 12x70 buckshot shells | 107 kills | HTK 2.17 | Cost 300 | TTK 0.94s | STK 0.28s | TTTK 0.48s | 100% Acc | Close Range | 0% Overkill | C | 250 | 198.0 | 8.0 | 7.8
+Mutant | Medium | Saiga-12 Tactical | 12x70 buckshot shells | 10 kills | HTK 3.26 | Cost 450 | TTK 2.52s | STK 0.54s | TTTK 0.55s | 100% Acc | Medium Range | 0% Overkill | C | 250 | 198.0 | 8.0 | 7.8
+
+Mutant | Medium | Saiga-12 Tactical | 12x76 slug shells | 7 kills | HTK 2.17 | Cost 494 | TTK 0.92s | STK 0.28s | TTTK 0.48s | 100% Acc | Close Range | 0% Overkill | C | 250 | 198.0 | 8.0 | 7.8
+
+Mutant | Small | SPAS-12 | 12x70 buckshot shells | 12 kills | HTK 1.09 | Cost 150 | TTK 0.05s | STK 0.02s | TTTK 0.13s | 100% Acc | Close Range | 0% Overkill | C | 250 | 198.0 | 8.0 | 9.7
+Mutant | Strong | SPAS-12 | 12x70 buckshot shells | 6 kills | HTK 3.0 | Cost 414 | TTK 2.17s | STK 0.48s | TTTK 0.60s | 84% Acc | Close Range | 0% Overkill | C | 250 | 198.0 | 8.0 | 9.7
+Mutant | Medium | SPAS-12 | 12x70 buckshot shells | 13 kills | HTK 2.0 | Cost 276 | TTK 1.24s | STK 0.24s | TTTK 0.48s | 100% Acc | Close Range | 0% Overkill | C | 250 | 198.0 | 8.0 | 9.7
+
+Mutant | Small | SR-2M Veresk | 9x21 SP10 | 9 kills | HTK 3.0 | Cost 636 | TTK 0.53s | STK 0.13s | TTTK 0.36s | 71% Acc | Close Range | 0% Overkill | C | 900 | 26.0 | 30.0 | 7.7
+Mutant | Medium | SR-2M Veresk | 9x21 SP10 | 6 kills | HTK 8.7 | Cost 1844 | TTK 1.91s | STK 0.52s | TTTK 0.88s | 58% Acc | Close Range | 0% Overkill | C | 900 | 26.0 | 30.0 | 7.7
+
+Mutant | Small | SR-2M Veresk "Tactical" | 9x21 SP10 | 7 kills | HTK 9.79 | Cost 2075 | TTK 5.45s | STK 0.59s | TTTK 1.10s | 68% Acc | Close Range | 0% Overkill | C | 900 | 26.0 | 30.0 | 7.7
+Mutant | Medium | SR-2M Veresk "Tactical" | 9x21 SP10 | 7 kills | HTK 8.7 | Cost 1844 | TTK 1.40s | STK 0.51s | TTTK 0.87s | 63% Acc | Close Range | 0% Overkill | C | 900 | 26.0 | 30.0 | 7.7
+
+Mutant | Medium | Steyr AUG A3 9mm | 9x19 HP | 7 kills | HTK 5.44 | Cost 566 | TTK 1.41s | STK 0.38s | TTTK 0.56s | 80% Acc | Close Range | 0% Overkill | A | 700 | 21.0 | 32.0 | 4.8
+
+Mutant | Small | Strayer Voigt Infinity | .45 ACP Hydra-shock HP | 18 kills | HTK 2.17 | Cost 304 | TTK 1.11s | STK 0.28s | TTTK 0.28s | 100% Acc | Close Range | 0% Overkill | A | 250 | 27.0 | 15.0 | 2.4
+Mutant | Strong | Strayer Voigt Infinity | .45 ACP Hydra-shock HP | 10 kills | HTK 6.76 | Cost 946 | TTK 10.50s | STK 1.39s | TTTK 3.80s | 52% Acc | Close Range | 0% Overkill | A | 250 | 27.0 | 15.0 | 2.4
+Mutant | Medium | Strayer Voigt Infinity | .45 ACP Hydra-shock HP | 14 kills | HTK 3.26 | Cost 457 | TTK 1.05s | STK 0.54s | TTTK 1.33s | 60% Acc | Close Range | 0% Overkill | A | 250 | 27.0 | 15.0 | 2.4
+
+Mutant | Small | Thompson Model 1921 | .45 ACP Hydra-shock HP | 10 kills | HTK 2.0 | Cost 280 | TTK 0.34s | STK 0.07s | TTTK 0.42s | 33% Acc | Close Range | 0% Overkill | A | 900 | 27.0 | 50.0 | 4.4
+Mutant | Medium | Thompson Model 1921 | .45 ACP Hydra-shock HP | 11 kills | HTK 6.0 | Cost 840 | TTK 0.91s | STK 0.33s | TTTK 1.31s | 33% Acc | Close Range | 0% Overkill | A | 900 | 27.0 | 50.0 | 4.4
+
+Mutant | Small | TOZ-106 | 20x70 buckshot round | 22 kills | HTK 1.0 | Cost 83 | TTK 0.05s | STK 0.00s | TTTK 0.00s | 100% Acc | Close Range | 0% Overkill | B | 35 | 144.0 | 4.0 | 5.9
+Mutant | Medium | TOZ-106 | 20x70 buckshot round | 12 kills | HTK 2.5 | Cost 208 | TTK 5.76s | STK 2.57s | TTTK 3.43s | 100% Acc | Close Range | 0% Overkill | B | 35 | 144.0 | 4.0 | 5.9
+
+Mutant | Small | TOZ-34 | 12x70 buckshot shells | 6 kills | HTK 1.0 | Cost 138 | TTK 0.05s | STK 0.00s | TTTK 0.00s | 100% Acc | Close Range | 0% Overkill | B | 1000 | 198.0 | 2.0 | 4.5
+Mutant | Medium | TOZ-34 | 12x70 buckshot shells | 12 kills | HTK 1.0 | Cost 138 | TTK 0.34s | STK 0.00s | TTTK 0.06s | 100% Acc | Close Range | 0% Overkill | B | 1000 | 198.0 | 2.0 | 4.5
+
+Mutant | Small | TOZ-34 "Chimera Hunter" | "Shrapnel-25" 23x75 | 62 kills | HTK 1.0 | Cost 275 | TTK 0.05s | STK 0.00s | TTTK 0.00s | 100% Acc | Close Range | 0% Overkill | B | 200 | 312.0 | 2.0 | 4.5
+Mutant | Small | TOZ-34 "Chimera Hunter" | "Shrapnel-25" 23x75 | 8 kills | HTK 1.0 | Cost 275 | TTK 0.05s | STK 0.00s | TTTK 0.00s | 100% Acc | Medium Range | 0% Overkill | B | 200 | 312.0 | 2.0 | 4.5
+Mutant | Strong | TOZ-34 "Chimera Hunter" | "Shrapnel-25" 23x75 | 55 kills | HTK 1.0 | Cost 275 | TTK 0.05s | STK 0.00s | TTTK 0.30s | 100% Acc | Close Range | 0% Overkill | B | 200 | 312.0 | 2.0 | 4.5
+Mutant | Medium | TOZ-34 "Chimera Hunter" | "Shrapnel-25" 23x75 | 84 kills | HTK 1.0 | Cost 275 | TTK 0.05s | STK 0.00s | TTTK 0.00s | 100% Acc | Close Range | 0% Overkill | B | 200 | 312.0 | 2.0 | 4.5
+
+Mutant | Small | UDP-9 Carbine | .45 ACP Hydra-shock HP | 7 kills | HTK 4.35 | Cost 609 | TTK 6.48s | STK 0.57s | TTTK 1.32s | 86% Acc | Close Range | 0% Overkill | A | 350 | 21.0 | 33.0 | 3.0
+
+Mutant | Small | UDP-9 Carbine | 9x19 HP | 13 kills | HTK 3.26 | Cost 339 | TTK 4.49s | STK 0.39s | TTTK 0.39s | 100% Acc | Medium Range | 0% Overkill | A | 350 | 21.0 | 33.0 | 3.0
+
+Mutant | Strong | UMP45 | .45 ACP Hydra-shock HP | 11 kills | HTK 3.0 | Cost 420 | TTK 0.84s | STK 0.20s | TTTK 0.51s | 45% Acc | Close Range | 0% Overkill | C | 600 | 27.0 | 25.0 | 3.6
+
+Mutant | Medium | Walther P99 Custom | 9x19 HP | 10 kills | HTK 5.44 | Cost 566 | TTK 5.26s | STK 1.02s | TTTK 1.27s | 84% Acc | Close Range | 0% Overkill | A | 260 | 21.0 | 16.0 | 4.0
+
+Mutant | Small | Winchester Model 1873 | .357 HP | 33 kills | HTK 1.0 | Cost 275 | TTK 0.05s | STK 0.00s | TTTK 0.00s | 100% Acc | Close Range | 0% Overkill | B | 95 | 121.0 | 12.0 | 10.6
+Mutant | Small | Winchester Model 1873 | .357 HP | 17 kills | HTK 1.0 | Cost 275 | TTK 0.05s | STK 0.00s | TTTK 0.63s | 100% Acc | Medium Range | 0% Overkill | B | 95 | 121.0 | 12.0 | 10.6
+Mutant | Strong | Winchester Model 1873 | .357 HP | 12 kills | HTK 2.0 | Cost 550 | TTK 2.04s | STK 0.63s | TTTK 1.89s | 88% Acc | Close Range | 0% Overkill | B | 95 | 121.0 | 12.0 | 10.6
+Mutant | Medium | Winchester Model 1873 | .357 HP | 48 kills | HTK 3.0 | Cost 825 | TTK 1.52s | STK 1.26s | TTTK 1.26s | 100% Acc | Close Range | 0% Overkill | B | 95 | 121.0 | 12.0 | 10.6
+Mutant | Medium | Winchester Model 1873 | .357 HP | 13 kills | HTK 2.0 | Cost 550 | TTK 2.96s | STK 0.63s | TTTK 1.28s | 80% Acc | Medium Range | 0% Overkill | B | 95 | 121.0 | 12.0 | 10.6
+
+
+`;
+// ▲▲▲ END OF DATA ▲▲▲
+
+// ══════════════════════════════════════════════════════════════
+// OVERRIDES
+// ══════════════════════════════════════════════════════════════
+const NOTE_OVERRIDES = {
+
+};
+
+// ══════════════════════════════════════════════════════════════
+// CONSTANTS
+// ══════════════════════════════════════════════════════════════
+// Armor tiers: 0=PseudoGiant, 1=Strong, 2=Medium, 3=Small
+// Note: raw data uses 'Gigant' as the armor string; it maps to 'PseudoGiant' (index 0)
+const ARMOR_IDX   = { 'Small': 3, 'Medium': 2, 'Strong': 1, 'Gigant': 0 };
+const ARMOR_NAMES = ['PseudoGiant', 'Strong', 'Medium', 'Small'];
+const NUM_TIERS   = 4;
+
+// Armor tier weights
+// W_FULL: all tiers included  [PseudoGiant, Strong, Medium, Small]
+// W_EXCL: PseudoGiant excluded [PseudoGiant=0, Strong, Medium, Small]
+const W_FULL = [0.25, 0.25, 0.25, 0.25];
+const W_EXCL = [0.00, 0.3334, 0.3333, 0.3333];
+
+const MTTK_W_STK = 0.20, MTTK_W_TTTK = 0.35, MTTK_W_TTK = 0.45;
+const LOW_KILLS = 125, LOW_KILLS_TIER = 25, MIN_KILLS_COMPOSITE = 3;
+const INSUFF_PER_TIER = 5, INSUFF_TOTAL = 50;
+const TOTAL_WEAPONS   = 168;
+
+// ══════════════════════════════════════════════════════════════
+// PARSER
+// ══════════════════════════════════════════════════════════════
+function parseCNRaw(raw) {
+  const map = new Map();
+  for (const line of raw.split('\n')) {
+    const t = line.trim();
+    if (!t || t.startsWith('#')) continue;
+    const p = t.split('|').map(s => s.trim());
+    if (p.length < 18) continue;
+
+    const [, armor, weapon, ammo] = p;
+    const ei = ARMOR_IDX[armor];
+    if (ei === undefined) continue;
+
+    const kills    = parseInt(p[4]);
+    const htk      = parseFloat(p[5].replace('HTK ', ''));
+    const cost     = parseInt(p[6].replace('Cost ', ''));
+    const ttk      = parseFloat(p[7].replace('TTK ', '').replace('s', ''));
+    const stk      = parseFloat(p[8].replace('STK ', '').replace('s', ''));
+    const tttk     = parseFloat(p[9].replace('TTTK ', '').replace('s', ''));
+    const acc      = p[10] ? parseFloat(p[10].replace('%', '')) / 100 : null;
+    const dist     = p[11].trim();  // accepted but not filtered
+    // p[12] = Overkill not used for mutants
+    const tkRaw    = p[13] ? p[13].trim() : '';
+    const toolkit  = ['A', 'B', 'C', 'D'].includes(tkRaw) ? tkRaw : null;
+
+    // Flat weapon stats
+    const fireRate   = p[14] !== '' ? parseFloat(p[14]) : null;
+    const magSize    = p[16] !== '' ? parseFloat(p[16]) : null;
+    const reloadTime = p[17] !== '' ? parseFloat(p[17]) : null;
+
+    if ([kills, htk, ttk, cost, stk, tttk].some(isNaN)) continue;
+
+    const key = `${weapon}|${ammo}`;
+    if (!map.has(key)) {
+      map.set(key, {
+        name: weapon, rawName: weapon, ammo, toolkit, note: '',
+        fireRate: null, magSize: null, reloadTime: null,
+        raw: [null, null, null, null]  // [PseudoGiant, Strong, Medium, Small]
+      });
+    }
+    const w = map.get(key);
+
+    // Flat stats: first non-null wins
+    if (fireRate   !== null && w.fireRate   === null) w.fireRate   = fireRate;
+    if (magSize    !== null && w.magSize    === null) w.magSize    = magSize;
+    if (reloadTime !== null && w.reloadTime === null) w.reloadTime = reloadTime;
+
+    if (!w.raw[ei]) w.raw[ei] = {};
+
+    // All distance records are merged together
+    if (w.raw[ei][dist]) {
+      const ex = w.raw[ei][dist];
+      const tk = ex.kills + kills;
+      const blend    = (a, b)          => (a * ex.kills + b * kills) / tk;
+      const blendOpt = (a, b, ka, kb)  => {
+        if (a === null && b === null) return null;
+        if (a === null) return b;
+        if (b === null) return a;
+        return (a * ka + b * kb) / (ka + kb);
+      };
+      w.raw[ei][dist] = {
+        stk:      blend(ex.stk,  stk),
+        tttk:     blend(ex.tttk, tttk),
+        ttk:      blend(ex.ttk,  ttk),
+        cost:     blend(ex.cost, cost),
+        htk:      blend(ex.htk,  htk),
+        acc:      blendOpt(ex.acc,      acc,      ex.kills, kills),
+        kills:    tk
+      };
+    } else {
+      w.raw[ei][dist] = { stk, tttk, ttk, cost, htk, acc, kills };
+    }
+  }
+
+  const out = Array.from(map.values());
+  for (const w of out) {
+    const k = `${w.rawName}|${w.ammo}`;
+    if (NOTE_OVERRIDES[k]) w.note = NOTE_OVERRIDES[k];
+  }
+  return out;
+}
+
+const weapons = parseCNRaw(CN_RAW);
+
+// ══════════════════════════════════════════════════════════════
+// FILTER STATE
+// ══════════════════════════════════════════════════════════════
+const activeToolkits = { A: true, B: true, C: true, D: true };
+const activeArmors   = { 'PseudoGiant': false, 'Strong': true, 'Medium': true, 'Small': true };
+let mergeWeapons = false;
+
+// ══════════════════════════════════════════════════════════════
+// DATA AGGREGATION
+// ══════════════════════════════════════════════════════════════
+
+// Kill-weighted optional average (skips null values)
+function waOpt(entries, key) {
+  const valid = entries.filter(d => d[key] !== null && d[key] !== undefined);
+  if (!valid.length) return null;
+  const vk = valid.reduce((s, d) => s + d.kills, 0);
+  return vk > 0 ? valid.reduce((s, d) => s + d[key] * d.kills, 0) / vk : null;
+}
+
+// (no distance filtering for mutants)
+function mergeTier(tierObj) {
+  if (!tierObj) return null;
+  const entries = Object.values(tierObj);
+  if (!entries.length) return null;
+  const totalKills = entries.reduce((s, d) => s + d.kills, 0);
+  if (!totalKills) return null;
+  const wa = key => entries.reduce((s, d) => s + d[key] * d.kills, 0) / totalKills;
+  return {
+    stk:      wa('stk'),
+    tttk:     wa('tttk'),
+    ttk:      wa('ttk'),
+    cost:     wa('cost'),
+    htk:      wa('htk'),
+    acc:      waOpt(entries, 'acc'),
+    kills:    totalKills
+  };
+}
+
+function getMerged(w) {
+  const stks = [], tttks = [], ttks = [], costs = [], htks = [],
+        accs = [], kills = [];
+  for (let ei = 0; ei < NUM_TIERS; ei++) {
+    const m = mergeTier(w.raw[ei]);
+    stks.push(m ? m.stk      : null);
+    tttks.push(m ? m.tttk    : null);
+    ttks.push(m ? m.ttk      : null);
+    costs.push(m ? m.cost    : null);
+    htks.push(m ? m.htk      : null);
+    accs.push(m ? m.acc      : null);
+    kills.push(m ? m.kills   : null);
+  }
+  return { stks, tttks, ttks, costs, htks, accs, kills };
+}
+
+// ══════════════════════════════════════════════════════════════
+// RSTK - Reload-Adjusted STK
+// ══════════════════════════════════════════════════════════════
+function calcRSTK(stk, htk, magSize, reloadTime) {
+  if (stk === null) return null;
+  if (!magSize || !reloadTime || !htk || magSize <= 0) return stk;
+  const reloadsNeeded = Math.max(0, Math.ceil(htk / magSize) - 1);
+  return stk + reloadsNeeded * reloadTime;
+}
+
+// ══════════════════════════════════════════════════════════════
+// MASTER TTK
+// ══════════════════════════════════════════════════════════════
+function tierMTTK(merged, ei, magSize, reloadTime) {
+  const stk = merged.stks[ei], tttk = merged.tttks[ei], ttk = merged.ttks[ei];
+  const htk = merged.htks[ei], k = merged.kills[ei];
+  if (tttk === null) return null;
+  if (k !== null && k < MIN_KILLS_COMPOSITE) return tttk;
+  if (stk === null || ttk === null) return tttk;
+  const rstk = calcRSTK(stk, htk, magSize, reloadTime);
+  return MTTK_W_STK * (rstk !== null ? rstk : stk) + MTTK_W_TTTK * tttk + MTTK_W_TTK * ttk;
+}
+
+function effectiveW(excl) {
+  const base = excl ? W_EXCL : W_FULL;
+  return base.map((v, i) => activeArmors[ARMOR_NAMES[i]] ? v : 0);
+}
+
+function wAvg(vals, W) {
+  let sw = 0, sv = 0;
+  for (let i = 0; i < vals.length; i++) {
+    if (vals[i] !== null && W[i] > 0) { sw += W[i]; sv += W[i] * vals[i]; }
+  }
+  return sw > 0 ? sv / sw : null;
+}
+
+function isLowConf(merged, excl) {
+  const W = effectiveW(excl);
+  let anyUnderTotal = false, anyUnderTier = false;
+  for (let i = 0; i < NUM_TIERS; i++) {
+    if (W[i] > 0 && merged.kills[i] !== null) {
+      if (merged.kills[i] < LOW_KILLS)      anyUnderTotal = true;
+      if (merged.kills[i] < LOW_KILLS_TIER) anyUnderTier  = true;
+    }
+  }
+  return anyUnderTotal && anyUnderTier;
+}
+
+// ══════════════════════════════════════════════════════════════
+// INSUFFICIENT DATA GATE
+// ══════════════════════════════════════════════════════════════
+function totalActiveKills(w) {
+  const merged = w._premerged || getMerged(w);
+  let total = 0;
+  for (let i = 0; i < NUM_TIERS; i++) {
+    if (activeArmors[ARMOR_NAMES[i]] && merged.kills[i] !== null) total += merged.kills[i];
+  }
+  return total;
+}
+
+function hasSufficientData(w) {
+  const merged = w._premerged || getMerged(w);
+  let total = 0;
+  for (let i = 0; i < NUM_TIERS; i++) {
+    if (activeArmors[ARMOR_NAMES[i]]) {
+      const k = merged.kills[i];
+      if (k === null || k < INSUFF_PER_TIER) return false;
+      total += k;
+    }
+  }
+  return total >= INSUFF_TOTAL;
+}
+
+function getFiltered()     { return weapons.filter(w => (w.toolkit === null || activeToolkits[w.toolkit]) && hasSufficientData(w)); }
+function getInsufficient() { return weapons.filter(w => (w.toolkit === null || activeToolkits[w.toolkit]) && !hasSufficientData(w)); }
+
+// ══════════════════════════════════════════════════════════════
+// MERGE AMMO VARIANTS
+// ══════════════════════════════════════════════════════════════
+function getCaliber(ammo) { return ammo.trim().split(/\s+/)[0]; }
+
+function buildMergedWeapon(group) {
+  const stks = [], tttks = [], ttks = [], costs = [], htks = [],
+        accs = [], kills = [];
+  for (let ei = 0; ei < NUM_TIERS; ei++) {
+    const tierEntries = group.map(w => {
+      const m = getMerged(w);
+      return m.kills[ei] !== null
+        ? { stk: m.stks[ei], tttk: m.tttks[ei], ttk: m.ttks[ei], cost: m.costs[ei],
+            htk: m.htks[ei], acc: m.accs[ei], kills: m.kills[ei] }
+        : null;
+    }).filter(Boolean);
+    if (!tierEntries.length) {
+      stks.push(null); tttks.push(null); ttks.push(null); costs.push(null);
+      htks.push(null); accs.push(null); kills.push(null);
+    } else {
+      const totalK = tierEntries.reduce((s, e) => s + e.kills, 0);
+      const wa = key => tierEntries.reduce((s, e) => s + e[key] * e.kills, 0) / totalK;
+      stks.push(wa('stk'));  tttks.push(wa('tttk')); ttks.push(wa('ttk'));
+      costs.push(wa('cost')); htks.push(wa('htk'));  kills.push(totalK);
+      accs.push(waOpt(tierEntries, 'acc'));
+    }
+  }
+  const ammos   = [...new Set(group.map(w => w.ammo))];
+  const caliber = getCaliber(ammos[0]);
+  const firstWithStats = group.find(w => w.fireRate !== null) || group[0];
+  return {
+    name: group[0].name, rawName: group[0].rawName,
+    ammo: ammos.length === 1 ? ammos[0] : ammos.join(', '),
+    ammos, caliber, toolkit: group[0].toolkit, note: '',
+    fireRate:   firstWithStats.fireRate,
+    magSize:    firstWithStats.magSize,
+    reloadTime: firstWithStats.reloadTime,
+    _premerged: { stks, tttks, ttks, costs, htks, accs, kills },
+    _srcGroup: group
+  };
+}
+
+function getWeaponsForRanking() {
+  const filtered = getFiltered();
+  if (!mergeWeapons) return filtered;
+  const groups = new Map();
+  for (const w of filtered) {
+    const key = w.rawName + '|' + getCaliber(w.ammo);
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(w);
+  }
+  return Array.from(groups.values()).map(g => g.length === 1 ? g[0] : buildMergedWeapon(g));
+}
+
+// ══════════════════════════════════════════════════════════════
+// METRICS & RANKINGS
+// ══════════════════════════════════════════════════════════════
+function calcMetrics(w, excl) {
+  const W        = effectiveW(excl);
+  const merged   = w._premerged || getMerged(w);
+  const magSize    = w.magSize    || null;
+  const reloadTime = w.reloadTime || null;
+  const mt = Array.from({length: NUM_TIERS}, (_, i) => W[i] > 0 ? tierMTTK(merged, i, magSize, reloadTime) : null);
+  return {
+    avgMasterTTK: wAvg(mt, W),
+    avgTTTK:      wAvg(merged.tttks, W),
+    avgCost:      wAvg(merged.costs, W),
+    merged,
+  };
+}
+
+function usable(excl, needCost) {
+  return getWeaponsForRanking().filter(w => {
+    const m = calcMetrics(w, excl);
+    return m.avgMasterTTK !== null && (!needCost || m.avgCost !== null);
+  });
+}
+
+function calcRankings(excl) {
+  const sp = usable(excl, false).map(w => ({ ...w, ...calcMetrics(w, excl) }));
+  const cp = usable(excl, true ).map(w => ({ ...w, ...calcMetrics(w, excl) }));
+  if (!sp.length) return { bySpeed: [], byCost: [], byBal: [] };
+
+  sp.sort((a, b) => a.avgMasterTTK - b.avgMasterTTK);
+  cp.sort((a, b) => a.avgCost      - b.avgCost);
+
+  const spTTKs  = sp.map(w => w.avgMasterTTK).filter(v => v !== null);
+  const cpCosts = cp.map(w => w.avgCost).filter(v => v !== null);
+  const minTTK  = Math.min(...spTTKs),  maxTTK  = Math.max(...spTTKs);
+  const minCost = Math.min(...cpCosts), maxCost = Math.max(...cpCosts);
+  const ttkRange = maxTTK - minTTK || 1, costRange = maxCost - minCost || 1;
+
+  const bl = cp.map(w => {
+    const spW       = sp.find(x => x.name === w.name && x.ammo === w.ammo);
+    const ttkScore  = spW ? (spW.avgMasterTTK - minTTK) / ttkRange : 1;
+    const costScore = (w.avgCost - minCost) / costRange;
+    return { ...w, balance: ttkScore * 0.6 + costScore * 0.4 };
+  });
+  bl.sort((a, b) => a.balance - b.balance);
+
+  return { bySpeed: sp, byCost: cp, byBal: bl };
+}
+
+// ══════════════════════════════════════════════════════════════
+// RENDER HELPERS
+// ══════════════════════════════════════════════════════════════
+function rCls(r) { return r===1?'r1':r===2?'r2':r===3?'r3':'rn'; }
+
+function vCls(v, arr, dir) {
+  const vl = arr.filter(x => x !== null && isFinite(x));
+  if (!vl.length || v === null) return 'mono';
+  const mn = Math.min(...vl), mx = Math.max(...vl), p = mx === mn ? 0 : (v - mn) / (mx - mn);
+  const q = dir === 'desc' ? 1 - p : p;
+  return q <= 0.25 ? 'c-hi' : q <= 0.50 ? 'c-mid' : q <= 0.75 ? 'c-lo' : 'c-bad';
+}
+
+function tGrps(s, k) {
+  const g = []; let dr = 1, i = 0;
+  while (i < s.length) {
+    let j = i + 1;
+    while (j < s.length && Math.abs(s[j][k] - s[j-1][k]) / (s[j-1][k] || 1) <= 0.02) j++;
+    const c = j - i;
+    for (let x = i; x < j; x++) g.push({ dr, label: c > 1 ? 'Tie' : '#' + dr, tied: c > 1 });
+    dr++; i = j;
+  }
+  return g;
+}
+
+// ══════════════════════════════════════════════════════════════
+// RENDER TABLE
+// ══════════════════════════════════════════════════════════════
+function render(bId, sorted, sKey, sFmt, excl, cat) {
+  const isBal = cat === 'balance', isCh = cat === 'cheap';
+  const tb = document.getElementById(bId);
+  tb.innerHTML = '';
+  if (!sorted.length) {
+    tb.innerHTML = '<tr><td colspan="10" style="text-align:center;color:#4b5563;padding:20px;font-style:italic;">No data - all toolkits disabled or insufficient kills</td></tr>';
+    return;
+  }
+  const av = sorted.map(w => w[sKey]);
+  const tg = isBal ? tGrps(sorted, sKey) : null;
+  const W  = effectiveW(excl);
+
+  sorted.forEach((w, i) => {
+    let rank, rl;
+    if (isBal) { const t = tg[i]; rank = t.dr; rl = t.label; }
+    else        { rank = i + 1;   rl = '#' + rank; }
+    const t  = isBal ? tg[i] : null;
+
+    const merged = w.merged;
+    const cb = isLowConf(merged, excl) ? `<span class="b-lowconf">Low Data</span>` : '';
+
+    // Per-tier columns (4 tiers: PseudoGiant, Strong, Medium, Small)
+    let ec = '';
+    for (let ei = 0; ei < NUM_TIERS; ei++) {
+      if (!activeArmors[ARMOR_NAMES[ei]]) {
+        ec += `<td class="c-na ecol" style="text-align:center">-</td>`;
+        continue;
+      }
+      if (isCh) {
+        const v = merged.costs[ei];
+        if (v === null) { ec += `<td class="c-na ecol" style="text-align:center">n/a</td>`; continue; }
+        const lk = merged.kills[ei] !== null && merged.kills[ei] < LOW_KILLS;
+        ec += `<td class="${lk ? 'c-warn' : 'mono'} ecol" style="text-align:center">${Math.round(v).toLocaleString()}r</td>`;
+      } else {
+        const tttk = merged.tttks[ei];
+        if (tttk === null) { ec += `<td class="c-na ecol" style="text-align:center">n/a</td>`; continue; }
+        const lk = merged.kills[ei] !== null && merged.kills[ei] < LOW_KILLS;
+        ec += `<td class="${lk ? 'c-warn' : 'mono'} ecol" style="text-align:center">${tttk.toFixed(2)}s</td>`;
+      }
+    }
+
+    // Secondary column
+    let sc = '';
+    if (isCh) {
+      const m = w.avgMasterTTK;
+      sc = `<td class="${vCls(m, sorted.map(x => x.avgMasterTTK))} col-tttk" style="text-align:center;vertical-align:middle">${m !== null ? m.toFixed(2) + 's' : '-'}</td>`;
+    } else if (isBal) {
+      const v = w.avgCost;
+      sc = `<td class="${vCls(v, sorted.map(x => x.avgCost))} col-tttk" style="text-align:center;vertical-align:middle">${v !== null ? Math.round(v).toLocaleString() + 'r' : '-'}</td>`;
+    } else {
+      const v = w.avgTTTK;
+      sc = `<td class="${vCls(v, sorted.map(x => x.avgTTTK))} col-tttk" style="text-align:center;vertical-align:middle">${v !== null ? v.toFixed(2) + 's' : '-'}</td>`;
+    }
+
+    const vc = vCls(w[sKey], av);
+    const totalKills = merged.kills.reduce((sum, k, ei) =>
+      activeArmors[ARMOR_NAMES[ei]] && k !== null ? sum + k : sum, 0);
+    const killsSub = `<span class="kills-sub">${totalKills} kills</span>`;
+
+    const tl    = t && t.tied ? `#${rank} <span style="color:#60a5fa;font-size:0.7rem;font-weight:600;">(tie)</span>` : rl;
+    const medal = rank===1?'🥇':rank===2?'🥈':rank===3?'🥉':null;
+    const rc    = medal
+      ? `<span style="font-size:15px">${medal}</span>`
+      : `<span class="${t && t.tied ? 'rn' : rCls(rank)}" style="${t && t.tied ? 'font-family:monospace;font-weight:700;color:#d97706;' : ''}">${tl}</span>`;
+
+    const avMin = Math.min(...av), avMax = Math.max(...av), avRng = avMax - avMin || 1;
+    const bp = Math.max(5, Math.round((1 - (w[sKey] - avMin) / avRng) * 95 + 5));
+
+    const tkb = w.toolkit
+      ? `<span class="tk-badge tk-${w.toolkit}">${{A:'Type A',B:'Type B',C:'Type C',D:'Type D'}[w.toolkit]}</span>`
+      : `<span class="tk-badge tk-unknown">TBD</span>`;
+
+    // Tooltip flat stats
+    const avgHTK = wAvg(merged.htks, W);
+    const killsPerMag = (w.magSize && avgHTK !== null && avgHTK > 0)
+      ? Math.floor(w.magSize / Math.ceil(avgHTK)) : null;
+    const hasStats = w.fireRate || w.magSize || w.reloadTime;
+
+    const tr = document.createElement('tr');
+    tr.className = rank===1?'top1':rank===2?'top2':rank===3?'top3':'';
+    tr.innerHTML = `
+      <td class="col-rank" style="text-align:center;vertical-align:middle">${rc}</td>
+      <td class="col-weapon">
+        <span class="wname${hasStats ? ' has-stats' : ''}"
+          data-has-stats="${hasStats ? '1' : ''}"
+          data-firerate="${w.fireRate ?? ''}"
+          data-magsize="${w.magSize ?? ''}"
+          data-reload="${w.reloadTime ?? ''}"
+          data-kpm="${killsPerMag ?? ''}"
+          data-avghtk="${avgHTK !== null ? avgHTK.toFixed(2) : ''}"
+        >${w.name}${cb}</span>
+        <div style="margin-top:2px">${
+          (w.ammos && w.ammos.length > 1)
+            ? w.ammos.map(a => `<span class="ammo-t" style="display:block;line-height:1.4;">${a}</span>`).join('')
+            : `<span class="ammo-t">${w.ammo}</span>`
+        }</div>
+        <div class="bar-wrap"><div class="bar-fill" style="width:${bp}%"></div></div>
+      </td>
+      <td class="${vc} col-score" style="text-align:center;vertical-align:middle">${sFmt(w[sKey])}${killsSub}</td>
+      ${sc}${ec}
+      <td class="col-tk" style="text-align:center;vertical-align:middle">${tkb}</td>
+      <td class="col-notes" style="color:#9ca3af;font-size:0.75rem;vertical-align:middle;font-style:italic">${w.note||''}</td>`;
+    tb.appendChild(tr);
+  });
+}
+
+// ══════════════════════════════════════════════════════════════
+// RENDER INSUFFICIENT DATA BOX
+// ══════════════════════════════════════════════════════════════
+function renderInsufficient() {
+  const list    = getInsufficient();
+  const body    = document.getElementById('insuff-body');
+  const countEl = document.getElementById('insuff-count');
+  body.innerHTML = '';
+  if (!list.length) {
+    body.innerHTML = '<span class="insuff-empty">None - all weapons have sufficient data</span>';
+    countEl.textContent = '';
+    return;
+  }
+  countEl.textContent = list.length + ' entr' + (list.length === 1 ? 'y' : 'ies');
+  list.forEach(w => {
+    const kills = totalActiveKills(w);
+    const tag   = document.createElement('div');
+    tag.className = 'insuff-tag';
+    tag.innerHTML = `<span class="it-name">${w.name}</span><span class="it-ammo">${w.ammo}</span><span class="it-kills">${kills} kills</span>`;
+    body.appendChild(tag);
+  });
+}
+
+// ══════════════════════════════════════════════════════════════
+// RENDER COVERAGE BARS
+// ══════════════════════════════════════════════════════════════
+function renderCoverage(excl) {
+  const filtered      = getFiltered();
+  const reliableNames = new Set(filtered.filter(w => !isLowConf(getMerged(w), excl)).map(w => w.rawName));
+  const rankedNames   = new Set(filtered.map(w => w.rawName));
+  const totalNames    = new Set(weapons.map(w => w.rawName));
+  const T = TOTAL_WEAPONS;
+
+  function applyBar(fillId, lblId, pctId, numId, count, numColor) {
+    const pct = Math.min(100, (count / T) * 100);
+    document.getElementById(fillId).style.width = pct.toFixed(1) + '%';
+    document.getElementById(pctId).textContent  = pct.toFixed(1) + '%';
+    document.getElementById(numId).textContent  = count;
+    document.getElementById(numId).style.color  = numColor;
+    document.getElementById(lblId).style.left   = pct.toFixed(1) + '%';
+  }
+  applyBar('cov-fill-reliable','cov-lbl-reliable','cov-pct-reliable','cov-num-reliable', reliableNames.size, '#34d399');
+  applyBar('cov-fill-ranked',  'cov-lbl-ranked',  'cov-pct-ranked',  'cov-num-ranked',   rankedNames.size,   '#60a5fa');
+  applyBar('cov-fill-total',   'cov-lbl-total',   'cov-pct-total',   'cov-num-total',    totalNames.size,    '#fbbf24');
+}
+
+function openMethodology() {
+  const box  = document.querySelector('.method-box');
+  const btn  = box.querySelector('.method-toggle');
+  const body = box.querySelector('.method-body');
+  const icon = btn.querySelector('.method-toggle-icon');
+  if (!body.classList.contains('open')) {
+    body.classList.add('open');
+    icon.classList.add('open');
+    btn.setAttribute('aria-expanded', 'true');
+  }
+  box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ══════════════════════════════════════════════════════════════
+// RENDER ALL (main entry point for all filter changes)
+// ══════════════════════════════════════════════════════════════
+function renderAll(excl) {
+  const { bySpeed, byCost, byBal } = calcRankings(excl);
+  render('body-speed',   bySpeed, 'avgMasterTTK', v => v.toFixed(2) + 's',                   excl, 'speed');
+  render('body-cheap',   byCost,  'avgCost',       v => Math.round(v).toLocaleString() + 'r', excl, 'cheap');
+  render('body-balance', byBal,   'balance',       v => v.toFixed(3),                         excl, 'balance');
+
+  document.getElementById('count-speed').textContent   = bySpeed.length + ' weapon' + (bySpeed.length   === 1 ? '' : 's');
+  document.getElementById('count-cheap').textContent   = byCost.length  + ' weapon' + (byCost.length    === 1 ? '' : 's');
+  document.getElementById('count-balance').textContent = byBal.length   + ' weapon' + (byBal.length     === 1 ? '' : 's');
+
+  renderInsufficient();
+  renderCoverage(excl);
+
+  // Strike through PseudoGiant column headers in excl mode
+  ['th-sg','th-cg','th-bg'].forEach(id => {
+    const el = document.getElementById(id); if (!el) return;
+    el.style.color          = excl ? '#374151' : '';
+    el.style.textDecoration = excl ? 'line-through' : '';
+  });
+
+  // Dim columns for any armor tier that's been toggled off
+  const armorHeaderMap = {
+    'Small':       ['th-ss','th-cs','th-bs'],
+    'Medium':      ['th-sm','th-cm','th-bm'],
+    'Strong':      ['th-sst','th-cst','th-bst'],
+    'PseudoGiant': ['th-sg','th-cg','th-bg'],
+  };
+  ARMOR_NAMES.forEach(name => {
+    const on = activeArmors[name];
+    (armorHeaderMap[name] || []).forEach(id => {
+      const el = document.getElementById(id); if (!el) return;
+      if (!excl || name !== 'PseudoGiant') {
+        el.style.color          = on ? '' : '#374151';
+        el.style.textDecoration = on ? '' : 'line-through';
+      }
+    });
+  });
+
+  const pill = document.getElementById('modePill');
+  pill.textContent = excl ? 'EXCLUDED' : 'ALL ARMOR';
+  pill.className   = 'mode-pill ' + (excl ? 'mode-excl' : 'mode-all');
+}
+
+// ══════════════════════════════════════════════════════════════
+// EVENT HANDLERS
+// ══════════════════════════════════════════════════════════════
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  btn.classList.add('active');
+}
+
+function toggleToolkit(type, e) {
+  e.stopPropagation(); e.preventDefault();
+  activeToolkits[type] = !activeToolkits[type];
+  const btn = document.getElementById('tkBtn-' + type);
+  btn.classList.toggle('active',   activeToolkits[type]);
+  btn.classList.toggle('inactive', !activeToolkits[type]);
+  renderAll(!document.getElementById('gigantToggle').checked);
+}
+
+function toggleGigant(e) {
+  e.stopPropagation();
+  const cb = document.getElementById('gigantToggle');
+  if (e.target !== cb) cb.checked = !cb.checked;
+  activeArmors['PseudoGiant'] = cb.checked;
+  renderAll(!cb.checked);
+}
+document.getElementById('gigantToggle').addEventListener('change', toggleGigant);
+document.getElementById('gigantSwitch').addEventListener('click',  toggleGigant);
+document.getElementById('gigantLabel').addEventListener('click',   toggleGigant);
+
+function toggleMerge(e) {
+  e.stopPropagation();
+  const cb = document.getElementById('mergeToggle');
+  if (e.target !== cb) cb.checked = !cb.checked;
+  mergeWeapons = cb.checked;
+  renderAll(!document.getElementById('gigantToggle').checked);
+}
+document.getElementById('mergeToggle').addEventListener('change', e => {
+  e.stopPropagation();
+  mergeWeapons = e.target.checked;
+  renderAll(!document.getElementById('gigantToggle').checked);
+});
+document.getElementById('mergeSwitch').addEventListener('click', toggleMerge);
+document.getElementById('mergeLabel').addEventListener('click',  toggleMerge);
+
+function toggleMethod(btn) {
+  const body = btn.nextElementSibling;
+  const icon = btn.querySelector('.method-toggle-icon');
+  const open = body.classList.toggle('open');
+  icon.classList.toggle('open', open);
+  btn.setAttribute('aria-expanded', open);
+}
+
+// ══════════════════════════════════════════════════════════════
+// TOOLTIP
+// ══════════════════════════════════════════════════════════════
+(function() {
+  const tip  = document.getElementById('stat-tooltip');
+  let current = null, hideTimer = null;
+
+  function kpmClass(kpm) {
+    if (kpm === null || kpm === '') return 'tt-kpm-lo';
+    const n = parseInt(kpm);
+    if (n >= 3) return 'tt-kpm-hi';
+    if (n === 2) return 'tt-kpm-mid';
+    if (n === 1) return 'tt-kpm-lo';
+    return 'tt-kpm-bad';
+  }
+  function kpmLabel(kpm) {
+    if (kpm === null || kpm === '') return '—';
+    const n = parseInt(kpm);
+    if (n === 0) return '<1';
+    return String(n);
+  }
+  function buildContent(el) {
+    const fr  = el.dataset.firerate;
+    const mag = el.dataset.magsize;
+    const rel = el.dataset.reload;
+    const kpm = el.dataset.kpm;
+    const htk = el.dataset.avghtk;
+
+    const rows = [];
+    if (fr)  rows.push(`<div class="tt-row tt-row-nd"><span class="tt-label">Fire Rate</span><span class="tt-val">${Math.round(fr)} rpm</span></div>`);
+    if (mag) rows.push(`<div class="tt-row tt-row-nd"><span class="tt-label">Mag Size</span><span class="tt-val">${mag} rds</span></div>`);
+    if (rel) rows.push(`<div class="tt-row tt-row-nd"><span class="tt-label">Reload Time</span><span class="tt-val">${rel}s</span></div>`);
+    if (htk) rows.push(`<div class="tt-row tt-row-nd"><span class="tt-label">Hits to Kill (Avg)</span><span class="tt-val">${htk}</span></div>`);
+
+    const kpmHtml = (mag && htk)
+      ? `<div class="tt-row tt-row-nd tt-row-sep"><span class="tt-label">Kills per Mag</span><span class="tt-val ${kpmClass(kpm)}">${kpmLabel(kpm)}</span></div>`
+      : '';
+
+    return `${rows.join('')}${kpmHtml}`;
+  }
+
+  function show(el, e) {
+    if (el.dataset.hasStats !== '1') return;
+    clearTimeout(hideTimer);
+    current = el;
+    tip.innerHTML = buildContent(el);
+    position(e);
+    tip.classList.add('visible');
+  }
+
+  function position(e) {
+    const pad = 12;
+    const tw  = tip.offsetWidth  || 200;
+    const th  = tip.offsetHeight || 160;
+    let x = e.clientX + pad;
+    let y = e.clientY + pad;
+    if (x + tw > window.innerWidth  - pad) x = e.clientX - tw - pad;
+    if (y + th > window.innerHeight - pad) y = e.clientY - th - pad;
+    tip.style.left = x + 'px';
+    tip.style.top  = y + 'px';
+  }
+
+  function hide() {
+    hideTimer = setTimeout(() => {
+      tip.classList.remove('visible');
+      current = null;
+    }, 80);
+  }
+
+  document.addEventListener('mouseover', e => {
+    const el = e.target.closest('.wname');
+    if (el && el !== current) show(el, e);
+  });
+  document.addEventListener('mousemove', e => {
+    if (current) position(e);
+  });
+  document.addEventListener('mouseout', e => {
+    if (current && !current.contains(e.relatedTarget)) hide();
+  });
+  document.addEventListener('scroll', () => { tip.classList.remove('visible'); current = null; }, true);
+})();
+
+// Initial render - PseudoGiant excluded by default
+renderAll(true);
+document.getElementById('gigantToggle').checked = false;
+</script>
+</body>
+</html>
