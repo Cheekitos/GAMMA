@@ -24,7 +24,7 @@
 
   .container { max-width: 960px; margin: 0 auto; }
 
-  /* ── Site header ── */
+  /* Site header */
   .page-header {
     display: flex;
     justify-content: space-between;
@@ -42,7 +42,7 @@
   }
   .site-title:hover { color: #fbbf24; }
 
-  /* ── Breadcrumb ── */
+  /* Breadcrumb */
   .breadcrumb {
     display: flex;
     align-items: center;
@@ -54,7 +54,7 @@
   .breadcrumb a { color: #60a5fa; }
   .breadcrumb-sep { color: #9ca3af; }
 
-  /* ── Hero ── */
+  /* Hero */
   .hero {
     text-align: center;
     padding: 20px 0 24px;
@@ -72,7 +72,7 @@
     margin: 0 auto;
   }
 
-  /* ── Section label ── */
+  /* Section label */
   .section-label {
     font-size: 0.825rem;
     font-weight: 700;
@@ -86,7 +86,7 @@
 
   .section-divider { border: none; border-top: 1px solid #374151; margin: 36px 0; }
 
-  /* ── Card grid ── */
+  /* Card grid */
   .card-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -117,6 +117,44 @@
     opacity: 0.45;
     cursor: not-allowed;
     pointer-events: none;
+  }
+
+  /* Featured card - yellow */
+  .card.featured-yellow {
+    border-color: rgba(251,191,36,0.4);
+    background: linear-gradient(135deg, #1f2937 0%, rgba(251,191,36,0.06) 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .card.featured-yellow::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #fbbf24, transparent);
+  }
+  .card.featured-yellow:hover {
+    border-color: #fbbf24;
+    background: linear-gradient(135deg, rgba(251,191,36,0.08) 0%, rgba(251,191,36,0.12) 100%);
+  }
+
+  /* Featured card - blue (Submit Data) */
+  .card.featured {
+    border-color: rgba(56,189,248,0.4);
+    background: linear-gradient(135deg, #1f2937 0%, rgba(56,189,248,0.06) 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .card.featured::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #38bdf8, transparent);
+  }
+  .card.featured:hover {
+    border-color: #38bdf8;
+    background: linear-gradient(135deg, rgba(56,189,248,0.08) 0%, rgba(56,189,248,0.12) 100%);
   }
 
   .card-title {
@@ -150,7 +188,7 @@
   .tag-community{ background: rgba(56,189,248,0.12); color: #7dd3fc; border: 1px solid rgba(56,189,248,0.3); }
   .tag-closing  { background: rgba(239,68,68,0.18);  color: #fca5a5; border: 1px solid rgba(239,68,68,0.5); }
 
-  /* ── Info box ── */
+  /* Info box */
   .info-box {
     background: #1f2937;
     border: 1px solid #374151;
@@ -162,7 +200,7 @@
     color: #d1d5db;
   }
 
-  /* ── Footer ── */
+  /* Footer */
   .footer {
     text-align: center;
     color: #4b5563;
@@ -177,9 +215,10 @@
   @media (max-width: 600px) {
     .hero-title { font-size: 1.5rem; }
     .card-grid  { grid-template-columns: 1fr; }
+    .card-grid.three-col { grid-template-columns: 1fr; }
   }
 
-  /* ── WIP Badge ── */
+  /* WIP Badge */
   .wip-badge {
     display: inline-flex;
     align-items: center;
@@ -241,11 +280,21 @@
     <p class="hero-sub">Home of the Cheeki Numbers Mod Project - Weapon rankings, Guides &amp; More</p>
   </div>
 
+  <!-- Best Weapons Rankings -->
   <div class="section-label">Best Weapons Rankings</div>
   <div class="card-grid">
 
+    <a class="card featured-yellow" href="GAMMA/Stalkers_Rankings.html">
+      <div class="card-title"><span style="color:#fbbf24;">◆</span> Stalker Rankings</div>
+      <p class="card-desc">Best Weapons against NPCs</p>
+      <div style="display:inline-flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:4px;">
+        <span class="card-tag tag-enemies">Rankings</span>
+        <span class="wip-badge">WIP <span class="wip-dots"><span></span><span></span><span></span></span></span>
+      </div>
+    </a>
+
     <a class="card" href="GAMMA/Mutants_Rankings.html">
-      <div class="card-title">🦴 Mutant Rankings</div>
+      <div class="card-title"><span style="color:#fbbf24;">◆</span> Mutant Rankings</div>
       <p class="card-desc">Best Weapons to Hunt Mutants</p>
       <div style="display:inline-flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:4px;">
         <span class="card-tag tag-enemies">Rankings</span>
@@ -253,13 +302,18 @@
       </div>
     </a>
 
-    <a class="card" href="GAMMA/Stalkers_Rankings.html">
-      <div class="card-title">🎯 Stalker Rankings</div>
-      <p class="card-desc">Best Weapons against NPCs</p>
-      <div style="display:inline-flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:4px;">
-        <span class="card-tag tag-enemies">Rankings</span>
-        <span class="wip-badge">WIP <span class="wip-dots"><span></span><span></span><span></span></span></span>
-      </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Community -->
+  <div class="section-label">Community</div>
+  <div class="card-grid">
+
+    <a class="card featured" href="GAMMA/submit_stats.html">
+      <div class="card-title"><span style="color:#38bdf8;">◈</span> Submit Data &amp; See my Stats</div>
+      <p class="card-desc">Submit your logs and see a detailed breakdown of your gameplay!</p>
+      <span class="card-tag tag-community">Community</span>
     </a>
 
     <a class="card" href="GAMMA/kills_leaderboard.html">
@@ -272,7 +326,8 @@
 
   <hr class="section-divider">
 
-  <div class="section-label">Weapons &amp; Ammo Guides</div>
+  <!-- Guides and Useful Info -->
+  <div class="section-label">Guides &amp; Useful Info</div>
   <div class="card-grid three-col">
 
     <a class="card" href="GAMMA/Ballistics_Guide.html">
@@ -300,30 +355,40 @@
 
   <hr class="section-divider">
 
+  <!-- Cheeki Numbers Mod -->
   <div class="section-label">Cheeki Numbers Mod</div>
   <div class="info-box">
-   <span style="color:#fbbf24; font-weight:700; font-size:2em;">→</span> <span style="font-size:2em; font-weight:700;">Get the mod <a href="https://drive.google.com/file/d/11tofFEkMj0OSOkCsM_k-HKfp_dofd_4m/" target="_blank" rel="noopener noreferrer">here</a> to help the project!</span>
+   <span style="color:#fbbf24; font-weight:700; font-size:2em;">→</span> <span style="font-size:2em; font-weight:700;">Get the mod <a href="https://drive.google.com/file/d/1VzsDwEMP6c3wkrBmlxl9IVuBgDQJg9WB" target="_blank" rel="noopener noreferrer">here</a> to help the project!</span>
     <ul style="margin-top:10px; padding-left:18px; display:flex; flex-direction:column; gap:5px;">
       <li>Install the mod at the bottom of your GAMMA modlist</li>
       <li>Go to Main Menu → Mod Configuration Menu → Cheeki Numbers → Make sure <strong style="color:#f9fafb;">Enable Mod</strong> and <strong style="color:#f9fafb;">Enable File Log</strong> at the top are turned on.</li>
-      <li>Everything else can be turned off, the mod will run in the background without displaying anything in-game.</li>
-      <li>Your data will be saved automatically in <code style="background:#111827;padding:1px 5px;border-radius:3px;font-size:0.8rem;">YOUR DRIVE:\YOUR GAMMA FOLDER\overwrite\bin\cheeki_numbers.log</code></li>
-      <li>All your gaming sessions will be saved inside this single file, it <u>does not get overwritten</u>.</li>
-      <li>Send it to me at <a href="mailto:cheekitos@proton.me">cheekitos@proton.me</a> and make it to the leaderboard! <strong style="color:#f9fafb;">NO MORE THAN ONE SUBMISSION PER WEEK PLEASE!</strong></li>
-      <li>Make sure to <u>rename the file</u> or save it in a different folder, so next round of kills you send me is fresh and new.</li>
-      <li>(I recommend keeping your kill files, I have some cool extra features coming soon where you will be able to use them to track personal data)</li>
+      <li><u>Everything else can be turned off</u>, the mod will run in the background without displaying anything in-game.</li>
+      <li>Your data will be saved automatically in <code style="background:#111827;padding:1px 5px;border-radius:3px;font-size:0.8rem;">YOUR DRIVE:\YOUR GAMMA FOLDER\overwrite\bin\cheeki_numbers_new.log</code></li>
+      <li>All your gaming sessions will be saved inside this single log file.</li>
+      <li>Submit your log file to help the rankings and appear in the leaderboard in the <b>Submit Data &amp; See my Stats</b> section.</li>
+      <li><u>Rename the file</u> or save it in a different folder after submission, so next round of kills you submit is fresh and new!</li>
+      <li>Multiple logs can be analyzed at the same time in the stats page, it will give you a summary of everything!</li>
+	  <li>For any issues, old logs submissions or bug reports you can still contact me at <a href="mailto:cheekitos@proton.me">cheekitos@proton.me</a></li>
     </ul>
     <div style="margin-top:12px; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.35); border-radius:6px; padding:10px 14px; display:flex; gap:10px; align-items:flex-start;">
       <span style="font-size:1.1em; flex-shrink:0;">⚠️</span>
       <div style="color:#fca5a5; font-size:0.8rem; line-height:1.6;">
         <strong>If you plan on sending me your data, please:</strong>
         <ul style="margin-top:6px; padding-left:18px; display:flex; flex-direction:column; gap:4px;">
-          <li>Do not use companions</li>
+          <li>Do not use mods that modify the vanilla ballistic system (special ammo, weapon types etc...)</li>
           <li>Do not equip artifacts with on-hit effects</li>
-          <li>Avoid mods that modify the ballistic system (special ammo, weapons, etc.)</li>
           <li>PLEASE DO NOT spawn squads just to mow them down.</li>
           <li>Anything that will not reflect the damage your weapon is actually doing in real gameplay conditions defeats the purpose of the whole project.</li>
-          <li><u>AO Engine</u> does not work with the mod, X-Ray Monolith Next Gen is ok, a bit buggy with mutants but I'll fix this soon!</li>
+          <li><u>AO Engine</u> does not work with the mod</li>
+        </ul>
+      </div>
+    </div>
+    <div style="margin-top:8px; background:rgba(74,222,128,0.08); border:1px solid rgba(74,222,128,0.3); border-radius:6px; padding:10px 14px; display:flex; gap:10px; align-items:flex-start;">
+      <span style="font-size:1.1em; flex-shrink:0;">✔</span>
+      <div style="color:#86efac; font-size:0.8rem; line-height:1.6;">
+        <ul style="padding-left:18px; display:flex; flex-direction:column; gap:4px;">
+          <li><u>You can use companions</u> with the mod (kills that are not 100% yours will be skipped from the logs)</li>
+          <li>X-Ray Monolith Engine NextGen is compatible</li>
         </ul>
       </div>
     </div>
@@ -339,7 +404,6 @@
   function getNextSunday() {
     var now = new Date();
     var day = now.getDay();
-    // If today is Sunday (0), next Sunday is 7 days away. Otherwise, it's 7 - current day.
     var daysUntil = day === 0 ? 7 : 7 - day;
     var next = new Date(now);
     next.setDate(now.getDate() + daysUntil);
@@ -351,25 +415,21 @@
     var now = new Date();
     var target = getNextSunday();
     var diff = target - now;
-    
+
     var days    = Math.floor(diff / (1000 * 60 * 60 * 24));
     var hours   = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     var minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
     var seconds = Math.floor((diff % (1000 * 60)) / 1000);
-    
-    // Adds a leading zero to numbers under 10
+
     var pad = function(n) { return n < 10 ? '0' + n : n; };
-    
-    // Updates the HTML element with the id 'countdown'
+
     var countdownElement = document.getElementById('countdown');
     if (countdownElement) {
         countdownElement.innerText = days + 'd ' + pad(hours) + 'h ' + pad(minutes) + 'm ' + pad(seconds) + 's';
     }
   }
 
-  // Run the function immediately so it doesn't show --d for a second
   updateCountdown();
-  // Set it to update every 1000 milliseconds (1 second)
   setInterval(updateCountdown, 1000);
 </script>
 </body>
