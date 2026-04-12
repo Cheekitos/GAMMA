@@ -1,0 +1,1846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Stats | Cheeki's Mods Archive</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<style>
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: #111827;
+    color: #f3f4f6;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  a { color: #60a5fa; text-decoration: none; transition: color 0.2s; }
+  a:hover { color: #93c5fd; }
+  .container { max-width: 960px; margin: 0 auto; }
+
+  /* ── Header ── */
+  .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; gap: 12px; flex-wrap: wrap; }
+  .site-title { font-size: 1.5rem; font-weight: bold; color: #f3f4f6; text-decoration: none; transition: color 0.2s; }
+  .site-title:hover { color: #fbbf24; }
+
+  /* ── Breadcrumb ── */
+  .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 0.875rem; margin-bottom: 24px; color: #9ca3af; }
+  .breadcrumb a { color: #60a5fa; }
+  .breadcrumb-sep { color: #9ca3af; }
+
+  /* ── Hero ── */
+  .hero { text-align: center; padding: 20px 0 28px; }
+  .hero-title { font-size: 2rem; font-weight: bold; color: #fbbf24; margin-bottom: 8px; }
+  .hero-sub { color: #9ca3af; font-size: 0.9rem; max-width: 520px; margin: 0 auto; }
+
+  /* ── Section label ── */
+  .section-label { font-size: 0.825rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #fbbf24; border-left: 3px solid #fbbf24; padding-left: 10px; margin-bottom: 16px; }
+  .section-divider { border: none; border-top: 1px solid #374151; margin: 36px 0; }
+
+  /* ── Upload zone ── */
+  #upload-zone {
+    border: 2px dashed #374151;
+    border-radius: 12px;
+    background: #1f2937;
+    padding: 52px 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    margin-bottom: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  #upload-zone:hover, #upload-zone.drag-over {
+    border-color: #fbbf24;
+    background: rgba(251,191,36,0.05);
+  }
+  #upload-zone .upload-icon { font-size: 2.8rem; display: block; margin-bottom: 12px; }
+  #upload-zone .upload-title { font-size: 1.1rem; font-weight: 700; color: #f9fafb; margin-bottom: 6px; }
+  #upload-zone .upload-hint { font-size: 0.8rem; color: #6b7280; }
+  #file-input { display: none; }
+
+  .upload-note {
+    font-size: 0.78rem;
+    color: #6b7280;
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  /* ── Results area ── */
+  #results { display: none; }
+
+  /* ── Summary strip ── */
+  .summary-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+  .summary-card {
+    background: #1f2937;
+    border: 1px solid #374151;
+    border-radius: 8px;
+    padding: 16px 14px;
+    text-align: center;
+  }
+  .summary-val { display: block; font-size: 1.6rem; font-weight: 800; color: #fbbf24; font-variant-numeric: tabular-nums; }
+  .summary-lbl { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: #6b7280; margin-top: 2px; }
+
+  /* ── Stat cards ── */
+  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 0; }
+  .stat-grid.three-col { grid-template-columns: 1fr 1fr 1fr; }
+  .stat-grid.one-col { grid-template-columns: 1fr; }
+
+  .stat-card {
+    background: #1f2937;
+    border: 1px solid #374151;
+    border-radius: 8px;
+    padding: 18px 20px;
+  }
+  .stat-card-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #9ca3af;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .stat-card-title .icon { font-size: 0.9rem; color: #fbbf24; line-height: 1; }
+  .stat-big { font-size: 2rem; font-weight: 800; color: #f9fafb; line-height: 1; margin-bottom: 4px; }
+  .stat-big.highlight { color: #fbbf24; }
+  .stat-big.green { color: #4ade80; }
+  .stat-big.red { color: #f87171; }
+  .stat-sub { font-size: 0.75rem; color: #6b7280; margin-bottom: 12px; }
+
+  /* ── Comparison bar ── */
+  .comparison { margin-top: 8px; }
+  .bar-track { height: 6px; border-radius: 3px; overflow: visible; position: relative; margin-bottom: 2px; margin-top: 16px; }
+  .bar-track-inner { height: 100%; border-radius: 3px; overflow: hidden; position: relative; background: #374151; }
+  .bar-gradient-bg { position: absolute; inset: 0; border-radius: 3px; }
+  .bar-mask { position: absolute; top: 0; right: 0; height: 100%; background: #1a2332; border-radius: 0 3px 3px 0; transition: width 0.6s ease; }
+  .bar-comm-marker {
+    position: absolute;
+    top: -3px;
+    width: 2px;
+    height: 12px;
+    background: #e5e7eb;
+    border-radius: 1px;
+    transform: translateX(-50%);
+    z-index: 2;
+    pointer-events: none;
+  }
+  .bar-comm-label {
+    position: absolute;
+    top: -19px;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: #9ca3af;
+    white-space: nowrap;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+  .bar-labels { display: flex; justify-content: space-between; font-size: 0.65rem; color: #4b5563; margin-top: 2px; }
+
+  /* ── Weapons Grid ── */
+  .weapon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; }
+  .weapon-grid-3col { grid-template-columns: repeat(3, 1fr); }
+
+  .wcat-card { padding: 0; overflow: hidden; }
+  .wcat-header {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 11px 14px 10px;
+    border-bottom: 1px solid #374151;
+  }
+  .wcat-accent {
+    width: 3px;
+    height: 14px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .wcat-title {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #f3f4f6;
+    flex: 1;
+  }
+  .wcat-total {
+    font-size: 0.68rem;
+    color: #4b5563;
+    font-variant-numeric: tabular-nums;
+  }
+  .wcat-entries { padding: 8px 14px 10px; display: flex; flex-direction: column; gap: 8px; }
+  .wcat-entry { display: flex; flex-direction: column; gap: 3px; }
+  .wcat-entry-top { display: flex; align-items: baseline; gap: 7px; }
+  .wcat-rank {
+    font-size: 0.65rem;
+    font-weight: 800;
+    width: 14px;
+    flex-shrink: 0;
+    text-align: center;
+    color: #4b5563;
+  }
+  .wcat-rank.gold   { color: #fbbf24; }
+  .wcat-rank.silver { color: #9ca3af; }
+  .wcat-rank.bronze { color: #b45309; }
+  .wcat-name {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #9ca3af;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .wcat-entry.first .wcat-name { font-size: 0.9rem; color: #9ca3af; }
+  .wcat-kills {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #6b7280;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .wcat-entry.first .wcat-kills { color: #4ade80; font-size: 0.78rem; }
+  .wcat-bar-track { height: 3px; background: #1f2937; border-radius: 2px; overflow: hidden; margin-left: 21px; }
+  .wcat-bar { height: 100%; border-radius: 2px; transition: width 0.4s ease; }
+  .wcat-nodata { font-size: 0.78rem; color: #4b5563; font-style: italic; padding: 6px 0; }
+
+  /* ── Enemy list ── */
+  .enemy-list { display: flex; flex-direction: column; gap: 6px; }
+  .enemy-row { display: flex; align-items: center; justify-content: space-between; padding: 7px 10px; background: #111827; border-radius: 5px; }
+  .enemy-name { font-size: 0.82rem; color: #d1d5db; }
+  .enemy-deaths { font-size: 0.82rem; font-weight: 700; color: #f87171; }
+
+  /* ── Anomaly breakdown ── */
+  .anomaly-list { display: flex; flex-direction: column; gap: 8px; }
+  .anomaly-row { display: flex; flex-direction: column; gap: 3px; }
+  .anomaly-header { display: flex; justify-content: space-between; align-items: center; }
+  .anomaly-name { font-size: 0.82rem; color: #d1d5db; display: flex; align-items: center; gap: 6px; }
+  .anomaly-count { font-size: 0.82rem; font-weight: 700; color: #f87171; }
+  .anomaly-bar-track { height: 4px; background: #374151; border-radius: 2px; overflow: hidden; }
+  .anomaly-bar-fill { height: 100%; border-radius: 2px; }
+
+  /* ── Overkill meter ── */
+  .overkill-meter { text-align: center; padding: 0; }
+  .overkill-circle {
+    width: 83px;
+    height: 83px;
+    border-radius: 50%;
+    border: 5px solid #374151;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin: 0 auto;
+    position: relative;
+  }
+  .overkill-pct { font-size: 1.2rem; font-weight: 800; color: #fbbf24; line-height: 1; }
+  .overkill-label { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.1em; color: #6b7280; }
+
+  /* ── Save scummer ── */
+  .save-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 8px; }
+  .save-mini { background: #111827; border-radius: 5px; padding: 10px; text-align: center; }
+  .save-mini-val { font-size: 1.2rem; font-weight: 800; color: #f9fafb; }
+  .save-mini-lbl { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; color: #6b7280; }
+
+  /* ── Special death cards ── */
+  .death-icon { font-size: 2.2rem; margin-bottom: 8px; display: block; text-align: center; }
+  .death-special-val { font-size: 1.8rem; font-weight: 800; color: #f87171; text-align: center; }
+  .death-special-lbl { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: #6b7280; margin-top: 2px; text-align: center; }
+
+  /* ── No data state ── */
+  .no-data { color: #4b5563; font-style: italic; font-size: 0.82rem; padding: 8px 0; }
+
+  /* ── Error box ── */
+  .error-box {
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.35);
+    border-radius: 6px;
+    padding: 12px 16px;
+    color: #fca5a5;
+    font-size: 0.85rem;
+    margin-bottom: 16px;
+    display: none;
+  }
+
+  /* ── Reset button ── */
+  .reset-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #374151;
+    border: 1px solid #4b5563;
+    border-radius: 6px;
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 7px 14px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    margin-bottom: 28px;
+  }
+  .reset-btn:hover { background: #4b5563; border-color: #6b7280; }
+
+  /* ── Bell curve ── */
+  .bellcurve-card {
+    background: #1f2937;
+    border: 1px solid #374151;
+    border-radius: 8px;
+    padding: 20px 24px 16px;
+    margin-bottom: 0;
+  }
+  .bellcurve-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .bellcurve-score-block { display: flex; flex-direction: column; gap: 2px; }
+  .bellcurve-score-val { font-size: 2rem; font-weight: 800; color: #fbbf24; line-height: 1; }
+  .bellcurve-score-lbl { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: #6b7280; }
+  .bellcurve-percentile {
+    font-size: 0.8rem;
+    color: #9ca3af;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .bellcurve-percentile strong { color: #fbbf24; }
+  .bellcurve-canvas-wrap { position: relative; width: 100%; overflow: visible; }
+  canvas#bell-canvas { width: 100%; height: 140px; display: block; }
+  .bellcurve-axis { display: flex; justify-content: space-between; font-size: 0.62rem; color: #4b5563; margin-top: 4px; padding: 0 2px; }
+  .bellcurve-breakdown {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid #374151;
+  }
+  .bc-factor { text-align: center; }
+  .bc-factor-val { font-size: 1rem; font-weight: 700; color: #f9fafb; }
+  .bc-factor-lbl { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.08em; color: #6b7280; margin-top: 2px; }
+  .bc-factor-contrib { font-size: 0.65rem; color: #4b5563; margin-top: 2px; }
+
+  /* ── Footer ── */
+  .footer { text-align: center; color: #4b5563; font-size: 0.875rem; padding: 32px 0 12px; }
+
+  @media (max-width: 768px) {
+    .weapon-grid { grid-template-columns: repeat(2, 1fr); }
+    .weapon-grid-3col { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 640px) {
+    .summary-strip { grid-template-columns: repeat(2, 1fr); }
+    .stat-grid { grid-template-columns: 1fr; }
+    .stat-grid.three-col { grid-template-columns: 1fr; }
+    .weapon-grid { grid-template-columns: 1fr; }
+    .weapon-grid-3col { grid-template-columns: 1fr; }
+    .save-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  #submit-banner { border-radius: 6px; padding: 10px 14px; font-size: 0.82rem; }
+
+  /* ── Upload wrapper ── */
+  #upload-wrapper {
+    display: flex;
+    gap: 14px;
+    align-items: stretch;
+    margin-bottom: 8px;
+  }
+  #upload-zone {
+    flex: 1;
+    min-width: 0;
+    margin-bottom: 0;
+  }
+  #upload-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 260px;
+    flex-shrink: 0;
+  }
+
+  /* ── Action buttons ── */
+  .action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    flex: 1;
+    padding: 16px 18px;
+    border-radius: 12px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.2s, border-color 0.2s, opacity 0.2s;
+    opacity: 0.38;
+    pointer-events: none;
+  }
+  .action-btn:not([disabled]) {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .action-btn-primary {
+    background: transparent;
+    border-color: #fbbf24;
+  }
+  .action-btn-primary:not([disabled]):hover {
+    background: rgba(251,191,36,0.8);
+    border-color: #fbbf24;
+  }
+  .action-btn-primary:not([disabled]):hover .action-btn-title,
+  .action-btn-primary:not([disabled]):hover .action-btn-sub {
+    color: #111827;
+  }
+  .action-btn-primary:not([disabled]):hover .action-btn-icon {
+    filter: none;
+  }
+  .action-btn-secondary {
+    background: #1f2937;
+    border-color: #374151;
+  }
+  .action-btn-secondary:not([disabled]):hover {
+    background: #374151;
+    border-color: #4b5563;
+  }
+  .action-btn-icon {
+    font-size: 1.4rem;
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+  .action-btn-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #f3f4f6;
+    line-height: 1.3;
+  }
+  .action-btn-sub {
+    font-size: 0.72rem;
+    color: #6b7280;
+    line-height: 1.4;
+  }
+  .action-btn-primary .action-btn-sub { color: #9ca3af; }
+
+  @media (max-width: 640px) {
+    #upload-wrapper { flex-direction: column; }
+    #upload-actions { width: 100%; flex-direction: row; }
+    .action-btn { flex: 1; }
+  }
+
+  /* ── Nickname field ── */
+  #nickname-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  #nickname-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #9ca3af;
+  }
+  #nickname-input {
+    background: #111827;
+    border: 1px solid #374151;
+    border-radius: 7px;
+    color: #f3f4f6;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 9px 12px;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+  #nickname-input::placeholder { color: #4b5563; font-weight: 400; }
+  #nickname-input:focus { border-color: #2563eb; }
+  #nickname-hint {
+    font-size: 0.68rem;
+    color: #4b5563;
+  }
+
+  /* ── Toast notification ── */
+  #submit-toast {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%) translateY(12px);
+    background: #1a2e1a;
+    border: 1px solid #4ade80;
+    color: #4ade80;
+    font-size: 0.88rem;
+    font-weight: 600;
+    padding: 13px 24px;
+    border-radius: 10px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+    z-index: 9999;
+    white-space: nowrap;
+  }
+  #submit-toast.toast-visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* ── Version error modal ── */
+  #version-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.72);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+  #version-modal-overlay.modal-visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  #version-modal {
+    background: #1f2937;
+    border: 1px solid #ef4444;
+    border-radius: 14px;
+    padding: 32px 30px 26px;
+    max-width: 420px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+    transform: scale(0.95);
+    transition: transform 0.25s ease;
+  }
+  #version-modal-overlay.modal-visible #version-modal {
+    transform: scale(1);
+  }
+  .version-modal-icon { font-size: 2.8rem; display: block; margin-bottom: 14px; }
+  .version-modal-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #f87171;
+    margin-bottom: 12px;
+  }
+  .version-modal-msg {
+    font-size: 0.9rem;
+    color: #d1d5db;
+    line-height: 1.6;
+    margin-bottom: 22px;
+  }
+  .version-modal-close {
+    background: #ef4444;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 0.88rem;
+    font-weight: 700;
+    padding: 10px 28px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .version-modal-close:hover { background: #dc2626; }
+</style>
+</head>
+<body>
+
+<!-- Version error modal -->
+<div id="version-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="version-modal-title">
+  <div id="version-modal">
+    <span class="version-modal-icon">⚠️</span>
+    <div class="version-modal-title" id="version-modal-title">Outdated Log File Detected</div>
+    <p class="version-modal-msg">Only the latest version of the mod is compatible with these new features, please update it!</p>
+    <button class="version-modal-close" id="version-modal-close-btn">Got it</button>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="page-header">
+    <a class="site-title" href="https://cheeki.zone">Cheeki's Mods Archive</a>
+  </div>
+
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <svg fill="currentColor" viewBox="0 0 20 20" width="14" height="14" style="flex-shrink:0">
+      <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+    </svg>
+    <a href="https://cheeki.zone">Archive</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="../index.html">GAMMA Tools</a>
+    <span class="breadcrumb-sep">›</span>
+    <span style="color:#d1d5db;">My S.T.A.L.K.E.R. GAMMA Statistics</span>
+  </nav>
+
+  <div class="hero">
+    <h1 class="hero-title">My Stats</h1>
+    <p class="hero-sub">Drop your <code style="background:#1f2937;padding:1px 6px;border-radius:3px;font-size:0.85em;">cheeki_numbers.log</code> file(s) below and see your detailed gameplay statistics and how you compare against the community!</p>
+  </div>
+
+  <div id="upload-wrapper">
+    <div id="upload-zone">
+      <span class="upload-icon">📂</span>
+      <div class="upload-title">Drop your log file(s) here</div>
+      <div class="upload-hint">or click to browse · multiple files supported</div>
+      <div id="files-ready-label" style="display:none;margin-top:10px;font-size:0.8rem;font-weight:700;color:#4ade80;"></div>
+    </div>
+    <div id="upload-actions">
+      <div id="nickname-wrap">
+        <label for="nickname-input" id="nickname-label">Your nickname</label>
+        <input
+          type="text"
+          id="nickname-input"
+          placeholder="e.g. Cheeki_Breeki"
+          maxlength="32"
+          autocomplete="off"
+          spellcheck="false"
+        >
+        <span id="nickname-hint">Required to submit · shown in the rankings</span>
+      </div>
+      <button id="btn-submit-check" class="action-btn action-btn-primary" disabled>
+        <span class="action-btn-icon">📤</span>
+        <span class="action-btn-title">Submit Data &amp; Check Stats (Once a week Limit)</span>
+        <span class="action-btn-sub">Share your logs to help build the community rankings!</span>
+      </button>
+      <button id="btn-check-only" class="action-btn action-btn-secondary" disabled>
+        <span class="action-btn-icon">📊</span>
+        <span class="action-btn-title">Only check my stats</span>
+        <span class="action-btn-sub">Stays in your browser, nothing is sent anywhere</span>
+      </button>
+    </div>
+  </div>
+  <input type="file" id="file-input" accept=".log,.txt" multiple>
+
+
+  <div class="error-box" id="error-box"></div>
+  <div id="submit-banner" style="display:none;border-radius:6px;padding:10px 14px;font-size:0.82rem;margin-bottom:12px;"></div>
+
+  <div id="results">
+    <button class="reset-btn" id="reset-btn">↩ Upload a different file</button>
+
+    <div class="section-label">Overview</div>
+    <div class="summary-strip">
+      <div class="summary-card">
+        <span class="summary-val" id="stat-difficulty">--</span>
+        <div class="summary-lbl">Difficulty</div>
+      </div>
+      <div class="summary-card">
+        <span class="summary-val" id="stat-playtime">--</span>
+        <div class="summary-lbl">Hours Played</div>
+      </div>
+      <div class="summary-card">
+        <span class="summary-val" id="stat-kills">--</span>
+        <div class="summary-lbl">Total Kills</div>
+      </div>
+      <div class="summary-card">
+        <span class="summary-val" id="stat-deaths">--</span>
+        <div class="summary-lbl">Total Deaths</div>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <div class="section-label">Overall Performance</div>
+    <div class="bellcurve-card">
+      <div class="bellcurve-header">
+        <div class="bellcurve-score-block">
+          <div class="bellcurve-score-val" id="bc-score">--</div>
+          <div class="bellcurve-score-lbl">Performance Score</div>
+        </div>
+        <div class="bellcurve-percentile" id="bc-percentile-text">Upload your log to see where you land.</div>
+      </div>
+      <div class="bellcurve-canvas-wrap">
+        <canvas id="bell-canvas" height="140"></canvas>
+        <div id="bell-you-label" style="position:absolute;display:none;font-size:9px;font-weight:700;letter-spacing:0.05em;transform:translateX(-50%);pointer-events:none;">YOU</div>
+      </div>
+      <div class="bellcurve-axis">
+        <span>Weak</span>
+        <span>Below Avg</span>
+        <span>Average</span>
+        <span>Above Avg</span>
+        <span>Elite</span>
+      </div>
+      <div class="bellcurve-breakdown">
+        <div class="bc-factor">
+          <div class="bc-factor-val" id="bc-dph">--</div>
+          <div class="bc-factor-lbl">Deaths/hr</div>
+          <div class="bc-factor-contrib" id="bc-dph-contrib"></div>
+        </div>
+        <div class="bc-factor">
+          <div class="bc-factor-val" id="bc-acc">--</div>
+          <div class="bc-factor-lbl">Accuracy</div>
+          <div class="bc-factor-contrib" id="bc-acc-contrib"></div>
+        </div>
+        <div class="bc-factor">
+          <div class="bc-factor-val" id="bc-hs">--</div>
+          <div class="bc-factor-lbl">Headshots</div>
+          <div class="bc-factor-contrib" id="bc-hs-contrib"></div>
+        </div>
+        <div class="bc-factor">
+          <div class="bc-factor-val" id="bc-kd">--</div>
+          <div class="bc-factor-lbl">K/D Ratio</div>
+          <div class="bc-factor-contrib" id="bc-kd-contrib"></div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <div class="section-label">Shooting Performance</div>
+    <div class="stat-grid three-col">
+
+      <div class="stat-card">
+        <div class="stat-card-title"><span class="icon">◎</span> Accuracy</div>
+        <div class="stat-big" id="s-accuracy">--</div>
+        <div class="stat-sub">avg shots you hit</div>
+        <div class="comparison">
+          <div class="bar-track">
+            <div class="bar-comm-label" id="comm-label-accuracy">Average</div>
+            <div class="bar-track-inner">
+              <div class="bar-gradient-bg" id="grad-accuracy"></div>
+              <div class="bar-mask" id="bar-accuracy" style="width:100%"></div>
+            </div>
+            <div class="bar-comm-marker" id="marker-accuracy"></div>
+          </div>
+          <div class="bar-labels"><span>0%</span><span>100%</span></div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card-title"><span class="icon">×</span> K/D Ratio</div>
+        <div class="stat-big" id="s-kda">--</div>
+        <div class="stat-sub" style="margin-bottom:24px;">Kills per death</div>
+        <div class="comparison">
+          <div class="bar-track">
+            <div class="bar-comm-label" id="comm-label-kda">Average</div>
+            <div class="bar-track-inner">
+              <div class="bar-gradient-bg" id="grad-kda"></div>
+              <div class="bar-mask" id="bar-kda" style="width:100%"></div>
+            </div>
+            <div class="bar-comm-marker" id="marker-kda"></div>
+          </div>
+          <div class="bar-labels"><span>0</span><span id="kda-max-label">5.0</span></div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card-title"><span class="icon">◆</span> Headshots</div>
+        <div class="stat-big" id="s-headshots">--</div>
+        <div class="stat-sub">avg number of headshots</div>
+        <div class="comparison">
+          <div class="bar-track">
+            <div class="bar-comm-label" id="comm-label-headshots">Average</div>
+            <div class="bar-track-inner">
+              <div class="bar-gradient-bg" id="grad-headshots"></div>
+              <div class="bar-mask" id="bar-headshots" style="width:100%"></div>
+            </div>
+            <div class="bar-comm-marker" id="marker-headshots"></div>
+          </div>
+          <div class="bar-labels"><span>0%</span><span>100%</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <hr class="section-divider">
+
+    <div class="section-label">Habits</div>
+    <div class="stat-grid">
+
+      <div class="stat-card">
+        <div class="stat-card-title"><span class="icon">▲</span> Overkill Meter</div>
+        <div class="stat-big" id="s-overkill">--</div>
+        <div class="stat-sub" style="margin-bottom:24px;">Unnecessary extra damage dealt to enemies</div>
+        <div class="comparison">
+          <div class="bar-track">
+            <div class="bar-comm-label" id="comm-label-overkill">Average</div>
+            <div class="bar-track-inner">
+              <div class="bar-gradient-bg" id="grad-overkill"></div>
+              <div class="bar-mask" id="bar-overkill" style="width:100%"></div>
+            </div>
+            <div class="bar-comm-marker" id="marker-overkill"></div>
+          </div>
+          <div class="bar-labels"><span>0%</span><span>200%+</span></div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card-title"><span class="icon">⟶</span> Distance</div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:4px;">
+          <div>
+            <div class="stat-big" id="s-distance">--</div>
+            <div class="stat-sub" style="margin-bottom:0;">avg kill distance</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="stat-big" id="s-longest-kill">--</div>
+            <div class="stat-sub" style="margin-bottom:0;">longest kill</div>
+          </div>
+        </div>
+        <div class="comparison">
+          <div class="bar-track">
+            <div class="bar-comm-label" id="comm-label-distance">Average</div>
+            <div class="bar-track-inner">
+              <div class="bar-gradient-bg" id="grad-distance"></div>
+              <div class="bar-mask" id="bar-distance" style="width:100%"></div>
+            </div>
+            <div class="bar-comm-marker" id="marker-distance"></div>
+          </div>
+          <div class="bar-labels"><span>0m</span><span id="dist-max-label">100m</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <hr class="section-divider">
+
+    <div class="section-label">Favorite Weapons</div>
+    <div id="weapons-breakdown"></div>
+
+    <hr class="section-divider">
+
+    <div class="section-label">Stop Bullying Me</div>
+    <div class="stat-grid three-col">
+
+      <div class="stat-card">
+        <div class="stat-card-title"><span class="icon">↓</span> Deaths per Hour</div>
+        <div class="stat-big" id="s-dph">--</div>
+        <div class="stat-sub">The lower the better!</div>
+        <div class="comparison">
+          <div class="bar-track">
+            <div class="bar-comm-label" id="comm-label-dph">Average</div>
+            <div class="bar-track-inner">
+              <div class="bar-gradient-bg" id="grad-dph"></div>
+              <div class="bar-mask" id="bar-dph" style="width:100%"></div>
+            </div>
+            <div class="bar-comm-marker" id="marker-dph"></div>
+          </div>
+          <div class="bar-labels"><span>0</span><span id="dph-max-label">20</span></div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card-title"><span class="icon">▪</span> Worst NPCs</div>
+        <div class="enemy-list" id="worst-npcs"></div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card-title"><span class="icon">▪</span> Worst Mutants</div>
+        <div class="enemy-list" id="worst-mutants"></div>
+      </div>
+
+    </div>
+
+    <hr class="section-divider">
+
+    <div class="section-label">How the Zone Kills You</div>
+    <div class="stat-grid three-col">
+
+      <div class="stat-card">
+        <div class="stat-card-title"><span class="icon">◈</span> Anomaly Deaths</div>
+        <div class="anomaly-list" id="anomaly-list"></div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card-title"><span class="icon">◈</span> Environmental Deaths</div>
+        <div class="save-grid" style="grid-template-columns:1fr 1fr; margin-top:8px;">
+          <div class="save-mini" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 10px;">
+            <span style="font-size:1.6rem;margin-bottom:4px;color:#86efac;font-weight:700;line-height:1;">☢</span>
+            <div class="death-special-val" id="s-radiation">--</div>
+            <div class="death-special-lbl">Radiation</div>
+          </div>
+          <div class="save-mini" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 10px;">
+            <span style="font-size:1.6rem;margin-bottom:4px;color:#9ca3af;font-weight:700;line-height:1;">↓</span>
+            <div class="death-special-val" id="s-falls">--</div>
+            <div class="death-special-lbl">Falls</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card-title"><span class="icon">▪</span> Community Killers</div>
+        <div class="anomaly-list" id="community-killers-list"></div>
+      </div>
+
+    </div>
+
+    <hr class="section-divider">
+
+    <div class="section-label">Save Scummer Awards</div>
+    <div class="stat-card" style="margin-bottom:0;">
+      <div class="stat-card-title"><span class="icon">◇</span> Save & Reload Behavior</div>
+      <div class="save-grid">
+        <div class="save-mini">
+          <div class="save-mini-val" id="s-saves">--</div>
+          <div class="save-mini-lbl">Total Saves</div>
+        </div>
+        <div class="save-mini">
+          <div class="save-mini-val" id="s-loads">--</div>
+          <div class="save-mini-lbl">Total Loads</div>
+        </div>
+        <div class="save-mini">
+          <div class="save-mini-val" id="s-saves-hr">--</div>
+          <div class="save-mini-lbl">Saves / Hour</div>
+        </div>
+        <div class="save-mini">
+          <div class="save-mini-val" id="s-loads-hr">--</div>
+          <div class="save-mini-lbl">Loads / Hour</div>
+        </div>
+      </div>
+      <div style="margin-top:22px;">
+        <div class="comparison">
+          <div class="bar-track">
+            <div class="bar-comm-label" id="comm-label-saves">Average</div>
+            <div class="bar-track-inner">
+              <div class="bar-gradient-bg" id="grad-saves"></div>
+              <div class="bar-mask" id="bar-saves" style="width:100%"></div>
+            </div>
+            <div class="bar-comm-marker" id="marker-saves"></div>
+          </div>
+          <div class="bar-labels"><span>0</span><span id="saves-max-label">30</span></div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+  </div><footer class="footer">
+    Cheeki's Mods Archive · <a href="https://linktr.ee/cheekibreekii" target="_blank" rel="noopener noreferrer">Check me Out!</a>
+  </footer>
+
+</div><script>
+
+// ============================================================
+// SUPABASE CONFIG
+// ============================================================
+const SUPABASE_URL     = 'https://afwfywimvidhcbiofyep.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmd2Z5d2ltdmlkaGNiaW9meWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MDQ4ODgsImV4cCI6MjA5MTI4MDg4OH0.ozgbNF0VBl4_UsiHD0kUz-D1eSRlerAsEGKrW5XsOqE';
+let _supabase = null;
+
+function initSupabase() {
+  try {
+    if (SUPABASE_URL === 'YOUR_SUPABASE_URL_HERE') return;
+    const { createClient } = window.supabase;
+    _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  } catch (e) {
+    console.warn('Supabase init failed:', e);
+  }
+}
+
+const SUBMIT_COOLDOWN_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+
+async function submitRawLog(rawText, nickname) {
+  if (!_supabase) {
+    showSubmitBanner('Supabase is not configured. Add your URL and key to the HTML file.', true);
+    return;
+  }
+
+  // File size cap (1 MB)
+  if (rawText.length > 1 * 1024 * 1024) {
+    showSubmitBanner('File too large to submit (max 1 MB). You can still check your stats using the other button.', true);
+    return;
+  }
+
+  // Rate limit
+  const lastSubmit = localStorage.getItem('last_log_submit');
+  if (lastSubmit && Date.now() - parseInt(lastSubmit) < SUBMIT_COOLDOWN_MS) {
+    const unlockAt = parseInt(lastSubmit) + SUBMIT_COOLDOWN_MS;
+    startRateLimitCountdown(unlockAt);
+    return;
+  }
+
+  const btn = document.getElementById('btn-submit-check');
+  if (btn) { btn.disabled = true; }
+  try {
+    const { error } = await _supabase
+      .from('log_submissions')
+      .insert({ nickname: nickname || 'anonymous', log_content: rawText });
+    if (error) throw error;
+    localStorage.setItem('last_log_submit', Date.now().toString());
+    showSubmitBanner('Log submitted, thanks ' + (nickname || 'anonymous') + '! 🙏');
+    showToast('Data submitted successfully, thank you!');
+  } catch (e) {
+    showSubmitBanner('Submission failed: ' + e.message, true);
+    if (btn) { btn.disabled = false; }
+  }
+}
+
+function showToast(msg) {
+  const existing = document.getElementById('submit-toast');
+  if (existing) existing.remove();
+  const toast = document.createElement('div');
+  toast.id = 'submit-toast';
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  // trigger fade in
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => { toast.classList.add('toast-visible'); });
+  });
+  setTimeout(() => {
+    toast.classList.remove('toast-visible');
+    setTimeout(() => toast.remove(), 400);
+  }, 5000);
+}
+
+function showSubmitBanner(msg, isError = false, isHTML = false) {
+  const el = document.getElementById('submit-banner');
+  if (!el) return;
+  if (isHTML) el.innerHTML = msg; else el.textContent = msg;
+  el.style.background    = isError ? 'rgba(239,68,68,0.12)'   : 'rgba(74,222,128,0.10)';
+  el.style.borderColor   = isError ? 'rgba(239,68,68,0.35)'   : 'rgba(74,222,128,0.3)';
+  el.style.color         = isError ? '#fca5a5'                : '#86efac';
+  el.style.display       = 'block';
+}
+
+function startRateLimitCountdown(unlockAt) {
+  let intervalId = null;
+  function fmt2(n) { return String(n).padStart(2, '0'); }
+  function tick() {
+    const msLeft = unlockAt - Date.now();
+    if (msLeft <= 0) { clearInterval(intervalId); return; }
+    const totalSec = Math.floor(msLeft / 1000);
+    const dd = Math.floor(totalSec / 86400);
+    const hh = Math.floor((totalSec % 86400) / 3600);
+    const mm = Math.floor((totalSec % 3600) / 60);
+    const ss = totalSec % 60;
+    const timer = dd + ':' + fmt2(hh) + ':' + fmt2(mm) + ':' + fmt2(ss);
+    showSubmitBanner(
+      'Submissions are limited to once per week. Get more kills and come back in <strong>' + timer +
+      '</strong> to submit your data! You can always check your stats in the meantime by using the “Only check my stats” option!',
+      true, true
+    );
+  }
+  tick();
+  intervalId = setInterval(tick, 1000);
+}
+
+
+// ============================================================
+// COMMUNITY AVERAGES
+// ============================================================
+const COMMUNITY = {
+  avgAccuracyPct:   68.0,    // % - average shot accuracy across all kills
+  avgDistanceM:     23.3,    // metres - average engagement distance
+  avgHeadshotPct:   28.5,    // % - headshots per kill (headshots / kills * 100)
+  avgDeathsPerHour: 3.2,     // deaths per hour of active playtime
+  avgOverkillPct:   56.0,    // % - average overkill % across all kills
+  avgSavesPerHour:  8.5,     // saves per hour
+  avgKD:            8,       // community average kill/death ratio (8:1)
+
+  // Top causes of death for the average player
+  topKillers: [
+    { label: '▲ Fire Anomaly',    color: '#f97316', deaths: 121 },
+    { label: '∿ Shock Anomaly',   color: '#60a5fa', deaths: 107 },
+    { label: '☢ Radiation',       color: '#86efac', deaths: 84 },
+    { label: '◈ Chemical Anomaly',color: '#a78bfa', deaths: 62 },
+    { label: '◆ Physical Anomaly',color: '#fbbf24', deaths: 55 },
+  ],
+  topWeapons: {
+    'Melee':   ['6h4 Bayonet', 'Hunting Knife', 'Hunting Axe'],
+    'Pistol':  ['Makarov PM', 'Fort-12', 'Desert Eagle'],
+    'Shotgun': ['SPAS-12', 'TOZ-34', 'Saiga-12'],
+    'SMG':     ['MP5A3', 'PP-19 Bizon', 'UDP-9 Carbine'],
+    'Rifle':   ['AK-74', 'AK-101', 'OC-14 Groza'],
+    'Sniper':  ['SVD', 'VSS Vintorez', 'Mosin Nagant'],
+  },
+};
+// ============================================================
+
+
+// ── Weapon ID  ──
+const WEAPON_ID_CATEGORY = {"wpn_gauss_quest": "Sniper", "wpn_knife": "Melee", "wpn_9a91": "Rifle", "wpn_adar2_15": "Rifle", "wpn_aek": "Rifle", "wpn_ak5c_bas": "Rifle", "wpn_ak5c_bas_5c_tik": "Rifle", "wpn_ak5c_isg": "Rifle", "wpn_akm_alfa": "Rifle", "wpn_ak101_camo": "Rifle", "wpn_ak101": "Rifle", "wpn_ak102": "Rifle", "wpn_ak103_camo": "Rifle", "wpn_ak103": "Rifle", "wpn_ak104": "Rifle", "wpn_ak104_alfa": "Rifle", "wpn_ak105": "Rifle", "wpn_ak105_shakal": "Rifle", "wpn_ak105_sp": "Rifle", "wpn_ak105_swamp": "Rifle", "wpn_ak12_m1": "Rifle", "wpn_ak12": "Rifle", "wpn_ak12_custom_mono_kit": "Rifle", "wpn_ak12_custom": "Rifle", "wpn_ak": "Rifle", "wpn_ak74_n": "Rifle", "wpn_ak74_old": "Rifle", "wpn_ak74_pmc": "Rifle", "wpn_ak74m_duty": "Rifle", "wpn_ak74m_custom": "Rifle", "wpn_ak74m_alt": "Rifle", "wpn_ak74m_camo": "Rifle", "wpn_ak74m": "Rifle", "wpn_ak74m_n": "Rifle", "wpn_ak74m_beard": "Rifle", "wpn_ak74": "Rifle", "wpn_ak74_alt": "Rifle", "wpn_ak74_custom": "Rifle", "wpn_ak74_modern": "Rifle", "wpn_ak74_rpk": "Rifle", "wpn_ak74u_old": "Rifle", "wpn_ak74u_snag": "Rifle", "wpn_akm_bas": "Rifle", "wpn_akm": "Rifle", "wpn_akms_bas": "Rifle", "wpn_akms": "Rifle", "wpn_akms_alt": "Rifle", "wpn_aks": "Rifle", "wpn_aks74": "Rifle", "wpn_aks74_new": "Rifle", "wpn_ak74u_n1": "Rifle", "wpn_ak74u_tac": "Rifle", "wpn_ak74u_camo": "Rifle", "wpn_ak74u_custom": "Rifle", "wpn_ak74u": "Rifle", "wpn_am17": "Rifle", "wpn_amb17": "Rifle", "wpn_abakan_camo": "Rifle", "wpn_abakan": "Rifle", "wpn_abakan_n": "Rifle", "wpn_aps_bas_apsabigo": "Pistol", "wpn_aps": "Pistol", "wpn_aps_bas": "Pistol", "wpn_ar15_freedom": "Rifle", "wpn_protecta_aim": "Shotgun", "wpn_protecta_camo": "Shotgun", "wpn_protecta_custom": "Shotgun", "wpn_protecta": "Shotgun", "wpn_protecta_nimble": "Shotgun", "wpn_val_modern": "Rifle", "wpn_val_tac": "Rifle", "wpn_val": "Rifle", "wpn_l96a1m": "Sniper", "wpn_m82": "Sniper", "wpn_m98b": "Sniper", "wpn_beretta_alt": "Pistol", "wpn_beretta": "Pistol", "wpn_beretta_modern_d0cter": "Pistol", "wpn_beretta_modern_deltapoint": "Pistol", "wpn_beretta_modern_rmr": "Pistol", "wpn_beretta_modern": "Pistol", "wpn_beretta_camo": "Pistol", "wpn_brn180": "Rifle", "wpn_hpsa_alt": "Pistol", "wpn_hpsa": "Pistol", "wpn_mp9": "SMG", "wpn_mk47": "Rifle", "wpn_colt1911_alt": "Pistol", "wpn_colt1911_modern": "Pistol", "wpn_colt1911_n": "Pistol", "wpn_colt1911_new": "Pistol", "wpn_colt1911": "Pistol", "wpn_colt1911_duty": "Pistol", "wpn_colt1911_merc": "Pistol", "wpn_colt1911_camo": "Pistol", "wpn_cz75": "Pistol", "wpn_desert_eagle": "Pistol", "wpn_desert_eagle_nimble": "Pistol", "wpn_dtmdr": "Rifle", "wpn_dtmdr_sup": "Rifle", "wpn_dtmdr_black": "Rifle", "wpn_dtmdr_black_sup": "Rifle", "wpn_dvl10_m1": "Sniper", "wpn_dvl10": "Sniper", "wpn_famas3": "Rifle", "wpn_fn2000_custom": "Rifle", "wpn_fn2000": "Rifle", "wpn_fn2000_camo": "Rifle", "wpn_fn2000_nimble": "Rifle", "wpn_fal": "Rifle", "wpn_fn57": "Pistol", "wpn_fnc": "Rifle", "wpn_p90": "SMG", "wpn_p90gamma": "SMG", "wpn_p90_gs": "SMG", "wpn_scar_custom": "Rifle", "wpn_scar_new": "Rifle", "wpn_scar_siber": "Rifle", "wpn_scar": "Rifle", "wpn_scar_siber_black": "Rifle", "wpn_scar_siber_m2": "Rifle", "wpn_scar_siber_m2_custom": "Rifle", "wpn_scar_siber_m1_black": "Rifle", "wpn_scar_siber_m1": "Rifle", "wpn_fnp45": "Pistol", "wpn_fnp45_custom": "Pistol", "wpn_fnx45": "Pistol", "wpn_fnx45_custom": "Pistol", "wpn_fnx45_alt": "Pistol", "wpn_fort": "Pistol", "wpn_fort17": "Pistol", "wpn_fort_snag": "Pistol", "wpn_fort500": "Shotgun", "wpn_g36_nimble": "Rifle", "wpn_g36": "Rifle", "wpn_g36v_rwap": "Rifle", "wpn_g36nimble_rwap": "Rifle", "wpn_g36c_rwap": "Rifle", "wpn_g36k": "Rifle", "wpn_g36_camo": "Rifle", "wpn_g36k_rwap": "Rifle", "wpn_g36ka4_rwap": "Rifle", "wpn_g3": "Rifle", "wpn_g3sg1": "Rifle", "wpn_ace21": "Rifle", "wpn_ace52": "Rifle", "wpn_galil_custom": "Rifle", "wpn_galil": "Rifle", "wpn_galil_modern": "Rifle", "wpn_gauss": "Sniper", "wpn_knife9": "Melee", "wpn_g43": "Sniper", "wpn_glock17": "Pistol", "wpn_glock17_m1": "Pistol", "wpn_glock": "Pistol", "wpn_glock_modern": "Pistol", "wpn_gsh18": "Pistol", "wpn_gsh18_custom": "Pistol", "wpn_hk416": "Rifle", "wpn_hk417": "Rifle", "wpn_howa20": "Rifle", "wpn_glock_custom": "Pistol", "wpn_axe": "Melee", "wpn_knife3": "Melee", "wpn_ithacam37_sawnoff": "Shotgun", "wpn_ithacam37_mag": "Shotgun", "wpn_ithacam37": "Shotgun", "wpn_ithacam37_stakeout_20x70": "Shotgun", "wpn_ithacam37_stakeout": "Shotgun", "wpn_ithacam37_trench": "Shotgun", "wpn_k98": "Sniper", "wpn_k98_mauser_kit": "Sniper", "wpn_k98_mod_silen98": "Sniper", "wpn_korth": "Pistol", "wpn_korth_custom": "Pistol", "wpn_kriss_vector": "SMG", "wpn_saiga12s_isg": "Shotgun", "wpn_ks23": "Shotgun", "wpn_ks23_ecolog": "Shotgun", "wpn_ks23_23_up": "Shotgun", "wpn_ks23_kaban": "Shotgun", "wpn_ks23_kaban_kab_up": "Shotgun", "wpn_ksg23": "Shotgun", "wpn_knife8": "Melee", "wpn_l85_modern": "Rifle", "wpn_l85": "Rifle", "wpn_l85_alt": "Rifle", "wpn_l85_custom": "Rifle", "wpn_l85a2_modern": "Rifle", "wpn_l85_m2": "Rifle", "wpn_l85a2_custom": "Rifle", "wpn_l85a2": "Rifle", "wpn_l85_m1": "Rifle", "wpn_l85a2_alt": "Rifle", "wpn_l85_m3": "Rifle", "wpn_l96a1": "Sniper", "wpn_pl15_pl15_scolaz": "Pistol", "wpn_pl15_tan_pl15_scolaz": "Pistol", "wpn_pl15": "Pistol", "wpn_pl15_tan": "Pistol", "wpn_lr300": "Rifle", "wpn_lr300_custom": "Rifle", "wpn_lr300_camo": "Rifle", "wpn_benelli_m1014": "Shotgun", "wpn_m16a2": "Rifle", "wpn_m16": "Rifle", "wpn_m24": "Sniper", "wpn_m249": "Rifle", "wpn_m4": "Rifle", "wpn_m4a1": "Rifle", "wpn_m4a1_siber": "Rifle", "wpn_m4a1_freedom": "Rifle", "wpn_m4a1_custom": "Rifle", "wpn_m4a1_camo": "Rifle", "wpn_m4_butcher": "Rifle", "wpn_m4_tac": "Rifle", "wpn_m60": "Rifle", "wpn_m79": "Launcher", "wpn_knife5": "Melee", "wpn_pm_bas": "Pistol", "wpn_pm_custom": "Pistol", "wpn_pm": "Pistol", "wpn_pm_actor": "Pistol", "wpn_pm_bas_actor": "Pistol", "wpn_pm_bas_custom": "Pistol", "wpn_pmm_bas": "Pistol", "wpn_pmm": "Pistol", "wpn_k98_mod": "Sniper", "wpn_mk14": "Rifle", "wpn_knife7": "Melee", "wpn_mosin": "Sniper", "wpn_mossberg590_rail": "Shotgun", "wpn_mossberg590": "Shotgun", "wpn_mossberg590_wood": "Shotgun", "wpn_mp133": "Shotgun", "wpn_mp153": "Shotgun", "wpn_mp153_m1": "Shotgun", "wpn_mp155": "Shotgun", "wpn_mp412": "Pistol", "wpn_mp443": "Pistol", "wpn_mp5": "SMG", "wpn_mp5_alt": "SMG", "wpn_mp5_custom": "SMG", "wpn_mp5_nimble": "SMG", "wpn_mp5sd_custom": "SMG", "wpn_mp5sd_new": "SMG", "wpn_mp5sd": "SMG", "wpn_mp7": "SMG", "wpn_knife2": "Melee", "wpn_groza": "Rifle", "wpn_kiparis": "SMG", "wpn_svu": "Sniper", "wpn_svu_alt": "Sniper", "wpn_svu_nimble": "Sniper", "wpn_groza_nimble": "Rifle", "wpn_oc33": "Pistol", "wpn_knife6": "Melee", "wpn_pb_bas_custom": "Pistol", "wpn_pb_bas": "Pistol", "wpn_pb_custom": "Pistol", "wpn_pb": "Pistol", "wpn_pkm": "Rifle", "wpn_pkm_siber": "Rifle", "wpn_pkm_zenit_siber": "Rifle", "wpn_pkm_zulus": "Rifle", "wpn_pkp": "Rifle", "wpn_pkp_siber": "Rifle", "wpn_bizon": "SMG", "wpn_vityaz": "SMG", "wpn_pp2000": "SMG", "wpn_pp2000_operator": "SMG", "wpn_ppsh41_woodnew": "Rifle", "wpn_ppsh41_rednew": "Rifle", "wpn_ppsh41": "Rifle", "wpn_raptr": "Shotgun", "wpn_vintorez_isg": "Rifle", "wpn_remington700": "Sniper", "wpn_remington700_archangel": "Sniper", "wpn_remington700_lapua700": "Sniper", "wpn_remington700_magpul_pro": "Sniper", "wpn_remington700_mod_x_gen3": "Sniper", "wpn_remington870": "Shotgun", "wpn_rg-6": "Launcher", "wpn_ak74u_m1_isg": "Rifle", "wpn_akm_isg": "Rifle", "wpn_ak74_isg": "Rifle", "wpn_ak74u_isg": "Rifle", "wpn_rpd": "Rifle", "wpn_rpg7": "Launcher", "wpn_rpk": "Rifle", "wpn_rpk74_16": "Rifle", "wpn_rpk74_16_drum": "Rifle", "wpn_rpk74": "Rifle", "wpn_eft_rsh12": "Pistol", "wpn_m4_ru556": "Rifle", "wpn_fal_aus": "Rifle", "wpn_fal_sa58_osw": "Rifle", "wpn_saiga12s": "Shotgun", "wpn_saiga12s_m1": "Shotgun", "wpn_saiga12s_m2": "Shotgun", "wpn_trg": "Sniper", "wpn_sr1m": "Pistol", "wpn_sr1m_gurza_up": "Pistol", "wpn_sr1m_sr1upgr1": "Pistol", "wpn_ash12": "Rifle", "wpn_ash12_sup": "Rifle", "wpn_sig220_custom": "Pistol", "wpn_sig220": "Pistol", "wpn_sig220_n": "Pistol", "wpn_sig220_nimble": "Pistol", "wpn_sig220_n_u2p2g0r": "Pistol", "wpn_sig220_n_upg220": "Pistol", "wpn_sig226": "Pistol", "wpn_sig226_226sig_kit": "Pistol", "wpn_sig550_camo": "Rifle", "wpn_sig550": "Rifle", "wpn_sig550_custom": "Rifle", "wpn_sig550_luckygun": "Rifle", "wpn_sig550_sniper": "Sniper", "wpn_sig552": "Rifle", "wpn_vz61": "SMG", "wpn_vz61_camo": "SMG", "wpn_vz61_alt": "SMG", "wpn_vz61_freedom": "SMG", "wpn_sks_modern": "Sniper", "wpn_sks_b": "Sniper", "wpn_sks": "Sniper", "wpn_sks_molot": "Sniper", "wpn_sks_tac": "Sniper", "wpn_axe3": "Melee", "wpn_spas12_custom": "Shotgun", "wpn_spas12": "Shotgun", "wpn_spas12_nimble": "Shotgun", "wpn_knife4": "Melee", "wpn_sr25": "Sniper", "wpn_sr2_veresk": "SMG", "wpn_sr2_m1": "SMG", "wpn_sr2_veresk_sr2_upkit": "SMG", "wpn_vihr": "Rifle", "wpn_aug_a1_bas": "Rifle", "wpn_aug": "Rifle", "wpn_aug_a1_custom_bas": "Rifle", "wpn_aug_custom": "Rifle", "wpn_aug_a3_bas": "Rifle", "wpn_aug_a3": "Rifle", "wpn_aug_modern": "Rifle", "wpn_aug_freedom": "SMG", "wpn_aug_a3_custom_bas": "Rifle", "wpn_steyr_scout": "Sniper", "wpn_steyr_scout_big": "Sniper", "wpn_colt1911_custom": "Pistol", "wpn_sv98": "Sniper", "wpn_sv98_custom": "Sniper", "wpn_svd_custom": "Sniper", "wpn_svd": "Sniper", "wpn_svd_m1": "Sniper", "wpn_svd_nimble": "Sniper", "wpn_svds": "Sniper", "wpn_svds_pmc": "Sniper", "wpn_svt40_modern": "Sniper", "wpn_svt40": "Sniper", "wpn_aug_merc": "Rifle", "wpn_thompson_m1a1": "SMG", "wpn_thompson_1921": "SMG", "wpn_toz106_m1": "Shotgun", "wpn_toz106": "Shotgun", "wpn_wincheaster1300": "Shotgun", "wpn_wincheaster1300_trapper": "Shotgun", "wpn_toz34_decor": "Shotgun", "wpn_toz34": "Shotgun", "wpn_toz34_custom": "Shotgun", "wpn_bm16_full_alt_23": "Shotgun", "wpn_toz34_mark4": "Shotgun", "wpn_toz34_bull": "Shotgun", "wpn_toz34_mark4_23": "Shotgun", "wpn_toz34_obrez": "Shotgun", "wpn_toz34_obrez_decor": "Shotgun", "wpn_toz34_obrez_custom": "Shotgun", "wpn_bm16_full": "Shotgun", "wpn_bm16_full_alt": "Shotgun", "wpn_bm16": "Shotgun", "wpn_bm16_alt": "Shotgun", "wpn_tt33_modern": "Pistol", "wpn_tt33": "Pistol", "wpn_type63": "Rifle", "wpn_udp9": "SMG", "wpn_ump45_custom": "SMG", "wpn_ump45": "SMG", "pri_a17_gauss_rifle": "Sniper", "wpn_usas12": "Shotgun", "wpn_usp_match": "Pistol", "wpn_usp_tac_45": "Pistol", "wpn_usp_tac": "Pistol", "wpn_usp_nimble": "Pistol", "wpn_usp": "Pistol", "wpn_usp_custom": "Pistol", "wpn_vepr": "Shotgun", "wpn_vsk94": "Rifle", "wpn_vintorez_n1": "Rifle", "wpn_vintorez_alt": "Rifle", "wpn_vintorez_m1": "Rifle", "wpn_vintorez_nimble": "Rifle", "wpn_vintorez_m2": "Rifle", "wpn_vintorez_1pn93": "Rifle", "wpn_vintorez": "Rifle", "wpn_vssk": "Sniper", "wpn_walther_p99": "Pistol", "wpn_walther_custom": "Pistol", "wpn_walther": "Pistol", "wpn_walther_p99_mod9": "Pistol", "wpn_wa2000": "Sniper", "wpn_winchester1873": "Sniper", "wpn_xm4": "Rifle", "wpn_xm8": "Rifle"};
+
+// ── Weapon Name ──
+const WEAPON_NAME_CATEGORY = {"\"Item №62\"": "Sniper", "6h4 Bayonet": "Melee", "9A-91": "Rifle", "ADAR 2-15": "Rifle", "AEK-971": "Rifle", "AK 5C": "Rifle", "AK 5C \"ISG Special\"": "Rifle", "AK 5C \"ISG\"": "Rifle", "AK Alfa": "Rifle", "AK-101": "Rifle", "AK-102": "Rifle", "AK-103": "Rifle", "AK-104": "Rifle", "AK-104 \"Alpha\"": "Rifle", "AK-105": "Rifle", "AK-105 \"Shakal\"": "Rifle", "AK-105 \"Specialist\"": "Rifle", "AK-105 \"Swamp Thing\"": "Rifle", "AK-12": "Rifle", "AK-12 \"Monolith's Light\"": "Rifle", "AK-12 \"Monolith\"": "Rifle", "AK-47": "Rifle", "AK-74": "Rifle", "AK-74 \"PMC\"": "Rifle", "AK-74M": "Rifle", "AK-74M \"Venom\"": "Rifle", "AK-74N": "Rifle", "AK-74N EOTech": "Rifle", "AK-74U": "Rifle", "AK-74UNB": "Rifle", "AKM": "Rifle", "AKMS": "Rifle", "AKS-47": "Rifle", "AKS-74": "Rifle", "AKS-74U": "Rifle", "AKS-74U \"Tactician\"": "Rifle", "AKS-74UN": "Rifle", "AM-17": "Rifle", "AMB-17": "Rifle", "AN-94": "Rifle", "APS Stechkin": "Pistol", "AR-15 HERA": "Rifle", "Armsel Protecta": "Shotgun", "Armsel Protecta [camo]": "Shotgun", "Armsel Protecta [custom]": "Shotgun", "Armsel Protecta [default]": "Shotgun", "Armsel Protecta Custom": "Shotgun", "AS Val": "Rifle", "AWSM": "Sniper", "Barrett M82": "Sniper", "Barrett M98B": "Sniper", "Beretta 92F": "Pistol", "Beretta 92F [default]": "Pistol", "Beretta 92F [modern_d0cter]": "Pistol", "Beretta 92F [modern_deltapoint]": "Pistol", "Beretta 92F [modern_rmr]": "Pistol", "Beretta 92F [modern]": "Pistol", "Beretta Px4 Storm": "Pistol", "BRN-180": "Rifle", "Browning Hi-Power": "Pistol", "Brugger & Thomet MP9": "SMG", "CMMG MK47 MUTANT": "Rifle", "Colt M1911": "Pistol", "Colt M1911 \"Aries\"": "Pistol", "Colt M1911 \"Orion\"": "Pistol", "Coonan .357 Magnum Compact": "Pistol", "CZ-75": "Pistol", "Desert Eagle": "Pistol", "Desert Eagle \"Steppe Eagle\"": "Pistol", "Desert Tech MDR 5.56x45 [default]": "Rifle", "Desert Tech MDR 5.56x45 [sup]": "Rifle", "Desert Tech MDR 7.62x51 [default]": "Rifle", "Desert Tech MDR 7.62x51 [sup]": "Rifle", "DVL-10 M1 Saboteur": "Sniper", "DVL-10 M2 Urbana": "Sniper", "FAMAS F1": "Rifle", "FN F2000": "Rifle", "FN F2000 \"Competitor\"": "Rifle", "FN FAL": "Rifle", "FN Five-seveN": "Pistol", "FN FNC": "Rifle", "FN P90 [default]": "SMG", "FN P90 [gamma]": "SMG", "FN P90 [gs]": "SMG", "FN SCAR-H": "Rifle", "FN SCAR-H \"Black\"": "Rifle", "FN SCAR-H \"Expert Operator\"": "Rifle", "FN SCAR-H \"Specialist Operator\"": "Rifle", "FN SCAR-H \"Tactical Black\"": "Rifle", "FN SCAR-H \"Tactical\"": "Rifle", "FNP-45": "Pistol", "FNX-45": "Pistol", "Fort-12": "Pistol", "Fort-17": "Pistol", "Fort-21": "Pistol", "Fort-500": "Shotgun", "G36 \"FEAR\"": "Rifle", "G36 [default]": "Rifle", "G36 [v_rwap]": "Rifle", "G36C \"Merc\"": "Rifle", "G36C [c_rwap]": "Rifle", "G36C [k]": "Rifle", "G36K [camo]": "Rifle", "G36K [k_rwap]": "Rifle", "G36K [ka4_rwap]": "Rifle", "G3A3": "Rifle", "G3SG1": "Rifle", "Galil ACE-21": "Rifle", "Galil ACE-52": "Rifle", "Galil AR": "Rifle", "Gauss Rifle": "Sniper", "Gerber Tomahawk": "Melee", "Gewehr 43": "Sniper", "Glock 17": "Pistol", "Glock 17 \"Bruder\"": "Pistol", "Glock 19": "Pistol", "Glock 19 \"Hornet\"": "Pistol", "Gsh-18": "Pistol", "HK416": "Rifle", "HK417": "Rifle", "Howa Type 20": "Rifle", "HS2000": "Pistol", "Hunting Axe": "Melee", "Hunting Knife": "Melee", "Ithaca M37 (Sawn-off)": "Shotgun", "Ithaca M37 Defense": "Shotgun", "Ithaca M37 Riot": "Shotgun", "Ithaca M37 Stakeout [20x70]": "Shotgun", "Ithaca M37 Stakeout [default]": "Shotgun", "Ithaca M37 Trenchgun": "Shotgun", "Karabiner 98k": "Sniper", "Karabiner 98k Forester mk.2 [auser_kit]": "Sniper", "Karabiner 98k Forester mk.2 [od_silen98]": "Sniper", "Korth Custom 4": "Pistol", "Korth Custom 6": "Pistol", "KRISS Vector": "SMG", "KS-12": "Shotgun", "KS-23": "Shotgun", "KS-23 Eco": "Shotgun", "KS-23 Shortie": "Shotgun", "KS-23M Drozd": "Shotgun", "KS-23M Drozd \"Boar\"": "Shotgun", "KSG-23": "Shotgun", "Kukri": "Melee", "L85A1": "Rifle", "L85A2": "Rifle", "L85A2 \"Tactical\"": "Rifle", "L96A1": "Sniper", "Lebedev PL-15 \"Bearcat\" [pl15_scolaz]": "Pistol", "Lebedev PL-15 \"Bearcat\" [tan_pl15_scolaz]": "Pistol", "Lebedev PL-15 [default]": "Pistol", "Lebedev PL-15 [tan]": "Pistol", "LR-300ML": "Rifle", "M1014": "Shotgun", "M16A2": "Rifle", "M16A4": "Rifle", "M24 SWS": "Sniper", "M249 SAW": "Rifle", "M4": "Rifle", "M4A1": "Rifle", "M4A1 \"Butcher\"": "Rifle", "M4A1 \"Protector\"": "Rifle", "M60": "Rifle", "M79": "Launcher", "M9 Bayonet": "Melee", "Makarov PM": "Pistol", "Makarov PM \"Ceremonial\"": "Pistol", "Makarov PM \"Mythic\"": "Pistol", "Makarov PM Custom": "Pistol", "Makarov PMM": "Pistol", "Mauser 98k Forester mk.1": "Sniper", "Mk 14 EBR": "Rifle", "Monolith Blade": "Melee", "Mosin Nagant": "Sniper", "Mossberg 590A1": "Shotgun", "Mossberg 590A1 Retrograde": "Shotgun", "MP-133": "Shotgun", "MP-153": "Shotgun", "MP-153 \"Carabineer\"": "Shotgun", "MP-155": "Shotgun", "MP-412 Rex": "Pistol", "MP-443 Grach": "Pistol", "MP5A3": "SMG", "MP5A3 \"Frasier\"": "SMG", "MP5SD6": "SMG", "MP7": "SMG", "NR-40 Scout Knife": "Melee", "OC-14 Groza": "Rifle", "OTs-02 Kiparis": "SMG", "OTs-03 SVU": "Sniper", "OTs-03A SVU-A": "Sniper", "OTs-14 Groza \"Storm\"": "Rifle", "OTs-33 Pernach": "Pistol", "OTs-4 Combat Knife": "Melee", "PB": "Pistol", "PKM": "Rifle", "PKM \"Zenit\"": "Rifle", "PKM \"Zulu\"": "Rifle", "PKP Pecheneg": "Rifle", "PP-19 Bizon": "SMG", "PP-19-01 Vityaz": "SMG", "PP-2000": "SMG", "PP-2000 \"Operator\"": "SMG", "PPSh-41": "Rifle", "RAPTR": "Shotgun", "RD-939": "Rifle", "Remington 700": "Sniper", "Remington 700 \"Archangel\"": "Sniper", "Remington 700 \"Deer Hunter\"": "Sniper", "Remington 700 \"Magpul PRO\"": "Sniper", "Remington 700 \"MOD X Gen.3\"": "Sniper", "Remington 870": "Shotgun", "RG-6 Grenade Launcher": "Launcher", "Rifle Dynamics Draco ISG": "Rifle", "Rifle Dynamics RD-47 ISG Tactical": "Rifle", "Rifle Dynamics RD-74N ISG Tactical": "Rifle", "Rifle Dynamics RD-74U ISG": "Rifle", "RPD": "Rifle", "RPG-7": "Launcher", "RPK": "Rifle", "RPK-16 LMG [default]": "Rifle", "RPK-16 LMG [drum]": "Rifle", "RPK-74": "Rifle", "RSH-12 Revolver": "Pistol", "Ruger SR-556": "Rifle", "SA-58 AUS": "Rifle", "SA-58 OSW": "Rifle", "Saiga-12": "Shotgun", "Saiga-12 Tactical": "Shotgun", "Sako TRG-42": "Sniper", "Serdyukov SR1M Gyurza": "Pistol", "Serdyukov SR1M Gyurza Custom [gurza_up]": "Pistol", "Serdyukov SR1M Gyurza Custom [sr1upgr1]": "Pistol", "ShAK-12 [default]": "Rifle", "ShAK-12 [sup]": "Rifle", "SIG P220": "Pistol", "SIG P220 \"Alpine\"": "Pistol", "SIG P220 \"Stalker\"": "Pistol", "SIG P220 \"XXX\"": "Pistol", "SIG P226R": "Pistol", "SIG P226R Custom": "Pistol", "SIG SG 550": "Rifle", "SIG SG 550-1 Arrow": "Rifle", "SIG SG 550-1 Sniper": "Sniper", "SIG SG 552 Commando": "Rifle", "Skorpion vz.68": "SMG", "Skorpion vz.68 \"Freedom\"": "SMG", "SKS": "Sniper", "SKS Molot": "Sniper", "SKS Tactical": "Sniper", "Sledgehammer": "Melee", "SPAS-12 [custom]": "Shotgun", "SPAS-12 [default]": "Shotgun", "SPAS-12 [nimble]": "Shotgun", "Spetsnaz Switchblade": "Melee", "SR-25": "Sniper", "SR-2M Veresk": "SMG", "SR-2M Veresk \"Tactical\"": "SMG", "SR-3M Vikhr": "Rifle", "Steyr AUG A1": "Rifle", "Steyr AUG A2": "Rifle", "Steyr AUG A3": "Rifle", "Steyr AUG A3 [a3]": "Rifle", "Steyr AUG A3 [modern]": "Rifle", "Steyr AUG A3 9mm": "SMG", "Steyr AUG A3 Commando": "Rifle", "Steyr Scout 5.56": "Sniper", "Steyr Scout 7.62": "Sniper", "Strayer Voigt Infinity": "Pistol", "SV98": "Sniper", "SVD": "Sniper", "SVD \"Lynx\"": "Sniper", "SVDS": "Sniper", "SVDS \"Retribution\"": "Sniper", "SVT-40": "Sniper", "Thales EF88": "Rifle", "Thompson M1A1": "SMG", "Thompson Model 1921": "SMG", "TOZ-106": "Shotgun", "TOZ-194 [default]": "Shotgun", "TOZ-194 [trapper]": "Shotgun", "TOZ-34": "Shotgun", "TOZ-34 \"Bear\"": "Shotgun", "TOZ-34 \"Bison\"": "Shotgun", "TOZ-34 \"Bull\"": "Shotgun", "TOZ-34 \"Chimera Hunter\"": "Shotgun", "TOZ-34 (Sawn-off)": "Shotgun", "TOZ-66": "Shotgun", "TOZ-66 (Sawn-off)": "Shotgun", "TT-33": "Pistol", "Type 63": "Rifle", "UDP-9 Carbine": "SMG", "UMP45": "SMG", "Unidentified Weapon": "Sniper", "USAS-12": "Shotgun", "USP Match": "Pistol", "USP Match \"Overwatch\" [45]": "Pistol", "USP Match \"Overwatch\" [default]": "Pistol", "USP Match \"Wolfhound\"": "Pistol", "USP45": "Pistol", "Vepr-12": "Shotgun", "VSK-94": "Rifle", "VSS Vintorez": "Rifle", "VSS Vintorez \"Savant\"": "Rifle", "VSS Vintorez \"Tide\"": "Rifle", "VSS Vintorez \"Venal\"": "Rifle", "VSS Vintorez [1pn93]": "Rifle", "VSS Vintorez [default]": "Rifle", "VSSK Vykhlop": "Sniper", "Walther P99": "Pistol", "Walther P99 Custom": "Pistol", "Walther WA 2000": "Sniper", "Winchester Model 1873": "Sniper", "XM177E2": "Rifle", "XM8": "Rifle"};
+
+function getCategory(weaponId, weaponName) {
+  if (weaponId) {
+    const id = weaponId.toLowerCase().trim();
+    if (WEAPON_ID_CATEGORY[id]) return WEAPON_ID_CATEGORY[id];
+  }
+  if (weaponName) {
+    const name = weaponName.trim();
+    if (WEAPON_NAME_CATEGORY[name]) return WEAPON_NAME_CATEGORY[name];
+  }
+  return 'Other';
+}
+
+// ── Anomaly color map ──
+const ANOMALY_COLORS = {
+  'Chemical': '#86efac',
+  'Psi':      '#c084fc',
+  'Shock':    '#60a5fa',
+  'Physical': '#fbbf24',
+  'Fire':     '#f97316',
+  'Other':    '#6b7280',
+};
+
+// ── Parser ──
+function parseLog(text) {
+  const kills = [], deaths = [], saves = [], loads = [];
+  // sessions: array of {start, entries:[ts,...]}
+  const sessionData = [];
+  let currentSession = null;
+  let justStartedSession = false;
+
+  for (const raw of text.split('\n')) {
+    const line = raw.trim();
+    if (!line) continue;
+
+    if (line.startsWith('=== Session:')) {
+      currentSession = { start: null, end: null };
+      sessionData.push(currentSession);
+      justStartedSession = true;
+      continue;
+    }
+
+    const parts = line.split('|').map(s => s.trim());
+    if (parts.length < 2) continue;
+
+    const ts = parts[0];
+    const type = parts[1];
+
+    // Track first/last timestamp per session for playtime
+    if (currentSession) {
+      const d = tsToDate(ts);
+      if (!isNaN(d)) {
+        if (!currentSession.start) currentSession.start = d;
+        currentSession.end = d;
+      }
+    }
+
+    if (type === 'Game Saved') { saves.push(ts); justStartedSession = false; continue; }
+    if (type === 'Game Loaded') {
+      // Ignore the first Game Loaded right after a session start marker (auto-load on boot)
+      if (!justStartedSession) loads.push(ts);
+      justStartedSession = false;
+      continue;
+    }
+    justStartedSession = false;
+
+    // Kill line: Timestamp | Difficulty | Enemy | Armor | WeaponID | WeaponName | Ammo | HTK | TTK | HS | Acc | Dist | Overkill | SB/NS
+    if (parts.length >= 14 && !['Death','Game Saved','Game Loaded'].includes(type)) {
+      const acc = parseFloat(parts[10]) || 0;
+      const dist = parseInt(parts[11]) || 0;
+      const overkill = parseFloat(parts[12].replace('+','').replace('%','')) || 0;
+      const hs = parseInt(parts[9]) || 0;
+      kills.push({
+        ts,
+        difficulty: parts[1],
+        enemy: parts[2],
+        armor: parts[3],
+        weaponId: parts[4],
+        weaponName: parts[5],
+        ammo: parts[6],
+        htk: parseInt(parts[7]) || 1,
+        ttk: parseFloat(parts[8]) || 0,
+        headshots: hs,
+        accuracy: acc,
+        distance: dist,
+        overkill,
+      });
+      continue;
+    }
+
+    // Death line: Timestamp | Death | Cause | Armor
+    if (type === 'Death' && parts.length >= 3) {
+      deaths.push({ ts, cause: parts[2], armor: parts[3] || '' });
+      continue;
+    }
+  }
+
+  return { kills, deaths, saves, loads, sessionData };
+}
+
+function tsToDate(ts) {
+  // Format: "2026-04-05 16:30:08.656"
+  return new Date(ts.replace(' ', 'T'));
+}
+
+function computeStats(data) {
+  const { kills, deaths, saves, loads, sessionData } = data;
+  const sessions = sessionData.length;
+
+  // ── Playtime: sum of (last event - first event) per session ──
+  let totalHours = 0;
+  for (const s of sessionData) {
+    if (s.start && s.end && s.end > s.start) {
+      totalHours += (s.end - s.start) / 3600000;
+    }
+  }
+
+  // ── Difficulty: most common value in kills ──
+  const diffCount = {};
+  for (const k of kills) {
+    if (k.difficulty) diffCount[k.difficulty] = (diffCount[k.difficulty] || 0) + 1;
+  }
+  let difficulty = '--';
+  if (Object.keys(diffCount).length) {
+    difficulty = Object.entries(diffCount).sort((a,b) => b[1]-a[1])[0][0];
+  }
+
+  // ── Accuracy ──
+  const avgAcc = kills.length ? kills.reduce((s,k) => s + k.accuracy, 0) / kills.length : 0;
+
+  // ── Distance ──
+  const avgDist = kills.length ? kills.reduce((s,k) => s + k.distance, 0) / kills.length : 0;
+  const longestKill = kills.length ? Math.max(...kills.map(k => k.distance)) : 0;
+
+  // ── Headshots per kill (mutants excluded) ──
+  const humanKills = kills.filter(k => k.armor !== 'Mutant');
+  const totalHs = humanKills.reduce((s,k) => s + k.headshots, 0);
+  const avgHsPct = humanKills.length ? (totalHs / humanKills.length) * 100 : 0;
+
+  // ── Overkill ──
+  const avgOverkill = kills.length ? kills.reduce((s,k) => s + k.overkill, 0) / kills.length : 0;
+
+  // ── Deaths per hour ──
+  const dph = totalHours > 0 ? deaths.length / totalHours : 0;
+
+  // ── K/D Ratio ──
+  const kd = deaths.length > 0 ? kills.length / deaths.length : kills.length;
+
+  // ── Saves / Loads per hour ──
+  const savesPerHr = totalHours > 0 ? saves.length / totalHours : 0;
+  const loadsPerHr = totalHours > 0 ? loads.length / totalHours : 0;
+
+  // ── Weapons ──
+  const weaponKills = {};
+  for (const k of kills) {
+    const key = k.weaponId + '|||' + k.weaponName;
+    weaponKills[key] = (weaponKills[key] || 0) + 1;
+  }
+  // Group by category, top 3 per category
+  const byCat = {};
+  for (const [key, count] of Object.entries(weaponKills)) {
+    const [wid, wname] = key.split('|||');
+    const cat = getCategory(wid, wname);
+    if (!byCat[cat]) byCat[cat] = [];
+    byCat[cat].push({ name: wname || wid, kills: count });
+  }
+  for (const cat of Object.keys(byCat)) {
+    byCat[cat].sort((a,b) => b.kills - a.kills);
+    byCat[cat] = byCat[cat].slice(0,3);
+  }
+
+  // ── Deaths by cause ──
+  const deathCauses = {};
+  for (const d of deaths) {
+    const cause = d.cause || 'Unknown';
+    deathCauses[cause] = (deathCauses[cause] || 0) + 1;
+  }
+
+  // ── Worst enemies (deaths from NPC/Mutant) ──
+  const npcDeaths = {}, mutantDeaths = {};
+  for (const d of deaths) {
+    const cause = d.cause || '';
+    const armor = d.armor || '';
+    if (armor === 'Mutant') {
+      mutantDeaths[cause] = (mutantDeaths[cause] || 0) + 1;
+    } else if (!cause.startsWith('Anomaly') && cause !== 'Radiation' && cause !== 'Fall/Strike' && armor !== 'N/A' && armor !== '') {
+      npcDeaths[cause] = (npcDeaths[cause] || 0) + 1;
+    }
+  }
+
+  // ── Anomaly deaths ──
+  const anomalyDeaths = {};
+  for (const [cause, count] of Object.entries(deathCauses)) {
+    const m = cause.match(/Anomaly \((.+)\)/);
+    if (m) anomalyDeaths[m[1]] = (anomalyDeaths[m[1]] || 0) + count;
+  }
+
+  const radiationDeaths = deathCauses['Radiation'] || 0;
+  const fallDeaths = deathCauses['Fall/Strike'] || 0;
+
+  return {
+    killCount: kills.length,
+    deathCount: deaths.length,
+    totalHours,
+    sessions,
+    difficulty,
+    avgAcc,
+    avgDist,
+    longestKill,
+    avgHsPct,
+    totalHs,
+    avgOverkill,
+    dph,
+    kd,
+    savesTotal: saves.length,
+    loadsTotal: loads.length,
+    savesPerHr,
+    loadsPerHr,
+    weaponsByCategory: byCat,
+    npcDeaths,
+    mutantDeaths,
+    anomalyDeaths,
+    radiationDeaths,
+    fallDeaths,
+    deathCauses,
+  };
+}
+
+// ── Bell Curve ──
+function computePerformanceScore(st) {
+  // Weights: dph=40, accuracy=25, headshots=20, kd=15 (must sum to 100)
+  // Each component is normalised to a 0–100 sub-score vs community averages.
+
+  const comm = COMMUNITY;
+
+  // 1. Deaths per hour - lower is better
+  const dphScore = Math.max(0, Math.min(100,
+    100 * Math.exp(-0.693 * (st.dph / comm.avgDeathsPerHour))
+  ));
+
+  // 2. Accuracy - higher is better; community avg = 50 pts
+  const accScore = Math.max(0, Math.min(100,
+    50 * (st.avgAcc / comm.avgAccuracyPct)
+  ));
+
+  // 3. Headshots - higher is better; community avg = 50 pts
+  const hsScore = Math.max(0, Math.min(100,
+    50 * (st.avgHsPct / comm.avgHeadshotPct)
+  ));
+
+  // 4. K/D ratio - higher is better
+  const kdScore = Math.max(0, Math.min(100,
+    50 * (st.kd / comm.avgKD)
+  ));
+
+  const composite = (
+    dphScore  * 0.40 +
+    accScore  * 0.25 +
+    hsScore   * 0.20 +
+    kdScore   * 0.15
+  );
+
+  const commScore = 50;
+
+  // Std deviation: derived to put ~68% of players within ±15 pts of 50
+  const sigma = 15;
+
+  return { composite, commScore, sigma, dphScore, accScore, hsScore, kdScore };
+}
+
+function normalPDF(x, mu, sigma) {
+  return Math.exp(-0.5 * ((x - mu) / sigma) ** 2) / (sigma * Math.sqrt(2 * Math.PI));
+}
+
+function normalCDF(x, mu, sigma) {
+  // Approximation
+  const z = (x - mu) / (sigma * Math.SQRT2);
+  return 0.5 * (1 + erf(z));
+}
+
+function erf(x) {
+  const t = 1 / (1 + 0.3275911 * Math.abs(x));
+  const y = 1 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-x * x);
+  return x >= 0 ? y : -y;
+}
+
+function renderBellCurve(st) {
+  const { composite, commScore, sigma, dphScore, accScore, hsScore, kdScore } = computePerformanceScore(st);
+  const mu = commScore; // community mean = 50
+
+  // Score display
+  document.getElementById('bc-score').textContent = Math.round(composite);
+
+  // Percentile
+  const percentile = Math.round(normalCDF(composite, mu, sigma) * 100);
+  const aboveAvg = composite >= mu;
+  const percentileText = aboveAvg
+    ? `placing in the top <strong>${100 - percentile}%</strong> of the community.`
+    : `placing in the bottom <strong>${percentile}%</strong> of the community.`;
+  document.getElementById('bc-percentile-text').innerHTML =
+    `You scored <strong>${Math.round(composite)}</strong>, ${percentileText}`;
+
+  // Colour score by percentile
+  const scoreEl = document.getElementById('bc-score');
+  if (percentile >= 75) scoreEl.style.color = '#4ade80';
+  else if (percentile >= 45) scoreEl.style.color = '#fbbf24';
+  else scoreEl.style.color = '#f87171';
+
+  // Factor breakdown
+  document.getElementById('bc-dph').textContent = fmt(st.dph, 1);
+  document.getElementById('bc-acc').textContent = fmt(st.avgAcc, 1) + '%';
+  document.getElementById('bc-hs').textContent = fmt(st.avgHsPct, 1) + '%';
+  document.getElementById('bc-kd').textContent = fmt(st.kd, 2);
+
+  const fmtContrib = (score, weight) => {
+    const contrib = (score * weight / 100).toFixed(1);
+    const color = score >= 55 ? '#4ade80' : score >= 40 ? '#fbbf24' : '#f87171';
+    return `<span style="color:${color}">+${contrib} pts</span>`;
+  };
+  document.getElementById('bc-dph-contrib').innerHTML  = fmtContrib(dphScore, 40);
+  document.getElementById('bc-acc-contrib').innerHTML  = fmtContrib(accScore, 25);
+  document.getElementById('bc-hs-contrib').innerHTML   = fmtContrib(hsScore, 20);
+  document.getElementById('bc-kd-contrib').innerHTML   = fmtContrib(kdScore, 15);
+
+  // Draw bell curve
+  const canvas = document.getElementById('bell-canvas');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width  = rect.width  * dpr;
+  canvas.height = rect.height * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  const W = rect.width, H = rect.height;
+
+  const xMin = mu - 3.5 * sigma;
+  const xMax = mu + 3.5 * sigma;
+  const toX = v => ((v - xMin) / (xMax - xMin)) * W;
+
+  // Find peak for scaling
+  const peak = normalPDF(mu, mu, sigma);
+  const toY = v => H - 8 - (v / peak) * (H - 24);
+
+  // Shaded fill under curve
+  const gradient = ctx.createLinearGradient(0, 0, W, 0);
+  gradient.addColorStop(0,   'rgba(251,191,36,0.04)');
+  gradient.addColorStop(0.5, 'rgba(251,191,36,0.13)');
+  gradient.addColorStop(1,   'rgba(251,191,36,0.04)');
+
+  ctx.beginPath();
+  ctx.moveTo(toX(xMin), H - 8);
+  for (let x = xMin; x <= xMax; x += 0.2) {
+    ctx.lineTo(toX(x), toY(normalPDF(x, mu, sigma)));
+  }
+  ctx.lineTo(toX(xMax), H - 8);
+  ctx.closePath();
+  ctx.fillStyle = gradient;
+  ctx.fill();
+
+  // Highlight player's slice
+  const playerX = Math.min(Math.max(composite, xMin + 0.5), xMax - 0.5);
+  const sliceW  = sigma * 0.4;
+  ctx.beginPath();
+  ctx.moveTo(toX(playerX - sliceW), H - 8);
+  for (let x = playerX - sliceW; x <= playerX + sliceW; x += 0.1) {
+    ctx.lineTo(toX(x), toY(normalPDF(x, mu, sigma)));
+  }
+  ctx.lineTo(toX(playerX + sliceW), H - 8);
+  ctx.closePath();
+  const sliceColor = percentile >= 75 ? 'rgba(74,222,128,0.25)' : percentile >= 45 ? 'rgba(251,191,36,0.3)' : 'rgba(248,113,113,0.25)';
+  ctx.fillStyle = sliceColor;
+  ctx.fill();
+
+  // Curve line
+  ctx.beginPath();
+  ctx.moveTo(toX(xMin), toY(normalPDF(xMin, mu, sigma)));
+  for (let x = xMin; x <= xMax; x += 0.2) {
+    ctx.lineTo(toX(x), toY(normalPDF(x, mu, sigma)));
+  }
+  ctx.strokeStyle = '#374151';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Community marker (vertical dashed line at mu)
+  const commXpx = toX(mu);
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath();
+  ctx.moveTo(commXpx, H - 8);
+  ctx.lineTo(commXpx, toY(peak) - 4);
+  ctx.strokeStyle = '#d1d5db';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#e5e7eb';
+  ctx.font = `bold ${9 * dpr / dpr}px sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.fillText('AVG', commXpx, toY(peak) - 7);
+
+  // Player marker
+  const youXpx = toX(playerX);
+  const markerColor = percentile >= 75 ? '#4ade80' : percentile >= 45 ? '#fbbf24' : '#f87171';
+
+  // Vertical line from baseline to curve
+  ctx.beginPath();
+  ctx.moveTo(youXpx, H - 8);
+  ctx.lineTo(youXpx, toY(normalPDF(playerX, mu, sigma)));
+  ctx.strokeStyle = markerColor;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Diamond marker on the curve
+  const markerY = toY(normalPDF(playerX, mu, sigma));
+  ctx.beginPath();
+  ctx.moveTo(youXpx,     markerY - 7);
+  ctx.lineTo(youXpx + 5, markerY);
+  ctx.lineTo(youXpx,     markerY + 7);
+  ctx.lineTo(youXpx - 5, markerY);
+  ctx.closePath();
+  ctx.fillStyle = markerColor;
+  ctx.fill();
+
+  // Position the HTML "YOU" label
+  const youLabelEl = document.getElementById('bell-you-label');
+  if (youLabelEl) {
+    youLabelEl.style.left  = youXpx + 'px';
+    youLabelEl.style.top   = (markerY - 22) + 'px';
+    youLabelEl.style.color = markerColor;
+    youLabelEl.style.display = 'block';
+  }
+}
+
+
+function fmt(n, dec=1) { return isNaN(n) ? '--' : n.toFixed(dec); }
+function fmtInt(n) { return isNaN(n) || n === undefined ? '--' : Math.round(n).toLocaleString(); }
+
+function setBar(barId, markerId, value, max, commValue, lowerIsBetter = false) {
+  const pct = Math.min(100, (value / max) * 100);
+  const commPct = Math.min(100, (commValue / max) * 100);
+
+  // The mask hides the right portion of the gradient, revealing [0..pct] of it
+  const maskEl = document.getElementById(barId);
+  if (maskEl) maskEl.style.width = (100 - pct) + '%';
+
+  const markerEl = document.getElementById(markerId);
+  if (markerEl) markerEl.style.left = commPct + '%';
+
+  const labelId = markerId.replace('marker-', 'comm-label-');
+  const labelEl = document.getElementById(labelId);
+  if (labelEl) labelEl.style.left = commPct + '%';
+
+  // Build gradient: yellow→green transition pivots exactly at commPct (the white tick)
+  // lowerIsBetter=true  → green on left, red on right (low value is good)
+  // lowerIsBetter=false → red on left,   green on right (high value is good)
+  const gradId = barId.replace('bar-', 'grad-');
+  const gradEl = document.getElementById(gradId);
+  if (gradEl) {
+    const cp = commPct.toFixed(1);
+    const midWarm = (commPct / 2).toFixed(1);
+    const midCool = (commPct + (100 - commPct) / 2).toFixed(1);
+    const gradientStops = lowerIsBetter
+      ? `linear-gradient(to right, #4ade80 0%, #facc15 ${cp}%, #fb923c ${midCool}%, #f87171 100%)`
+      : `linear-gradient(to right, #f87171 0%, #fb923c ${midWarm}%, #facc15 ${cp}%, #4ade80 100%)`;
+    gradEl.style.background = gradientStops;
+    gradEl.style.position = 'absolute';
+    gradEl.style.inset = '0';
+    gradEl.style.borderRadius = '3px';
+  }
+}
+
+function renderEnemyList(elId, deathMap, label) {
+  const el = document.getElementById(elId);
+  const sorted = Object.entries(deathMap).sort((a,b) => b[1]-a[1]).slice(0,3);
+  if (!sorted.length) { el.innerHTML = '<div class="no-data">No '+label+' deaths found.</div>'; return; }
+  el.innerHTML = sorted.map(([name, count]) =>
+    `<div class="enemy-row"><span class="enemy-name">${name}</span><span class="enemy-deaths">${count} death${count>1?'s':''}</span></div>`
+  ).join('');
+}
+
+function renderAnomalies(st) {
+  const el = document.getElementById('anomaly-list');
+  const emojiMap = {Chemical:'◈', Psi:'◉', Shock:'∿', Physical:'◆', Fire:'▲'};
+  const allTypes = ['Chemical', 'Psi', 'Shock', 'Physical', 'Fire'];
+  const entries = allTypes
+    .map(type => [type, st.anomalyDeaths[type] || 0])
+    .sort((a, b) => b[1] - a[1]);
+  const maxVal = Math.max(...entries.map(e=>e[1]), 1);
+  el.innerHTML = entries.map(([type, count]) => {
+    const color = ANOMALY_COLORS[type] || ANOMALY_COLORS.Other;
+    const pct = (count / maxVal * 100).toFixed(1);
+    const glyph = emojiMap[type] || '▪';
+    return `<div class="anomaly-row">
+      <div class="anomaly-header">
+        <span class="anomaly-name"><span style="color:${color}">${glyph}</span> ${type}</span>
+        <span class="anomaly-count" style="color:${count > 0 ? '#f87171' : '#4b5563'}">${count}</span>
+      </div>
+      <div class="anomaly-bar-track">
+        <div class="anomaly-bar-fill" style="width:${pct}%; background:${color};"></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderWeapons(byCat) {
+  const catOrder   = ['Melee', 'Pistol', 'Shotgun', 'SMG', 'Rifle', 'Sniper'];
+  const catDisplay = { Melee:'Melee', Pistol:'Pistol', Shotgun:'Shotgun', SMG:'SMG', Rifle:'Rifle', Sniper:'Sniper' };
+  const catColor   = { Melee:'#fca5a5', Pistol:'#93c5fd', Shotgun:'#fdba74', SMG:'#c4b5fd', Rifle:'#86efac', Sniper:'#fcd34d' };
+  const rankClass  = ['gold','silver','bronze'];
+  const el = document.getElementById('weapons-breakdown');
+
+  let html = '<div class="weapon-grid weapon-grid-3col">';
+  for (const cat of catOrder) {
+    const weapons = byCat[cat] || [];
+    const color   = catColor[cat] || '#6b7280';
+    const top3    = weapons.slice(0, 3);
+    const total   = weapons.reduce((s, w) => s + w.kills, 0);
+    const maxK    = top3[0]?.kills || 1;
+
+    html += `<div class="stat-card wcat-card">
+      <div class="wcat-header">
+        <span class="wcat-accent" style="background:${color}"></span>
+        <span class="wcat-title">${catDisplay[cat]}</span>
+        ${total ? `<span class="wcat-total">${total} kills</span>` : ''}
+      </div>
+      <div class="wcat-entries">`;
+
+    if (!top3.length) {
+      html += '<div class="wcat-nodata">No kills recorded.</div>';
+    } else {
+      top3.forEach((w, i) => {
+        const barW      = Math.round(w.kills / maxK * 100);
+        const barOpacity = i === 0 ? '1' : i === 1 ? '0.55' : '0.35';
+        html += `<div class="wcat-entry ${i === 0 ? 'first' : ''}">
+          <div class="wcat-entry-top">
+            <span class="wcat-rank ${rankClass[i]}">${i + 1}</span>
+            <span class="wcat-name" title="${w.name}">${w.name}</span>
+            <span class="wcat-kills">${w.kills}</span>
+          </div>
+          <div class="wcat-bar-track">
+            <div class="wcat-bar" style="width:${barW}%;background:${color};opacity:${barOpacity}"></div>
+          </div>
+        </div>`;
+      });
+    }
+
+    html += '</div></div>';
+  }
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+function renderCommunityKillers() {
+  const el = document.getElementById('community-killers-list');
+  if (!el) return;
+  el.innerHTML = COMMUNITY.topKillers.map((item, i) => {
+    const deathsHtml = item.deaths != null
+      ? `<span style="font-size:0.82rem;font-weight:400;color:#6b7280;font-variant-numeric:tabular-nums;">${item.deaths.toLocaleString()} deaths</span>`
+      : '';
+    return `<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #374151;">
+      <span style="font-size:0.72rem;font-weight:700;color:#4b5563;width:16px;flex-shrink:0;">${i+1}.</span>
+      <span style="font-size:0.82rem;font-weight:700;color:#d1d5db;flex:1;">${item.label}</span>
+      ${deathsHtml}
+    </div>`;
+  }).join('');
+}
+
+
+function renderStats(st) {
+  // Overview
+  document.getElementById('stat-kills').textContent = fmtInt(st.killCount);
+  document.getElementById('stat-deaths').textContent = fmtInt(st.deathCount);
+  document.getElementById('stat-playtime').textContent = fmt(st.totalHours, 1) + 'h';
+  document.getElementById('stat-difficulty').textContent = st.difficulty || '--';
+
+  // Accuracy
+  document.getElementById('s-accuracy').textContent = fmt(st.avgAcc, 1) + '%';
+  setBar('bar-accuracy', 'marker-accuracy', st.avgAcc, 100, COMMUNITY.avgAccuracyPct, false);
+
+  // Distance
+  const distMax = Math.max(st.avgDist * 1.5, COMMUNITY.avgDistanceM * 2, 50);
+  document.getElementById('s-distance').textContent = fmt(st.avgDist, 1) + 'm';
+  document.getElementById('s-longest-kill').textContent = fmt(st.longestKill, 1) + 'm';
+  document.getElementById('dist-max-label').textContent = Math.round(distMax) + 'm';
+  setBar('bar-distance', 'marker-distance', st.avgDist, distMax, COMMUNITY.avgDistanceM, false);
+
+  // Headshots
+  document.getElementById('s-headshots').textContent = fmt(st.avgHsPct, 1) + '%';
+  setBar('bar-headshots', 'marker-headshots', st.avgHsPct, 100, COMMUNITY.avgHeadshotPct, false);
+
+  // Overkill
+  document.getElementById('s-overkill').textContent = fmt(st.avgOverkill, 0) + '%';
+  const overkillMax = Math.max(st.avgOverkill * 1.3, COMMUNITY.avgOverkillPct * 2, 100);
+  setBar('bar-overkill', 'marker-overkill', st.avgOverkill, overkillMax, COMMUNITY.avgOverkillPct, true);
+
+  // KDA
+  document.getElementById('s-kda').textContent = fmt(st.kd, 2);
+  const kdaMax = Math.max(st.kd * 1.5, COMMUNITY.avgKD * 2, 5.0);
+  document.getElementById('kda-max-label').textContent = fmt(kdaMax, 1);
+  setBar('bar-kda', 'marker-kda', st.kd, kdaMax, COMMUNITY.avgKD, false);
+
+  // Deaths/hr
+  const dphMax = Math.max(st.dph * 1.5, COMMUNITY.avgDeathsPerHour * 3, 10);
+  document.getElementById('s-dph').textContent = fmt(st.dph, 1);
+  document.getElementById('dph-max-label').textContent = Math.round(dphMax);
+  setBar('bar-dph', 'marker-dph', st.dph, dphMax, COMMUNITY.avgDeathsPerHour, true);
+
+  // Saves
+  document.getElementById('s-saves').textContent = fmtInt(st.savesTotal);
+  document.getElementById('s-loads').textContent = fmtInt(st.loadsTotal);
+  document.getElementById('s-saves-hr').textContent = fmt(st.savesPerHr, 1);
+  document.getElementById('s-loads-hr').textContent = fmt(st.loadsPerHr, 1);
+  const savesMax = Math.max(st.savesPerHr * 1.5, COMMUNITY.avgSavesPerHour * 3, 20);
+  document.getElementById('saves-max-label').textContent = Math.round(savesMax);
+  setBar('bar-saves', 'marker-saves', st.savesPerHr, savesMax, COMMUNITY.avgSavesPerHour, true);
+
+  // Bell curve
+  renderBellCurve(st);
+
+  // Weapons
+  renderWeapons(st.weaponsByCategory);
+
+  // Enemies
+  renderEnemyList('worst-npcs', st.npcDeaths, 'NPC');
+  renderEnemyList('worst-mutants', st.mutantDeaths, 'Mutant');
+
+  // Anomalies
+  renderAnomalies(st);
+  renderCommunityKillers();
+
+  // Radiation & falls
+  document.getElementById('s-radiation').textContent = st.radiationDeaths;
+  document.getElementById('s-falls').textContent = st.fallDeaths;
+
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('upload-wrapper').style.display = 'none';
+
+  // Redraw bell curve after layout is visible
+  requestAnimationFrame(() => renderBellCurve(st));
+}
+
+function showError(msg) {
+  const el = document.getElementById('error-box');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function showVersionModal() {
+  const overlay = document.getElementById('version-modal-overlay');
+  overlay.classList.add('modal-visible');
+}
+
+function hideVersionModal() {
+  const overlay = document.getElementById('version-modal-overlay');
+  overlay.classList.remove('modal-visible');
+}
+
+function processFiles(files, submitToSupabase, nickname) {
+  const readers = [...files].map(f => new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = e => res(e.target.result);
+    r.onerror = () => rej(new Error('Failed to read ' + f.name));
+    r.readAsText(f);
+  }));
+
+  Promise.all(readers).then(texts => {
+    const REQUIRED_HEADER = 'Timestamp | Difficulty | Enemy | Armor | WeaponID | Weapon | Ammo | HTK | TTK | Headshots | Acc | Dist | Overkill | SB/NS';
+    for (const text of texts) {
+      const firstLine = text.replace(/^\uFEFF/, '').split(/\r?\n/)[0].trim();
+      if (firstLine !== REQUIRED_HEADER) {
+        showVersionModal();
+        return;
+      }
+    }
+    const combined = texts.join('\n');
+    window._lastRawLog = combined; // stash raw text for optional submission
+    const raw = parseLog(combined);
+    if (!raw.kills.length && !raw.deaths.length && !raw.saves.length) {
+      showError('No valid log data found. Make sure you uploaded a cheeki_numbers.log file.');
+      return;
+    }
+    document.getElementById('error-box').style.display = 'none';
+    if (submitToSupabase) {
+      const lastSubmit = localStorage.getItem('last_log_submit');
+      if (lastSubmit && Date.now() - parseInt(lastSubmit) < SUBMIT_COOLDOWN_MS) {
+        const unlockAt = parseInt(lastSubmit) + SUBMIT_COOLDOWN_MS;
+        startRateLimitCountdown(unlockAt);
+        return; // blocked — don't render stats
+      }
+      submitRawLog(combined, nickname);
+    }
+    const stats = computeStats(raw);
+    renderStats(stats);
+  }).catch(err => showError(err.message));
+}
+
+// ── Init ──
+document.addEventListener('DOMContentLoaded', function () {
+  try {
+    initSupabase();
+
+    const zone       = document.getElementById('upload-zone');
+    const input      = document.getElementById('file-input');
+    const btnSubmit  = document.getElementById('btn-submit-check');
+    const btnOnly    = document.getElementById('btn-check-only');
+    const readyLabel = document.getElementById('files-ready-label');
+
+    renderCommunityKillers();
+
+    document.getElementById('version-modal-close-btn').addEventListener('click', hideVersionModal);
+    document.getElementById('version-modal-overlay').addEventListener('click', function(e) {
+      if (e.target === this) hideVersionModal();
+    });
+
+    // Enable action buttons once files are staged
+    function stageFiles(files) {
+      if (!files || !files.length) return;
+      window._stagedFiles = files;
+      const n = files.length;
+      readyLabel.textContent = n === 1 ? '1 file ready - pick an option →' : n + ' files ready - pick an option →';
+      readyLabel.style.display = 'block';
+      btnSubmit.disabled = false;
+      btnOnly.disabled   = false;
+    }
+
+    zone.addEventListener('click', () => input.click());
+    input.addEventListener('change', e => { if (e.target.files.length) stageFiles(e.target.files); });
+
+    zone.addEventListener('dragover',  e => { e.preventDefault(); zone.classList.add('drag-over'); });
+    zone.addEventListener('dragleave', ()  => zone.classList.remove('drag-over'));
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      zone.classList.remove('drag-over');
+      if (e.dataTransfer.files.length) stageFiles(e.dataTransfer.files);
+    });
+
+    btnSubmit.addEventListener('click', () => {
+      if (!window._stagedFiles) return;
+      const nicknameInput = document.getElementById('nickname-input');
+      const nickname = nicknameInput ? nicknameInput.value.trim().replace(/[<>"'&]/g, '') : '';
+      if (!nickname) {
+        nicknameInput.focus();
+        nicknameInput.style.borderColor = '#ef4444';
+        nicknameInput.addEventListener('input', function fix() {
+          nicknameInput.style.borderColor = '';
+          nicknameInput.removeEventListener('input', fix);
+        });
+        return;
+      }
+      processFiles(window._stagedFiles, true, nickname);
+    });
+
+    btnOnly.addEventListener('click', () => {
+      if (!window._stagedFiles) return;
+      processFiles(window._stagedFiles, false);
+    });
+
+    document.getElementById('reset-btn').addEventListener('click', () => {
+      document.getElementById('results').style.display = 'none';
+      document.getElementById('upload-wrapper').style.display = '';
+      readyLabel.style.display = 'none';
+      btnSubmit.disabled = true;
+      btnOnly.disabled   = true;
+      window._stagedFiles  = null;
+      window._lastRawLog   = null;
+      const ni = document.getElementById('nickname-input');
+      if (ni) { ni.value = ''; ni.style.borderColor = ''; }
+      input.value = '';
+    });
+
+  } catch (err) {
+    console.error('Init error:', err);
+    const eb = document.getElementById('error-box');
+    if (eb) { eb.textContent = 'Page error: ' + err.message; eb.style.display = 'block'; }
+  }
+});
+
+</script>
+</body>
+</html>
