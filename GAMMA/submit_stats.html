@@ -1172,6 +1172,37 @@ function tsToDate(ts) {
   return new Date(ts.replace(' ', 'T'));
 }
 
+// ── Mutant name normalizer ──
+// Maps raw log names (e.g. cat_weak_a, zombi_babka_1) to clean display names.
+// Order matters: more specific patterns must come before broader ones.
+function normalizeMutantName(raw) {
+  const s = raw.toLowerCase();
+  if (s.includes('tushkanchik'))                      return 'Tushkano';
+  if (s.includes('tushkano'))                         return 'Tushkano';
+  if (s.includes('pseudodog'))                        return 'Pseudodog';
+  if (s.includes('psy_dog') || s.includes('psydog')) return 'Psy Dog';
+  if (s.includes('baba_yaga') || s.includes('babayaga')) return 'Baba Yaga';
+  if (s.includes('bloodsucker'))                      return 'Bloodsucker';
+  if (s.includes('psysucker'))                        return 'Psysucker';
+  if (s.includes('poltergeist'))                      return 'Poltergeist';
+  if (s.includes('controller'))                       return 'Controller';
+  if (s.includes('chimera'))                          return 'Chimera';
+  if (s.includes('gigant'))                           return 'Gigant';
+  if (s.includes('fracture'))                         return 'Fracture';
+  if (s.includes('snork'))                            return 'Snork';
+  if (s.includes('lurker'))                           return 'Lurker';
+  if (s.includes('burer'))                            return 'Burer';
+  if (s.includes('borya'))                            return 'Borya';
+  if (s.includes('karlik'))                           return 'Karlik';
+  if (s.includes('zombie') || s.includes('zombi'))   return 'Zombie';
+  if (s.includes('flesh'))                            return 'Flesh';
+  if (s.includes('boar'))                             return 'Boar';
+  if (s.includes('cat'))                              return 'Cat';
+  if (s.includes('dog'))                              return 'Dog';
+  if (s.includes('rat'))                              return 'Rat';
+  return null; // unrecognised — will be skipped
+}
+
 function computeStats(data) {
   const { kills, deaths, saves, loads, sessionData } = data;
   const sessions = sessionData.length;
@@ -1251,7 +1282,8 @@ function computeStats(data) {
     const cause = d.cause || '';
     const armor = d.armor || '';
     if (armor === 'Mutant') {
-      mutantDeaths[cause] = (mutantDeaths[cause] || 0) + 1;
+      const displayName = normalizeMutantName(cause);
+      if (displayName) mutantDeaths[displayName] = (mutantDeaths[displayName] || 0) + 1;
     } else if (!cause.startsWith('Anomaly') && cause !== 'Radiation' && cause !== 'Fall/Strike' && armor !== 'N/A' && armor !== '') {
       npcDeaths[cause] = (npcDeaths[cause] || 0) + 1;
     }
