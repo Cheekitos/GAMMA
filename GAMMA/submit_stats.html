@@ -743,7 +743,7 @@
       <div class="stat-card">
         <div class="stat-card-title"><span class="icon">◆</span> Headshots</div>
         <div class="stat-big" id="s-headshots">--</div>
-        <div class="stat-sub">avg number of headshots</div>
+        <div class="stat-sub">% of hits that are headshots</div>
         <div class="comparison">
           <div class="bar-track">
             <div class="bar-comm-label" id="comm-label-headshots">Average</div>
@@ -1112,6 +1112,9 @@ function parseLog(text) {
     const parts = line.split('|').map(s => s.trim());
     if (parts.length < 2) continue;
 
+    // Skip the header row (present once per file when multiple files are joined)
+    if (parts[0] === 'Timestamp') continue;
+
     const ts = parts[0];
     const type = parts[1];
 
@@ -1232,10 +1235,12 @@ function computeStats(data) {
   const avgDist = kills.length ? kills.reduce((s,k) => s + k.distance, 0) / kills.length : 0;
   const longestKill = kills.length ? Math.max(...kills.map(k => k.distance)) : 0;
 
-  // ── Headshots per kill (mutants excluded) ──
-  const humanKills = kills.filter(k => k.armor !== 'Mutant');
-  const totalHs = humanKills.reduce((s,k) => s + k.headshots, 0);
-  const avgHsPct = humanKills.length ? (totalHs / humanKills.length) * 100 : 0;
+  // ── Headshots % (stalker/NPC kills only — armor !== 'Mutant') ──
+  // Formula: (sum of headshots across all stalker kills / sum of HTK across all stalker kills) * 100
+  const stalkerKills = kills.filter(k => k.armor !== 'Mutant');
+  const totalHs  = stalkerKills.reduce((s, k) => s + k.headshots, 0);
+  const totalHtk = stalkerKills.reduce((s, k) => s + k.htk, 0);
+  const avgHsPct = totalHtk > 0 ? (totalHs / totalHtk) * 100 : 0;
 
   // ── Overkill ──
   const avgOverkill = kills.length ? kills.reduce((s,k) => s + k.overkill, 0) / kills.length : 0;
