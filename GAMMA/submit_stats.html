@@ -558,6 +558,44 @@
     transition: background 0.2s;
   }
   .version-modal-close:hover { background: #dc2626; }
+
+  /* ── Community preview button ── */
+  .community-preview-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: transparent;
+    border: 1px dashed #4b5563;
+    border-radius: 8px;
+    color: #9ca3af;
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 9px 22px;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+    letter-spacing: 0.02em;
+  }
+  .community-preview-btn:hover {
+    border-color: #fbbf24;
+    border-style: solid;
+    color: #fbbf24;
+    background: rgba(251,191,36,0.05);
+  }
+
+  /* ── Community preview banner ── */
+  #community-preview-banner {
+    display: none;
+    background: rgba(251,191,36,0.07);
+    border: 1px solid rgba(251,191,36,0.28);
+    border-radius: 6px;
+    padding: 11px 16px;
+    font-size: 0.82rem;
+    color: #fbbf24;
+    margin-bottom: 20px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+  }
 </style>
 </head>
 <body>
@@ -628,12 +666,20 @@
   </div>
   <input type="file" id="file-input" accept=".log,.txt" multiple>
 
+  <div style="text-align:center;margin-top:12px;margin-bottom:8px;">
+    <button id="btn-community-preview" class="community-preview-btn">
+      <span style="font-size:1rem;">👁</span> See community stats
+    </button>
+    <div style="margin-top:6px;font-size:0.72rem;color:#4b5563;">No log file needed · Community Averages</div>
+  </div>
 
   <div class="error-box" id="error-box"></div>
   <div id="submit-banner" style="display:none;border-radius:6px;padding:10px 14px;font-size:0.82rem;margin-bottom:12px;"></div>
 
   <div id="results">
-    <button class="reset-btn" id="reset-btn">↩ Upload a different file</button>
+    <div id="community-preview-banner">
+      <span>THIS PAGE IS MOSTLY PLACEHOLDER / TEMPORARY DATA while I wait for more player logs, it is a DEMO, not accurate data!</span>
+    </div>
 
     <div class="section-label">Overview</div>
     <div class="summary-strip">
@@ -743,7 +789,7 @@
       <div class="stat-card">
         <div class="stat-card-title"><span class="icon">◆</span> Headshots</div>
         <div class="stat-big" id="s-headshots">--</div>
-        <div class="stat-sub">headshots out of all hits</div>
+        <div class="stat-sub">headshots as % of hits (stalkers only)</div>
         <div class="comparison">
           <div class="bar-track">
             <div class="bar-comm-label" id="comm-label-headshots">Average</div>
@@ -803,6 +849,55 @@
             <div class="bar-comm-marker" id="marker-distance"></div>
           </div>
           <div class="bar-labels"><span>0m</span><span id="dist-max-label">100m</span></div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card-title"><span class="icon">⚡</span> Longest Kill Streak</div>
+        <div style="font-size:0.72rem;color:#4b5563;margin-bottom:10px;">Consecutive kills without a death</div>
+        <div style="display:flex;gap:16px;align-items:flex-start;">
+          <div style="flex:1;">
+            <div style="background:#111827;border-radius:6px;padding:10px 12px;text-align:center;">
+              <div style="font-size:2rem;font-weight:800;color:#ffffff;line-height:1;" id="s-streak-all">--</div>
+              <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.09em;color:#6b7280;margin-top:4px;">All enemies</div>
+            </div>
+            <div class="comparison" style="margin-top:28px;">
+              <div class="bar-track">
+                <div class="bar-comm-label" id="comm-label-streak-all">Average</div>
+                <div class="bar-track-inner">
+                  <div class="bar-gradient-bg" id="grad-streak-all"></div>
+                  <div class="bar-mask" id="bar-streak-all" style="width:100%"></div>
+                </div>
+                <div class="bar-comm-marker" id="marker-streak-all"></div>
+              </div>
+              <div class="bar-labels"><span>0</span><span id="streak-all-max-label">30</span></div>
+            </div>
+          </div>
+          <div style="flex:1;">
+            <div style="background:#111827;border-radius:6px;padding:10px 12px;text-align:center;">
+              <div style="font-size:2rem;font-weight:800;color:#ffffff;line-height:1;" id="s-streak-stalker">--</div>
+              <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.09em;color:#6b7280;margin-top:4px;">Stalkers only</div>
+            </div>
+            <div class="comparison" style="margin-top:28px;">
+              <div class="bar-track">
+                <div class="bar-comm-label" id="comm-label-streak-stalker">Average</div>
+                <div class="bar-track-inner">
+                  <div class="bar-gradient-bg" id="grad-streak-stalker"></div>
+                  <div class="bar-mask" id="bar-streak-stalker" style="width:100%"></div>
+                </div>
+                <div class="bar-comm-marker" id="marker-streak-stalker"></div>
+              </div>
+              <div class="bar-labels"><span>0</span><span id="streak-stalker-max-label">20</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card-title"><span class="icon">◉</span> Kills Breakdown</div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:18px;">
+          <canvas id="kill-pie-canvas" width="130" height="130" style="flex-shrink:0;opacity:0.75;"></canvas>
+          <div style="display:flex;flex-direction:column;gap:14px;" id="kill-pie-legend"></div>
         </div>
       </div>
 
@@ -1041,6 +1136,8 @@ const COMMUNITY = {
   avgOverkillPct:   56.0,    // % - average overkill % across all kills
   avgSavesPerHour:  8.5,     // saves per hour
   avgKD:            8,       // community average kill/death ratio (8:1)
+  avgStreakAll:     22,      // longest kill streak - all enemies (stalkers + mutants)
+  avgStreakStalker: 14,      // longest kill streak - stalkers only
 
   // Top causes of death for the average player
   topKillers: [
@@ -1304,6 +1401,31 @@ function computeStats(data) {
   const radiationDeaths = deathCauses['Radiation'] || 0;
   const fallDeaths = deathCauses['Fall/Strike'] || 0;
 
+  // ── Kill Streaks ──
+  // Interleave kills and deaths chronologically, walk to find longest streaks.
+  const allEvents = [
+    ...kills.map(k => ({ ts: k.ts, type: 'kill', isMutant: k.armor === 'Mutant' })),
+    ...deaths.map(d => ({ ts: d.ts, type: 'death' })),
+  ].sort((a, b) => tsToDate(a.ts) - tsToDate(b.ts));
+
+  let streakAll = 0, bestStreakAll = 0;
+  let streakStalker = 0, bestStreakStalker = 0;
+  for (const ev of allEvents) {
+    if (ev.type === 'death') {
+      streakAll = 0;
+      streakStalker = 0;
+    } else {
+      streakAll++;
+      if (!ev.isMutant) streakStalker++;
+      if (streakAll > bestStreakAll) bestStreakAll = streakAll;
+      if (streakStalker > bestStreakStalker) bestStreakStalker = streakStalker;
+    }
+  }
+
+  // ── Kill composition ──
+  const stalkerKillCount = kills.filter(k => k.armor !== 'Mutant').length;
+  const mutantKillCount  = kills.filter(k => k.armor === 'Mutant').length;
+
   return {
     killCount: kills.length,
     deathCount: deaths.length,
@@ -1329,6 +1451,10 @@ function computeStats(data) {
     radiationDeaths,
     fallDeaths,
     deathCauses,
+    bestStreakAll,
+    bestStreakStalker,
+    stalkerKillCount,
+    mutantKillCount,
   };
 }
 
@@ -1448,9 +1574,9 @@ function renderBellCurve(st) {
 
   // Shaded fill under curve
   const gradient = ctx.createLinearGradient(0, 0, W, 0);
-  gradient.addColorStop(0,   'rgba(251,191,36,0.04)');
-  gradient.addColorStop(0.5, 'rgba(251,191,36,0.13)');
-  gradient.addColorStop(1,   'rgba(251,191,36,0.04)');
+  gradient.addColorStop(0,   'rgba(156,163,175,0.15)');
+  gradient.addColorStop(0.5, 'rgba(156,163,175,0.35)');
+  gradient.addColorStop(1,   'rgba(156,163,175,0.15)');
 
   ctx.beginPath();
   ctx.moveTo(toX(xMin), H - 8);
@@ -1499,7 +1625,7 @@ function renderBellCurve(st) {
   ctx.fillStyle = '#e5e7eb';
   ctx.font = `bold ${9 * dpr / dpr}px sans-serif`;
   ctx.textAlign = 'center';
-  ctx.fillText('AVG', commXpx, toY(peak) - 7);
+  if (Math.abs(composite - commScore) > 0.5) ctx.fillText('AVG', commXpx, toY(peak) - 7);
 
   // Player marker
   const youXpx = toX(playerX);
@@ -1669,6 +1795,216 @@ function renderCommunityKillers() {
 }
 
 
+function renderKillStreak(st) {
+  document.getElementById('s-streak-all').textContent     = fmtInt(st.bestStreakAll);
+  document.getElementById('s-streak-stalker').textContent = fmtInt(st.bestStreakStalker);
+
+  // Comparison bars — same pattern as setBar() elsewhere on the page
+  const streakAllMax     = Math.max(st.bestStreakAll * 1.4, COMMUNITY.avgStreakAll * 2, 30);
+  const streakStalkerMax = Math.max(st.bestStreakStalker * 1.4, COMMUNITY.avgStreakStalker * 2, 20);
+
+  setBar('bar-streak-all',     'marker-streak-all',     st.bestStreakAll,     streakAllMax,     COMMUNITY.avgStreakAll,     false);
+  setBar('bar-streak-stalker', 'marker-streak-stalker', st.bestStreakStalker, streakStalkerMax, COMMUNITY.avgStreakStalker, false);
+
+  document.getElementById('streak-all-max-label').textContent     = Math.round(streakAllMax);
+  document.getElementById('streak-stalker-max-label').textContent = Math.round(streakStalkerMax);
+}
+
+function renderKillPie(st) {
+  const stalker = st.stalkerKillCount;
+  const mutant  = st.mutantKillCount;
+  const total   = stalker + mutant;
+
+  const canvas = document.getElementById('kill-pie-canvas');
+  const ctx    = canvas.getContext('2d');
+  const dpr    = window.devicePixelRatio || 1;
+  const size   = 130;
+  canvas.width  = size * dpr;
+  canvas.height = size * dpr;
+  canvas.style.width  = size + 'px';
+  canvas.style.height = size + 'px';
+  ctx.scale(dpr, dpr);
+
+  const cx = size / 2, cy = size / 2, r = size / 2 - 6;
+
+  if (total === 0) {
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fillStyle = '#374151';
+    ctx.fill();
+  } else {
+    const slices = [
+      { value: stalker, color: '#fbbf24', label: 'Stalkers' },
+      { value: mutant,  color: '#93c5fd', label: 'Mutants'  },
+    ];
+    let startAngle = -Math.PI / 2;
+    const angleData = [];
+    for (const s of slices) {
+      const sweep = (s.value / total) * Math.PI * 2;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.arc(cx, cy, r, startAngle, startAngle + sweep);
+      ctx.closePath();
+      ctx.fillStyle = s.color;
+      ctx.fill();
+      angleData.push({ startAngle, sweep, value: s.value });
+      startAngle += sweep;
+    }
+    // donut hole
+    const holeR = r * 0.52;
+    ctx.beginPath();
+    ctx.arc(cx, cy, holeR, 0, Math.PI * 2);
+    ctx.fillStyle = '#1f2937';
+    ctx.fill();
+    // centre: total number
+    ctx.fillStyle = '#f9fafb';
+    ctx.font = 'bold ' + Math.round(size * 0.17) + 'px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(fmtInt(total), cx, cy - size * 0.055);
+    // "Total Kills" label
+    ctx.fillStyle = '#6b7280';
+    ctx.font = Math.round(size * 0.082) + 'px sans-serif';
+    ctx.fillText('Total Kills', cx, cy + size * 0.09);
+  }
+
+  // Legend
+  const legend = document.getElementById('kill-pie-legend');
+  legend.innerHTML = '';
+  const items = [
+    { label: 'Stalkers', value: stalker, color: '#fbbf24' },
+    { label: 'Mutants',  value: mutant,  color: '#93c5fd' },
+  ];
+  for (const item of items) {
+    const pct = total > 0 ? ((item.value / total) * 100).toFixed(1) : '0.0';
+    legend.innerHTML += `
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="width:10px;height:10px;border-radius:50%;background:${item.color};flex-shrink:0;display:inline-block;"></span>
+        <span style="font-size:0.78rem;color:#d1d5db;font-weight:600;">${item.label}</span>
+        <span style="font-size:0.92rem;font-weight:800;color:${item.color};">${fmtInt(item.value)}</span>
+        <span style="font-size:0.68rem;color:#6b7280;">${pct}%</span>
+      </div>`;
+  }
+}
+
+// ============================================================
+// COMMUNITY PREVIEW — builds a fake stats object from COMMUNITY
+// averages so visitors can see the full stats page without a log.
+// ============================================================
+function buildCommunityPreviewStats() {
+  // Derived from COMMUNITY averages + plausible placeholders
+  // (marked with **PLACEHOLDER** below — replace when you have real data)
+
+  const avgKills        = 820;          // **PLACEHOLDER** community avg total kills
+  const avgDeaths       = Math.round(avgKills / COMMUNITY.avgKD);   // ≈102
+  const avgHours        = +(avgDeaths / COMMUNITY.avgDeathsPerHour).toFixed(1); // ≈32h
+
+  const stalkerFrac     = 0.76;         // **PLACEHOLDER** % of kills that are stalkers
+  const stalkerKills    = Math.round(avgKills * stalkerFrac);
+  const mutantKills     = avgKills - stalkerKills;
+
+  const avgLoadsPerHour = 6.4;          // **PLACEHOLDER** avg loads/hr
+  const avgSavesTotal   = Math.round(COMMUNITY.avgSavesPerHour * avgHours);
+  const avgLoadsTotal   = Math.round(avgLoadsPerHour * avgHours);
+
+  // Anomaly deaths — pull straight from COMMUNITY.topKillers
+  const anomalyDeaths = { Chemical: 0, Psi: 0, Shock: 0, Physical: 0, Fire: 0 };
+  const anomalyMap = {
+    'Fire Anomaly':      'Fire',
+    'Shock Anomaly':     'Shock',
+    'Radiation':         null,           // handled separately as radiationDeaths
+    'Chemical Anomaly':  'Chemical',
+    'Physical Anomaly':  'Physical',
+  };
+  let radiationDeaths = 0;
+  for (const k of COMMUNITY.topKillers) {
+    for (const [keyword, type] of Object.entries(anomalyMap)) {
+      if (k.label.includes(keyword)) {
+        if (type) anomalyDeaths[type] = k.deaths;
+        else radiationDeaths = k.deaths;
+        break;
+      }
+    }
+  }
+
+  // Weapon kills — fake kill counts that rank correctly
+  const weaponsByCategory = {};
+  const baseKills = { Melee: 45, Pistol: 60, Shotgun: 80, SMG: 110, Rifle: 340, Sniper: 185 };
+  for (const [cat, names] of Object.entries(COMMUNITY.topWeapons)) {
+    weaponsByCategory[cat] = names.map((name, i) => ({
+      name,
+      kills: Math.round(baseKills[cat] * (i === 0 ? 1 : i === 1 ? 0.52 : 0.28)),
+    }));
+  }
+
+  // Worst NPCs and mutants — **PLACEHOLDER** community top killers
+  const npcDeaths = {
+    'Military'       : 38,   // **PLACEHOLDER**
+    'Bandit'         : 31,   // **PLACEHOLDER**
+    'Mercenary'      : 22,   // **PLACEHOLDER**
+  };
+  const mutantDeaths = {
+    'Bloodsucker'    : 29,   // **PLACEHOLDER**
+    'Chimera'        : 18,   // **PLACEHOLDER**
+    'Pseudodog'      : 14,   // **PLACEHOLDER**
+  };
+
+  return {
+    killCount        : avgKills,
+    deathCount       : avgDeaths,
+    totalHours       : avgHours,
+    difficulty       : 'Veteran',       // **PLACEHOLDER** most common difficulty
+
+    avgAcc           : COMMUNITY.avgAccuracyPct,
+    avgDist          : COMMUNITY.avgDistanceM,
+    longestKill      : 192,             // **PLACEHOLDER** community avg longest kill (m)
+    avgHsPct         : COMMUNITY.avgHeadshotPct,
+    avgOverkill      : COMMUNITY.avgOverkillPct,
+
+    kd               : COMMUNITY.avgKD,
+    dph              : COMMUNITY.avgDeathsPerHour,
+
+    savesTotal       : avgSavesTotal,
+    loadsTotal       : avgLoadsTotal,
+    savesPerHr       : COMMUNITY.avgSavesPerHour,
+    loadsPerHr       : avgLoadsPerHour,
+
+    bestStreakAll     : COMMUNITY.avgStreakAll,
+    bestStreakStalker : COMMUNITY.avgStreakStalker,
+
+    stalkerKillCount  : stalkerKills,
+    mutantKillCount   : mutantKills,
+
+    weaponsByCategory,
+    npcDeaths,
+    mutantDeaths,
+    anomalyDeaths,
+
+    radiationDeaths,
+    fallDeaths       : 28,             // **PLACEHOLDER** community avg fall deaths
+  };
+}
+
+function showCommunityPreview() {
+  const st = buildCommunityPreviewStats();
+
+  // Show banner, hide upload wrapper
+  document.getElementById('community-preview-banner').style.display = 'flex';
+  document.getElementById('upload-wrapper').style.display = 'none';
+
+  // Patch the percentile text for the bell curve to say "community" not "you"
+  window._isCommunityPreview = true;
+  renderStats(st);
+  window._isCommunityPreview = false;
+
+  // Override the bell curve "YOU" label to say "AVG"
+  const youLabel = document.getElementById('bell-you-label');
+  if (youLabel) youLabel.textContent = 'AVG';
+  // Override the bc-percentile-text
+  document.getElementById('bc-percentile-text').innerHTML =
+    'The <strong>average STALKER</strong> scores exactly <strong>50</strong> — right in the middle of the community.';
+}
+
 function renderStats(st) {
   // Overview
   document.getElementById('stat-kills').textContent = fmtInt(st.killCount);
@@ -1716,6 +2052,10 @@ function renderStats(st) {
   const savesMax = Math.max(st.savesPerHr * 1.5, COMMUNITY.avgSavesPerHour * 3, 20);
   document.getElementById('saves-max-label').textContent = Math.round(savesMax);
   setBar('bar-saves', 'marker-saves', st.savesPerHr, savesMax, COMMUNITY.avgSavesPerHour, true);
+
+  // Kill streak & composition
+  renderKillStreak(st);
+  renderKillPie(st);
 
   // Bell curve
   renderBellCurve(st);
@@ -1815,6 +2155,8 @@ document.addEventListener('DOMContentLoaded', function () {
       if (e.target === this) hideVersionModal();
     });
 
+    document.getElementById('btn-community-preview').addEventListener('click', showCommunityPreview);
+
     // Enable action buttons once files are staged
     function stageFiles(files) {
       if (!files || !files.length) return;
@@ -1858,9 +2200,11 @@ document.addEventListener('DOMContentLoaded', function () {
       processFiles(window._stagedFiles, false);
     });
 
-    document.getElementById('reset-btn').addEventListener('click', () => {
+    const resetBtn = document.getElementById('reset-btn');
+    if (resetBtn) resetBtn.addEventListener('click', () => {
       document.getElementById('results').style.display = 'none';
       document.getElementById('upload-wrapper').style.display = '';
+      document.getElementById('community-preview-banner').style.display = 'none';
       readyLabel.style.display = 'none';
       btnSubmit.disabled = true;
       btnOnly.disabled   = true;
