@@ -581,17 +581,6 @@
     color: #fbbf24;
     background: rgba(251,191,36,0.05);
   }
-  .community-preview-btn:disabled {
-    opacity: 0.45;
-    cursor: not-allowed;
-    pointer-events: auto;
-  }
-  .community-preview-btn:disabled:hover {
-    border-color: #4b5563;
-    border-style: dashed;
-    color: #9ca3af;
-    background: transparent;
-  }
 
   /* ── Community preview banner ── */
   #community-preview-banner {
@@ -661,7 +650,7 @@
           autocomplete="off"
           spellcheck="false"
         >
-        <span id="nickname-hint">You will appear under this name in the rankings</span>
+        <span id="nickname-hint">Required to submit · shown in the rankings</span>
       </div>
       <button id="btn-submit-check" class="action-btn action-btn-primary" disabled>
         <span class="action-btn-icon">📤</span>
@@ -678,10 +667,10 @@
   <input type="file" id="file-input" accept=".log,.txt" multiple>
 
   <div style="text-align:center;margin-top:12px;margin-bottom:8px;">
-    <button id="btn-community-preview" class="community-preview-btn" disabled>
+    <button id="btn-community-preview" class="community-preview-btn">
       <span style="font-size:1rem;">👁</span> See community stats
     </button>
-    <div style="margin-top:6px;font-size:0.72rem;color:#4b5563;">Community Averages · Coming Soon!</div>
+    <div style="margin-top:6px;font-size:0.72rem;color:#4b5563;">No log file needed · Community Averages</div>
   </div>
 
   <div class="error-box" id="error-box"></div>
