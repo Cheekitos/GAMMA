@@ -594,6 +594,8 @@
     margin-bottom: 20px;
     display: none;
     align-items: center;
+    justify-content: center;
+    text-align: center;
     gap: 10px;
   }
 </style>
@@ -678,7 +680,10 @@
 
   <div id="results">
     <div id="community-preview-banner">
-      <span>THIS PAGE IS MOSTLY PLACEHOLDER / TEMPORARY DATA while I wait for more player logs, it is a DEMO, not accurate data!</span>
+      <span>This page is a DEMO for now, with mostly placeholder or temporary data. It is not Accurate. <r> When you don't see this message anymore, it means I got enough players logs for the data to be representative of the community.</span>
+    </div>
+    <div id="personal-stats-banner" style="display:none;background:rgba(251,191,36,0.07);border:1px solid rgba(251,191,36,0.28);border-radius:6px;padding:11px 16px;font-size:0.82rem;color:#fbbf24;margin-bottom:20px;text-align:center;">
+      <span>Do not take the community averages and the "Overall performance" chart too seriously for now, I need more data for them to be accurate.<br> When you don't see this message anymore, it means we're good!</span>
     </div>
 
     <div class="section-label">Overview</div>
@@ -2077,6 +2082,7 @@ function renderStats(st) {
 
   document.getElementById('results').style.display = 'block';
   document.getElementById('upload-wrapper').style.display = 'none';
+  document.getElementById('personal-stats-banner').style.display = window._isCommunityPreview ? 'none' : 'block';
 
   // Redraw bell curve after layout is visible
   requestAnimationFrame(() => renderBellCurve(st));
@@ -2205,6 +2211,7 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('results').style.display = 'none';
       document.getElementById('upload-wrapper').style.display = '';
       document.getElementById('community-preview-banner').style.display = 'none';
+      document.getElementById('personal-stats-banner').style.display = 'none';
       readyLabel.style.display = 'none';
       btnSubmit.disabled = true;
       btnOnly.disabled   = true;
