@@ -104,6 +104,8 @@
     border: 1px solid #374151;
     border-radius: 8px;
     padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
   }
   .stat-card-title {
     font-size: 0.72rem;
@@ -124,7 +126,7 @@
   .stat-sub { font-size: 0.75rem; color: #6b7280; margin-bottom: 12px; }
 
   /* ── Comparison bar ── */
-  .comparison { margin-top: 8px; }
+  .comparison { margin-top: auto; padding-top: 8px; position: relative; padding-bottom: 2px; }
   .bar-track { height: 6px; border-radius: 3px; overflow: visible; position: relative; margin-bottom: 2px; margin-top: 16px; }
   .bar-track-inner { height: 100%; border-radius: 3px; overflow: hidden; position: relative; background: #374151; }
   .bar-gradient-bg { position: absolute; inset: 0; border-radius: 3px; }
@@ -152,6 +154,17 @@
     pointer-events: none;
   }
   .bar-labels { display: flex; justify-content: space-between; font-size: 0.65rem; color: #4b5563; margin-top: 2px; }
+  .bar-comm-value {
+    position: absolute;
+    top: 34px;
+    font-size: 0.52rem;
+    font-weight: 600;
+    color: #b0bac4;
+    white-space: nowrap;
+    transform: translateX(-50%);
+    pointer-events: none;
+    letter-spacing: 0.02em;
+  }
 
   /* ── Weapons Grid ── */
   .weapon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; }
@@ -592,7 +605,6 @@
     font-size: 0.82rem;
     color: #fbbf24;
     margin-bottom: 20px;
-    display: none;
     align-items: center;
     justify-content: center;
     text-align: center;
@@ -680,7 +692,7 @@
 
   <div id="results">
     <div id="community-preview-banner">
-      <span>This page is a DEMO for now, with mostly placeholder or temporary data. It is not Accurate. <r> When you don't see this message anymore, it means I got enough players logs for the data to be representative of the community.</span>
+      <span>This page is a DEMO for now, with mostly placeholder or temporary data. It is not Accurate.<br> When you don't see this message anymore, it means I got enough players logs for the data to be representative of the community.</span>
     </div>
     <div id="personal-stats-banner" style="display:none;background:rgba(251,191,36,0.07);border:1px solid rgba(251,191,36,0.28);border-radius:6px;padding:11px 16px;font-size:0.82rem;color:#fbbf24;margin-bottom:20px;text-align:center;">
       <span>Do not take the community averages and the "Overall performance" chart too seriously for now, I need more data for them to be accurate.<br> When you don't see this message anymore, it means we're good!</span>
@@ -724,7 +736,7 @@
       <div class="bellcurve-axis">
         <span>Weak</span>
         <span>Below Avg</span>
-        <span>Average</span>
+        <span style="color:#d1d5db;font-weight:700;">Average</span>
         <span>Above Avg</span>
         <span>Elite</span>
       </div>
@@ -758,6 +770,24 @@
     <div class="stat-grid three-col">
 
       <div class="stat-card">
+        <div class="stat-card-title"><span class="icon">×</span> K/D Ratio</div>
+        <div class="stat-big" id="s-kda">--</div>
+        <div class="stat-sub">Kills per death</div>
+        <div class="comparison">
+          <div class="bar-track">
+            <div class="bar-comm-label" id="comm-label-kda">Average</div>
+            <div class="bar-track-inner">
+              <div class="bar-gradient-bg" id="grad-kda"></div>
+              <div class="bar-mask" id="bar-kda" style="width:100%"></div>
+            </div>
+            <div class="bar-comm-marker" id="marker-kda"></div>
+          </div>
+          <div class="bar-labels"><span>0</span><span id="kda-max-label">5.0</span></div>
+          <div class="bar-comm-value" id="comm-value-kda"></div>
+        </div>
+      </div>
+
+      <div class="stat-card">
         <div class="stat-card-title"><span class="icon">◎</span> Accuracy</div>
         <div class="stat-big" id="s-accuracy">--</div>
         <div class="stat-sub">avg shots you hit</div>
@@ -771,23 +801,7 @@
             <div class="bar-comm-marker" id="marker-accuracy"></div>
           </div>
           <div class="bar-labels"><span>0%</span><span>100%</span></div>
-        </div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-card-title"><span class="icon">×</span> K/D Ratio</div>
-        <div class="stat-big" id="s-kda">--</div>
-        <div class="stat-sub" style="margin-bottom:24px;">Kills per death</div>
-        <div class="comparison">
-          <div class="bar-track">
-            <div class="bar-comm-label" id="comm-label-kda">Average</div>
-            <div class="bar-track-inner">
-              <div class="bar-gradient-bg" id="grad-kda"></div>
-              <div class="bar-mask" id="bar-kda" style="width:100%"></div>
-            </div>
-            <div class="bar-comm-marker" id="marker-kda"></div>
-          </div>
-          <div class="bar-labels"><span>0</span><span id="kda-max-label">5.0</span></div>
+          <div class="bar-comm-value" id="comm-value-accuracy"></div>
         </div>
       </div>
 
@@ -805,6 +819,7 @@
             <div class="bar-comm-marker" id="marker-headshots"></div>
           </div>
           <div class="bar-labels"><span>0%</span><span>100%</span></div>
+          <div class="bar-comm-value" id="comm-value-headshots"></div>
         </div>
       </div>
 
@@ -818,7 +833,7 @@
       <div class="stat-card">
         <div class="stat-card-title"><span class="icon">▲</span> Overkill Meter</div>
         <div class="stat-big" id="s-overkill">--</div>
-        <div class="stat-sub" style="margin-bottom:24px;">Unnecessary extra damage dealt to enemies</div>
+        <div class="stat-sub">Unnecessary extra damage dealt to enemies</div>
         <div class="comparison">
           <div class="bar-track">
             <div class="bar-comm-label" id="comm-label-overkill">Average</div>
@@ -829,6 +844,7 @@
             <div class="bar-comm-marker" id="marker-overkill"></div>
           </div>
           <div class="bar-labels"><span>0%</span><span>200%+</span></div>
+          <div class="bar-comm-value" id="comm-value-overkill"></div>
         </div>
       </div>
 
@@ -854,6 +870,7 @@
             <div class="bar-comm-marker" id="marker-distance"></div>
           </div>
           <div class="bar-labels"><span>0m</span><span id="dist-max-label">100m</span></div>
+          <div class="bar-comm-value" id="comm-value-distance"></div>
         </div>
       </div>
 
@@ -876,6 +893,7 @@
                 <div class="bar-comm-marker" id="marker-streak-all"></div>
               </div>
               <div class="bar-labels"><span>0</span><span id="streak-all-max-label">30</span></div>
+              <div class="bar-comm-value" id="comm-value-streak-all"></div>
             </div>
           </div>
           <div style="flex:1;">
@@ -893,6 +911,7 @@
                 <div class="bar-comm-marker" id="marker-streak-stalker"></div>
               </div>
               <div class="bar-labels"><span>0</span><span id="streak-stalker-max-label">20</span></div>
+              <div class="bar-comm-value" id="comm-value-streak-stalker"></div>
             </div>
           </div>
         </div>
@@ -900,7 +919,7 @@
 
       <div class="stat-card">
         <div class="stat-card-title"><span class="icon">◉</span> Kills Breakdown</div>
-        <div style="display:flex;align-items:center;justify-content:center;gap:18px;">
+        <div style="display:flex;align-items:center;justify-content:center;gap:18px;flex:1;">
           <canvas id="kill-pie-canvas" width="130" height="130" style="flex-shrink:0;opacity:0.75;"></canvas>
           <div style="display:flex;flex-direction:column;gap:14px;" id="kill-pie-legend"></div>
         </div>
@@ -932,6 +951,7 @@
             <div class="bar-comm-marker" id="marker-dph"></div>
           </div>
           <div class="bar-labels"><span>0</span><span id="dph-max-label">20</span></div>
+          <div class="bar-comm-value" id="comm-value-dph"></div>
         </div>
       </div>
 
@@ -1014,7 +1034,31 @@
             <div class="bar-comm-marker" id="marker-saves"></div>
           </div>
           <div class="bar-labels"><span>0</span><span id="saves-max-label">30</span></div>
+          <div class="bar-comm-value" id="comm-value-saves"></div>
         </div>
+      </div>
+
+      <!-- ── Rage Quit Meter (personal logs only) ── -->
+      <div id="rage-quit-section" style="display:none;margin-top:22px;padding-top:18px;border-top:1px solid #374151;">
+        <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#9ca3af;margin-bottom:12px;display:flex;align-items:center;gap:7px;">
+          <span style="font-size:0.9rem;color:#f87171;line-height:1;">🤬</span> Rage Quit Meter
+        </div>
+        <div style="display:flex;align-items:center;gap:18px;">
+          <div style="text-align:center;flex-shrink:0;">
+            <div style="font-size:2rem;font-weight:800;color:#f87171;line-height:1;" id="s-rage-quits">--</div>
+            <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.08em;color:#6b7280;margin-top:3px;">rage quits</div>
+          </div>
+          <div style="flex:1;">
+            <div style="font-size:0.78rem;font-weight:600;margin-bottom:8px;" id="rage-quit-verdict">--</div>
+            <div style="height:7px;background:#111827;border-radius:4px;overflow:hidden;">
+              <div id="rage-quit-bar" style="height:100%;width:0%;border-radius:4px;background:linear-gradient(to right,#fbbf24,#f97316,#ef4444,#7f1d1d);transition:width 0.7s ease;"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:0.6rem;color:#4b5563;margin-top:3px;">
+              <span>😌 Zen</span><span>😤 Salty</span><span>🤬 Tilted</span><span>💀 Gone</span>
+            </div>
+          </div>
+        </div>
+        <div style="font-size:0.72rem;color:#4b5563;margin-top:10px;">A rage quit = you died and immediately left the game, and you hadn't saved within 5 min of that death.</div>
       </div>
     </div>
 
@@ -1134,31 +1178,31 @@ function startRateLimitCountdown(unlockAt) {
 // COMMUNITY AVERAGES
 // ============================================================
 const COMMUNITY = {
-  avgAccuracyPct:   68.0,    // % - average shot accuracy across all kills
-  avgDistanceM:     23.3,    // metres - average engagement distance
-  avgHeadshotPct:   28.5,    // % - headshots per kill (headshots / kills * 100)
-  avgDeathsPerHour: 3.2,     // deaths per hour of active playtime
-  avgOverkillPct:   56.0,    // % - average overkill % across all kills
-  avgSavesPerHour:  8.5,     // saves per hour
-  avgKD:            8,       // community average kill/death ratio (8:1)
-  avgStreakAll:     22,      // longest kill streak - all enemies (stalkers + mutants)
-  avgStreakStalker: 14,      // longest kill streak - stalkers only
+  avgAccuracyPct:   68.2,    // % - average shot accuracy across all kills
+  avgDistanceM:     23.9,    // metres - average engagement distance
+  avgHeadshotPct:   24.8,    // % - headshots per kill (headshots / kills * 100)  // 20 of 22 players (new-format .log only)
+  avgDeathsPerHour: 1.8,     // deaths per hour of active playtime  // 20 of 22 players (new-format .log only)
+  avgOverkillPct:   57.3,    // % - average overkill % across all kills
+  avgSavesPerHour:  15.4,    // saves per hour  // 20 of 22 players (new-format .log only)
+  avgKD:            25.8,    // community average kill/death ratio  // 20 of 22 players (new-format .log only)
+  avgStreakAll:     61,      // longest kill streak - all enemies (stalkers + mutants)  // 20 of 22 players (new-format .log only)
+  avgStreakStalker: 47,      // longest kill streak - stalkers only  // 20 of 22 players (new-format .log only)
 
   // Top causes of death for the average player
   topKillers: [
-    { label: '▲ Fire Anomaly',    color: '#f97316', deaths: 121 },
-    { label: '∿ Shock Anomaly',   color: '#60a5fa', deaths: 107 },
-    { label: '☢ Radiation',       color: '#86efac', deaths: 84 },
-    { label: '◈ Chemical Anomaly',color: '#a78bfa', deaths: 62 },
-    { label: '◆ Physical Anomaly',color: '#fbbf24', deaths: 55 },
+    { label: '▲ Fire Anomaly',    color: '#f97316', deaths: 9 },   // 0.5 per player
+    { label: '∿ Shock Anomaly',   color: '#60a5fa', deaths: 7 },   // 0.3 per player
+    { label: '☢ Radiation',       color: '#86efac', deaths: 6 },   // 0.3 per player
+    { label: '◈ Chemical Anomaly',color: '#a78bfa', deaths: 8 },   // 0.4 per player
+    { label: '◆ Physical Anomaly',color: '#fbbf24', deaths: 3 },   // 0.1 per player
   ],
   topWeapons: {
-    'Melee':   ['6h4 Bayonet', 'Hunting Knife', 'Hunting Axe'],
-    'Pistol':  ['Makarov PM', 'Fort-12', 'Desert Eagle'],
-    'Shotgun': ['SPAS-12', 'TOZ-34', 'Saiga-12'],
-    'SMG':     ['MP5A3', 'PP-19 Bizon', 'UDP-9 Carbine'],
-    'Rifle':   ['AK-74', 'AK-101', 'OC-14 Groza'],
-    'Sniper':  ['SVD', 'VSS Vintorez', 'Mosin Nagant'],
+    'Melee':   ['6h4 Bayonet', 'Hunting Knife', 'OTs-4 Combat Knife'],
+    'Pistol':  ['Glock 19 "Hornet"', 'MP-412 Rex', 'FN Five-seveN'],
+    'Shotgun': ['Saiga-12 Tactical', 'KSG-23', 'RAPTR'],
+    'SMG':     ['MP5A3 "Frasier"', 'PP-19-01 Vityaz', 'MP5A3'],
+    'Rifle':   ['AK-101', 'AK-74 "PMC"', 'OTs-14 Groza "Storm"'],
+    'Sniper':  ['SVDS', 'Remington 700 "Magpul PRO"', 'Mosin Nagant'],
   },
 };
 // ============================================================
@@ -1199,12 +1243,29 @@ function parseLog(text) {
   const sessionData = [];
   let currentSession = null;
   let justStartedSession = false;
+  // ── Rage quit tracking ──
+  // A rage quit = player died, the very next session header is 30+ min later,
+  // AND the player did not save within 5 minutes before that death
+  // (a recent save means they probably just took a break, not raged).
+  let lastDeathTs = null;
+  let lastSaveTs  = null;
+  let rageQuits   = 0;
 
   for (const raw of text.split('\n')) {
     const line = raw.trim();
     if (!line) continue;
 
     if (line.startsWith('=== Session:')) {
+      // ── Rage quit check: compare death ts against this session's header timestamp ──
+      // Excluded if the player saved within 5 min before the death (likely just took a break).
+      const sessionTsMatch = line.match(/=== Session: (.+?) ===/);
+      if (sessionTsMatch && lastDeathTs) {
+        const sessionTs = new Date(sessionTsMatch[1].trim());
+        const savedRecently = lastSaveTs && (lastDeathTs - lastSaveTs) < 5 * 60 * 1000;
+        if (!isNaN(sessionTs) && (sessionTs - lastDeathTs) >= 30 * 60 * 1000 && !savedRecently) rageQuits++;
+      }
+      lastDeathTs = null;
+      lastSaveTs  = null;
       currentSession = { start: null, end: null };
       sessionData.push(currentSession);
       justStartedSession = true;
@@ -1229,7 +1290,7 @@ function parseLog(text) {
       }
     }
 
-    if (type === 'Game Saved') { saves.push(ts); justStartedSession = false; continue; }
+    if (type === 'Game Saved') { saves.push(ts); lastSaveTs = tsToDate(ts); justStartedSession = false; continue; }
     if (type === 'Game Loaded') {
       // Ignore the first Game Loaded right after a session start marker (auto-load on boot)
       if (!justStartedSession) loads.push(ts);
@@ -1265,11 +1326,12 @@ function parseLog(text) {
     // Death line: Timestamp | Death | Cause | Armor
     if (type === 'Death' && parts.length >= 3) {
       deaths.push({ ts, cause: parts[2], armor: parts[3] || '' });
+      lastDeathTs = tsToDate(ts); // track in case this is the last thing before a rage quit
       continue;
     }
   }
 
-  return { kills, deaths, saves, loads, sessionData };
+  return { kills, deaths, saves, loads, sessionData, rageQuits };
 }
 
 function tsToDate(ts) {
@@ -1309,7 +1371,7 @@ function normalizeMutantName(raw) {
 }
 
 function computeStats(data) {
-  const { kills, deaths, saves, loads, sessionData } = data;
+  const { kills, deaths, saves, loads, sessionData, rageQuits } = data;
   const sessions = sessionData.length;
 
   // ── Playtime: sum of (last event - first event) per session ──
@@ -1460,12 +1522,13 @@ function computeStats(data) {
     bestStreakStalker,
     stalkerKillCount,
     mutantKillCount,
+    rageQuits,
   };
 }
 
 // ── Bell Curve ──
 function computePerformanceScore(st) {
-  // Weights: dph=40, accuracy=25, headshots=20, kd=15 (must sum to 100)
+  // Weights: dph=30, accuracy=30, kd=20, headshots=20 (must sum to 100)
   // Each component is normalised to a 0–100 sub-score vs community averages.
 
   const comm = COMMUNITY;
@@ -1491,10 +1554,10 @@ function computePerformanceScore(st) {
   ));
 
   const composite = (
-    dphScore  * 0.40 +
-    accScore  * 0.25 +
-    hsScore   * 0.20 +
-    kdScore   * 0.15
+    dphScore  * 0.30 +
+    accScore  * 0.30 +
+    kdScore   * 0.20 +
+    hsScore   * 0.20
   );
 
   const commScore = 50;
@@ -1554,10 +1617,10 @@ function renderBellCurve(st) {
     const color = score >= 55 ? '#4ade80' : score >= 40 ? '#fbbf24' : '#f87171';
     return `<span style="color:${color}">+${contrib} pts</span>`;
   };
-  document.getElementById('bc-dph-contrib').innerHTML  = fmtContrib(dphScore, 40);
-  document.getElementById('bc-acc-contrib').innerHTML  = fmtContrib(accScore, 25);
+  document.getElementById('bc-dph-contrib').innerHTML  = fmtContrib(dphScore, 30);
+  document.getElementById('bc-acc-contrib').innerHTML  = fmtContrib(accScore, 30);
   document.getElementById('bc-hs-contrib').innerHTML   = fmtContrib(hsScore, 20);
-  document.getElementById('bc-kd-contrib').innerHTML   = fmtContrib(kdScore, 15);
+  document.getElementById('bc-kd-contrib').innerHTML   = fmtContrib(kdScore, 20);
 
   // Draw bell curve
   const canvas = document.getElementById('bell-canvas');
@@ -1627,10 +1690,6 @@ function renderBellCurve(st) {
   ctx.lineWidth = 1.5;
   ctx.stroke();
   ctx.setLineDash([]);
-  ctx.fillStyle = '#e5e7eb';
-  ctx.font = `bold ${9 * dpr / dpr}px sans-serif`;
-  ctx.textAlign = 'center';
-  if (Math.abs(composite - commScore) > 0.5) ctx.fillText('AVG', commXpx, toY(peak) - 7);
 
   // Player marker
   const youXpx = toX(playerX);
@@ -1669,7 +1728,7 @@ function renderBellCurve(st) {
 function fmt(n, dec=1) { return isNaN(n) ? '--' : n.toFixed(dec); }
 function fmtInt(n) { return isNaN(n) || n === undefined ? '--' : Math.round(n).toLocaleString(); }
 
-function setBar(barId, markerId, value, max, commValue, lowerIsBetter = false) {
+function setBar(barId, markerId, value, max, commValue, lowerIsBetter = false, commLabel = null) {
   const pct = Math.min(100, (value / max) * 100);
   const commPct = Math.min(100, (commValue / max) * 100);
 
@@ -1683,6 +1742,14 @@ function setBar(barId, markerId, value, max, commValue, lowerIsBetter = false) {
   const labelId = markerId.replace('marker-', 'comm-label-');
   const labelEl = document.getElementById(labelId);
   if (labelEl) labelEl.style.left = commPct + '%';
+
+  // Community average value shown below the bar
+  const valueId = markerId.replace('marker-', 'comm-value-');
+  const valueEl = document.getElementById(valueId);
+  if (valueEl) {
+    valueEl.style.left = commPct + '%';
+    valueEl.textContent = commLabel !== null ? commLabel : fmt(commValue, 1);
+  }
 
   // Build gradient: yellow→green transition pivots exactly at commPct (the white tick)
   // lowerIsBetter=true  → green on left, red on right (low value is good)
@@ -1808,8 +1875,8 @@ function renderKillStreak(st) {
   const streakAllMax     = Math.max(st.bestStreakAll * 1.4, COMMUNITY.avgStreakAll * 2, 30);
   const streakStalkerMax = Math.max(st.bestStreakStalker * 1.4, COMMUNITY.avgStreakStalker * 2, 20);
 
-  setBar('bar-streak-all',     'marker-streak-all',     st.bestStreakAll,     streakAllMax,     COMMUNITY.avgStreakAll,     false);
-  setBar('bar-streak-stalker', 'marker-streak-stalker', st.bestStreakStalker, streakStalkerMax, COMMUNITY.avgStreakStalker, false);
+  setBar('bar-streak-all',     'marker-streak-all',     st.bestStreakAll,     streakAllMax,     COMMUNITY.avgStreakAll,     false, fmt(COMMUNITY.avgStreakAll, 1));
+  setBar('bar-streak-stalker', 'marker-streak-stalker', st.bestStreakStalker, streakStalkerMax, COMMUNITY.avgStreakStalker, false, fmt(COMMUNITY.avgStreakStalker, 1));
 
   document.getElementById('streak-all-max-label').textContent     = Math.round(streakAllMax);
   document.getElementById('streak-stalker-max-label').textContent = Math.round(streakStalkerMax);
@@ -1900,15 +1967,15 @@ function buildCommunityPreviewStats() {
   // Derived from COMMUNITY averages + plausible placeholders
   // (marked with **PLACEHOLDER** below — replace when you have real data)
 
-  const avgKills        = 820;          // **PLACEHOLDER** community avg total kills
-  const avgDeaths       = Math.round(avgKills / COMMUNITY.avgKD);   // ≈102
-  const avgHours        = +(avgDeaths / COMMUNITY.avgDeathsPerHour).toFixed(1); // ≈32h
+  const avgKills        = 1756;         // community avg total kills
+  const avgDeaths       = Math.round(avgKills / COMMUNITY.avgKD);
+  const avgHours        = +(avgDeaths / COMMUNITY.avgDeathsPerHour).toFixed(1);
 
-  const stalkerFrac     = 0.76;         // **PLACEHOLDER** % of kills that are stalkers
+  const stalkerFrac     = 0.77;         // % of kills that are stalkers
   const stalkerKills    = Math.round(avgKills * stalkerFrac);
   const mutantKills     = avgKills - stalkerKills;
 
-  const avgLoadsPerHour = 6.4;          // **PLACEHOLDER** avg loads/hr
+  const avgLoadsPerHour = 8.9;          // avg loads/hr  // 20 of 22 players (new-format .log only)
   const avgSavesTotal   = Math.round(COMMUNITY.avgSavesPerHour * avgHours);
   const avgLoadsTotal   = Math.round(avgLoadsPerHour * avgHours);
 
@@ -1934,7 +2001,7 @@ function buildCommunityPreviewStats() {
 
   // Weapon kills — fake kill counts that rank correctly
   const weaponsByCategory = {};
-  const baseKills = { Melee: 45, Pistol: 60, Shotgun: 80, SMG: 110, Rifle: 340, Sniper: 185 };
+  const baseKills = { Melee: 19, Pistol: 119, Shotgun: 209, SMG: 330, Rifle: 665, Sniper: 208 };
   for (const [cat, names] of Object.entries(COMMUNITY.topWeapons)) {
     weaponsByCategory[cat] = names.map((name, i) => ({
       name,
@@ -1942,27 +2009,27 @@ function buildCommunityPreviewStats() {
     }));
   }
 
-  // Worst NPCs and mutants — **PLACEHOLDER** community top killers
+  // Worst NPCs and mutants — avg deaths per player, top 3  // 20 of 22 players (new-format .log only)
   const npcDeaths = {
-    'Military'       : 38,   // **PLACEHOLDER**
-    'Bandit'         : 31,   // **PLACEHOLDER**
-    'Mercenary'      : 22,   // **PLACEHOLDER**
+    'Monolith'       : 2,
+    'Renegade'       : 1,
+    'Bandit'         : 1,
   };
   const mutantDeaths = {
-    'Bloodsucker'    : 29,   // **PLACEHOLDER**
-    'Chimera'        : 18,   // **PLACEHOLDER**
-    'Pseudodog'      : 14,   // **PLACEHOLDER**
+    'Chimera'        : 0,
+    'Boar'           : 0,
+    'Gigant Weak'    : 0,
   };
 
   return {
     killCount        : avgKills,
     deathCount       : avgDeaths,
     totalHours       : avgHours,
-    difficulty       : 'Veteran',       // **PLACEHOLDER** most common difficulty
+    difficulty       : 'Veteran',
 
     avgAcc           : COMMUNITY.avgAccuracyPct,
     avgDist          : COMMUNITY.avgDistanceM,
-    longestKill      : 192,             // **PLACEHOLDER** community avg longest kill (m)
+    longestKill      : 142,             // community avg longest kill (m)  // 20 of 22 players (new-format .log only)
     avgHsPct         : COMMUNITY.avgHeadshotPct,
     avgOverkill      : COMMUNITY.avgOverkillPct,
 
@@ -1986,7 +2053,7 @@ function buildCommunityPreviewStats() {
     anomalyDeaths,
 
     radiationDeaths,
-    fallDeaths       : 28,             // **PLACEHOLDER** community avg fall deaths
+    fallDeaths       : 0,              // 20 of 22 players (new-format .log only)
   };
 }
 
@@ -2019,35 +2086,35 @@ function renderStats(st) {
 
   // Accuracy
   document.getElementById('s-accuracy').textContent = fmt(st.avgAcc, 1) + '%';
-  setBar('bar-accuracy', 'marker-accuracy', st.avgAcc, 100, COMMUNITY.avgAccuracyPct, false);
+  setBar('bar-accuracy', 'marker-accuracy', st.avgAcc, 100, COMMUNITY.avgAccuracyPct, false, fmt(COMMUNITY.avgAccuracyPct, 1) + '%');
 
   // Distance
   const distMax = Math.max(st.avgDist * 1.5, COMMUNITY.avgDistanceM * 2, 50);
   document.getElementById('s-distance').textContent = fmt(st.avgDist, 1) + 'm';
   document.getElementById('s-longest-kill').textContent = fmt(st.longestKill, 1) + 'm';
   document.getElementById('dist-max-label').textContent = Math.round(distMax) + 'm';
-  setBar('bar-distance', 'marker-distance', st.avgDist, distMax, COMMUNITY.avgDistanceM, false);
+  setBar('bar-distance', 'marker-distance', st.avgDist, distMax, COMMUNITY.avgDistanceM, false, fmt(COMMUNITY.avgDistanceM, 1) + 'm');
 
   // Headshots
   document.getElementById('s-headshots').textContent = fmt(st.avgHsPct, 1) + '%';
-  setBar('bar-headshots', 'marker-headshots', st.avgHsPct, 100, COMMUNITY.avgHeadshotPct, false);
+  setBar('bar-headshots', 'marker-headshots', st.avgHsPct, 100, COMMUNITY.avgHeadshotPct, false, fmt(COMMUNITY.avgHeadshotPct, 1) + '%');
 
   // Overkill
   document.getElementById('s-overkill').textContent = fmt(st.avgOverkill, 0) + '%';
   const overkillMax = Math.max(st.avgOverkill * 1.3, COMMUNITY.avgOverkillPct * 2, 100);
-  setBar('bar-overkill', 'marker-overkill', st.avgOverkill, overkillMax, COMMUNITY.avgOverkillPct, true);
+  setBar('bar-overkill', 'marker-overkill', st.avgOverkill, overkillMax, COMMUNITY.avgOverkillPct, true, fmt(COMMUNITY.avgOverkillPct, 0) + '%');
 
   // KDA
   document.getElementById('s-kda').textContent = fmt(st.kd, 2);
   const kdaMax = Math.max(st.kd * 1.5, COMMUNITY.avgKD * 2, 5.0);
   document.getElementById('kda-max-label').textContent = fmt(kdaMax, 1);
-  setBar('bar-kda', 'marker-kda', st.kd, kdaMax, COMMUNITY.avgKD, false);
+  setBar('bar-kda', 'marker-kda', st.kd, kdaMax, COMMUNITY.avgKD, false, fmt(COMMUNITY.avgKD, 2));
 
   // Deaths/hr
   const dphMax = Math.max(st.dph * 1.5, COMMUNITY.avgDeathsPerHour * 3, 10);
   document.getElementById('s-dph').textContent = fmt(st.dph, 1);
   document.getElementById('dph-max-label').textContent = Math.round(dphMax);
-  setBar('bar-dph', 'marker-dph', st.dph, dphMax, COMMUNITY.avgDeathsPerHour, true);
+  setBar('bar-dph', 'marker-dph', st.dph, dphMax, COMMUNITY.avgDeathsPerHour, true, fmt(COMMUNITY.avgDeathsPerHour, 1));
 
   // Saves
   document.getElementById('s-saves').textContent = fmtInt(st.savesTotal);
@@ -2056,7 +2123,34 @@ function renderStats(st) {
   document.getElementById('s-loads-hr').textContent = fmt(st.loadsPerHr, 1);
   const savesMax = Math.max(st.savesPerHr * 1.5, COMMUNITY.avgSavesPerHour * 3, 20);
   document.getElementById('saves-max-label').textContent = Math.round(savesMax);
-  setBar('bar-saves', 'marker-saves', st.savesPerHr, savesMax, COMMUNITY.avgSavesPerHour, true);
+  setBar('bar-saves', 'marker-saves', st.savesPerHr, savesMax, COMMUNITY.avgSavesPerHour, true, fmt(COMMUNITY.avgSavesPerHour, 1));
+
+  // Rage Quit Meter (personal logs only — hidden for community preview)
+  const rageQuitSection = document.getElementById('rage-quit-section');
+  if (!window._isCommunityPreview) {
+    const rq = st.rageQuits;
+    document.getElementById('s-rage-quits').textContent = rq;
+    // Ratio: rage quits / total deaths. Bar is full at 50% ratio (1 rage quit per 2 deaths).
+    const ratio = st.deathCount > 0 ? rq / st.deathCount : 0;
+    const TIERS = [
+      { max: 0,    label: '😌 Not a single rage quit. A true Stalker.',      color: '#4ade80' },
+      { max: 0.10, label: '😐 Barely tilted.',                               color: '#a3e635' },
+      { max: 0.20, label: '😤 Slight tilt detected.',                        color: '#fbbf24' },
+      { max: 0.35, label: '😡 Maybe try a lower difficulty?',                color: '#f97316' },
+      { max: 0.50, label: '🤬 Serious Psi-damage.',                          color: '#f87171' },
+      { max: Infinity, label: '💀 Even the Wishgranter can\'t save you.',    color: '#ef4444' },
+    ];
+    const tier = TIERS.find(t => ratio <= t.max);
+    const verdictEl = document.getElementById('rage-quit-verdict');
+    verdictEl.textContent = tier.label;
+    verdictEl.style.color = tier.color;
+    // Bar fills linearly: 0% ratio = empty, 50% ratio = full
+    const pct = Math.min(100, ratio * 200);
+    document.getElementById('rage-quit-bar').style.width = pct + '%';
+    rageQuitSection.style.display = 'block';
+  } else {
+    rageQuitSection.style.display = 'none';
+  }
 
   // Kill streak & composition
   renderKillStreak(st);
