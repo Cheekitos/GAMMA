@@ -86,6 +86,38 @@
 
   .section-divider { border: none; border-top: 1px solid #374151; margin: 36px 0; }
 
+  /* News Box */
+  .news-box {
+    background: rgba(31, 41, 55, 0.5);
+    border: 1px solid #374151;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+  }
+  .news-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: max-content 1fr; 
+    gap: 12px 24px;
+    align-items: baseline; 
+  }
+  .news-item {
+    display: contents;
+  }
+  .news-date {
+    font-family: monospace;
+    color: #fbbf24;
+    font-weight: bold;
+    white-space: nowrap;
+    font-size: 0.85rem;
+    line-height: 1.2; 
+  }
+  .news-content {
+    color: #d1d5db;
+    font-size: 0.85rem;
+    line-height: 1.2;
+  }
+
   /* Card grid */
   .card-grid {
     display: grid;
@@ -113,13 +145,6 @@
     transform: translateY(-2px);
   }
 
-  .card.disabled {
-    opacity: 0.45;
-    cursor: not-allowed;
-    pointer-events: none;
-  }
-
-  /* Featured card - yellow */
   .card.featured-yellow {
     border-color: rgba(251,191,36,0.4);
     background: linear-gradient(135deg, #1f2937 0%, rgba(251,191,36,0.06) 100%);
@@ -138,7 +163,6 @@
     background: linear-gradient(135deg, rgba(251,191,36,0.08) 0%, rgba(251,191,36,0.12) 100%);
   }
 
-  /* Featured card - blue (Submit Data) */
   .card.featured {
     border-color: rgba(56,189,248,0.4);
     background: linear-gradient(135deg, #1f2937 0%, rgba(56,189,248,0.06) 100%);
@@ -182,13 +206,9 @@
     border-radius: 3px;
   }
   .tag-weapons  { background: rgba(99,102,241,0.18); color: #a5b4fc; border: 1px solid rgba(99,102,241,0.3); }
-  .tag-ammo     { background: rgba(234,179,8,0.15);  color: #fde047; border: 1px solid rgba(234,179,8,0.3); }
   .tag-enemies  { background: rgba(239,68,68,0.15);  color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); }
-  .tag-mod      { background: rgba(74,222,128,0.12); color: #86efac; border: 1px solid rgba(74,222,128,0.3); }
   .tag-community{ background: rgba(56,189,248,0.12); color: #7dd3fc; border: 1px solid rgba(56,189,248,0.3); }
-  .tag-closing  { background: rgba(239,68,68,0.18);  color: #fca5a5; border: 1px solid rgba(239,68,68,0.5); }
 
-  /* Info box */
   .info-box {
     background: #1f2937;
     border: 1px solid #374151;
@@ -200,7 +220,6 @@
     color: #d1d5db;
   }
 
-  /* Footer */
   .footer {
     text-align: center;
     color: #4b5563;
@@ -216,9 +235,11 @@
     .hero-title { font-size: 1.5rem; }
     .card-grid  { grid-template-columns: 1fr; }
     .card-grid.three-col { grid-template-columns: 1fr; }
+    .news-list { grid-template-columns: 1fr; gap: 16px; }
+    .news-item { display: block; }
+    .news-date { display: block; margin-bottom: 4px; }
   }
 
-  /* WIP Badge */
   .wip-badge {
     display: inline-flex;
     align-items: center;
@@ -235,20 +256,14 @@
     align-self: flex-start;
   }
 
-  .wip-dots {
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-  }
-
   .wip-dots span {
     width: 4px;
     height: 4px;
     border-radius: 50%;
     background: #fbbf24;
+    display: inline-block;
     animation: wip-pulse 1.2s ease-in-out infinite;
   }
-
   .wip-dots span:nth-child(2) { animation-delay: 0.2s; }
   .wip-dots span:nth-child(3) { animation-delay: 0.4s; }
 
@@ -280,10 +295,24 @@
     <p class="hero-sub">Home of the Cheeki Numbers Mod Project - Weapon rankings, Guides &amp; More</p>
   </div>
 
-  <!-- Best Weapons Rankings -->
+  <div class="section-label">Recent News</div>
+  <div class="news-box">
+    <ul class="news-list">
+      <li class="news-item">
+        <span class="news-date">April 20</span>
+        <span class="news-content">Improved Leaderboards, 'See my Stats' page now features a rage-quit meter (Thanks <b>@fjoergyn</b> for the idea!)</span>
+      </li>
+      <li class="news-item">
+        <span class="news-date">April 16</span>
+        <span class="news-content">Cheeki Numbers v1.25 released with new features and update video: <a href="https://youtu.be/0cT7BxtG91o" target="_blank" rel="noopener noreferrer">[watch here]</a></span>
+      </li>
+    </ul>
+  </div>
+
+  <hr class="section-divider">
+
   <div class="section-label">Best Weapons Rankings</div>
   <div class="card-grid">
-
     <a class="card featured-yellow" href="GAMMA/stalkers_rankings.html">
       <div class="card-title"><span style="color:#fbbf24;">◆</span> Stalker Rankings</div>
       <p class="card-desc">Best Weapons against NPCs</p>
@@ -292,7 +321,6 @@
         <span class="wip-badge">WIP <span class="wip-dots"><span></span><span></span><span></span></span></span>
       </div>
     </a>
-
     <a class="card" href="GAMMA/mutants_rankings.html">
       <div class="card-title"><span style="color:#fbbf24;">◆</span> Mutant Rankings</div>
       <p class="card-desc">Best Weapons to Hunt Mutants</p>
@@ -301,47 +329,38 @@
         <span class="wip-badge">WIP <span class="wip-dots"><span></span><span></span><span></span></span></span>
       </div>
     </a>
-
   </div>
 
   <hr class="section-divider">
 
-  <!-- Community -->
   <div class="section-label">Community</div>
   <div class="card-grid">
-
     <a class="card featured" href="GAMMA/submit_stats.html">
-      <div class="card-title"><span style="color:#38bdf8;">◈</span> Submit Data &amp; See my Stats</div>
+      <div class="card-title"><span style="color:#38bdf8;">◈</span> Submit &amp; See my Stats</div>
       <p class="card-desc">Submit your logs and see a detailed breakdown of your gameplay!</p>
       <span class="card-tag tag-community">Community</span>
     </a>
-
     <a class="card" href="GAMMA/kills_leaderboard.html">
       <div class="card-title">🏆 Leaderboard</div>
       <p class="card-desc">All the people making this project possible! Next update in <span style="color:#e5e7eb;" id="countdown">--d --h --m --s</span></p>
       <span class="card-tag tag-community">Community</span>
     </a>
-
   </div>
 
   <hr class="section-divider">
 
-  <!-- Guides and Useful Info -->
   <div class="section-label">Guides &amp; Useful Info</div>
   <div class="card-grid three-col">
-
     <a class="card" href="GAMMA/ballistics_guide.html">
       <div class="card-title">Ballistics Guide</div>
       <p class="card-desc">Full breakdown of damage, armor penetration, and all weapon related mechanics in the game</p>
       <span class="card-tag tag-weapons">Guide</span>
     </a>
-
     <a class="card" href="GAMMA/ammo_efficiency.html">
       <div class="card-title">Ammo Efficiency</div>
       <p class="card-desc">All ammo prices and best crafting paths.</p>
       <span class="card-tag tag-weapons">Guide</span>
     </a>
-
     <a class="card" href="GAMMA/drop_chances.html">
       <div class="card-title">Weapons Drop Chances</div>
       <p class="card-desc">Weapon drop chances per faction &amp; rank, for every NPC in the game.</p>
@@ -350,27 +369,21 @@
         <span class="wip-badge">WIP <span class="wip-dots"><span></span><span></span><span></span></span></span>
       </div>
     </a>
-
   </div>
 
   <hr class="section-divider">
 
-  <!-- Cheeki Numbers Mod -->
   <div class="section-label">Cheeki Numbers Mod</div>
   <div class="info-box">
    <span style="color:#fbbf24; font-weight:700; font-size:2em;">→</span> <span style="font-size:2em; font-weight:700;">Get the mod <a href="https://drive.google.com/file/d/1vyVXqy_NrY_n401Pu7XqqpIArb8vWe_K" target="_blank" rel="noopener noreferrer">here</a> to help the project!</span>
-    <!-- Update History -->
+    
     <div style="margin-top:14px; border-top:1px solid #374151; padding-top:12px;">
       <div style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#6b7280; margin-bottom:8px;">Update History</div>
-      <div style="display:flex; flex-direction:column; gap:5px; font-size:0.8rem;">
+      <div style="display:flex; flex-direction:column; gap:5px; font-size:0.75rem;">
         <div style="display:flex; align-items:baseline; gap:8px;">
           <span style="font-family:monospace; color:#fbbf24; font-weight:700; white-space:nowrap; flex-shrink:0;">v1.27</span>
           <span style="color:#6b7280; font-size:0.65rem; flex-shrink:0;">CURRENT</span>
           <span style="color:#d1d5db;">Mixed weapons kills flagged as unreliable and excluded from the logs.</span>
-        </div>
-        <div style="display:flex; align-items:baseline; gap:8px;">
-          <span style="font-family:monospace; color:#9ca3af; font-weight:700; white-space:nowrap; flex-shrink:0;">v1.26</span>
-          <span style="color:#9ca3af;">Bug fixes, better performance and code cleanup. </span>
         </div>
         <div style="display:flex; align-items:baseline; gap:8px;">
           <span style="font-family:monospace; color:#9ca3af; font-weight:700; white-space:nowrap; flex-shrink:0;">v1.25</span>
@@ -382,18 +395,20 @@
         </div>
       </div>
     </div>
-    <div style="border-top:1px solid #374151; margin-top:12px;"></div>
 
-    <div style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#6b7280; margin-top:12px; margin-bottom:4px;">Installation Guide</div>
-    <ul style="margin-top:6px; padding-left:18px; display:flex; flex-direction:column; gap:5px;">
-      <li>Install at the bottom of your modlist. The mod is for <u>Vanilla GAMMA</u> - can't guarantee compatibility with extra addons.</li>
-      <li>Go to Main Menu → Mod Configuration Menu → Cheeki Numbers → Make sure <strong style="color:#f9fafb;">Enable Mod</strong> and <strong style="color:#f9fafb;">Enable File Log</strong> at the top are turned on.</li>
-      <li><u>Everything else can be turned off</u>, the mod will run in the background without displaying anything in-game.</li>
-      <li>Your data will be saved automatically in <code style="background:#111827;padding:1px 5px;border-radius:3px;font-size:0.8rem;">YOUR DRIVE:\YOUR GAMMA FOLDER\overwrite\bin\cheeki_numbers_new.log</code></li>
-      <li>All your gaming sessions will be saved inside this single log file.</li>
-      <li>Submit your log file to help the rankings and appear in the leaderboard in the <b>Submit Data &amp; See my Stats</b> section.</li>
-      <li><u>Rename the file</u> or save it in a different folder after submission, so next round of kills you submit is fresh and new!</li>
-    </ul>
+    <div style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#6b7280; margin-top:20px; margin-bottom:8px;">Installation Guide</div>
+    <div style="background:rgba(156, 163, 175, 0.05); border:1px solid rgba(156, 163, 175, 0.2); border-radius:8px; padding:16px;">
+      <ul style="padding-left:18px; display:flex; flex-direction:column; gap:6px; font-size: 0.85rem;">
+        <li>Install at the bottom of your modlist. The mod is for <u>Vanilla GAMMA</u> - can't guarantee compatibility with extra addons.</li>
+        <li>Go to Main Menu → Mod Configuration Menu → Cheeki Numbers → Make sure <strong style="color:#f9fafb;">Enable Mod</strong> and <strong style="color:#f9fafb;">Enable File Log</strong> at the top are turned on.</li>
+        <li><u>Everything else can be turned off</u>, the mod will run in the background without displaying anything in-game.</li>
+        <li>Your data will be saved automatically in <code style="background:#111827;padding:1px 5px;border-radius:3px;font-size:0.8rem;">YOUR DRIVE:\YOUR GAMMA FOLDER\overwrite\bin\cheeki_numbers_new.log</code></li>
+        <li>All your gaming sessions will be saved inside this single log file.</li>
+        <li>Submit your log file to help the rankings and appear in the leaderboard in the <b>Submit Data &amp; See my Stats</b> section.</li>
+        <li><u>Rename the file</u> or save it in a different folder after submission, so next round of kills you submit is fresh and new!</li>
+      </ul>
+    </div>
+
     <div style="border-top:1px solid #374151; margin-top:12px;"></div>
     <div style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#6b7280; margin-top:12px; margin-bottom:8px;">Important Information</div>
     <div style="margin-top:0; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.35); border-radius:6px; padding:10px 14px; display:flex; gap:10px; align-items:flex-start;">
@@ -441,7 +456,7 @@
 
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
   function getNextSunday() {
     var now = new Date();
     var day = now.getDay();
@@ -456,20 +471,16 @@
     var now = new Date();
     var target = getNextSunday();
     var diff = target - now;
-
     var days    = Math.floor(diff / (1000 * 60 * 60 * 24));
     var hours   = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     var minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
     var seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
     var pad = function(n) { return n < 10 ? '0' + n : n; };
-
     var countdownElement = document.getElementById('countdown');
     if (countdownElement) {
         countdownElement.innerText = days + 'd ' + pad(hours) + 'h ' + pad(minutes) + 'm ' + pad(seconds) + 's';
     }
   }
-
   updateCountdown();
   setInterval(updateCountdown, 1000);
 </script>
