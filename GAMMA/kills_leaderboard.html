@@ -302,6 +302,55 @@
     margin-top: 2px;
   }
 
+  /* ── New-contributor star ── */
+  .new-star {
+    display: inline-flex;
+    align-items: center;
+    cursor: default;
+    font-size: 0.8rem;
+    color: #fbbf24;
+    position: relative;
+    line-height: 1;
+  }
+  .new-star::after {
+    content: 'New contributor!';
+    position: absolute;
+    bottom: calc(100% + 4px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1f2937;
+    color: #f9fafb;
+    border: 1px solid #374151;
+    border-radius: 4px;
+    padding: 3px 10px;
+    font-size: 0.7rem;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+    z-index: 20;
+  }
+  .new-star:hover::after { opacity: 1; }
+
+  /* ── Kill-delta badge (+N) ── */
+  .kills-delta {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #4ade80;
+    font-family: 'SF Mono', 'Consolas', monospace;
+    margin-left: 4px;
+  }
+
+  /* podium delta sits below the main kills number */
+  .podium-kills-delta {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #4ade80;
+    font-family: 'SF Mono', 'Consolas', monospace;
+    display: block;
+    margin-top: 2px;
+  }
+
   @media (max-width: 600px) {
     .podium { grid-template-columns: 1fr; align-items: start; }
     .summary-strip { grid-template-columns: 1fr 1fr; }
@@ -375,8 +424,9 @@
 <script>
 // ============================================================
 const CONTRIBUTORS = [
-  { name: "Archvile",        kills: 95, legacy: 48    },
-  { name: "DeadPain",        kills: 1874, legacy: 1755,   youtube: "https://www.youtube.com/@DeadPain121", twitch: "https://www.twitch.tv/dead_pain" },
+  { name: "Cheekitos",       kills: 4826,  organizer: true },
+  { name: "Archvile",        kills: 95, legacy: 48, newKills: 47    },
+  { name: "DeadPain",        kills: 1874, legacy: 1755, newKills: 119, youtube: "https://www.youtube.com/@DeadPain121", twitch: "https://www.twitch.tv/dead_pain" },
   { name: "Bigdaddy",        kills: 140   },
   { name: "Jeffersonpike",   kills: 164   },
   { name: "Vlad",            kills: 664   },
@@ -403,7 +453,7 @@ const CONTRIBUTORS = [
   { name: "DeadZone",        kills: 363   },
   { name: "Vedmahel",        kills: 272   },
   { name: "Fantasy",         kills: 4306  },
-  { name: "MrTeufel",        kills: 1475, legacy: 1083  },
+  { name: "MrTeufel",        kills: 1475, legacy: 1083, newKills: 392  },
   { name: "BigBoiB",         kills: 2632  },
   { name: "MelonLord",       kills: 103   },
   { name: "Grant63",         kills: 430   },
@@ -416,11 +466,11 @@ const CONTRIBUTORS = [
   { name: "Deuspi",          kills: 555   },
   { name: "Vlad Prznic",     kills: 585   },
   { name: "ChemZ",           kills: 1285  },
-  { name: "Jötunn",          kills: 1236, legacy: 952   },
+  { name: "Jötunn",          kills: 1236, legacy: 952, newKills: 284   },
   { name: "Zlaya",           kills: 1421  },
   { name: "Patrick",         kills: 104   },
   { name: "Dr_ASnight",      kills: 2177  },
-  { name: "RuinsC66",        kills: 1343, legacy: 1308  },
+  { name: "RuinsC66",        kills: 1343, legacy: 1308, newKills: 35  },
   { name: "SnowbyOne",       kills: 723   },
   { name: "Roguek Jeden",    kills: 355   },
   { name: "Eskimos",   	     kills: 983   },
@@ -429,22 +479,21 @@ const CONTRIBUTORS = [
   { name: "Destruccion2264",                  kills: 945  },
   { name: "Mysterious Stalker",               kills: 351  },
   { name: "Drunken Professional",             kills: 2448 },
-  { name: "Cheekitos",       kills: 4826,  organizer: true },
-  { name: "Azrael",                  kills: 36, legacy: 0    },
-  { name: "Boris Borisovich",        kills: 25, legacy: 0    },
-  { name: "dxyhfqfr4mbn",            kills: 262, legacy: 0   },
-  { name: "GreaT_T1t",               kills: 147, legacy: 0   },
-  { name: "Huntress",                kills: 38, legacy: 0    },
-  { name: "Jajolomac",               kills: 57, legacy: 0    },
-  { name: "Nightroad",               kills: 139, legacy: 0   },
-  { name: "Redphoenix",              kills: 9, legacy: 0     },
-  { name: "Blue_maple",              kills: 57, legacy: 0    },
-  { name: "Mose",                    kills: 131, legacy: 0   },
-  { name: "Pappe",                   kills: 149, legacy: 0   },
-  { name: "cardboardmunchersupreme", kills: 101, legacy: 0   },
-  { name: "DwergBerg",               kills: 5, legacy: 0   },
-  { name: "Dyttii",                  kills: 45, legacy: 0   },
-  { name: "Johnny Bigoudi",          kills: 228, legacy: 0   },
+  { name: "Azrael",                  kills: 36, legacy: 0, isNew: true   },
+  { name: "Blue_maple",              kills: 57, legacy: 0, isNew: true   },
+  { name: "Boris Borisovich",        kills: 25, legacy: 0, isNew: true   },
+  { name: "cardboardmunchersupreme", kills: 101, legacy: 0, isNew: true   },
+  { name: "DwergBerg",               kills: 5, legacy: 0, isNew: true   },
+  { name: "dxyhfqfr4mbn",            kills: 262, legacy: 0, isNew: true   },
+  { name: "Dyttii",                  kills: 45, legacy: 0, isNew: true   },
+  { name: "GreaT_T1t",               kills: 147, legacy: 0, isNew: true   },
+  { name: "Huntress",                kills: 38, legacy: 0, isNew: true   },
+  { name: "Jajolomac",               kills: 57, legacy: 0, isNew: true   },
+  { name: "Johnny Bigoudi",          kills: 228, legacy: 0, isNew: true   },
+  { name: "Mose",                    kills: 131, legacy: 0, isNew: true   },
+  { name: "Nightroad",               kills: 139, legacy: 0, isNew: true   },
+  { name: "Pappe",                   kills: 149, legacy: 0, isNew: true   },
+  { name: "Redphoenix",              kills: 9, legacy: 0, isNew: true   },
 ];
 // ============================================================
 
@@ -477,11 +526,14 @@ const CONTRIBUTORS = [
     const entry = sorted[i];
     const rankNum = i + 1;
     if (entry) {
+      const starBadge = entry.isNew ? ' <span class="new-star">★</span>' : '';
+      const deltaBadge = entry.newKills ? `<span class="podium-kills-delta">(+${entry.newKills.toLocaleString()})</span>` : '';
       return `
         <div class="podium-card ${ranks[i]}">
           <span class="podium-medal">${medals[i]}</span>
           <div class="podium-rank">#${rankNum}</div>
-          <div class="podium-name">${entry.name}</div>
+          <div class="podium-name">${entry.name}${starBadge}</div>
+          ${deltaBadge}
           <span class="podium-kills">${entry.kills.toLocaleString()}</span>
           <div class="podium-kills-label">kills</div>
         </div>`;
@@ -524,11 +576,14 @@ const CONTRIBUTORS = [
         socials += '</span>';
       }
 
+      const starBadge = entry.isNew ? ' <span class="new-star">★</span>' : '';
+      const deltaBadge = entry.newKills ? `<span class="kills-delta">(+${entry.newKills.toLocaleString()})</span>` : '';
+
       return `
         <tr>
           <td class="lb-rank-num">${i + 1}</td>
           <td class="lb-name">
-            ${entry.name}
+            ${entry.name}${starBadge}
             ${socials}
           </td>
           <td class="lb-bar-cell">
@@ -536,7 +591,7 @@ const CONTRIBUTORS = [
               <div class="lb-bar-fill" style="width:${pct}%; background:${col};"></div>
             </div>
           </td>
-          <td class="lb-kills" style="color:${col};">${entry.kills.toLocaleString()}</td>
+          <td class="lb-kills" style="color:${col};"><span style="display:flex;align-items:baseline;justify-content:flex-end;gap:5px;">${deltaBadge}${entry.kills.toLocaleString()}</span></td>
         </tr>`;
     } else {
       return `
