@@ -1184,9 +1184,9 @@ const COMMUNITY = {
   avgDeathsPerHour: 1.8,     // deaths per hour of active playtime  // 20 of 22 players (new-format .log only)
   avgOverkillPct:   57.3,    // % - average overkill % across all kills
   avgSavesPerHour:  15.4,    // saves per hour  // 20 of 22 players (new-format .log only)
-  avgKD:            25.8,    // community average kill/death ratio  // 20 of 22 players (new-format .log only)
-  avgStreakAll:     61,      // longest kill streak - all enemies (stalkers + mutants)  // 20 of 22 players (new-format .log only)
-  avgStreakStalker: 47,      // longest kill streak - stalkers only  // 20 of 22 players (new-format .log only)
+  avgKD:            15.8,    // community average kill/death ratio  // 20 of 22 players (new-format .log only)
+  avgStreakAll:     31,      // longest kill streak - all enemies (stalkers + mutants)  // 20 of 22 players (new-format .log only)
+  avgStreakStalker: 27,      // longest kill streak - stalkers only  // 20 of 22 players (new-format .log only)
 
   // Top causes of death for the average player
   topKillers: [
@@ -1354,7 +1354,7 @@ function normalizeMutantName(raw) {
   if (s.includes('poltergeist'))                      return 'Poltergeist';
   if (s.includes('controller'))                       return 'Controller';
   if (s.includes('chimera'))                          return 'Chimera';
-  if (s.includes('gigant'))                           return 'Gigant';
+  if (s.includes('gigant'))                           return 'PseudoGiant';
   if (s.includes('fracture'))                         return 'Fracture';
   if (s.includes('snork'))                            return 'Snork';
   if (s.includes('lurker'))                           return 'Lurker';
