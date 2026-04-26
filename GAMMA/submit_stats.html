@@ -80,7 +80,7 @@
   /* ── Summary strip ── */
   .summary-strip {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 10px;
     margin-bottom: 32px;
   }
@@ -97,6 +97,7 @@
   /* ── Stat cards ── */
   .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 0; }
   .stat-grid.three-col { grid-template-columns: 1fr 1fr 1fr; }
+  .stat-grid.four-col  { grid-template-columns: repeat(4, 1fr); }
   .stat-grid.one-col { grid-template-columns: 1fr; }
 
   .stat-card {
@@ -357,12 +358,14 @@
   @media (max-width: 768px) {
     .weapon-grid { grid-template-columns: repeat(2, 1fr); }
     .weapon-grid-3col { grid-template-columns: repeat(2, 1fr); }
+    .stat-grid.four-col { grid-template-columns: repeat(2, 1fr); }
   }
 
   @media (max-width: 640px) {
     .summary-strip { grid-template-columns: repeat(2, 1fr); }
     .stat-grid { grid-template-columns: 1fr; }
     .stat-grid.three-col { grid-template-columns: 1fr; }
+    .stat-grid.four-col  { grid-template-columns: 1fr; }
     .weapon-grid { grid-template-columns: 1fr; }
     .weapon-grid-3col { grid-template-columns: 1fr; }
     .save-grid { grid-template-columns: 1fr 1fr; }
@@ -596,20 +599,111 @@
   }
 
   /* ── Community preview banner ── */
-  #community-preview-banner {
-    display: none;
-    background: rgba(251,191,36,0.07);
-    border: 1px solid rgba(251,191,36,0.28);
-    border-radius: 6px;
-    padding: 11px 16px;
-    font-size: 0.82rem;
-    color: #fbbf24;
-    margin-bottom: 20px;
+
+
+  /* ── Top 20 toggle (community view only) ── */
+  .top20-toggle-btn {
+    display: flex;
     align-items: center;
     justify-content: center;
-    text-align: center;
-    gap: 10px;
+    gap: 8px;
+    width: 100%;
+    padding: 11px 20px;
+    background: #1f2937;
+    border: 1px dashed #4b5563;
+    border-radius: 8px;
+    color: #f3f4f6;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
   }
+  .top20-toggle-btn:hover {
+    background: rgba(255,255,255,0.05);
+    border-color: #6b7280;
+    border-style: dashed;
+    color: #ffffff;
+  }
+  .top20-toggle-btn[aria-expanded="true"] {
+    border-style: solid;
+    border-color: #4b5563;
+    color: #f3f4f6;
+    border-radius: 8px 8px 0 0;
+  }
+  .top20-chevron {
+    font-size: 1rem;
+    transition: transform 0.25s ease;
+    display: inline-block;
+  }
+  .top20-toggle-btn[aria-expanded="true"] .top20-chevron {
+    transform: rotate(180deg);
+  }
+  .top20-panel {
+    background: #1a2332;
+    border: 1px solid #4b5563;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    padding: 4px 0 8px;
+  }
+  .top20-list {
+    display: flex;
+    flex-direction: column;
+  }
+  .top20-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 18px;
+    border-bottom: 1px solid #1f2937;
+    transition: background 0.15s;
+  }
+  .top20-row:last-child { border-bottom: none; }
+  .top20-row:hover { background: #1f2937; }
+  .top20-rank {
+    font-size: 0.68rem;
+    font-weight: 800;
+    width: 20px;
+    flex-shrink: 0;
+    text-align: right;
+    color: #4b5563;
+  }
+  .top20-rank.gold   { color: #fbbf24; }
+  .top20-rank.silver { color: #9ca3af; }
+  .top20-rank.bronze { color: #b45309; }
+  .top20-cat-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .top20-name {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #d1d5db;
+    flex: 1;
+  }
+  .top20-cat-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #4b5563;
+  }
+  .top20-entries-count {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #6b7280;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .top20-row:nth-child(1) .top20-entries-count { color: #4ade80; }
+  .top20-bar-wrap {
+    padding: 0 18px 5px calc(18px + 20px + 10px + 8px + 10px);
+  }
+  .top20-bar-track { height: 3px; background: #1f2937; border-radius: 2px; overflow: hidden; }
+  .top20-bar { height: 100%; border-radius: 2px; transition: width 0.4s ease; }
 </style>
 </head>
 <body>
@@ -691,33 +785,71 @@
   <div id="submit-banner" style="display:none;border-radius:6px;padding:10px 14px;font-size:0.82rem;margin-bottom:12px;"></div>
 
   <div id="results">
-    <div id="community-preview-banner">
-      <span>This page is a DEMO for now, with mostly placeholder or temporary data. It is not Accurate.<br> When you don't see this message anymore, it means I got enough players logs for the data to be representative of the community.</span>
-    </div>
-    <div id="personal-stats-banner" style="display:none;background:rgba(251,191,36,0.07);border:1px solid rgba(251,191,36,0.28);border-radius:6px;padding:11px 16px;font-size:0.82rem;color:#fbbf24;margin-bottom:20px;text-align:center;">
-      <span>Do not take the community averages and the "Overall performance" chart too seriously for now, I need more data for them to be accurate.<br> When you don't see this message anymore, it means we're good!</span>
-    </div>
+    <div id="community-data-credit" style="display:none;"></div>
+
 
     <div class="section-label">Overview</div>
     <div class="summary-strip">
+
+      <!-- Card 1: Difficulty -->
       <div class="summary-card">
         <span class="summary-val" id="stat-difficulty">--</span>
-        <div class="summary-lbl">Difficulty</div>
+        <div class="summary-lbl" id="stat-difficulty-lbl">Difficulty</div>
+        <!-- Personal-only: community share for the player's difficulty -->
+        <div id="personal-diff-extra" style="display:none;">
+          <div style="border-top:1px solid #374151;margin-top:14px;padding-top:14px;">
+            <div style="font-size:1.05rem;font-weight:800;line-height:1;font-variant-numeric:tabular-nums;" id="personal-diff-comm-pct">--</div>
+            <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:0.09em;color:#6b7280;margin-top:4px;">of the community</div>
+            <div style="font-size:0.68rem;color:#4b5563;margin-top:3px;" id="personal-diff-comm-label">--</div>
+          </div>
+        </div>
       </div>
-      <div class="summary-card">
+
+      <!-- Card 2: Playtime - personal view shows avg hours; community view overrides with full breakdown -->
+      <div class="summary-card" id="playtime-card">
         <span class="summary-val" id="stat-playtime">--</span>
         <div class="summary-lbl">Hours Played</div>
+        <!-- Personal-only extra rows: player session time + community avg -->
+        <div id="personal-playtime-extra" style="display:none;">
+          <div style="border-top:1px solid #374151;margin-top:14px;padding-top:14px;display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;">
+              <span style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.09em;color:#6b7280;">avg gaming session</span>
+              <span style="font-size:1.1rem;font-weight:800;color:#f9fafb;font-variant-numeric:tabular-nums;" id="personal-avg-session">--</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;">
+              <span style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.09em;color:#6b7280;">Community Avg</span>
+              <span style="font-size:1.1rem;font-weight:800;color:#9ca3af;font-variant-numeric:tabular-nums;" id="personal-comm-avg-session">--</span>
+            </div>
+          </div>
+        </div>
+        <!-- Community-only extra rows (hidden in personal view) -->
+        <div id="comm-playtime-extra" style="display:none;">
+          <div style="border-top:1px solid #374151;margin-top:14px;padding-top:14px;display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;">
+              <span style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.09em;color:#6b7280;">Avg Log Playtime</span>
+              <span style="font-size:1.1rem;font-weight:800;color:#f9fafb;font-variant-numeric:tabular-nums;" id="comm-avg-duration">--</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;">
+              <span style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.09em;color:#6b7280;">Avg Gaming Session</span>
+              <span style="font-size:1.1rem;font-weight:800;color:#f9fafb;font-variant-numeric:tabular-nums;" id="comm-avg-session">--</span>
+            </div>
+          </div>
+        </div>
       </div>
+
+      <!-- Card 3: Kills + Deaths merged -->
       <div class="summary-card">
         <span class="summary-val" id="stat-kills">--</span>
         <div class="summary-lbl">Total Kills</div>
+        <div style="border-top:1px solid #374151;margin-top:14px;padding-top:14px;">
+          <span class="summary-val" id="stat-deaths" style="color:#f87171;">--</span>
+          <div class="summary-lbl">Total Deaths</div>
+        </div>
       </div>
-      <div class="summary-card">
-        <span class="summary-val" id="stat-deaths">--</span>
-        <div class="summary-lbl">Total Deaths</div>
-      </div>
+
     </div>
 
+    <div id="overall-performance-section">
     <hr class="section-divider">
 
     <div class="section-label">Overall Performance</div>
@@ -763,6 +895,7 @@
         </div>
       </div>
     </div>
+    </div><!-- /#overall-performance-section -->
 
     <hr class="section-divider">
 
@@ -772,7 +905,7 @@
       <div class="stat-card">
         <div class="stat-card-title"><span class="icon">×</span> K/D Ratio</div>
         <div class="stat-big" id="s-kda">--</div>
-        <div class="stat-sub">Kills per death</div>
+        <div class="stat-sub">(stalkers only)</div>
         <div class="comparison">
           <div class="bar-track">
             <div class="bar-comm-label" id="comm-label-kda">Average</div>
@@ -808,7 +941,7 @@
       <div class="stat-card">
         <div class="stat-card-title"><span class="icon">◆</span> Headshots</div>
         <div class="stat-big" id="s-headshots">--</div>
-        <div class="stat-sub">headshots as % of hits (stalkers only)</div>
+        <div class="stat-sub">(stalkers only)</div>
         <div class="comparison">
           <div class="bar-track">
             <div class="bar-comm-label" id="comm-label-headshots">Average</div>
@@ -833,7 +966,7 @@
       <div class="stat-card">
         <div class="stat-card-title"><span class="icon">▲</span> Overkill Meter</div>
         <div class="stat-big" id="s-overkill">--</div>
-        <div class="stat-sub">Unnecessary extra damage dealt to enemies</div>
+        <div class="stat-sub">Unnecessary extra damage dealt to enemies (the lower the better)</div>
         <div class="comparison">
           <div class="bar-track">
             <div class="bar-comm-label" id="comm-label-overkill">Average</div>
@@ -932,6 +1065,17 @@
     <div class="section-label">Favorite Weapons</div>
     <div id="weapons-breakdown"></div>
 
+    <!-- Community-only: Top 20 overall toggle -->
+    <div id="top20-toggle-wrap" style="display:none;margin-top:14px;">
+      <button id="btn-top20-toggle" class="top20-toggle-btn" aria-expanded="false">
+        <span id="top20-btn-label">Most Used Weapons - Top 20</span>
+        <span id="top20-btn-chevron" class="top20-chevron">▾</span>
+      </button>
+      <div id="top20-panel" class="top20-panel" style="display:none;">
+        <div id="top20-list" class="top20-list"></div>
+      </div>
+    </div>
+
     <hr class="section-divider">
 
     <div class="section-label">Stop Bullying Me</div>
@@ -1011,16 +1155,22 @@
           <div class="save-mini-lbl">Total Saves</div>
         </div>
         <div class="save-mini">
-          <div class="save-mini-val" id="s-loads">--</div>
-          <div class="save-mini-lbl">Total Loads</div>
-        </div>
-        <div class="save-mini">
           <div class="save-mini-val" id="s-saves-hr">--</div>
           <div class="save-mini-lbl">Saves / Hour</div>
         </div>
-        <div class="save-mini">
-          <div class="save-mini-val" id="s-loads-hr">--</div>
-          <div class="save-mini-lbl">Loads / Hour</div>
+        <div class="save-mini" style="position:relative;overflow:hidden;">
+          <div class="save-mini-val" id="s-loads" style="opacity:0.25;">--</div>
+          <div class="save-mini-lbl" style="opacity:0.25;">Total Loads</div>
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(17,24,39,0.55);border-radius:5px;">
+            <span style="font-size:0.6rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:#4b5563;">Coming Soon</span>
+          </div>
+        </div>
+        <div class="save-mini" style="position:relative;overflow:hidden;">
+          <div class="save-mini-val" id="s-loads-hr" style="opacity:0.25;">--</div>
+          <div class="save-mini-lbl" style="opacity:0.25;">Loads / Hour</div>
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(17,24,39,0.55);border-radius:5px;">
+            <span style="font-size:0.6rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:#4b5563;">Coming Soon</span>
+          </div>
         </div>
       </div>
       <div style="margin-top:22px;">
@@ -1041,7 +1191,7 @@
       <!-- ── Rage Quit Meter (personal logs only) ── -->
       <div id="rage-quit-section" style="display:none;margin-top:22px;padding-top:18px;border-top:1px solid #374151;">
         <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#9ca3af;margin-bottom:12px;display:flex;align-items:center;gap:7px;">
-          <span style="font-size:0.9rem;color:#f87171;line-height:1;">🤬</span> Rage Quit Meter
+          <span style="font-size:0.9rem;color:#f87171;line-height:1;">⊗</span> Rage Quit Meter
         </div>
         <div style="display:flex;align-items:center;gap:18px;">
           <div style="text-align:center;flex-shrink:0;">
@@ -1178,32 +1328,116 @@ function startRateLimitCountdown(unlockAt) {
 // COMMUNITY AVERAGES
 // ============================================================
 const COMMUNITY = {
-  avgAccuracyPct:   68.2,    // % - average shot accuracy across all kills
-  avgDistanceM:     23.9,    // metres - average engagement distance
-  avgHeadshotPct:   24.8,    // % - headshots per kill (headshots / kills * 100)  // 20 of 22 players (new-format .log only)
-  avgDeathsPerHour: 1.8,     // deaths per hour of active playtime  // 20 of 22 players (new-format .log only)
-  avgOverkillPct:   57.3,    // % - average overkill % across all kills
-  avgSavesPerHour:  15.4,    // saves per hour  // 20 of 22 players (new-format .log only)
-  avgKD:            15.8,    // community average kill/death ratio  // 20 of 22 players (new-format .log only)
-  avgStreakAll:     31,      // longest kill streak - all enemies (stalkers + mutants)  // 20 of 22 players (new-format .log only)
-  avgStreakStalker: 27,      // longest kill streak - stalkers only  // 20 of 22 players (new-format .log only)
+  // ── DATA DECISIONS (update this block whenever you change the source data) ──────────────────
+  // avgKD / avgNpcKD        → always use MEDIAN of per-player KD ratios (marked "recommended"
+  //                           in the txt report). Never use mean — skewed by outlier players.
+  // killEntries             → total pooled kill count (all formats). Used for the data-credit strip.
+  // newFormatKillEntries /  → new-format players only. Used for community view Total Kills /
+  // newFormatTotalDeaths       Total Deaths cards. Do NOT use avgKills (600) here — that is a
+  //                           per-player average, not a community total.
+  // avgPlayerDurationHours  → numeric hours from avgPlayerDuration. Used directly in
+  //                           buildCommunityPreviewStats() to compute saves/loads totals.
+  //                           Never derive hours from avgKD → avgDeaths → hours.
+  // ────────────────────────────────────────────────────────────────────────────────────────────
+
+  killEntries:      51637,   // total kill entries used for community averages
+  playerCount:      86,      // number of players in the dataset
+
+  medianHTK:        3,       // median hits-to-kill (all difficulties combined)
+  medianTTK:        0.84,    // median time-to-kill in seconds (all difficulties combined)
+
+  avgAccuracyPct:   68.5,    // % - average shot accuracy across all kills
+  avgDistanceM:     25.1,    // metres - average engagement distance
+  avgHeadshotPct:   24.6,    // % - headshots per kill (headshots / kills * 100)  // new-format only
+  avgDeathsPerHour: 4.0,     // deaths per hour of active playtime                // new-format only
+  avgOverkillPct:   58.1,    // % - average overkill % across all kills
+  avgSavesPerHour:  13.7,    // saves per hour                                    // new-format only
+  avgLoadsPerHour:  8.8,     // loads per hour                                    // new-format only
+  avgKD:            12.0,    // community MEDIAN K/D ratio (stalkers + mutants)   // new-format only
+  avgNpcKD:         6.2,     // community MEDIAN K/D ratio (stalkers only)        // new-format only
+  avgStreakAll:     61,       // longest kill streak - all enemies (stalkers + mutants)  // new-format only
+  avgStreakStalker: 46,       // longest kill streak - stalkers only                     // new-format only
+  avgKills:         600,      // avg kills per player (stalkers + mutants)
+  stalkerFrac:      0.76,     // NPC kill fraction (stalker/mutant split)
+  longestKill:      157,      // avg longest kill distance in metres                    // new-format only
+  fallDeaths:       0,        // avg fall deaths per player                             // new-format only
+
+  // New-format totals (used for community view Overview cards)
+  newFormatKillEntries: 5079, // kill entries from new-format players only
+  newFormatTotalDeaths:  439, // total deaths from new-format players only
 
   // Top causes of death for the average player
   topKillers: [
-    { label: '▲ Fire Anomaly',    color: '#f97316', deaths: 9 },   // 0.5 per player
-    { label: '∿ Shock Anomaly',   color: '#60a5fa', deaths: 7 },   // 0.3 per player
-    { label: '☢ Radiation',       color: '#86efac', deaths: 6 },   // 0.3 per player
-    { label: '◈ Chemical Anomaly',color: '#a78bfa', deaths: 8 },   // 0.4 per player
-    { label: '◆ Physical Anomaly',color: '#fbbf24', deaths: 3 },   // 0.1 per player
+    { label: '∿ Shock Anomaly',    color: '#60a5fa', deaths: 16 },
+    { label: '▲ Fire Anomaly',     color: '#f97316', deaths: 14 },
+    { label: '◉ Psi Anomaly',      color: '#c084fc', deaths: 13 },
+    { label: '☢ Radiation',        color: '#86efac', deaths: 11 },
+    { label: '◆ Physical Anomaly', color: '#fbbf24', deaths: 7  },
+    { label: '☣ Chemical Anomaly', color: '#a78bfa', deaths: 2  },
   ],
+  // Raw community totals — new-format players only (33 players)
+  totalNpcDeaths:    249,   // total deaths caused by all NPC factions combined
+  totalMutantDeaths: 110,   // total deaths caused by all mutant types combined
+
+  // Per-faction breakdown for Worst NPCs / Worst Mutants panels
+  npcDeathsBreakdown:    { 'Monolith': 50, 'Military': 43, 'Bandit': 42, 'Renegade': 33, 'Mercenary': 30 },
+  mutantDeathsBreakdown: { 'Boar': 15, 'Pseudogiant': 12, 'Chimera': 12, 'Dog': 11, 'Pseudodog': 11 },
+
   topWeapons: {
-    'Melee':   ['6h4 Bayonet', 'Hunting Knife', 'OTs-4 Combat Knife'],
-    'Pistol':  ['Glock 19 "Hornet"', 'MP-412 Rex', 'FN Five-seveN'],
-    'Shotgun': ['Saiga-12 Tactical', 'KSG-23', 'RAPTR'],
-    'SMG':     ['MP5A3 "Frasier"', 'PP-19-01 Vityaz', 'MP5A3'],
-    'Rifle':   ['AK-101', 'AK-74 "PMC"', 'OTs-14 Groza "Storm"'],
-    'Sniper':  ['SVDS', 'Remington 700 "Magpul PRO"', 'Mosin Nagant'],
+    'Melee':   ['OTs-4 Combat Knife', '6h4 Bayonet', 'Hunting Knife', 'Kukri', 'Monolith Blade', 'M9 Bayonet'],
+    'Pistol':  ['Glock 19 "Hornet"', 'FNX-45', 'MP-412 Rex', 'Desert Eagle', 'Desert Eagle "Steppe Eagle"', 'FNP-45'],
+    'Shotgun': ['Saiga-12 Tactical', 'KSG-23', 'TOZ-34 "Chimera Hunter"', 'M1014', 'Mossberg 590A1', 'RAPTR'],
+    'SMG':     ['MP5A3 "Frasier"', 'PP-19-01 Vityaz', 'SR-2M Veresk', 'OTs-02 Kiparis', 'SR-2M Veresk "Tactical"', 'UMP45'],
+    'Rifle':   ['AK-74 "PMC"', 'BRN-180', 'Thales EF88', 'AK-105 "Shakal"', 'SIG SG 550', 'PKP Pecheneg'],
+    'Sniper':  ['Remington 700 "Magpul PRO"', 'SVDS', 'Mosin Nagant', 'Barrett M98B', 'Mauser 98k Forester mk.1', 'SVD'],
   },
+
+  // Top 20 weapons overall by usage (selective ranking)
+  // Each entry carries its category directly from the community averages report.
+  top20: [
+    { name: 'AK-74 "PMC"',                cat: 'Rifle',   entries: 301 },
+    { name: 'Saiga-12 Tactical',           cat: 'Shotgun', entries: 300 },
+    { name: 'Remington 700 "Magpul PRO"', cat: 'Sniper',  entries: 281 },
+    { name: 'KSG-23',                      cat: 'Shotgun', entries: 281 },
+    { name: 'MP5A3 "Frasier"',             cat: 'SMG',     entries: 259 },
+    { name: 'PP-19-01 Vityaz',             cat: 'SMG',     entries: 230 },
+    { name: 'Glock 19 "Hornet"',           cat: 'Pistol',  entries: 219 },
+    { name: 'FN P90',                      cat: 'SMG',     entries: 195 },
+    { name: 'SR-2M Veresk',               cat: 'SMG',     entries: 191 },
+    { name: 'TOZ-34 "Chimera Hunter"',     cat: 'Shotgun', entries: 185 },
+    { name: 'Karabiner 98k Forester mk.2', cat: 'Sniper',  entries: 171 },
+    { name: 'SVDS',                        cat: 'Sniper',  entries: 163 },
+    { name: 'RPK-16 LMG',                  cat: 'Rifle',   entries: 159 },
+    { name: 'BRN-180',                     cat: 'Rifle',   entries: 157 },
+    { name: 'M1014',                       cat: 'Shotgun', entries: 155 },
+    { name: 'Mosin Nagant',               cat: 'Sniper',  entries: 143 },
+    { name: 'Thales EF88',                 cat: 'Rifle',   entries: 125 },
+    { name: 'OTs-02 Kiparis',             cat: 'SMG',     entries: 123 },
+    { name: 'Mossberg 590A1',             cat: 'Shotgun', entries: 122 },
+    { name: 'SR-2M Veresk "Tactical"',    cat: 'SMG',     entries: 122 },
+  ],
+
+  // Gameplay duration - new-format .log only
+  communityTotalPlaytime:  '355h 06m',   // total combined playtime
+  avgPlayerDuration:       '9h 52m',     // avg per player (display string)
+  avgPlayerDurationHours:  9.87,         // avg per player in hours (used for derived totals in community preview)
+  avgSessionLength:        '1h 01m',     // avg gaming session
+
+  // Avg kills per player broken down by weapon category (baseKills column from txt report).
+  // Used by buildCommunityPreviewStats() to generate ranked weapon kill counts.
+  // Keep in sync with the "Kills by weapon category" table in 01_community_averages.txt.
+  baseKillsByCategory: { Melee: 7, Pistol: 36, Shotgun: 72, SMG: 109, Rifle: 234, Sniper: 69 },
+
+  // Difficulty distribution by UNIQUE PLAYER COUNT.
+  // A player may appear under multiple difficulties, so the sum of `players` can exceed the total
+  // unique player count. Percentages are derived from the player counts alone (kill counts and
+  // kill % are intentionally ignored): pct = (players / sum_of_all_difficulty_players) × 100.
+  // e.g. Novice: 18/(18+20+55) = 18/93 ≈ 19.4%
+  difficultyDistribution: [
+    { label: 'Novice',  players: 18, pct: 19.4, color: '#4ade80' },
+    { label: 'Stalker', players: 20, pct: 21.5, color: '#fbbf24' },
+    { label: 'Veteran', players: 55, pct: 59.1, color: '#f87171' },
+  ],
 };
 // ============================================================
 
@@ -1266,12 +1500,22 @@ function parseLog(text) {
       }
       lastDeathTs = null;
       lastSaveTs  = null;
-      currentSession = { start: null, end: null };
-      sessionData.push(currentSession);
+
+      // Merge into the previous session if the header timestamp is within 5 min
+      // of the last recorded event in that session (same play session, just reloaded).
+      const lastSession = sessionData.length > 0 ? sessionData[sessionData.length - 1] : null;
+      const headerTs = sessionTsMatch ? new Date(sessionTsMatch[1].trim()) : null;
+      const SESSION_MERGE_MS = 5 * 60 * 1000;
+      if (headerTs && !isNaN(headerTs) && lastSession && lastSession.end &&
+          (headerTs - lastSession.end) < SESSION_MERGE_MS) {
+        currentSession = lastSession; // continue the same session
+      } else {
+        currentSession = { start: null, end: null };
+        sessionData.push(currentSession);
+      }
       justStartedSession = true;
       continue;
     }
-
     const parts = line.split('|').map(s => s.trim());
     if (parts.length < 2) continue;
 
@@ -1367,7 +1611,14 @@ function normalizeMutantName(raw) {
   if (s.includes('cat'))                              return 'Cat';
   if (s.includes('dog'))                              return 'Dog';
   if (s.includes('rat'))                              return 'Rat';
-  return null; // unrecognised — will be skipped
+  return null; // unrecognised - will be skipped
+}
+
+function median(arr) {
+  if (!arr.length) return 0;
+  const sorted = [...arr].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 !== 0 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
 }
 
 function computeStats(data) {
@@ -1399,7 +1650,7 @@ function computeStats(data) {
   const avgDist = kills.length ? kills.reduce((s,k) => s + k.distance, 0) / kills.length : 0;
   const longestKill = kills.length ? Math.max(...kills.map(k => k.distance)) : 0;
 
-  // ── Headshots % (stalker/NPC kills only — armor !== 'Mutant') ──
+  // ── Headshots % (stalker/NPC kills only - armor !== 'Mutant') ──
   // Formula: (sum of headshots across all stalker kills / sum of HTK across all stalker kills) * 100
   const stalkerKills = kills.filter(k => k.armor !== 'Mutant');
   const totalHs  = stalkerKills.reduce((s, k) => s + k.headshots, 0);
@@ -1412,8 +1663,8 @@ function computeStats(data) {
   // ── Deaths per hour ──
   const dph = totalHours > 0 ? deaths.length / totalHours : 0;
 
-  // ── K/D Ratio ──
-  const kd = deaths.length > 0 ? kills.length / deaths.length : kills.length;
+  // ── K/D Ratio (stalker kills only - mirrors headshot filter) ──
+  const kd = deaths.length > 0 ? stalkerKills.length / deaths.length : stalkerKills.length;
 
   // ── Saves / Loads per hour ──
   const savesPerHr = totalHours > 0 ? saves.length / totalHours : 0;
@@ -1493,6 +1744,10 @@ function computeStats(data) {
   const stalkerKillCount = kills.filter(k => k.armor !== 'Mutant').length;
   const mutantKillCount  = kills.filter(k => k.armor === 'Mutant').length;
 
+  // ── Median HTK / TTK ──
+  const medianHTK = median(kills.map(k => k.htk));
+  const medianTTK = median(kills.map(k => k.ttk));
+
   return {
     killCount: kills.length,
     deathCount: deaths.length,
@@ -1523,6 +1778,8 @@ function computeStats(data) {
     stalkerKillCount,
     mutantKillCount,
     rageQuits,
+    medianHTK,
+    medianTTK,
   };
 }
 
@@ -1548,9 +1805,9 @@ function computePerformanceScore(st) {
     50 * (st.avgHsPct / comm.avgHeadshotPct)
   ));
 
-  // 4. K/D ratio - higher is better
+  // 4. K/D ratio (stalkers only) - higher is better
   const kdScore = Math.max(0, Math.min(100,
-    50 * (st.kd / comm.avgKD)
+    50 * (st.kd / comm.avgNpcKD)
   ));
 
   const composite = (
@@ -1781,7 +2038,7 @@ function renderEnemyList(elId, deathMap, label) {
 
 function renderAnomalies(st) {
   const el = document.getElementById('anomaly-list');
-  const emojiMap = {Chemical:'◈', Psi:'◉', Shock:'∿', Physical:'◆', Fire:'▲'};
+  const emojiMap = {Chemical:'☣', Psi:'◉', Shock:'∿', Physical:'◆', Fire:'▲'};
   const allTypes = ['Chemical', 'Psi', 'Shock', 'Physical', 'Fire'];
   const entries = allTypes
     .map(type => [type, st.anomalyDeaths[type] || 0])
@@ -1807,16 +2064,19 @@ function renderWeapons(byCat) {
   const catOrder   = ['Melee', 'Pistol', 'Shotgun', 'SMG', 'Rifle', 'Sniper'];
   const catDisplay = { Melee:'Melee', Pistol:'Pistol', Shotgun:'Shotgun', SMG:'SMG', Rifle:'Rifle', Sniper:'Sniper' };
   const catColor   = { Melee:'#fca5a5', Pistol:'#93c5fd', Shotgun:'#fdba74', SMG:'#c4b5fd', Rifle:'#86efac', Sniper:'#fcd34d' };
-  const rankClass  = ['gold','silver','bronze'];
+  const rankClass  = ['gold','silver','bronze','','',''];
   const el = document.getElementById('weapons-breakdown');
+
+  // Show top 6 in community view, top 3 in personal view
+  const topN = window._isCommunityPreview ? 6 : 3;
 
   let html = '<div class="weapon-grid weapon-grid-3col">';
   for (const cat of catOrder) {
     const weapons = byCat[cat] || [];
     const color   = catColor[cat] || '#6b7280';
-    const top3    = weapons.slice(0, 3);
+    const topSlice = weapons.slice(0, topN);
     const total   = weapons.reduce((s, w) => s + w.kills, 0);
-    const maxK    = top3[0]?.kills || 1;
+    const maxK    = topSlice[0]?.kills || 1;
 
     html += `<div class="stat-card wcat-card">
       <div class="wcat-header">
@@ -1826,12 +2086,12 @@ function renderWeapons(byCat) {
       </div>
       <div class="wcat-entries">`;
 
-    if (!top3.length) {
+    if (!topSlice.length) {
       html += '<div class="wcat-nodata">No kills recorded.</div>';
     } else {
-      top3.forEach((w, i) => {
+      topSlice.forEach((w, i) => {
         const barW      = Math.round(w.kills / maxK * 100);
-        const barOpacity = i === 0 ? '1' : i === 1 ? '0.55' : '0.35';
+        const barOpacity = i === 0 ? '1' : i === 1 ? '0.55' : i === 2 ? '0.35' : '0.22';
         html += `<div class="wcat-entry ${i === 0 ? 'first' : ''}">
           <div class="wcat-entry-top">
             <span class="wcat-rank ${rankClass[i]}">${i + 1}</span>
@@ -1851,10 +2111,71 @@ function renderWeapons(byCat) {
   el.innerHTML = html;
 }
 
+function renderTop20() {
+  const catColor = { Melee:'#fca5a5', Pistol:'#93c5fd', Shotgun:'#fdba74', SMG:'#c4b5fd', Rifle:'#86efac', Sniper:'#fcd34d' };
+  const rankClass = ['gold','silver','bronze'];
+
+  const el = document.getElementById('top20-list');
+  if (!el) return;
+
+  const maxEntries = Math.max(...COMMUNITY.top20.map(e => e.entries || 1), 1);
+
+  // Each entry in COMMUNITY.top20 is { name, cat, entries }
+  el.innerHTML = COMMUNITY.top20.map((entry, i) => {
+    const name    = entry.name;
+    const cat     = entry.cat || '';
+    const entries = entry.entries || 0;
+    const color   = catColor[cat] || '#6b7280';
+    const rc      = rankClass[i] || '';
+    const barW    = Math.round(entries / maxEntries * 100);
+    const barOpacity = i === 0 ? '1' : i <= 2 ? '0.75' : i <= 5 ? '0.55' : '0.38';
+    const countColor  = i === 0 ? '#4ade80' : '#6b7280';
+
+    return `<div>
+      <div class="top20-row">
+        <span class="top20-rank ${rc}">${i + 1}</span>
+        <span class="top20-cat-dot" style="background:${color}"></span>
+        <span class="top20-name">${name}</span>
+        <span class="top20-cat-label" style="margin-right:10px;">${cat}</span>
+        <span class="top20-entries-count" style="color:${countColor}">${entries}</span>
+      </div>
+      <div class="top20-bar-wrap">
+        <div class="top20-bar-track">
+          <div class="top20-bar" style="width:${barW}%;background:${color};opacity:${barOpacity}"></div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Wire toggle button (idempotent - safe to call multiple times)
+  const btn   = document.getElementById('btn-top20-toggle');
+  const panel = document.getElementById('top20-panel');
+  const label = document.getElementById('top20-btn-label');
+  if (btn && panel) {
+    // Remove any previously attached listener to avoid duplicates
+    const newBtn = btn.cloneNode(true);
+    btn.parentNode.replaceChild(newBtn, btn);
+    document.getElementById('btn-top20-toggle').addEventListener('click', () => {
+      const open = document.getElementById('top20-panel').style.display !== 'none';
+      document.getElementById('top20-panel').style.display = open ? 'none' : 'block';
+      document.getElementById('btn-top20-toggle').setAttribute('aria-expanded', String(!open));
+      document.getElementById('top20-btn-label').textContent = open ? 'Most Used Weapons - Top 20' : 'Most Used Weapons - Top 20';
+    });
+  }
+}
+
 function renderCommunityKillers() {
   const el = document.getElementById('community-killers-list');
   if (!el) return;
-  el.innerHTML = COMMUNITY.topKillers.map((item, i) => {
+
+  // Build merged list: aggregate NPC + mutant totals, plus each environmental entry
+  const allKillers = [
+    { label: '⚔ Stalkers',  color: '#f87171', deaths: COMMUNITY.totalNpcDeaths    || 0 },
+    { label: '◈ Mutants',   color: '#c084fc', deaths: COMMUNITY.totalMutantDeaths || 0 },
+    ...COMMUNITY.topKillers,
+  ].sort((a, b) => b.deaths - a.deaths).slice(0, 5);
+
+  el.innerHTML = allKillers.map((item, i) => {
     const deathsHtml = item.deaths != null
       ? `<span style="font-size:0.82rem;font-weight:400;color:#6b7280;font-variant-numeric:tabular-nums;">${item.deaths.toLocaleString()} deaths</span>`
       : '';
@@ -1871,7 +2192,7 @@ function renderKillStreak(st) {
   document.getElementById('s-streak-all').textContent     = fmtInt(st.bestStreakAll);
   document.getElementById('s-streak-stalker').textContent = fmtInt(st.bestStreakStalker);
 
-  // Comparison bars — same pattern as setBar() elsewhere on the page
+  // Comparison bars - same pattern as setBar() elsewhere on the page
   const streakAllMax     = Math.max(st.bestStreakAll * 1.4, COMMUNITY.avgStreakAll * 2, 30);
   const streakStalkerMax = Math.max(st.bestStreakStalker * 1.4, COMMUNITY.avgStreakStalker * 2, 20);
 
@@ -1960,32 +2281,31 @@ function renderKillPie(st) {
 }
 
 // ============================================================
-// COMMUNITY PREVIEW — builds a fake stats object from COMMUNITY
+// COMMUNITY PREVIEW - builds a fake stats object from COMMUNITY
 // averages so visitors can see the full stats page without a log.
 // ============================================================
 function buildCommunityPreviewStats() {
   // Derived from COMMUNITY averages + plausible placeholders
-  // (marked with **PLACEHOLDER** below — replace when you have real data)
+  // (marked with **PLACEHOLDER** below - replace when you have real data)
 
-  const avgKills        = 1756;         // community avg total kills
-  const avgDeaths       = Math.round(avgKills / COMMUNITY.avgKD);
-  const avgHours        = +(avgDeaths / COMMUNITY.avgDeathsPerHour).toFixed(1);
+  const avgKills        = COMMUNITY.avgKills;
+  const avgHours        = COMMUNITY.avgPlayerDurationHours;
 
-  const stalkerFrac     = 0.77;         // % of kills that are stalkers
+  const stalkerFrac     = COMMUNITY.stalkerFrac;
   const stalkerKills    = Math.round(avgKills * stalkerFrac);
   const mutantKills     = avgKills - stalkerKills;
 
-  const avgLoadsPerHour = 8.9;          // avg loads/hr  // 20 of 22 players (new-format .log only)
   const avgSavesTotal   = Math.round(COMMUNITY.avgSavesPerHour * avgHours);
-  const avgLoadsTotal   = Math.round(avgLoadsPerHour * avgHours);
+  const avgLoadsTotal   = Math.round(COMMUNITY.avgLoadsPerHour * avgHours);
 
-  // Anomaly deaths — pull straight from COMMUNITY.topKillers
+  // Anomaly deaths - pull straight from COMMUNITY.topKillers
   const anomalyDeaths = { Chemical: 0, Psi: 0, Shock: 0, Physical: 0, Fire: 0 };
   const anomalyMap = {
     'Fire Anomaly':      'Fire',
     'Shock Anomaly':     'Shock',
     'Radiation':         null,           // handled separately as radiationDeaths
     'Chemical Anomaly':  'Chemical',
+    'Psi Anomaly':       'Psi',
     'Physical Anomaly':  'Physical',
   };
   let radiationDeaths = 0;
@@ -1999,47 +2319,40 @@ function buildCommunityPreviewStats() {
     }
   }
 
-  // Weapon kills — fake kill counts that rank correctly
+  // Weapon kills - fake kill counts that rank correctly
   const weaponsByCategory = {};
-  const baseKills = { Melee: 19, Pistol: 119, Shotgun: 209, SMG: 330, Rifle: 665, Sniper: 208 };
+  const baseKills = COMMUNITY.baseKillsByCategory;
+  const killScaleFactors = [1, 0.52, 0.28, 0.18, 0.13, 0.09];
   for (const [cat, names] of Object.entries(COMMUNITY.topWeapons)) {
     weaponsByCategory[cat] = names.map((name, i) => ({
       name,
-      kills: Math.round(baseKills[cat] * (i === 0 ? 1 : i === 1 ? 0.52 : 0.28)),
+      kills: Math.round(baseKills[cat] * (killScaleFactors[i] ?? 0.07)),
     }));
   }
 
-  // Worst NPCs and mutants — avg deaths per player, top 3  // 20 of 22 players (new-format .log only)
-  const npcDeaths = {
-    'Monolith'       : 2,
-    'Renegade'       : 1,
-    'Bandit'         : 1,
-  };
-  const mutantDeaths = {
-    'Chimera'        : 0,
-    'Boar'           : 0,
-    'Gigant Weak'    : 0,
-  };
+  // Worst NPCs and mutants - raw community totals (new-format players only)
+  const npcDeaths    = COMMUNITY.npcDeathsBreakdown    || {};
+  const mutantDeaths = COMMUNITY.mutantDeathsBreakdown || {};
 
   return {
     killCount        : avgKills,
-    deathCount       : avgDeaths,
+    deathCount       : COMMUNITY.newFormatTotalDeaths,
     totalHours       : avgHours,
-    difficulty       : 'Veteran',
+    difficulty       : COMMUNITY.difficultyDistribution.reduce((a, b) => b.players > a.players ? b : a).label,
 
     avgAcc           : COMMUNITY.avgAccuracyPct,
     avgDist          : COMMUNITY.avgDistanceM,
-    longestKill      : 142,             // community avg longest kill (m)  // 20 of 22 players (new-format .log only)
+    longestKill      : COMMUNITY.longestKill,
     avgHsPct         : COMMUNITY.avgHeadshotPct,
     avgOverkill      : COMMUNITY.avgOverkillPct,
 
-    kd               : COMMUNITY.avgKD,
+    kd               : COMMUNITY.avgNpcKD,
     dph              : COMMUNITY.avgDeathsPerHour,
 
     savesTotal       : avgSavesTotal,
     loadsTotal       : avgLoadsTotal,
     savesPerHr       : COMMUNITY.avgSavesPerHour,
-    loadsPerHr       : avgLoadsPerHour,
+    loadsPerHr       : COMMUNITY.avgLoadsPerHour,
 
     bestStreakAll     : COMMUNITY.avgStreakAll,
     bestStreakStalker : COMMUNITY.avgStreakStalker,
@@ -2053,16 +2366,30 @@ function buildCommunityPreviewStats() {
     anomalyDeaths,
 
     radiationDeaths,
-    fallDeaths       : 0,              // 20 of 22 players (new-format .log only)
+    fallDeaths       : COMMUNITY.fallDeaths,
   };
 }
 
 function showCommunityPreview() {
+  // Restore the difficulty card to its original HTML before renderStats runs,
+  // so IDs like #stat-difficulty exist again on repeated calls.
+  if (window._diffCardOrigHTML) {
+    const firstCard = document.querySelector('.summary-strip .summary-card');
+    if (firstCard) firstCard.innerHTML = window._diffCardOrigHTML;
+  }
+
   const st = buildCommunityPreviewStats();
 
+  // Mark community preview as active and update button label
+  window._communityPreviewActive = true;
+  const btn = document.getElementById('btn-community-preview');
+  if (btn) {
+    btn.innerHTML = '<span style="font-size:1rem;">⬅</span> Back to upload';
+  }
+
   // Show banner, hide upload wrapper
-  document.getElementById('community-preview-banner').style.display = 'flex';
   document.getElementById('upload-wrapper').style.display = 'none';
+  document.getElementById('overall-performance-section').style.display = 'none';
 
   // Patch the percentile text for the bell curve to say "community" not "you"
   window._isCommunityPreview = true;
@@ -2074,15 +2401,154 @@ function showCommunityPreview() {
   if (youLabel) youLabel.textContent = 'AVG';
   // Override the bc-percentile-text
   document.getElementById('bc-percentile-text').innerHTML =
-    'The <strong>average STALKER</strong> scores exactly <strong>50</strong> — right in the middle of the community.';
+    'The <strong>average STALKER</strong> scores exactly <strong>50</strong> - right in the middle of the community.';
+
+  // Override Total Kills with new-format community total
+  // (renderStats() sets this from avgKills which is a per-player average — not what we want here)
+  // Note: stat-deaths no longer needs overriding — buildCommunityPreviewStats() now sets
+  // deathCount directly to COMMUNITY.newFormatTotalDeaths, so renderStats() handles it correctly.
+  document.getElementById('stat-kills').textContent  = COMMUNITY.newFormatKillEntries.toLocaleString();
+  // Rename 'Total Kills' → 'Total Community Kills' in community view only
+  const killsCard = document.getElementById('stat-kills').closest('.summary-card');
+  const killsLbl = killsCard ? killsCard.querySelector('.summary-lbl') : null;
+  if (killsLbl) killsLbl.textContent = 'Total Community Kills';
+
+  // Override the Hours Played summary card with full community duration breakdown
+  const playtimeValEl = document.getElementById('stat-playtime');
+  if (playtimeValEl) {
+    // Set the big headline number to hours only (e.g. '355h' from '355h 06m')
+    playtimeValEl.textContent = COMMUNITY.communityTotalPlaytime.split('h')[0] + 'h';
+    const playtimeCard = playtimeValEl.closest('.summary-card');
+    if (playtimeCard) {
+      // Re-label the primary figure
+      const primaryLbl = playtimeCard.querySelector('.summary-lbl');
+      if (primaryLbl) primaryLbl.textContent = 'Total Gameplay Time Submitted';
+    }
+    // Populate and reveal the community-only extra rows
+    const extra = document.getElementById('comm-playtime-extra');
+    const avgDurEl  = document.getElementById('comm-avg-duration');
+    const avgSessEl = document.getElementById('comm-avg-session');
+    if (extra && avgDurEl && avgSessEl) {
+      avgDurEl.textContent  = COMMUNITY.avgPlayerDuration;
+      avgSessEl.textContent = COMMUNITY.avgSessionLength;
+      extra.style.display = 'block';
+    }
+  }
+
+  // Override the Difficulty summary card with a 3-bar difficulty split (player-count based)
+  const diffValEl = document.getElementById('stat-difficulty');
+  if (diffValEl && COMMUNITY.difficultyDistribution) {
+    const card = diffValEl.closest('.summary-card');
+    if (card) {
+      // Save original HTML the first time so we can restore it on re-entry
+      if (!window._diffCardOrigHTML) window._diffCardOrigHTML = card.innerHTML;
+      const dist = COMMUNITY.difficultyDistribution;
+      card.innerHTML = `
+        <div style="font-size:0.62rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#6b7280;margin-bottom:4px;">Difficulty</div>
+        <div style="font-size:0.6rem;color:#4b5563;margin-bottom:10px;">Most Played Difficulty</div>
+        ${dist.map(d => `
+          <div style="margin-bottom:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px;">
+              <span style="font-size:0.72rem;font-weight:600;color:#9ca3af;">${d.label}</span>
+              <span style="font-size:0.72rem;font-weight:800;color:${d.color};">${d.pct}%</span>
+            </div>
+            <div style="height:5px;background:#374151;border-radius:3px;overflow:hidden;">
+              <div style="width:${d.pct}%;height:100%;background:${d.color};border-radius:3px;transition:width 0.6s ease;"></div>
+            </div>
+          </div>
+        `).join('')}
+      `;
+    }
+  }
+}
+
+function toggleCommunityPreview() {
+  if (window._communityPreviewActive) {
+    // Go back to the upload view
+    window._communityPreviewActive = false;
+    document.getElementById('results').style.display = 'none';
+    document.getElementById('upload-wrapper').style.display = '';
+    // Restore the difficulty card so its IDs are available for any subsequent renderStats call
+    if (window._diffCardOrigHTML) {
+      const firstCard = document.querySelector('.summary-strip .summary-card');
+      if (firstCard) firstCard.innerHTML = window._diffCardOrigHTML;
+    }
+    const btn = document.getElementById('btn-community-preview');
+    if (btn) {
+      btn.innerHTML = '<span style="font-size:1rem;">👁</span> See community stats';
+    }
+  } else {
+    showCommunityPreview();
+  }
 }
 
 function renderStats(st) {
   // Overview
   document.getElementById('stat-kills').textContent = fmtInt(st.killCount);
   document.getElementById('stat-deaths').textContent = fmtInt(st.deathCount);
-  document.getElementById('stat-playtime').textContent = fmt(st.totalHours, 1) + 'h';
+  const _ptH = Math.floor(st.totalHours), _ptM = Math.round((st.totalHours - _ptH) * 60);
+  document.getElementById('stat-playtime').textContent = _ptM > 0 ? `${_ptH}h ${_ptM}m` : `${_ptH}h`;
   document.getElementById('stat-difficulty').textContent = st.difficulty || '--';
+
+  if (!window._isCommunityPreview) {
+    // ── Difficulty card: personal view ──
+    // Reset kills label in case the user visited community view first
+    const killsCardReset = document.getElementById('stat-kills')?.closest('.summary-card');
+    const killsLblReset = killsCardReset ? killsCardReset.querySelector('.summary-lbl') : null;
+    if (killsLblReset) killsLblReset.textContent = 'Total Kills';
+    // Rename 'Hours Played' → 'Played' in personal view
+    const playtimeCard = document.getElementById('stat-playtime')?.closest('.summary-card');
+    const playtimeLbl = playtimeCard ? playtimeCard.querySelector('.summary-lbl') : null;
+    if (playtimeLbl) playtimeLbl.textContent = 'Played';
+    // Color the difficulty value and show the community share below it
+    const diffLblEl = document.getElementById('stat-difficulty-lbl');
+    if (diffLblEl) diffLblEl.textContent = 'Most Played Difficulty';
+
+    const statDiffEl = document.getElementById('stat-difficulty');
+    const personalDiffExtra = document.getElementById('personal-diff-extra');
+    if (statDiffEl && COMMUNITY.difficultyDistribution) {
+      const commDiff = COMMUNITY.difficultyDistribution.find(d => d.label === st.difficulty);
+      if (commDiff) {
+        statDiffEl.style.color = commDiff.color;
+        if (personalDiffExtra) {
+          document.getElementById('personal-diff-comm-pct').textContent = commDiff.pct + '%';
+          document.getElementById('personal-diff-comm-pct').style.color = commDiff.color;
+          document.getElementById('personal-diff-comm-label').textContent = 'also play ' + st.difficulty;
+          personalDiffExtra.style.display = 'block';
+        }
+      }
+    }
+
+    // ── Playtime card: personal view ──
+    // Show player avg session + community avg session; hide community-only block
+    const personalPlaytimeExtra = document.getElementById('personal-playtime-extra');
+    const commPlaytimeExtra = document.getElementById('comm-playtime-extra');
+    if (personalPlaytimeExtra) {
+      const avgSessionMin = st.sessions > 0 ? (st.totalHours * 60 / st.sessions) : 0;
+      const fmtSessionTime = (min) => {
+        if (min < 1) return '< 1m';
+        if (min < 60) return Math.round(min) + 'm';
+        const h = Math.floor(min / 60);
+        const m = Math.round(min % 60);
+        return m > 0 ? `${h}h ${m}m` : `${h}h`;
+      };
+      document.getElementById('personal-avg-session').textContent = fmtSessionTime(avgSessionMin);
+      document.getElementById('personal-comm-avg-session').textContent = COMMUNITY.avgSessionLength;
+      personalPlaytimeExtra.style.display = 'block';
+    }
+    if (commPlaytimeExtra) commPlaytimeExtra.style.display = 'none';
+
+  } else {
+    // Community preview - restore label, hide personal extras
+    const diffLblEl = document.getElementById('stat-difficulty-lbl');
+    if (diffLblEl) diffLblEl.textContent = 'Difficulty';
+    const personalDiffExtra = document.getElementById('personal-diff-extra');
+    if (personalDiffExtra) personalDiffExtra.style.display = 'none';
+    const statDiffEl = document.getElementById('stat-difficulty');
+    if (statDiffEl) statDiffEl.style.color = '';
+    const personalPlaytimeExtra = document.getElementById('personal-playtime-extra');
+    if (personalPlaytimeExtra) personalPlaytimeExtra.style.display = 'none';
+  }
 
   // Accuracy
   document.getElementById('s-accuracy').textContent = fmt(st.avgAcc, 1) + '%';
@@ -2106,9 +2572,9 @@ function renderStats(st) {
 
   // KDA
   document.getElementById('s-kda').textContent = fmt(st.kd, 2);
-  const kdaMax = Math.max(st.kd * 1.5, COMMUNITY.avgKD * 2, 5.0);
+  const kdaMax = Math.max(st.kd * 1.5, COMMUNITY.avgNpcKD * 2, 5.0);
   document.getElementById('kda-max-label').textContent = fmt(kdaMax, 1);
-  setBar('bar-kda', 'marker-kda', st.kd, kdaMax, COMMUNITY.avgKD, false, fmt(COMMUNITY.avgKD, 2));
+  setBar('bar-kda', 'marker-kda', st.kd, kdaMax, COMMUNITY.avgNpcKD, false, fmt(COMMUNITY.avgNpcKD, 2));
 
   // Deaths/hr
   const dphMax = Math.max(st.dph * 1.5, COMMUNITY.avgDeathsPerHour * 3, 10);
@@ -2125,7 +2591,7 @@ function renderStats(st) {
   document.getElementById('saves-max-label').textContent = Math.round(savesMax);
   setBar('bar-saves', 'marker-saves', st.savesPerHr, savesMax, COMMUNITY.avgSavesPerHour, true, fmt(COMMUNITY.avgSavesPerHour, 1));
 
-  // Rage Quit Meter (personal logs only — hidden for community preview)
+  // Rage Quit Meter (personal logs only - hidden for community preview)
   const rageQuitSection = document.getElementById('rage-quit-section');
   if (!window._isCommunityPreview) {
     const rq = st.rageQuits;
@@ -2133,12 +2599,12 @@ function renderStats(st) {
     // Ratio: rage quits / total deaths. Bar is full at 50% ratio (1 rage quit per 2 deaths).
     const ratio = st.deathCount > 0 ? rq / st.deathCount : 0;
     const TIERS = [
-      { max: 0,    label: '😌 Not a single rage quit. A true Stalker.',      color: '#4ade80' },
-      { max: 0.10, label: '😐 Barely tilted.',                               color: '#a3e635' },
-      { max: 0.20, label: '😤 Slight tilt detected.',                        color: '#fbbf24' },
-      { max: 0.35, label: '😡 Maybe try a lower difficulty?',                color: '#f97316' },
-      { max: 0.50, label: '🤬 Serious Psi-damage.',                          color: '#f87171' },
-      { max: Infinity, label: '💀 Even the Wishgranter can\'t save you.',    color: '#ef4444' },
+      { max: 0,    label: 'Not a single rage quit. A true Stalker.',      color: '#4ade80' },
+      { max: 0.10, label: 'Barely tilted.',                               color: '#a3e635' },
+      { max: 0.20, label: 'Slight tilt detected.',                        color: '#fbbf24' },
+      { max: 0.35, label: 'Maybe try a lower difficulty?',                color: '#f97316' },
+      { max: 0.50, label: 'Serious Psi-damage.',                          color: '#f87171' },
+      { max: Infinity, label: 'Even the Wishgranter can\'t save you.',    color: '#ef4444' },
     ];
     const tier = TIERS.find(t => ratio <= t.max);
     const verdictEl = document.getElementById('rage-quit-verdict');
@@ -2176,7 +2642,25 @@ function renderStats(st) {
 
   document.getElementById('results').style.display = 'block';
   document.getElementById('upload-wrapper').style.display = 'none';
-  document.getElementById('personal-stats-banner').style.display = window._isCommunityPreview ? 'none' : 'block';
+  document.getElementById('overall-performance-section').style.display = window._isCommunityPreview ? 'none' : '';
+
+  // Show/hide Top 20 toggle - community view only
+  const top20Wrap = document.getElementById('top20-toggle-wrap');
+  if (top20Wrap) {
+    if (window._isCommunityPreview) {
+      top20Wrap.style.display = 'block';
+      // Reset collapsed state on each re-entry
+      const panel = document.getElementById('top20-panel');
+      const btn   = document.getElementById('btn-top20-toggle');
+      const lbl   = document.getElementById('top20-btn-label');
+      if (panel) panel.style.display = 'none';
+      if (btn)   btn.setAttribute('aria-expanded', 'false');
+      if (lbl)   lbl.textContent = 'Most Used Weapons - Top 20';
+      renderTop20();
+    } else {
+      top20Wrap.style.display = 'none';
+    }
+  }
 
   // Redraw bell curve after layout is visible
   requestAnimationFrame(() => renderBellCurve(st));
@@ -2228,7 +2712,7 @@ function processFiles(files, submitToSupabase, nickname) {
       if (lastSubmit && Date.now() - parseInt(lastSubmit) < SUBMIT_COOLDOWN_MS) {
         const unlockAt = parseInt(lastSubmit) + SUBMIT_COOLDOWN_MS;
         startRateLimitCountdown(unlockAt);
-        return; // blocked — don't render stats
+        return; // blocked - don't render stats
       }
       submitRawLog(combined, nickname);
     }
@@ -2255,7 +2739,13 @@ document.addEventListener('DOMContentLoaded', function () {
       if (e.target === this) hideVersionModal();
     });
 
-    document.getElementById('btn-community-preview').addEventListener('click', showCommunityPreview);
+    document.getElementById('btn-community-preview').addEventListener('click', toggleCommunityPreview);
+
+    // Auto-enter community preview when linked from the Community Stats card on the index page
+    // (URL contains #community hash — e.g. submit_stats.html#community)
+    if (window.location.hash === '#community') {
+      toggleCommunityPreview();
+    }
 
     // Enable action buttons once files are staged
     function stageFiles(files) {
@@ -2304,8 +2794,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (resetBtn) resetBtn.addEventListener('click', () => {
       document.getElementById('results').style.display = 'none';
       document.getElementById('upload-wrapper').style.display = '';
-      document.getElementById('community-preview-banner').style.display = 'none';
-      document.getElementById('personal-stats-banner').style.display = 'none';
+      document.getElementById('overall-performance-section').style.display = '';
       readyLabel.style.display = 'none';
       btnSubmit.disabled = true;
       btnOnly.disabled   = true;
@@ -2314,6 +2803,9 @@ document.addEventListener('DOMContentLoaded', function () {
       const ni = document.getElementById('nickname-input');
       if (ni) { ni.value = ''; ni.style.borderColor = ''; }
       input.value = '';
+      window._communityPreviewActive = false;
+      const communityBtn = document.getElementById('btn-community-preview');
+      if (communityBtn) communityBtn.innerHTML = '<span style="font-size:1rem;">👁</span> See community stats';
     });
 
   } catch (err) {
