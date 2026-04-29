@@ -472,7 +472,7 @@ const CONTRIBUTORS = [
   { name: "H7Xboom2",        kills: 51    },
   { name: "Destruccion2264",                  kills: 945  },
   { name: "Mysterious Stalker",               kills: 351  },
-  { name: "Drunken Professional",             kills: 2448 },
+  { name: "Drunken Professional",             kills: 2776, legacy: 2448, newKills: 328 },
   { name: "Azrael",                  kills: 36, legacy: 0   },
   { name: "Blue_maple",              kills: 57, legacy: 0   },
   { name: "Boris Borisovich",        kills: 25, legacy: 0   },
@@ -491,7 +491,7 @@ const CONTRIBUTORS = [
   { name: "Nyarlathotep",            kills: 41, legacy: 0   },
   { name: "Phr33k",                  kills: 125, legacy: 0, newKills: 58   },
   { name: "redkhan37",               kills: 33, legacy: 0   },
-  { name: "FlyingNinja",             kills: 346, legacy: 0   },
+  { name: "FlyingNinja",             kills: 981, legacy: 0, newKills: 635   },
   { name: "Saiga12308",              kills: 377, legacy: 0   },
   { name: "Curitibano",              kills: 69, legacy: 0   },
   { name: "loft777",                 kills: 132, legacy: 0   },
@@ -508,6 +508,9 @@ const CONTRIBUTORS = [
   { name: "milo",                    kills: 327, legacy: 0, isNew: true   },
   { name: "Pappele",                 kills: 495, legacy: 0, newKills: 346, isNew: true   },
   { name: "sugi",                    kills: 49, legacy: 0, isNew: true   },
+  { name: "birukoff",                kills: 356, legacy: 0, isNew: true   },
+  { name: "Krnjajic",                kills: 6, legacy: 0, isNew: true   },
+  { name: "zak",                     kills: 305, legacy: 0, isNew: true   },
 ];
 // ============================================================
 
@@ -541,13 +544,11 @@ const CONTRIBUTORS = [
     const rankNum = i + 1;
     if (entry) {
       const starBadge = entry.isNew ? ' <span class="new-star">★</span>' : '';
-      const deltaBadge = entry.newKills ? `<span class="podium-kills-delta">(+${entry.newKills.toLocaleString()})</span>` : '';
       return `
         <div class="podium-card ${ranks[i]}">
           <span class="podium-medal">${medals[i]}</span>
           <div class="podium-rank">#${rankNum}</div>
           <div class="podium-name">${entry.name}${starBadge}</div>
-          ${deltaBadge}
           <span class="podium-kills">${entry.kills.toLocaleString()}</span>
           <div class="podium-kills-label">kills</div>
         </div>`;
