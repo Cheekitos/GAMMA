@@ -240,6 +240,87 @@
     .news-date { display: block; margin-bottom: 4px; }
   }
 
+  /* Big news entry */
+  .news-item-big {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, rgba(251,191,36,0.07) 0%, rgba(251,191,36,0.03) 100%);
+    border: 1px solid rgba(251,191,36,0.35);
+    border-left: 3px solid #fbbf24;
+    border-radius: 6px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .news-item-big .news-big-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .news-item-big .news-date {
+    font-size: 0.85rem;
+  }
+  .news-big-title {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #f9fafb;
+  }
+  .news-big-badge {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 3px;
+    background: rgba(251,191,36,0.15);
+    color: #fbbf24;
+    border: 1px solid rgba(251,191,36,0.4);
+    white-space: nowrap;
+  }
+  .news-big-body {
+    font-size: 0.82rem;
+    color: #d1d5db;
+    line-height: 1.55;
+  }
+  .news-big-body p {
+    margin-bottom: 8px;
+  }
+  .news-big-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .news-big-col-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #6b7280;
+    margin-bottom: 6px;
+  }
+  .news-big-col ul {
+    padding-left: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    font-size: 0.8rem;
+    color: #d1d5db;
+  }
+  .news-big-alert {
+    background: rgba(251,191,36,0.06);
+    border: 1px solid rgba(251,191,36,0.25);
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    color: #fde68a;
+    line-height: 1.5;
+  }
+  @media (max-width: 600px) {
+    .news-big-cols { grid-template-columns: 1fr; }
+  }
+
   .wip-badge {
     display: inline-flex;
     align-items: center;
@@ -298,10 +379,33 @@
   <div class="section-label">Recent News</div>
   <div class="news-box">
     <ul class="news-list">
-	   <li class="news-item">
-        <span class="news-date">April 25</span>
-        <span class="news-content">Better <b>See my Stats</b> page and expanded Community Stats section with more accurate numbers.</span>
-      </li>
+      <li class="news-item">
+        <span class="news-date">May 8th</span>
+        <span class="news-content">
+          <span style="display:flex; align-items:center; gap:8px;"><strong style="color:#f9fafb;">v1.32 Release:</strong>Update video: <a href="https://youtu.be/fr3cIqzhm5s" target="_blank" rel="noopener noreferrer">[watch here]</a></span><span style="display:block; margin-top:6px;">This is <strong style="color:#fbbf24;">BY FAR</strong> the biggest update of the mod. <u>If you encounter any bugs please contact me</u> at the address below.</span>
+          <div style="margin-top:8px;">
+            <strong style="color:#f9fafb;">The mod now tracks and logs:</strong>
+            <ul style="margin-top:6px; padding-left:18px; display:flex; flex-direction:column; gap:6px; font-size:0.85rem;">
+              <li>Faction Played &amp; Player Name</li>
+              <li>Areas visited and time spent in them</li>
+              <li>Coordinates of every important action (will make heatmaps of activity possible)</li>
+              <li>Artefact Finds &amp; Emissions Survived</li>
+              <li>How long it took you to find tools for the first time (and where you found them)</li>
+			  <li>How long you spend time healing around campfires</li>
+            </ul>
+          </div>
+          <div style="margin-top:8px;">
+            <strong style="color:#f9fafb;">Added new safeties for better data collection:</strong>
+            <ul style="margin-top:6px; padding-left:18px; display:flex; flex-direction:column; gap:6px; font-size:0.85rem;">
+              <li>Kills with perks artefacts on-hit effects are ignored from the logs (so you can use artefacts freely with the mod now)</li>
+              <li>Kills with the help of companions are ignored from the logs (so you can play freely with companions)</li>
+            </ul>
+          </div>
+          <div style="margin-top:8px; background:rgba(251,191,36,0.07); border:1px solid rgba(251,191,36,0.35); border-radius:6px; padding:10px 14px; color:#fde68a; line-height:1.6;">
+            <strong>IMPORTANT -</strong> The mod will create a new, unique log file for each character you play, not everything is merged inside the same file anymore. Update to this new version so you can start logging all the new extra data. The 'See my Stats' and 'Community' page will be updated to support all the new stuff soon (it's a lot so gimme like 2 weeks xD).
+          </div>
+        </span>
+      </li>	  
       <li class="news-item">
         <span class="news-date">April 20</span>
         <span class="news-content">Improved Leaderboards, <b>See my Stats</b> page now features a rage-quit meter (Thanks <b>@fjoergyn</b> for the idea!)</span>
@@ -384,15 +488,15 @@
 
   <div class="section-label">Cheeki Numbers Mod</div>
   <div class="info-box">
-   <span style="color:#fbbf24; font-weight:700; font-size:2em;">→</span> <span style="font-size:2em; font-weight:700;">Get the mod <a href="https://drive.google.com/file/d/1vyVXqy_NrY_n401Pu7XqqpIArb8vWe_K" target="_blank" rel="noopener noreferrer">here</a> to help the project!</span>
+   <span style="color:#fbbf24; font-weight:700; font-size:2em;">→</span> <span style="font-size:2em; font-weight:700;">Get the mod <a href="https://drive.google.com/file/d/10lj1Rroyz_mWOzisy4xP8p9yLIxxLjdg" target="_blank" rel="noopener noreferrer">here</a> to help the project!</span>
     
     <div style="margin-top:14px; border-top:1px solid #374151; padding-top:12px;">
       <div style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#6b7280; margin-bottom:8px;">Update History</div>
       <div style="display:flex; flex-direction:column; gap:5px; font-size:0.75rem;">
         <div style="display:flex; align-items:baseline; gap:8px;">
-          <span style="font-family:monospace; color:#fbbf24; font-weight:700; white-space:nowrap; flex-shrink:0;">v1.27</span>
+          <span style="font-family:monospace; color:#fbbf24; font-weight:700; white-space:nowrap; flex-shrink:0;">v1.32</span>
           <span style="color:#6b7280; font-size:0.65rem; flex-shrink:0;">CURRENT</span>
-          <span style="color:#d1d5db;">Mixed weapons kills flagged as unreliable and excluded from the logs.</span>
+          <span style="color:#d1d5db;">Area tracking, artefact and tool finds, emissions, unique per-character log files and a lot more. Quick overview: <a href="https://youtu.be/fr3cIqzhm5s" target="_blank" rel="noopener noreferrer">[watch here]</a></span>
         </div>
         <div style="display:flex; align-items:baseline; gap:8px;">
           <span style="font-family:monospace; color:#9ca3af; font-weight:700; white-space:nowrap; flex-shrink:0;">v1.25</span>
@@ -408,13 +512,13 @@
     <div style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#6b7280; margin-top:20px; margin-bottom:8px;">Installation Guide</div>
     <div style="background:rgba(156, 163, 175, 0.05); border:1px solid rgba(156, 163, 175, 0.2); border-radius:8px; padding:16px;">
       <ul style="padding-left:18px; display:flex; flex-direction:column; gap:6px; font-size: 0.85rem;">
-        <li>Install at the bottom of your modlist. The mod is for <u>Vanilla GAMMA</u> - can't guarantee compatibility with extra addons.</li>
-        <li>Go to Main Menu → Mod Configuration Menu → Cheeki Numbers → Make sure <strong style="color:#f9fafb;">Enable Mod</strong> and <strong style="color:#f9fafb;">Enable File Log</strong> at the top are turned on.</li>
-        <li><u>Everything else can be turned off</u>, the mod will run in the background without displaying anything in-game.</li>
-        <li>Your data will be saved automatically in <code style="background:#111827;padding:1px 5px;border-radius:3px;font-size:0.8rem;">YOUR DRIVE:\YOUR GAMMA FOLDER\overwrite\bin\cheeki_numbers_new.log</code></li>
-        <li>All your gaming sessions will be saved inside this single log file.</li>
-        <li>Submit your log file to help the rankings and appear in the leaderboard in the <b>Submit Data &amp; See my Stats</b> section.</li>
-        <li><u>Rename the file</u> or save it in a different folder after submission, so next round of kills you submit is fresh and new!</li>
+        <li>Install at the bottom of your modlist. The mod is for <u>Vanilla GAMMA</u> and I can't guarantee compatibility with extra addons.</li>
+        <li>The mod runs in the background without displaying anything in-game by default.</li> 
+		<li>All the display options are opt-in and detailed in Mod Configuration Menu → Cheeki Numbers</li>
+        <li>Your data will be saved automatically in <code style="background:#111827;padding:1px 5px;border-radius:3px;font-size:0.8rem;">YOUR DRIVE:\YOUR GAMMA FOLDER\overwrite\bin\[cheeki_v1.32]_name_faction.log</code></li>
+        <li>All your gaming sessions will be saved inside this single log file, no need to do anything.</li>
+        <li>Submit your log file to help the rankings, community averages, and appear in the leaderboard in the <b>Submit Data &amp; See my Stats</b> section.</li>
+        <li>You can submit the same log file multiple times as you progress the game. One submission max per week.</li>
       </ul>
     </div>
 
@@ -426,7 +530,6 @@
         <strong>If you plan on sending me your data, please:</strong>
         <ul style="margin-top:6px; padding-left:18px; display:flex; flex-direction:column; gap:4px;">
           <li>Do not use mods that modify the vanilla ballistic system (special ammo types, reworked damage and resitances etc...)</li>
-          <li>Do not equip artifacts with on-hit effects</li>
           <li>Do not spawn squads just to mow them down</li>
         </ul>
       </div>
@@ -452,8 +555,8 @@
       <div style="color:#86efac; font-size:0.8rem; line-height:1.6;">
         <ul style="padding-left:18px; display:flex; flex-direction:column; gap:4px;">
           <li><u>You can use companions</u> with the mod (kills that are not 100% yours will be skipped from the logs)</li>
-		  <li>Adding new / extra weapons is fine, as long as the mod <u>doesn't rework</u> the vanilla weapons</li>
-          <li>X-Ray Monolith Engine NextGen is compatible</li>
+		  <li><u>You can use perks artefacts</u> with on-hit effects (kills that use them will be skipped from the logs)</li>
+		  <li>Adding new / extra weapons is fine, as long as the mod you use <u>doesn't rework</u> the vanilla weapons</li>
         </ul>
       </div>
     </div>
