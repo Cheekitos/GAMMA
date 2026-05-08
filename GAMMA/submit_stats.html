@@ -2643,17 +2643,16 @@ function renderKillPie(st) {
 }
 
 // ============================================================
-// COMMUNITY PREVIEW - builds a fake stats object from COMMUNITY
+// COMMUNITY PREVIEW - builds stats object from COMMUNITY
 // averages so visitors can see the full stats page without a log.
 // ============================================================
 function buildCommunityPreviewStats() {
   // Derived from COMMUNITY averages + plausible placeholders
-  // (marked with **PLACEHOLDER** below - replace when you have real data)
 
   const avgKills        = COMMUNITY.avgKills;
   const avgHours        = COMMUNITY.avgPlayerDurationHours;
 
-  // NOTE: Use newFormatKillEntries (not avgKills) as the base for the kills pie chart
+  // newFormatKillEntries (not avgKills) are the base for the kills pie chart
   // and killCount. avgKills is a per-player average and will produce a misleadingly small
   // number in the community view. newFormatKillEntries is the true total across all
   // new-format players and is what drives the Kills Breakdown pie and the kills overview card.
@@ -2759,7 +2758,7 @@ function showCommunityPreview() {
   document.getElementById('upload-wrapper').style.display = 'none';
   document.getElementById('overall-performance-section').style.display = 'none';
 
-  // Patch the percentile text for the bell curve to say "community" not "you"
+  // percentile text for the bell curve to say "community" not "you"
   window._isCommunityPreview = true;
   renderStats(st);
   window._isCommunityPreview = false;
@@ -2772,9 +2771,8 @@ function showCommunityPreview() {
     'The <strong>average STALKER</strong> scores exactly <strong>50</strong> - right in the middle of the community.';
 
   // Override Total Kills with new-format community total
-  // (renderStats() sets this from avgKills which is a per-player average - not what we want here)
-  // Note: stat-deaths no longer needs overriding - buildCommunityPreviewStats() now sets
-  // deathCount directly to COMMUNITY.newFormatTotalDeaths, so renderStats() handles it correctly.
+  // (renderStats() sets this from avgKills which is a per-player average)
+  // buildCommunityPreviewStats() sets deathCount directly to COMMUNITY.newFormatTotalDeaths, so renderStats() handles it correctly.
   document.getElementById('stat-kills').textContent  = COMMUNITY.newFormatKillEntries.toLocaleString();
   // Rename 'Total Kills' → 'Total Community Kills' in community view only
   const killsCard = document.getElementById('stat-kills').closest('.summary-card');
