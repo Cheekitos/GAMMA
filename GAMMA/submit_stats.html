@@ -6,49 +6,50 @@
 <title>My Stats | Cheeki's Mods Archive</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
 
   body {
-    background: #111827;
-    color: #f3f4f6;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    font-size: 14px;
-    line-height: 1.6;
+    background: #111927;
+    color: #d7dde3;
+    font-family: 'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
     min-height: 100vh;
     padding: 20px;
   }
 
-  a { color: #60a5fa; text-decoration: none; transition: color 0.2s; }
-  a:hover { color: #93c5fd; }
+  a { color: #4d8fc9; text-decoration: none; transition: color 0.2s; }
+  a:hover { color: #7bb8e8; }
   .container { max-width: 960px; margin: 0 auto; }
 
   /* ── Header ── */
-  .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; gap: 12px; flex-wrap: wrap; }
-  .site-title { font-size: 1.5rem; font-weight: bold; color: #f3f4f6; text-decoration: none; transition: color 0.2s; }
-  .site-title:hover { color: #fbbf24; }
+  .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; gap: 12px; flex-wrap: wrap; }
+  .site-title { font-size: 0.95rem; font-weight: 700; color: #d7dde3; text-decoration: none; transition: color 0.2s; letter-spacing: 0.03em; }
+  .site-title:hover { color: #c9973a; }
 
   /* ── Breadcrumb ── */
-  .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 0.875rem; margin-bottom: 24px; color: #9ca3af; }
-  .breadcrumb a { color: #60a5fa; }
-  .breadcrumb-sep { color: #9ca3af; }
+  .breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 0.72rem; margin-bottom: 18px; color: #767b82; }
+  .breadcrumb a { color: #4d8fc9; }
+  .breadcrumb-sep { color: #64686e; }
 
   /* ── Hero ── */
-  .hero { text-align: center; padding: 20px 0 28px; }
-  .hero-title { font-size: 2rem; font-weight: bold; color: #fbbf24; margin-bottom: 8px; }
-  .hero-sub { color: #9ca3af; font-size: 0.9rem; max-width: 520px; margin: 0 auto; }
+  .hero { padding: 10px 0 18px; }
+  .hero-title { font-size: 1.2rem; font-weight: 700; color: #c9973a; margin-bottom: 5px; letter-spacing: 0.02em; }
+  .hero-sub { color: #9da3ac; font-size: 0.78rem; max-width: 560px; }
 
   /* ── Section label ── */
-  .section-label { font-size: 0.825rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #fbbf24; border-left: 3px solid #fbbf24; padding-left: 10px; margin-bottom: 16px; }
-  .section-divider { border: none; border-top: 1px solid #374151; margin: 36px 0; }
+  .section-label { font-size: 0.69rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #d0d6de; border-left: 2px solid #c9973a; padding-left: 8px; margin-bottom: 10px; }
+  .section-divider { border: none; border-top: 1px solid #28323e; margin: 22px 0; }
 
   /* ── Upload zone ── */
   #upload-zone {
-    border: 2px dashed #374151;
-    border-radius: 12px;
-    background: #1f2937;
-    padding: 52px 24px;
+    border: 1px dashed #64686e;
+    border-radius: 2px;
+    background: rgba(33, 43, 55, 0.63);
+    padding: 30px 24px;
     text-align: center;
     cursor: pointer;
     transition: border-color 0.2s, background 0.2s;
@@ -57,21 +58,61 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    position: relative;
+  }
+  /* Corner bracket accents */
+  #upload-zone::before {
+    content: '';
+    position: absolute;
+    top: 6px; left: 6px;
+    width: 14px; height: 14px;
+    border-top: 2px solid #c9973a;
+    border-left: 2px solid #c9973a;
+    pointer-events: none;
+    transition: border-color 0.2s;
+  }
+  #upload-zone::after {
+    content: '';
+    position: absolute;
+    bottom: 6px; right: 6px;
+    width: 14px; height: 14px;
+    border-bottom: 2px solid #c9973a;
+    border-right: 2px solid #c9973a;
+    pointer-events: none;
+    transition: border-color 0.2s;
+  }
+  #upload-zone .corner-tr {
+    position: absolute;
+    top: 6px; right: 6px;
+    width: 14px; height: 14px;
+    border-top: 2px solid #c9973a;
+    border-right: 2px solid #c9973a;
+    pointer-events: none;
+    transition: border-color 0.2s;
+  }
+  #upload-zone .corner-bl {
+    position: absolute;
+    bottom: 6px; left: 6px;
+    width: 14px; height: 14px;
+    border-bottom: 2px solid #c9973a;
+    border-left: 2px solid #c9973a;
+    pointer-events: none;
+    transition: border-color 0.2s;
   }
   #upload-zone:hover, #upload-zone.drag-over {
-    border-color: #fbbf24;
-    background: rgba(251,191,36,0.05);
+    border-color: #c9973a;
+    background: rgba(201,151,58,0.04);
   }
-  #upload-zone .upload-icon { font-size: 2.8rem; display: block; margin-bottom: 12px; }
-  #upload-zone .upload-title { font-size: 1.1rem; font-weight: 700; color: #f9fafb; margin-bottom: 6px; }
-  #upload-zone .upload-hint { font-size: 0.8rem; color: #6b7280; }
+  #upload-zone .upload-icon { font-size: 1.6rem; display: block; margin-bottom: 8px; }
+  #upload-zone .upload-title { font-size: 0.88rem; font-weight: 600; color: #e6edf3; margin-bottom: 4px; }
+  #upload-zone .upload-hint { font-size: 0.72rem; color: #767b82; }
   #file-input { display: none; }
 
   .upload-note {
-    font-size: 0.78rem;
-    color: #6b7280;
+    font-size: 0.72rem;
+    color: #767b82;
     text-align: center;
-    margin-bottom: 32px;
+    margin-bottom: 24px;
   }
 
   /* ── Results area ── */
@@ -81,86 +122,87 @@
   .summary-strip {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-bottom: 32px;
+    gap: 6px;
+    margin-bottom: 22px;
   }
   .summary-card {
-    background: #1f2937;
-    border: 1px solid #374151;
-    border-radius: 8px;
-    padding: 16px 14px;
+    background: rgba(33, 43, 55, 0.63);
+    border: 1px solid #28323e;
+    border-top: 2px solid #2a3545;
+    border-radius: 2px;
+    padding: 10px 12px;
     text-align: center;
   }
-  .summary-val { display: block; font-size: 1.6rem; font-weight: 800; color: #fbbf24; font-variant-numeric: tabular-nums; }
-  .summary-lbl { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: #6b7280; margin-top: 2px; }
+  .summary-val { display: block; font-size: 1.2rem; font-weight: 700; color: #c9973a; font-variant-numeric: tabular-nums; font-family: 'IBM Plex Mono', 'Consolas', monospace; }
+  .summary-lbl { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.12em; color: #767b82; margin-top: 2px; }
 
   /* ── Stat cards ── */
-  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 0; }
+  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 0; }
   .stat-grid.three-col { grid-template-columns: 1fr 1fr 1fr; }
   .stat-grid.four-col  { grid-template-columns: repeat(4, 1fr); }
   .stat-grid.one-col { grid-template-columns: 1fr; }
 
   .stat-card {
-    background: #1f2937;
-    border: 1px solid #374151;
-    border-radius: 8px;
-    padding: 18px 20px;
+    background: rgba(33, 43, 55, 0.63);
+    border: 1px solid #28323e;
+    border-radius: 2px;
+    padding: 10px 12px;
     display: flex;
     flex-direction: column;
   }
   .stat-card-title {
-    font-size: 0.72rem;
+    font-size: 0.66rem;
     font-weight: 700;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: #9ca3af;
-    margin-bottom: 10px;
+    color: #9da3ac;
+    margin-bottom: 8px;
     display: flex;
     align-items: center;
-    gap: 7px;
+    gap: 6px;
   }
-  .stat-card-title .icon { font-size: 0.9rem; color: #fbbf24; line-height: 1; }
-  .stat-big { font-size: 2rem; font-weight: 800; color: #f9fafb; line-height: 1; margin-bottom: 4px; }
-  .stat-big.highlight { color: #fbbf24; }
-  .stat-big.green { color: #4ade80; }
-  .stat-big.red { color: #f87171; }
-  .stat-sub { font-size: 0.75rem; color: #6b7280; margin-bottom: 12px; }
+  .stat-card-title .icon { font-size: 0.75rem; color: #c9973a; line-height: 1; }
+  .stat-big { font-size: 1.45rem; font-weight: 700; color: #e6edf3; line-height: 1; margin-bottom: 3px; font-family: 'IBM Plex Mono', 'Consolas', monospace; }
+  .stat-big.highlight { color: #c9973a; }
+  .stat-big.green { color: #4a9a5e; }
+  .stat-big.red { color: #c0484a; }
+  .stat-sub { font-size: 0.68rem; color: #767b82; margin-bottom: 8px; }
 
   /* ── Comparison bar ── */
   .comparison { margin-top: auto; padding-top: 8px; position: relative; padding-bottom: 2px; }
-  .bar-track { height: 6px; border-radius: 3px; overflow: visible; position: relative; margin-bottom: 2px; margin-top: 16px; }
-  .bar-track-inner { height: 100%; border-radius: 3px; overflow: hidden; position: relative; background: #374151; }
-  .bar-gradient-bg { position: absolute; inset: 0; border-radius: 3px; }
-  .bar-mask { position: absolute; top: 0; right: 0; height: 100%; background: #1a2332; border-radius: 0 3px 3px 0; transition: width 0.6s ease; }
+  .bar-track { height: 4px; border-radius: 1px; overflow: visible; position: relative; margin-bottom: 2px; margin-top: 16px; }
+  .bar-track-inner { height: 100%; border-radius: 1px; overflow: hidden; position: relative; background: #3d5068; }
+  .bar-gradient-bg { position: absolute; inset: 0; border-radius: 1px; }
+  .bar-mask { position: absolute; top: 0; right: 0; height: 100%; background: rgba(45, 60, 78, 0.9); border-radius: 0 1px 1px 0; transition: width 0.6s ease; }
   .bar-comm-marker {
     position: absolute;
-    top: -3px;
-    width: 2px;
+    top: -4px;
+    width: 1px;
     height: 12px;
-    background: #e5e7eb;
-    border-radius: 1px;
+    background: #d0d6de;
+    border-radius: 0;
     transform: translateX(-50%);
     z-index: 2;
     pointer-events: none;
   }
   .bar-comm-label {
     position: absolute;
-    top: -19px;
-    font-size: 0.6rem;
-    font-weight: 700;
+    top: -17px;
+    font-size: 0.55rem;
+    font-weight: 600;
     letter-spacing: 0.05em;
-    color: #9ca3af;
+    color: #767b82;
     white-space: nowrap;
     transform: translateX(-50%);
     pointer-events: none;
   }
-  .bar-labels { display: flex; justify-content: space-between; font-size: 0.65rem; color: #4b5563; margin-top: 2px; }
+  .bar-labels { display: flex; justify-content: space-between; font-size: 0.6rem; color: #64686e; margin-top: 2px; }
   .bar-comm-value {
     position: absolute;
     top: 34px;
-    font-size: 0.52rem;
+    font-size: 0.5rem;
     font-weight: 600;
-    color: #b0bac4;
+    color: #9da3ac;
     white-space: nowrap;
     transform: translateX(-50%);
     pointer-events: none;
@@ -168,94 +210,96 @@
   }
 
   /* ── Weapons Grid ── */
-  .weapon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; }
+  .weapon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 6px; }
   .weapon-grid-3col { grid-template-columns: repeat(3, 1fr); }
 
   .wcat-card { padding: 0; overflow: hidden; }
   .wcat-header {
     display: flex;
     align-items: center;
-    gap: 9px;
-    padding: 11px 14px 10px;
-    border-bottom: 1px solid #374151;
+    gap: 8px;
+    padding: 8px 10px 7px;
+    border-bottom: 1px solid #28323e;
   }
   .wcat-accent {
-    width: 3px;
-    height: 14px;
-    border-radius: 2px;
+    width: 2px;
+    height: 11px;
+    border-radius: 0;
     flex-shrink: 0;
   }
   .wcat-title {
-    font-size: 0.7rem;
+    font-size: 0.62rem;
     font-weight: 700;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: #f3f4f6;
+    color: #d7dde3;
     flex: 1;
   }
   .wcat-total {
-    font-size: 0.68rem;
-    color: #4b5563;
+    font-size: 0.6rem;
+    color: #64686e;
     font-variant-numeric: tabular-nums;
   }
-  .wcat-entries { padding: 8px 14px 10px; display: flex; flex-direction: column; gap: 8px; }
-  .wcat-entry { display: flex; flex-direction: column; gap: 3px; }
-  .wcat-entry-top { display: flex; align-items: baseline; gap: 7px; }
+  .wcat-entries { padding: 6px 10px 8px; display: flex; flex-direction: column; gap: 6px; }
+  .wcat-entry { display: flex; flex-direction: column; gap: 2px; }
+  .wcat-entry-top { display: flex; align-items: baseline; gap: 6px; }
   .wcat-rank {
-    font-size: 0.65rem;
-    font-weight: 800;
-    width: 14px;
+    font-size: 0.6rem;
+    font-weight: 700;
+    width: 12px;
     flex-shrink: 0;
     text-align: center;
-    color: #4b5563;
+    color: #64686e;
+    font-family: 'IBM Plex Mono', monospace;
   }
-  .wcat-rank.gold   { color: #fbbf24; }
-  .wcat-rank.silver { color: #9ca3af; }
-  .wcat-rank.bronze { color: #b45309; }
+  .wcat-rank.gold   { color: #c9973a; }
+  .wcat-rank.silver { color: #9da3ac; }
+  .wcat-rank.bronze { color: #7a5e28; }
   .wcat-name {
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: #9ca3af;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #9da3ac;
     flex: 1;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .wcat-entry.first .wcat-name { font-size: 0.9rem; color: #9ca3af; }
+  .wcat-entry.first .wcat-name { font-size: 0.82rem; color: #d7dde3; }
   .wcat-kills {
-    font-size: 0.72rem;
-    font-weight: 700;
-    color: #6b7280;
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: #767b82;
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
+    font-family: 'IBM Plex Mono', monospace;
   }
-  .wcat-entry.first .wcat-kills { color: #4ade80; font-size: 0.78rem; }
-  .wcat-bar-track { height: 3px; background: #1f2937; border-radius: 2px; overflow: hidden; margin-left: 21px; }
-  .wcat-bar { height: 100%; border-radius: 2px; transition: width 0.4s ease; }
-  .wcat-nodata { font-size: 0.78rem; color: #4b5563; font-style: italic; padding: 6px 0; }
+  .wcat-entry.first .wcat-kills { color: #4a9a5e; font-size: 0.72rem; }
+  .wcat-bar-track { height: 2px; background: #151c26; border-radius: 0; overflow: hidden; margin-left: 18px; }
+  .wcat-bar { height: 100%; border-radius: 0; transition: width 0.4s ease; }
+  .wcat-nodata { font-size: 0.72rem; color: #64686e; font-style: italic; padding: 4px 0; }
 
   /* ── Enemy list ── */
-  .enemy-list { display: flex; flex-direction: column; gap: 6px; }
-  .enemy-row { display: flex; align-items: center; justify-content: space-between; padding: 7px 10px; background: #111827; border-radius: 5px; }
-  .enemy-name { font-size: 0.82rem; color: #d1d5db; }
-  .enemy-deaths { font-size: 0.82rem; font-weight: 700; color: #f87171; }
+  .enemy-list { display: flex; flex-direction: column; gap: 4px; }
+  .enemy-row { display: flex; align-items: center; justify-content: space-between; padding: 5px 8px; background: #151c26; border-radius: 1px; border-left: 2px solid #28323e; }
+  .enemy-name { font-size: 0.75rem; color: #d7dde3; }
+  .enemy-deaths { font-size: 0.75rem; font-weight: 700; color: #c0484a; font-family: 'IBM Plex Mono', monospace; }
 
   /* ── Anomaly breakdown ── */
-  .anomaly-list { display: flex; flex-direction: column; gap: 8px; }
-  .anomaly-row { display: flex; flex-direction: column; gap: 3px; }
+  .anomaly-list { display: flex; flex-direction: column; gap: 6px; }
+  .anomaly-row { display: flex; flex-direction: column; gap: 2px; }
   .anomaly-header { display: flex; justify-content: space-between; align-items: center; }
-  .anomaly-name { font-size: 0.82rem; color: #d1d5db; display: flex; align-items: center; gap: 6px; }
-  .anomaly-count { font-size: 0.82rem; font-weight: 700; color: #f87171; }
-  .anomaly-bar-track { height: 4px; background: #374151; border-radius: 2px; overflow: hidden; }
-  .anomaly-bar-fill { height: 100%; border-radius: 2px; }
+  .anomaly-name { font-size: 0.82rem; color: #d7dde3; display: flex; align-items: center; gap: 5px; }
+  .anomaly-count { font-size: 0.75rem; font-weight: 700; color: #c0484a; font-family: 'IBM Plex Mono', monospace; }
+  .anomaly-bar-track { height: 3px; background: #28323e; border-radius: 0; overflow: hidden; }
+  .anomaly-bar-fill { height: 100%; border-radius: 0; }
 
   /* ── Overkill meter ── */
   .overkill-meter { text-align: center; padding: 0; }
   .overkill-circle {
-    width: 83px;
-    height: 83px;
-    border-radius: 50%;
-    border: 5px solid #374151;
+    width: 70px;
+    height: 70px;
+    border-radius: 0;
+    border: 1px solid #64686e;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -263,32 +307,32 @@
     margin: 0 auto;
     position: relative;
   }
-  .overkill-pct { font-size: 1.2rem; font-weight: 800; color: #fbbf24; line-height: 1; }
-  .overkill-label { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.1em; color: #6b7280; }
+  .overkill-pct { font-size: 1.1rem; font-weight: 700; color: #c9973a; line-height: 1; font-family: 'IBM Plex Mono', monospace; }
+  .overkill-label { font-size: 0.5rem; text-transform: uppercase; letter-spacing: 0.1em; color: #767b82; }
 
   /* ── Save scummer ── */
-  .save-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 8px; }
-  .save-mini { background: #111827; border-radius: 5px; padding: 10px; text-align: center; }
-  .save-mini-val { font-size: 1.2rem; font-weight: 800; color: #f9fafb; }
-  .save-mini-lbl { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; color: #6b7280; }
+  .save-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 6px; }
+  .save-mini { background: #151c26; border-radius: 1px; padding: 8px; text-align: center; border: 1px solid #28323e; }
+  .save-mini-val { font-size: 1rem; font-weight: 700; color: #e6edf3; font-family: 'IBM Plex Mono', monospace; }
+  .save-mini-lbl { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.08em; color: #767b82; margin-top: 1px; }
 
   /* ── Special death cards ── */
-  .death-icon { font-size: 2.2rem; margin-bottom: 8px; display: block; text-align: center; }
-  .death-special-val { font-size: 1.8rem; font-weight: 800; color: #f87171; text-align: center; }
-  .death-special-lbl { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: #6b7280; margin-top: 2px; text-align: center; }
+  .death-icon { font-size: 1.4rem; margin-bottom: 4px; display: block; text-align: center; }
+  .death-special-val { font-size: 1.4rem; font-weight: 700; color: #c0484a; text-align: center; font-family: 'IBM Plex Mono', monospace; }
+  .death-special-lbl { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.1em; color: #767b82; margin-top: 2px; text-align: center; }
 
   /* ── No data state ── */
-  .no-data { color: #4b5563; font-style: italic; font-size: 0.82rem; padding: 8px 0; }
+  .no-data { color: #64686e; font-style: italic; font-size: 0.75rem; padding: 6px 0; }
 
   /* ── Error box ── */
   .error-box {
-    background: rgba(239,68,68,0.1);
-    border: 1px solid rgba(239,68,68,0.35);
-    border-radius: 6px;
-    padding: 12px 16px;
-    color: #fca5a5;
-    font-size: 0.85rem;
-    margin-bottom: 16px;
+    background: rgba(192,72,74,0.08);
+    border: 1px solid rgba(192,72,74,0.3);
+    border-radius: 2px;
+    padding: 10px 14px;
+    color: #e08a8c;
+    font-size: 0.8rem;
+    margin-bottom: 12px;
     display: none;
   }
 
@@ -297,25 +341,25 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background: #374151;
-    border: 1px solid #4b5563;
-    border-radius: 6px;
-    color: #d1d5db;
-    font-size: 0.8rem;
+    background: #1d2530;
+    border: 1px solid #64686e;
+    border-radius: 2px;
+    color: #9da3ac;
+    font-size: 0.75rem;
     font-weight: 600;
-    padding: 7px 14px;
+    padding: 5px 12px;
     cursor: pointer;
-    transition: background 0.2s, border-color 0.2s;
-    margin-bottom: 28px;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+    margin-bottom: 20px;
   }
-  .reset-btn:hover { background: #4b5563; border-color: #6b7280; }
+  .reset-btn:hover { background: #28323e; border-color: #767b82; color: #d7dde3; }
 
   /* ── Bell curve ── */
   .bellcurve-card {
-    background: #1f2937;
-    border: 1px solid #374151;
-    border-radius: 8px;
-    padding: 20px 24px 16px;
+    background: rgba(33, 43, 55, 0.63);
+    border: 1px solid #28323e;
+    border-radius: 2px;
+    padding: 14px 16px 12px;
     margin-bottom: 0;
   }
   .bellcurve-header {
@@ -323,37 +367,37 @@
     align-items: flex-start;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 16px;
+    gap: 10px;
+    margin-bottom: 12px;
   }
   .bellcurve-score-block { display: flex; flex-direction: column; gap: 2px; }
-  .bellcurve-score-val { font-size: 2rem; font-weight: 800; color: #fbbf24; line-height: 1; }
-  .bellcurve-score-lbl { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: #6b7280; }
+  .bellcurve-score-val { font-size: 1.5rem; font-weight: 700; color: #c9973a; line-height: 1; font-family: 'IBM Plex Mono', monospace; }
+  .bellcurve-score-lbl { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.1em; color: #767b82; }
   .bellcurve-percentile {
-    font-size: 0.8rem;
-    color: #9ca3af;
+    font-size: 0.75rem;
+    color: #9da3ac;
     text-align: right;
     white-space: nowrap;
   }
-  .bellcurve-percentile strong { color: #fbbf24; }
+  .bellcurve-percentile strong { color: #c9973a; }
   .bellcurve-canvas-wrap { position: relative; width: 100%; overflow: visible; }
-  canvas#bell-canvas { width: 100%; height: 140px; display: block; }
-  .bellcurve-axis { display: flex; justify-content: space-between; font-size: 0.62rem; color: #4b5563; margin-top: 4px; padding: 0 2px; }
+  canvas#bell-canvas { width: 100%; height: 120px; display: block; }
+  .bellcurve-axis { display: flex; justify-content: space-between; font-size: 0.58rem; color: #64686e; margin-top: 4px; padding: 0 2px; }
   .bellcurve-breakdown {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    margin-top: 16px;
-    padding-top: 14px;
-    border-top: 1px solid #374151;
+    gap: 6px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #28323e;
   }
   .bc-factor { text-align: center; }
-  .bc-factor-val { font-size: 1rem; font-weight: 700; color: #f9fafb; }
-  .bc-factor-lbl { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.08em; color: #6b7280; margin-top: 2px; }
-  .bc-factor-contrib { font-size: 0.65rem; color: #4b5563; margin-top: 2px; }
+  .bc-factor-val { font-size: 0.9rem; font-weight: 700; color: #e6edf3; font-family: 'IBM Plex Mono', monospace; }
+  .bc-factor-lbl { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.08em; color: #767b82; margin-top: 2px; }
+  .bc-factor-contrib { font-size: 0.6rem; color: #64686e; margin-top: 1px; }
 
   /* ── Footer ── */
-  .footer { text-align: center; color: #4b5563; font-size: 0.875rem; padding: 32px 0 12px; }
+  .footer { text-align: center; color: #64686e; font-size: 0.75rem; padding: 24px 0 10px; }
 
   @media (max-width: 768px) {
     .weapon-grid { grid-template-columns: repeat(2, 1fr); }
@@ -371,12 +415,12 @@
     .save-grid { grid-template-columns: 1fr 1fr; }
   }
 
-  #submit-banner { border-radius: 6px; padding: 10px 14px; font-size: 0.82rem; }
+  #submit-banner { border-radius: 2px; padding: 8px 12px; font-size: 0.78rem; }
 
   /* ── Upload wrapper ── */
   #upload-wrapper {
     display: flex;
-    gap: 14px;
+    gap: 10px;
     align-items: stretch;
     margin-bottom: 8px;
   }
@@ -388,8 +432,8 @@
   #upload-actions {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    width: 260px;
+    gap: 8px;
+    width: 250px;
     flex-shrink: 0;
   }
 
@@ -398,15 +442,15 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 4px;
+    gap: 3px;
     flex: 1;
-    padding: 16px 18px;
-    border-radius: 12px;
-    border: 2px solid transparent;
+    padding: 10px 14px;
+    border-radius: 2px;
+    border: 1px solid transparent;
     cursor: pointer;
     text-align: left;
     transition: background 0.2s, border-color 0.2s, opacity 0.2s;
-    opacity: 0.38;
+    opacity: 0.35;
     pointer-events: none;
   }
   .action-btn:not([disabled]) {
@@ -415,44 +459,43 @@
   }
   .action-btn-primary {
     background: transparent;
-    border-color: #fbbf24;
+    border-color: #c9973a;
   }
   .action-btn-primary:not([disabled]):hover {
-    background: rgba(251,191,36,0.8);
-    border-color: #fbbf24;
+    background: rgba(201,151,58,0.1);
+    border-color: #c9973a;
   }
-  .action-btn-primary:not([disabled]):hover .action-btn-title,
-  .action-btn-primary:not([disabled]):hover .action-btn-sub {
-    color: #111827;
+  .action-btn-primary:not([disabled]):hover .action-btn-title {
+    color: #c9973a;
   }
   .action-btn-primary:not([disabled]):hover .action-btn-icon {
     filter: none;
   }
   .action-btn-secondary {
-    background: #1f2937;
-    border-color: #374151;
+    background: #1d2530;
+    border-color: #28323e;
   }
   .action-btn-secondary:not([disabled]):hover {
-    background: #374151;
-    border-color: #4b5563;
+    background: #28323e;
+    border-color: #64686e;
   }
   .action-btn-icon {
-    font-size: 1.4rem;
+    font-size: 1rem;
     line-height: 1;
-    margin-bottom: 2px;
+    margin-bottom: 1px;
   }
   .action-btn-title {
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: #f3f4f6;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #d7dde3;
     line-height: 1.3;
   }
   .action-btn-sub {
-    font-size: 0.72rem;
-    color: #6b7280;
+    font-size: 0.68rem;
+    color: #767b82;
     line-height: 1.4;
   }
-  .action-btn-primary .action-btn-sub { color: #9ca3af; }
+  .action-btn-primary .action-btn-sub { color: #9da3ac; }
 
   @media (max-width: 640px) {
     #upload-wrapper { flex-direction: column; }
@@ -464,48 +507,48 @@
   #nickname-wrap {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 4px;
   }
   #nickname-label {
-    font-size: 0.72rem;
+    font-size: 0.63rem;
     font-weight: 700;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: #9ca3af;
+    color: #9da3ac;
   }
   #nickname-input {
-    background: #111827;
-    border: 1px solid #374151;
-    border-radius: 7px;
-    color: #f3f4f6;
-    font-size: 0.9rem;
-    font-weight: 600;
-    padding: 9px 12px;
+    background: #151c26;
+    border: 1px solid #64686e;
+    border-radius: 2px;
+    color: #d7dde3;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 7px 10px;
     outline: none;
     transition: border-color 0.2s;
     width: 100%;
   }
-  #nickname-input::placeholder { color: #4b5563; font-weight: 400; }
-  #nickname-input:focus { border-color: #2563eb; }
+  #nickname-input::placeholder { color: #64686e; font-weight: 400; }
+  #nickname-input:focus { border-color: #3a6fa3; }
   #nickname-hint {
-    font-size: 0.68rem;
-    color: #4b5563;
+    font-size: 0.62rem;
+    color: #64686e;
   }
 
   /* ── Toast notification ── */
   #submit-toast {
     position: fixed;
-    bottom: 32px;
+    bottom: 24px;
     left: 50%;
-    transform: translateX(-50%) translateY(12px);
-    background: #1a2e1a;
-    border: 1px solid #4ade80;
-    color: #4ade80;
-    font-size: 0.88rem;
+    transform: translateX(-50%) translateY(10px);
+    background: #0d1f0e;
+    border: 1px solid #4a9a5e;
+    color: #4a9a5e;
+    font-size: 0.82rem;
     font-weight: 600;
-    padding: 13px 24px;
-    border-radius: 10px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+    padding: 10px 20px;
+    border-radius: 2px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.6);
     opacity: 0;
     transition: opacity 0.3s ease, transform 0.3s ease;
     pointer-events: none;
@@ -518,10 +561,11 @@
   }
 
   /* ── Version error modal ── */
-  #version-modal-overlay {
+  #version-modal-overlay,
+  #outdated-modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.72);
+    background: rgba(0,0,0,0.8);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -530,76 +574,82 @@
     pointer-events: none;
     transition: opacity 0.25s ease;
   }
-  #version-modal-overlay.modal-visible {
+  #version-modal-overlay.modal-visible,
+  #outdated-modal-overlay.modal-visible {
     opacity: 1;
     pointer-events: auto;
   }
   #version-modal {
-    background: #1f2937;
-    border: 1px solid #ef4444;
-    border-radius: 14px;
-    padding: 32px 30px 26px;
+    background: #1d2530;
+    border: 1px solid #922020;
+    border-radius: 2px;
+    padding: 24px 22px 20px;
     max-width: 420px;
     width: 90%;
     text-align: center;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.6);
-    transform: scale(0.95);
+    box-shadow: 0 8px 40px rgba(0,0,0,0.7);
+    transform: scale(0.97);
     transition: transform 0.25s ease;
   }
-  #version-modal-overlay.modal-visible #version-modal {
+  #version-modal-overlay.modal-visible #version-modal,
+  #outdated-modal-overlay.modal-visible #version-modal {
     transform: scale(1);
   }
-  .version-modal-icon { font-size: 2.8rem; display: block; margin-bottom: 14px; }
+  #outdated-modal-overlay #version-modal {
+    border-color: #c9973a;
+  }
+  .version-modal-icon { font-size: 1.8rem; display: block; margin-bottom: 10px; }
   .version-modal-title {
-    font-size: 1.1rem;
-    font-weight: 800;
-    color: #f87171;
-    margin-bottom: 12px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #c0484a;
+    margin-bottom: 10px;
+    letter-spacing: 0.02em;
   }
   .version-modal-msg {
-    font-size: 0.9rem;
-    color: #d1d5db;
+    font-size: 0.82rem;
+    color: #9da3ac;
     line-height: 1.6;
-    margin-bottom: 22px;
+    margin-bottom: 18px;
   }
   .version-modal-close {
-    background: #ef4444;
+    background: #7a2020;
     border: none;
-    border-radius: 8px;
-    color: #fff;
-    font-size: 0.88rem;
+    border-radius: 2px;
+    color: #e6edf3;
+    font-size: 0.8rem;
     font-weight: 700;
-    padding: 10px 28px;
+    padding: 8px 24px;
     cursor: pointer;
+    letter-spacing: 0.05em;
     transition: background 0.2s;
   }
-  .version-modal-close:hover { background: #dc2626; }
+  .version-modal-close:hover { background: #922020; }
 
   /* ── Community preview button ── */
   .community-preview-btn {
     display: inline-flex;
     align-items: center;
-    gap: 7px;
+    gap: 6px;
     background: transparent;
-    border: 1px dashed #4b5563;
-    border-radius: 8px;
-    color: #9ca3af;
-    font-size: 0.82rem;
+    border: 1px dashed #64686e;
+    border-radius: 2px;
+    color: #9da3ac;
+    font-size: 0.75rem;
     font-weight: 600;
-    padding: 9px 22px;
+    padding: 7px 18px;
     cursor: pointer;
     transition: border-color 0.2s, color 0.2s, background 0.2s;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.03em;
   }
   .community-preview-btn:hover {
-    border-color: #fbbf24;
+    border-color: #c9973a;
     border-style: solid;
-    color: #fbbf24;
-    background: rgba(251,191,36,0.05);
+    color: #c9973a;
+    background: rgba(201,151,58,0.04);
   }
 
   /* ── Community preview banner ── */
-
 
   /* ── Top 20 toggle (community view only) ── */
   .top20-toggle-btn {
@@ -608,32 +658,32 @@
     justify-content: center;
     gap: 8px;
     width: 100%;
-    padding: 11px 20px;
-    background: #1f2937;
-    border: 1px dashed #4b5563;
-    border-radius: 8px;
-    color: #f3f4f6;
-    font-size: 0.8rem;
+    padding: 9px 16px;
+    background: #1d2530;
+    border: 1px dashed #64686e;
+    border-radius: 2px;
+    color: #d7dde3;
+    font-size: 0.68rem;
     font-weight: 700;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     cursor: pointer;
     transition: background 0.2s, border-color 0.2s, color 0.2s;
   }
   .top20-toggle-btn:hover {
-    background: rgba(255,255,255,0.05);
-    border-color: #6b7280;
+    background: #28323e;
+    border-color: #767b82;
     border-style: dashed;
-    color: #ffffff;
+    color: #e6edf3;
   }
   .top20-toggle-btn[aria-expanded="true"] {
     border-style: solid;
-    border-color: #4b5563;
-    color: #f3f4f6;
-    border-radius: 8px 8px 0 0;
+    border-color: #64686e;
+    color: #d7dde3;
+    border-radius: 2px 2px 0 0;
   }
   .top20-chevron {
-    font-size: 1rem;
+    font-size: 0.85rem;
     transition: transform 0.25s ease;
     display: inline-block;
   }
@@ -641,11 +691,11 @@
     transform: rotate(180deg);
   }
   .top20-panel {
-    background: #1a2332;
-    border: 1px solid #4b5563;
+    background: #151c26;
+    border: 1px solid #64686e;
     border-top: none;
-    border-radius: 0 0 8px 8px;
-    padding: 4px 0 8px;
+    border-radius: 0 0 2px 2px;
+    padding: 2px 0 6px;
   }
   .top20-list {
     display: flex;
@@ -654,56 +704,58 @@
   .top20-row {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 7px 18px;
-    border-bottom: 1px solid #1f2937;
+    gap: 8px;
+    padding: 5px 14px;
+    border-bottom: 1px solid #1d2530;
     transition: background 0.15s;
   }
   .top20-row:last-child { border-bottom: none; }
-  .top20-row:hover { background: #1f2937; }
+  .top20-row:hover { background: #1d2530; }
   .top20-rank {
-    font-size: 0.68rem;
-    font-weight: 800;
-    width: 20px;
+    font-size: 0.62rem;
+    font-weight: 700;
+    width: 18px;
     flex-shrink: 0;
     text-align: right;
-    color: #4b5563;
+    color: #64686e;
+    font-family: 'IBM Plex Mono', monospace;
   }
-  .top20-rank.gold   { color: #fbbf24; }
-  .top20-rank.silver { color: #9ca3af; }
-  .top20-rank.bronze { color: #b45309; }
+  .top20-rank.gold   { color: #c9973a; }
+  .top20-rank.silver { color: #9da3ac; }
+  .top20-rank.bronze { color: #7a5e28; }
   .top20-cat-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
+    width: 6px;
+    height: 6px;
+    border-radius: 0;
     flex-shrink: 0;
   }
   .top20-name {
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: #d1d5db;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #d7dde3;
     flex: 1;
   }
   .top20-cat-label {
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: #4b5563;
+    color: #64686e;
   }
   .top20-entries-count {
-    font-size: 0.72rem;
+    font-size: 0.68rem;
     font-weight: 700;
-    color: #6b7280;
+    color: #767b82;
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
+    font-family: 'IBM Plex Mono', monospace;
   }
-  .top20-row:nth-child(1) .top20-entries-count { color: #4ade80; }
+  .top20-row:nth-child(1) .top20-entries-count { color: #4a9a5e; }
   .top20-bar-wrap {
-    padding: 0 18px 5px calc(18px + 20px + 10px + 8px + 10px);
+    padding: 0 14px 4px calc(14px + 18px + 8px + 6px + 8px);
   }
-  .top20-bar-track { height: 3px; background: #1f2937; border-radius: 2px; overflow: hidden; }
-  .top20-bar { height: 100%; border-radius: 2px; transition: width 0.4s ease; }
+  .top20-bar-track { height: 2px; background: #1d2530; border-radius: 0; overflow: hidden; }
+  .top20-bar { height: 100%; border-radius: 0; transition: width 0.4s ease; }
 </style>
 </head>
 <body>
@@ -713,8 +765,22 @@
   <div id="version-modal">
     <span class="version-modal-icon">⚠️</span>
     <div class="version-modal-title" id="version-modal-title">Old Log File Detected</div>
-    <p class="version-modal-msg">Only the latest version of the mod is compatible with these new features. You can still send me your log at <a href="mailto:cheekitos@proton.me" style="color:#f87171;">cheekitos@proton.me</a> and I'll process it manually. Update to the latest version to be able to see your stats!</p>
+    <p class="version-modal-msg">Only the latest version of the mod is compatible with these new features. You can still send me your log at <a href="mailto:cheekitos@proton.me" style="color:#c0484a;">cheekitos@proton.me</a> and I'll process it manually. Update to the latest version to be able to see your stats!</p>
     <button class="version-modal-close" id="version-modal-close-btn">Got it</button>
+  </div>
+</div>
+
+<!-- Outdated version warning modal (soft - user can still proceed) -->
+<div id="outdated-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="outdated-modal-title">
+  <div id="version-modal">
+    <span class="version-modal-icon">⚠️</span>
+    <div class="version-modal-title" id="outdated-modal-title"
+         style="color:#c9973a;">The Mod Received an Update!</div>
+    <p class="version-modal-msg">
+      You can still submit your file and see your stats, but please update to the latest version. It unlocks new cool features you won't have access to right now!
+    </p>
+    <button class="version-modal-close" id="outdated-modal-close-btn"
+            style="background:#7a6020;">Got it</button>
   </div>
 </div>
 
@@ -732,20 +798,22 @@
     <span class="breadcrumb-sep">›</span>
     <a href="../index.html">GAMMA Tools</a>
     <span class="breadcrumb-sep">›</span>
-    <span style="color:#d1d5db;">My S.T.A.L.K.E.R. GAMMA Statistics</span>
+    <span style="color:#d7dde3;">My S.T.A.L.K.E.R. GAMMA Statistics</span>
   </nav>
 
   <div class="hero">
     <h1 class="hero-title">My Stats</h1>
-    <p class="hero-sub">Drop your <code style="background:#1f2937;padding:1px 6px;border-radius:3px;font-size:0.85em;">cheeki_numbers.log</code> file(s) below and see your detailed gameplay statistics and how you compare against the community!</p>
+    <p class="hero-sub">Drop your <code style="background:#1d2530;padding:1px 5px;border-radius:2px;font-size:0.85em;font-family:'IBM Plex Mono',monospace;border:1px solid #28323e;">cheeki_numbers.log</code> file(s) below and see your detailed gameplay statistics and how you compare against the community!</p>
   </div>
 
   <div id="upload-wrapper">
     <div id="upload-zone">
+      <span class="corner-tr"></span>
+      <span class="corner-bl"></span>
       <span class="upload-icon">📂</span>
       <div class="upload-title">Drop your log file(s) here</div>
       <div class="upload-hint">or click to browse · multiple files supported</div>
-      <div id="files-ready-label" style="display:none;margin-top:10px;font-size:0.8rem;font-weight:700;color:#4ade80;"></div>
+      <div id="files-ready-label" style="display:none;margin-top:8px;font-size:0.75rem;font-weight:700;color:#4a9a5e;"></div>
     </div>
     <div id="upload-actions">
       <div id="nickname-wrap">
@@ -762,7 +830,7 @@
       </div>
       <button id="btn-submit-check" class="action-btn action-btn-primary" disabled>
         <span class="action-btn-icon">📤</span>
-        <span class="action-btn-title">Submit Data &amp; Check Stats (Once a week Limit)</span>
+        <span class="action-btn-title">Submit Data &amp; Check Stats<br><span style="font-size:0.72rem;font-weight:400;opacity:0.75;">(Once a week Limit)</span></span>
         <span class="action-btn-sub">Share your logs to help build the community rankings!</span>
       </button>
       <button id="btn-check-only" class="action-btn action-btn-secondary" disabled>
@@ -778,7 +846,7 @@
     <button id="btn-community-preview" class="community-preview-btn">
       <span style="font-size:1rem;">👁</span> See community stats
     </button>
-    <div style="margin-top:6px;font-size:0.72rem;color:#4b5563;">No log file needed · Community Averages</div>
+    <div style="margin-top:5px;font-size:0.68rem;color:#64686e;">No log file needed · Community Averages</div>
   </div>
 
   <div class="error-box" id="error-box"></div>
@@ -797,10 +865,10 @@
         <div class="summary-lbl" id="stat-difficulty-lbl">Difficulty</div>
         <!-- Personal-only: community share for the player's difficulty -->
         <div id="personal-diff-extra" style="display:none;">
-          <div style="border-top:1px solid #374151;margin-top:14px;padding-top:14px;">
-            <div style="font-size:1.05rem;font-weight:800;line-height:1;font-variant-numeric:tabular-nums;" id="personal-diff-comm-pct">--</div>
-            <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:0.09em;color:#6b7280;margin-top:4px;">of the community</div>
-            <div style="font-size:0.68rem;color:#4b5563;margin-top:3px;" id="personal-diff-comm-label">--</div>
+          <div style="border-top:1px solid #28323e;margin-top:10px;padding-top:10px;">
+            <div style="font-size:0.95rem;font-weight:700;line-height:1;font-variant-numeric:tabular-nums;font-family:'IBM Plex Mono',monospace;" id="personal-diff-comm-pct">--</div>
+            <div style="font-size:0.58rem;text-transform:uppercase;letter-spacing:0.09em;color:#767b82;margin-top:3px;">of the community</div>
+            <div style="font-size:0.62rem;color:#64686e;margin-top:2px;" id="personal-diff-comm-label">--</div>
           </div>
         </div>
       </div>
@@ -811,27 +879,27 @@
         <div class="summary-lbl">Hours Played</div>
         <!-- Personal-only extra rows: player session time + community avg -->
         <div id="personal-playtime-extra" style="display:none;">
-          <div style="border-top:1px solid #374151;margin-top:14px;padding-top:14px;display:flex;flex-direction:column;gap:10px;">
+          <div style="border-top:1px solid #28323e;margin-top:10px;padding-top:10px;display:flex;flex-direction:column;gap:7px;">
             <div style="display:flex;justify-content:space-between;align-items:baseline;">
-              <span style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.09em;color:#6b7280;">avg gaming session</span>
-              <span style="font-size:1.1rem;font-weight:800;color:#f9fafb;font-variant-numeric:tabular-nums;" id="personal-avg-session">--</span>
+              <span style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.09em;color:#767b82;">avg gaming session</span>
+              <span style="font-size:0.9rem;font-weight:700;color:#e6edf3;font-variant-numeric:tabular-nums;font-family:'IBM Plex Mono',monospace;" id="personal-avg-session">--</span>
             </div>
             <div style="display:flex;justify-content:space-between;align-items:baseline;">
-              <span style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.09em;color:#6b7280;">Community Avg</span>
-              <span style="font-size:1.1rem;font-weight:800;color:#9ca3af;font-variant-numeric:tabular-nums;" id="personal-comm-avg-session">--</span>
+              <span style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.09em;color:#767b82;">Community Avg</span>
+              <span style="font-size:0.9rem;font-weight:700;color:#9da3ac;font-variant-numeric:tabular-nums;font-family:'IBM Plex Mono',monospace;" id="personal-comm-avg-session">--</span>
             </div>
           </div>
         </div>
         <!-- Community-only extra rows (hidden in personal view) -->
         <div id="comm-playtime-extra" style="display:none;">
-          <div style="border-top:1px solid #374151;margin-top:14px;padding-top:14px;display:flex;flex-direction:column;gap:10px;">
+          <div style="border-top:1px solid #28323e;margin-top:10px;padding-top:10px;display:flex;flex-direction:column;gap:7px;">
             <div style="display:flex;justify-content:space-between;align-items:baseline;">
-              <span style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.09em;color:#6b7280;">Avg Log Playtime</span>
-              <span style="font-size:1.1rem;font-weight:800;color:#f9fafb;font-variant-numeric:tabular-nums;" id="comm-avg-duration">--</span>
+              <span style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.09em;color:#767b82;">Avg Log Playtime</span>
+              <span style="font-size:0.9rem;font-weight:700;color:#e6edf3;font-variant-numeric:tabular-nums;font-family:'IBM Plex Mono',monospace;" id="comm-avg-duration">--</span>
             </div>
             <div style="display:flex;justify-content:space-between;align-items:baseline;">
-              <span style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.09em;color:#6b7280;">Avg Gaming Session</span>
-              <span style="font-size:1.1rem;font-weight:800;color:#f9fafb;font-variant-numeric:tabular-nums;" id="comm-avg-session">--</span>
+              <span style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.09em;color:#767b82;">Avg Gaming Session</span>
+              <span style="font-size:0.9rem;font-weight:700;color:#e6edf3;font-variant-numeric:tabular-nums;font-family:'IBM Plex Mono',monospace;" id="comm-avg-session">--</span>
             </div>
           </div>
         </div>
@@ -841,12 +909,62 @@
       <div class="summary-card">
         <span class="summary-val" id="stat-kills">--</span>
         <div class="summary-lbl">Total Kills</div>
-        <div style="border-top:1px solid #374151;margin-top:14px;padding-top:14px;">
-          <span class="summary-val" id="stat-deaths" style="color:#f87171;">--</span>
+        <div style="border-top:1px solid #28323e;margin-top:10px;padding-top:10px;">
+          <span class="summary-val" id="stat-deaths" style="color:#c0484a;">--</span>
           <div class="summary-lbl">Total Deaths</div>
         </div>
       </div>
 
+    </div>
+
+    <!-- Community-only: Faction & Starting Area coming soon card -->
+    <div id="overview-faction-coming-soon" style="display:none;margin-top:-16px;">
+      <div style="position:relative;overflow:hidden;background:rgba(33,43,55,0.63);border:1px solid #28323e;border-radius:2px;padding:18px 24px;">
+        <!-- Blurred fake content behind the overlay -->
+        <div style="filter:blur(5px);pointer-events:none;user-select:none;opacity:0.18;display:flex;gap:24px;align-items:center;">
+          <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+            <div style="font-size:0.62rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#9da3ac;margin-bottom:6px;">Favorite Faction</div>
+            <div style="display:flex;gap:6px;">
+              <div style="flex:3;background:#151c26;border-radius:1px;padding:7px 10px;border:1px solid #28323e;border-left:2px solid #c9973a;">
+                <div style="font-size:0.9rem;font-weight:700;color:#c9973a;font-family:'IBM Plex Mono',monospace;">Loners</div>
+                <div style="font-size:0.58rem;color:#767b82;margin-top:2px;">42% of stalkers</div>
+              </div>
+              <div style="flex:2;background:#151c26;border-radius:1px;padding:7px 10px;border:1px solid #28323e;">
+                <div style="font-size:0.9rem;font-weight:700;color:#9da3ac;font-family:'IBM Plex Mono',monospace;">UNISG</div>
+                <div style="font-size:0.58rem;color:#767b82;margin-top:2px;">18%</div>
+              </div>
+              <div style="flex:2;background:#151c26;border-radius:1px;padding:7px 10px;border:1px solid #28323e;">
+                <div style="font-size:0.9rem;font-weight:700;color:#9da3ac;font-family:'IBM Plex Mono',monospace;">Freedom</div>
+                <div style="font-size:0.58rem;color:#767b82;margin-top:2px;">15%</div>
+              </div>
+            </div>
+          </div>
+          <div style="width:1px;background:#28323e;align-self:stretch;flex-shrink:0;"></div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+            <div style="font-size:0.62rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#9da3ac;margin-bottom:6px;">Starting Area</div>
+            <div style="display:flex;gap:6px;">
+              <div style="flex:3;background:#151c26;border-radius:1px;padding:7px 10px;border:1px solid #28323e;border-left:2px solid #4d8fc9;">
+                <div style="font-size:0.9rem;font-weight:700;color:#4d8fc9;font-family:'IBM Plex Mono',monospace;">Cordon</div>
+                <div style="font-size:0.58rem;color:#767b82;margin-top:2px;">55% of stalkers</div>
+              </div>
+              <div style="flex:2;background:#151c26;border-radius:1px;padding:7px 10px;border:1px solid #28323e;">
+                <div style="font-size:0.9rem;font-weight:700;color:#9da3ac;font-family:'IBM Plex Mono',monospace;">Garbage</div>
+                <div style="font-size:0.58rem;color:#767b82;margin-top:2px;">28%</div>
+              </div>
+              <div style="flex:2;background:#151c26;border-radius:1px;padding:7px 10px;border:1px solid #28323e;">
+                <div style="font-size:0.9rem;font-weight:700;color:#9da3ac;font-family:'IBM Plex Mono',monospace;">Dark Valley</div>
+                <div style="font-size:0.58rem;color:#767b82;margin-top:2px;">11%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Coming Soon overlay -->
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;">
+          <span style="font-size:0.62rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#f5c842;">Coming Soon</span>
+          <span style="font-size:0.82rem;font-weight:700;color:#d7dde3;letter-spacing:0.03em;">Factions &amp; Starting Areas</span>
+          <span style="font-size:0.72rem;color:rgba(255,255,255,0.5);text-align:center;padding:0 16px;line-height:1.5;">Most popular factions played by the community, and the most common starting areas</span>
+        </div>
+      </div>
     </div>
 
     <div id="overall-performance-section">
@@ -862,13 +980,13 @@
         <div class="bellcurve-percentile" id="bc-percentile-text">Upload your log to see where you land.</div>
       </div>
       <div class="bellcurve-canvas-wrap">
-        <canvas id="bell-canvas" height="140"></canvas>
-        <div id="bell-you-label" style="position:absolute;display:none;font-size:9px;font-weight:700;letter-spacing:0.05em;transform:translateX(-50%);pointer-events:none;">YOU</div>
+        <canvas id="bell-canvas" height="120"></canvas>
+        <div id="bell-you-label" style="position:absolute;display:none;font-size:8px;font-weight:700;letter-spacing:0.08em;transform:translateX(-50%);pointer-events:none;font-family:'IBM Plex Mono',monospace;">YOU</div>
       </div>
       <div class="bellcurve-axis">
         <span>Weak</span>
         <span>Below Avg</span>
-        <span style="color:#d1d5db;font-weight:700;">Average</span>
+        <span style="color:#9da3ac;font-weight:600;">Average</span>
         <span>Above Avg</span>
         <span>Elite</span>
       </div>
@@ -1009,12 +1127,12 @@
 
       <div class="stat-card">
         <div class="stat-card-title"><span class="icon">⚡</span> Longest Kill Streak</div>
-        <div style="font-size:0.72rem;color:#4b5563;margin-bottom:10px;">Consecutive kills without a death</div>
-        <div style="display:flex;gap:16px;align-items:flex-start;">
+        <div style="font-size:0.65rem;color:#64686e;margin-bottom:8px;">Consecutive kills without a death</div>
+        <div style="display:flex;gap:10px;align-items:flex-start;">
           <div style="flex:1;">
-            <div style="background:#111827;border-radius:6px;padding:10px 12px;text-align:center;">
-              <div style="font-size:2rem;font-weight:800;color:#ffffff;line-height:1;" id="s-streak-all">--</div>
-              <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.09em;color:#6b7280;margin-top:4px;">All enemies</div>
+            <div style="background:#151c26;border-radius:1px;padding:8px 10px;text-align:center;border:1px solid #28323e;">
+              <div style="font-size:1.4rem;font-weight:700;color:#e6edf3;line-height:1;font-family:'IBM Plex Mono',monospace;" id="s-streak-all">--</div>
+              <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.09em;color:#767b82;margin-top:3px;">All enemies</div>
             </div>
             <div class="comparison" style="margin-top:28px;">
               <div class="bar-track">
@@ -1030,9 +1148,9 @@
             </div>
           </div>
           <div style="flex:1;">
-            <div style="background:#111827;border-radius:6px;padding:10px 12px;text-align:center;">
-              <div style="font-size:2rem;font-weight:800;color:#ffffff;line-height:1;" id="s-streak-stalker">--</div>
-              <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.09em;color:#6b7280;margin-top:4px;">Stalkers only</div>
+            <div style="background:#151c26;border-radius:1px;padding:8px 10px;text-align:center;border:1px solid #28323e;">
+              <div style="font-size:1.4rem;font-weight:700;color:#e6edf3;line-height:1;font-family:'IBM Plex Mono',monospace;" id="s-streak-stalker">--</div>
+              <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.09em;color:#767b82;margin-top:3px;">Stalkers only</div>
             </div>
             <div class="comparison" style="margin-top:28px;">
               <div class="bar-track">
@@ -1054,7 +1172,77 @@
         <div class="stat-card-title"><span class="icon">◉</span> Kills Breakdown</div>
         <div style="display:flex;align-items:center;justify-content:center;gap:18px;flex:1;">
           <canvas id="kill-pie-canvas" width="130" height="130" style="flex-shrink:0;opacity:0.75;"></canvas>
-          <div style="display:flex;flex-direction:column;gap:14px;" id="kill-pie-legend"></div>
+          <div style="display:flex;flex-direction:column;gap:8px;" id="kill-pie-legend"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── Habits row 2: Campfires & Crafting Tools (Coming Soon) ── -->
+    <div class="stat-grid" style="margin-top:6px;">
+
+      <!-- Campfires -->
+      <div class="stat-card" style="position:relative;overflow:hidden;">
+        <div style="filter:blur(5px);pointer-events:none;user-select:none;opacity:0.18;">
+          <div class="stat-card-title"><span class="icon">🔥</span> Campfires</div>
+          <div style="display:flex;gap:14px;margin-top:4px;">
+            <div style="flex:1;background:#151c26;border-radius:1px;padding:10px 10px;text-align:center;border:1px solid #28323e;">
+              <div style="font-size:1.3rem;font-weight:700;color:#c9973a;line-height:1;font-family:'IBM Plex Mono',monospace;">2h 14m</div>
+              <div style="font-size:0.58rem;text-transform:uppercase;letter-spacing:0.09em;color:#767b82;margin-top:3px;">Total rest time</div>
+            </div>
+            <div style="flex:1;background:#151c26;border-radius:1px;padding:10px 10px;text-align:center;border:1px solid #28323e;">
+              <div style="font-size:1.3rem;font-weight:700;color:#4a9a5e;line-height:1;font-family:'IBM Plex Mono',monospace;">340 HP</div>
+              <div style="font-size:0.58rem;text-transform:uppercase;letter-spacing:0.09em;color:#767b82;margin-top:3px;">Healed at campfire</div>
+            </div>
+          </div>
+          <div style="margin-top:10px;">
+            <div style="font-size:0.65rem;color:#767b82;margin-bottom:4px;">Avg rest per campfire visit</div>
+            <div style="height:3px;background:#28323e;border-radius:1px;overflow:hidden;">
+              <div style="width:58%;height:100%;background:linear-gradient(to right,#c9973a,#8a6030);border-radius:1px;"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:0.58rem;color:#64686e;margin-top:2px;"><span>0m</span><span>30m</span></div>
+          </div>
+        </div>
+        <!-- Coming Soon overlay -->
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;">
+          <span style="font-size:0.62rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#f5c842;">Coming Soon</span>
+          <span style="font-size:0.82rem;font-weight:700;color:#d7dde3;letter-spacing:0.03em;">Campfire Stats</span>
+          <span style="font-size:0.72rem;color:rgba(255,255,255,0.5);text-align:center;padding:0 16px;line-height:1.5;">How long you rest around campfires &amp; how much HP you heal</span>
+        </div>
+      </div>
+
+      <!-- Crafting Tools -->
+      <div class="stat-card" style="position:relative;overflow:hidden;">
+        <div style="filter:blur(5px);pointer-events:none;user-select:none;opacity:0.18;">
+          <div class="stat-card-title"><span class="icon">🔧</span> Crafting Tools</div>
+          <div style="display:flex;flex-direction:column;gap:5px;margin-top:4px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 8px;background:#151c26;border-radius:1px;border-left:2px solid #28323e;">
+              <span style="font-size:0.75rem;color:#d7dde3;">Basic Tools</span>
+              <span style="font-size:0.72rem;font-family:'IBM Plex Mono',monospace;color:#c9973a;">3h 12m in</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 8px;background:#151c26;border-radius:1px;border-left:2px solid #28323e;">
+              <span style="font-size:0.75rem;color:#d7dde3;">Advanced Tools</span>
+              <span style="font-size:0.72rem;font-family:'IBM Plex Mono',monospace;color:#c9973a;">8h 44m in</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 8px;background:#151c26;border-radius:1px;border-left:2px solid #28323e;">
+              <span style="font-size:0.75rem;color:#d7dde3;">Expert Tools</span>
+              <span style="font-size:0.72rem;font-family:'IBM Plex Mono',monospace;color:#c9973a;">18h 05m in</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 8px;background:#151c26;border-radius:1px;border-left:2px solid #3a5068;">
+              <span style="font-size:0.75rem;color:#d7dde3;">Medic Tools</span>
+              <span style="font-size:0.72rem;font-family:'IBM Plex Mono',monospace;color:#9da3ac;">Not found</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 8px;background:#151c26;border-radius:1px;border-left:2px solid #3a5068;">
+              <span style="font-size:0.75rem;color:#d7dde3;">Gunsmithing Tools</span>
+              <span style="font-size:0.72rem;font-family:'IBM Plex Mono',monospace;color:#9da3ac;">Not found</span>
+            </div>
+          </div>
+        </div>
+        <!-- Coming Soon overlay -->
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;">
+          <span style="font-size:0.62rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#f5c842;">Coming Soon</span>
+          <span style="font-size:0.82rem;font-weight:700;color:#d7dde3;letter-spacing:0.03em;">Crafting Tools</span>
+          <span style="font-size:0.72rem;color:rgba(255,255,255,0.5);text-align:center;padding:0 16px;line-height:1.5;">Where &amp; when you found each set of crafting tools</span>
         </div>
       </div>
 
@@ -1123,14 +1311,14 @@
 
       <div class="stat-card">
         <div class="stat-card-title"><span class="icon">◈</span> Environmental Deaths</div>
-        <div class="save-grid" style="grid-template-columns:1fr 1fr; margin-top:8px;">
-          <div class="save-mini" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 10px;">
-            <span style="font-size:1.6rem;margin-bottom:4px;color:#86efac;font-weight:700;line-height:1;">☢</span>
+        <div class="save-grid" style="grid-template-columns:1fr 1fr; margin-top:6px;">
+          <div class="save-mini" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 8px;">
+            <span style="font-size:1.1rem;margin-bottom:3px;color:#4a8a60;font-weight:700;line-height:1;">☢</span>
             <div class="death-special-val" id="s-radiation">--</div>
             <div class="death-special-lbl">Radiation</div>
           </div>
-          <div class="save-mini" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 10px;">
-            <span style="font-size:1.6rem;margin-bottom:4px;color:#9ca3af;font-weight:700;line-height:1;">↓</span>
+          <div class="save-mini" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 8px;">
+            <span style="font-size:1.1rem;margin-bottom:3px;color:#9da3ac;font-weight:700;line-height:1;">↓</span>
             <div class="death-special-val" id="s-falls">--</div>
             <div class="death-special-lbl">Falls</div>
           </div>
@@ -1143,6 +1331,162 @@
       </div>
 
     </div>
+
+    <hr class="section-divider">
+
+    <div class="section-label">Artefacts &amp; Emissions</div>
+    <div style="position:relative;overflow:hidden;border-radius:2px;">
+      <!-- Blurred placeholder content -->
+      <div style="filter:blur(4px);pointer-events:none;user-select:none;opacity:0.35;">
+        <div class="stat-grid three-col">
+          <div class="stat-card">
+            <div class="stat-card-title"><span class="icon">◈</span> Artefacts Found</div>
+            <div style="display:flex;flex-direction:column;gap:6px;margin-top:6px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:0.78rem;color:#d7dde3;">Soul</span>
+                <span style="font-size:0.78rem;font-family:'IBM Plex Mono',monospace;color:#c9973a;">12</span>
+              </div>
+              <div style="height:3px;background:#28323e;"><div style="width:72%;height:100%;background:#c9973a;"></div></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:0.78rem;color:#d7dde3;">Moonlight</span>
+                <span style="font-size:0.78rem;font-family:'IBM Plex Mono',monospace;color:#c9973a;">9</span>
+              </div>
+              <div style="height:3px;background:#28323e;"><div style="width:54%;height:100%;background:#c9973a;"></div></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:0.78rem;color:#d7dde3;">Sparkler</span>
+                <span style="font-size:0.78rem;font-family:'IBM Plex Mono',monospace;color:#c9973a;">6</span>
+              </div>
+              <div style="height:3px;background:#28323e;"><div style="width:36%;height:100%;background:#c9973a;"></div></div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-title"><span class="icon">◈</span> Emissions Survived</div>
+            <div style="text-align:center;padding:14px 0;">
+              <div style="font-size:2rem;font-weight:700;color:#c9973a;font-family:'IBM Plex Mono',monospace;line-height:1;">7</div>
+              <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:0.1em;color:#767b82;margin-top:4px;">total emissions</div>
+              <div style="margin-top:10px;font-size:0.78rem;color:#d7dde3;">Avg shelter time</div>
+              <div style="font-size:1rem;font-weight:700;color:#4a9a5e;font-family:'IBM Plex Mono',monospace;">1m 42s</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-title"><span class="icon">◈</span> Artefact Exposure</div>
+            <div style="display:flex;flex-direction:column;gap:6px;margin-top:6px;">
+              <div style="display:flex;justify-content:space-between;">
+                <span style="font-size:0.78rem;color:#d7dde3;">Radiation</span>
+                <span style="font-size:0.78rem;font-family:'IBM Plex Mono',monospace;color:#c0484a;">+340 rads</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;">
+                <span style="font-size:0.78rem;color:#d7dde3;">Psi</span>
+                <span style="font-size:0.78rem;font-family:'IBM Plex Mono',monospace;color:#6a5a98;">+180</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;">
+                <span style="font-size:0.78rem;color:#d7dde3;">Bleed</span>
+                <span style="font-size:0.78rem;font-family:'IBM Plex Mono',monospace;color:#8a3030;">+90</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Coming Soon overlay -->
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;">
+        <span style="font-size:0.62rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#f5c842;">Coming Soon</span>
+        <span style="font-size:0.82rem;font-weight:700;color:#d7dde3;letter-spacing:0.03em;">Artefacts &amp; Emissions</span>
+        <span style="font-size:0.72rem;color:rgba(255,255,255,0.5);text-align:center;padding:0 16px;line-height:1.5;">Your best artefact hunting spots and emissions survived</span>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <div class="section-label">Activity Heatmap</div>
+    <div style="position:relative;overflow:hidden;border-radius:2px;">
+      <!-- Blurred placeholder: map canvas with scattered dot activity -->
+      <div style="filter:blur(5px);pointer-events:none;user-select:none;opacity:0.3;">
+        <div class="stat-card" style="padding:0;overflow:hidden;">
+          <canvas id="placeholder-map-canvas" width="800" height="260" style="width:100%;height:260px;display:block;background:#0e1117;"></canvas>
+        </div>
+      </div>
+      <!-- Coming Soon overlay -->
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;">
+        <span style="font-size:0.62rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#f5c842;">Coming Soon</span>
+        <span style="font-size:0.82rem;font-weight:700;color:#d7dde3;letter-spacing:0.03em;">Activity Heatmap</span>
+        <span style="font-size:0.72rem;color:rgba(255,255,255,0.5);text-align:center;padding:0 16px;line-height:1.5;">Explore the map of the zone and visualize everything that happened to you so far</span>
+      </div>
+    </div>
+    <script>
+    (function() {
+      const canvas = document.getElementById('placeholder-map-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const W = canvas.width, H = canvas.height;
+
+      // Dark topographic map background
+      ctx.fillStyle = '#0e1117';
+      ctx.fillRect(0, 0, W, H);
+
+      // Terrain patches - muted greens and browns
+      const terrainZones = [
+        { x: 0.05, y: 0.1,  w: 0.3,  h: 0.35, color: '#131c14' },
+        { x: 0.38, y: 0.05, w: 0.25, h: 0.45, color: '#151a12' },
+        { x: 0.68, y: 0.15, w: 0.28, h: 0.3,  color: '#121810' },
+        { x: 0.1,  y: 0.55, w: 0.4,  h: 0.38, color: '#141b18' },
+        { x: 0.55, y: 0.5,  w: 0.35, h: 0.42, color: '#131916' },
+      ];
+      terrainZones.forEach(z => {
+        ctx.fillStyle = z.color;
+        ctx.fillRect(z.x * W, z.y * H, z.w * W, z.h * H);
+      });
+
+      // Grid lines topographic feel
+      ctx.strokeStyle = '#1a2230';
+      ctx.lineWidth = 0.5;
+      for (let x = 0; x < W; x += 40) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+      }
+      for (let y = 0; y < H; y += 40) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+      }
+
+      // Roads / paths
+      ctx.strokeStyle = '#2a3545';
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(0, H * 0.45); ctx.bezierCurveTo(W*0.3, H*0.4, W*0.6, H*0.55, W, H*0.5); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(W*0.4, 0); ctx.bezierCurveTo(W*0.42, H*0.3, W*0.38, H*0.6, W*0.45, H); ctx.stroke();
+
+      // Activity clusters - warm dots like kill/event heatmap
+      const clusters = [
+        { cx: 0.22, cy: 0.35, n: 18, spread: 0.06, color: '#c9973a' },
+        { cx: 0.55, cy: 0.28, n: 24, spread: 0.07, color: '#c9973a' },
+        { cx: 0.75, cy: 0.6,  n: 14, spread: 0.05, color: '#c0484a' },
+        { cx: 0.35, cy: 0.7,  n: 20, spread: 0.08, color: '#c9973a' },
+        { cx: 0.12, cy: 0.62, n: 10, spread: 0.04, color: '#4a9a5e' },
+        { cx: 0.88, cy: 0.3,  n: 8,  spread: 0.04, color: '#c0484a' },
+      ];
+      clusters.forEach(cl => {
+        for (let i = 0; i < cl.n; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const dist  = Math.random() * cl.spread;
+          const px = (cl.cx + Math.cos(angle) * dist) * W;
+          const py = (cl.cy + Math.sin(angle) * dist) * H;
+          const r  = 1.5 + Math.random() * 2.5;
+          ctx.beginPath();
+          ctx.arc(px, py, r, 0, Math.PI * 2);
+          ctx.fillStyle = cl.color;
+          ctx.globalAlpha = 0.4 + Math.random() * 0.5;
+          ctx.fill();
+        }
+      });
+      ctx.globalAlpha = 1;
+
+      // Zone labels
+      ctx.font = '700 9px "IBM Plex Mono", monospace';
+      ctx.fillStyle = '#2e3d50';
+      ctx.letterSpacing = '0.1em';
+      [['CORDON', 0.06, 0.08], ['GARBAGE', 0.42, 0.06], ['ROSTOK', 0.7, 0.12],
+       ['DARK VALLEY', 0.08, 0.52], ['PRIPYAT', 0.58, 0.48]].forEach(([lbl, x, y]) => {
+        ctx.fillText(lbl, x * W, y * H);
+      });
+    })();
+    </script>
 
     <hr class="section-divider">
 
@@ -1161,19 +1505,19 @@
         <div class="save-mini" style="position:relative;overflow:hidden;">
           <div class="save-mini-val" id="s-loads" style="opacity:0.25;">--</div>
           <div class="save-mini-lbl" style="opacity:0.25;">Total Loads</div>
-          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(17,24,39,0.55);border-radius:5px;">
-            <span style="font-size:0.6rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:#4b5563;">Coming Soon</span>
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(14,17,23,0.6);border-radius:1px;">
+            <span style="font-size:0.55rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#64686e;">Coming Soon</span>
           </div>
         </div>
         <div class="save-mini" style="position:relative;overflow:hidden;">
           <div class="save-mini-val" id="s-loads-hr" style="opacity:0.25;">--</div>
           <div class="save-mini-lbl" style="opacity:0.25;">Loads / Hour</div>
-          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(17,24,39,0.55);border-radius:5px;">
-            <span style="font-size:0.6rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:#4b5563;">Coming Soon</span>
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(14,17,23,0.6);border-radius:1px;">
+            <span style="font-size:0.55rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#64686e;">Coming Soon</span>
           </div>
         </div>
       </div>
-      <div style="margin-top:22px;">
+      <div style="margin-top:14px;">
         <div class="comparison">
           <div class="bar-track">
             <div class="bar-comm-label" id="comm-label-saves">Average</div>
@@ -1189,26 +1533,26 @@
       </div>
 
       <!-- ── Rage Quit Meter (personal logs only) ── -->
-      <div id="rage-quit-section" style="display:none;margin-top:22px;padding-top:18px;border-top:1px solid #374151;">
-        <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#9ca3af;margin-bottom:12px;display:flex;align-items:center;gap:7px;">
-          <span style="font-size:0.9rem;color:#f87171;line-height:1;">⊗</span> Rage Quit Meter
+      <div id="rage-quit-section" style="display:none;margin-top:16px;padding-top:14px;border-top:1px solid #28323e;">
+        <div style="font-size:0.63rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#9da3ac;margin-bottom:10px;display:flex;align-items:center;gap:6px;">
+          <span style="font-size:0.75rem;color:#c0484a;line-height:1;">⊗</span> Rage Quit Meter
         </div>
-        <div style="display:flex;align-items:center;gap:18px;">
+        <div style="display:flex;align-items:center;gap:14px;">
           <div style="text-align:center;flex-shrink:0;">
-            <div style="font-size:2rem;font-weight:800;color:#f87171;line-height:1;" id="s-rage-quits">--</div>
-            <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.08em;color:#6b7280;margin-top:3px;">rage quits</div>
+            <div style="font-size:1.4rem;font-weight:700;color:#c0484a;line-height:1;font-family:'IBM Plex Mono',monospace;" id="s-rage-quits">--</div>
+            <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:#767b82;margin-top:3px;">rage quits</div>
           </div>
           <div style="flex:1;">
-            <div style="font-size:0.78rem;font-weight:600;margin-bottom:8px;" id="rage-quit-verdict">--</div>
-            <div style="height:7px;background:#111827;border-radius:4px;overflow:hidden;">
-              <div id="rage-quit-bar" style="height:100%;width:0%;border-radius:4px;background:linear-gradient(to right,#fbbf24,#f97316,#ef4444,#7f1d1d);transition:width 0.7s ease;"></div>
+            <div style="font-size:0.72rem;font-weight:600;margin-bottom:6px;" id="rage-quit-verdict">--</div>
+            <div style="height:4px;background:#28323e;border-radius:1px;overflow:hidden;">
+              <div id="rage-quit-bar" style="height:100%;width:0%;border-radius:1px;background:linear-gradient(to right,#c9973a,#b06030,#8a3030,#5a1a1a);transition:width 0.7s ease;"></div>
             </div>
-            <div style="display:flex;justify-content:space-between;font-size:0.6rem;color:#4b5563;margin-top:3px;">
-              <span>😌 Zen</span><span>😤 Salty</span><span>🤬 Tilted</span><span>💀 Gone</span>
+            <div style="display:flex;justify-content:space-between;font-size:0.58rem;color:#64686e;margin-top:2px;">
+              <span>Zen</span><span>Salty</span><span>Tilted</span><span>Gone</span>
             </div>
           </div>
         </div>
-        <div style="font-size:0.72rem;color:#4b5563;margin-top:10px;">A rage quit = you died and immediately left the game, and you hadn't saved within 5 min of that death.</div>
+        <div style="font-size:0.65rem;color:#64686e;margin-top:8px;">A rage quit = you died and immediately left the game, and you hadn't saved within 5 min of that death.</div>
       </div>
     </div>
 
@@ -1237,6 +1581,7 @@ function initSupabase() {
 }
 
 const SUBMIT_COOLDOWN_MS = 5 * 24 * 60 * 60 * 1000; // 5 days (7 was too much)
+const CURRENT_LOG_VERSION = 'cn_v1.32'; // ← mod version
 
 async function submitRawLog(rawText, nickname) {
   if (!_supabase) {
@@ -1295,9 +1640,9 @@ function showSubmitBanner(msg, isError = false, isHTML = false) {
   const el = document.getElementById('submit-banner');
   if (!el) return;
   if (isHTML) el.innerHTML = msg; else el.textContent = msg;
-  el.style.background    = isError ? 'rgba(239,68,68,0.12)'   : 'rgba(74,222,128,0.10)';
-  el.style.borderColor   = isError ? 'rgba(239,68,68,0.35)'   : 'rgba(74,222,128,0.3)';
-  el.style.color         = isError ? '#fca5a5'                : '#86efac';
+  el.style.background    = isError ? 'rgba(192,72,74,0.10)'   : 'rgba(74,154,94,0.08)';
+  el.style.borderColor   = isError ? 'rgba(192,72,74,0.3)'    : 'rgba(74,154,94,0.25)';
+  el.style.color         = isError ? '#e08a8c'                : '#4a9a5e';
   el.style.display       = 'block';
 }
 
@@ -1328,115 +1673,111 @@ function startRateLimitCountdown(unlockAt) {
 // COMMUNITY AVERAGES
 // ============================================================
 const COMMUNITY = {
-  // ── DATA DECISIONS (update this block whenever you change the source data) ──────────────────
-  // avgKD / avgNpcKD        → always use MEDIAN of per-player KD ratios (marked "recommended"
-  //                           in the txt report). Never use mean — skewed by outlier players.
+  // ── DATA DECISIONS (source data updates) ──────────────────
+  // avgKD / avgNpcKD        → use MEDIAN of per-player KD ratios (marked "recommended" in the report)
   // killEntries             → total pooled kill count (all formats). Used for the data-credit strip.
   // newFormatKillEntries /  → new-format players only. Used for community view Total Kills /
-  // newFormatTotalDeaths       Total Deaths cards. Do NOT use avgKills (600) here — that is a
-  //                           per-player average, not a community total.
-  // avgPlayerDurationHours  → numeric hours from avgPlayerDuration. Used directly in
-  //                           buildCommunityPreviewStats() to compute saves/loads totals.
-  //                           Never derive hours from avgKD → avgDeaths → hours.
+  // newFormatTotalDeaths       Total Deaths cards. Do NOT use avgKills here - this is a per-player average, not a community total.
+  // avgPlayerDurationHours  → numeric hours from avgPlayerDuration. Used directly in buildCommunityPreviewStats() to compute saves/loads totals.
   // ────────────────────────────────────────────────────────────────────────────────────────────
 
-  killEntries:      51637,   // total kill entries used for community averages
-  playerCount:      86,      // number of players in the dataset
+  killEntries:      66407,   // total kill entries used for community averages
+  playerCount:      111,     // number of players in the dataset
 
   medianHTK:        3,       // median hits-to-kill (all difficulties combined)
   medianTTK:        0.84,    // median time-to-kill in seconds (all difficulties combined)
 
-  avgAccuracyPct:   68.5,    // % - average shot accuracy across all kills
-  avgDistanceM:     25.1,    // metres - average engagement distance
-  avgHeadshotPct:   24.6,    // % - headshots per kill (headshots / kills * 100)  // new-format only
-  avgDeathsPerHour: 4.0,     // deaths per hour of active playtime                // new-format only
-  avgOverkillPct:   58.1,    // % - average overkill % across all kills
-  avgSavesPerHour:  13.7,    // saves per hour                                    // new-format only
-  avgLoadsPerHour:  8.8,     // loads per hour                                    // new-format only
-  avgKD:            12.0,    // community MEDIAN K/D ratio (stalkers + mutants)   // new-format only
-  avgNpcKD:         6.2,     // community MEDIAN K/D ratio (stalkers only)        // new-format only
-  avgStreakAll:     61,       // longest kill streak - all enemies (stalkers + mutants)  // new-format only
-  avgStreakStalker: 46,       // longest kill streak - stalkers only                     // new-format only
-  avgKills:         600,      // avg kills per player (stalkers + mutants)
-  stalkerFrac:      0.76,     // NPC kill fraction (stalker/mutant split)
+  avgAccuracyPct:   68.8,    // % - average shot accuracy across all kills
+  avgDistanceM:     25.0,    // metres - average engagement distance
+  avgHeadshotPct:   22.6,    // % - headshots per kill (headshots / kills * 100)  // new-format only
+  avgDeathsPerHour: 2.9,     // deaths per hour of active playtime                // new-format only
+  avgOverkillPct:   61.5,    // % - average overkill % across all kills
+  avgSavesPerHour:  14.3,    // saves per hour                                    // new-format only
+  avgLoadsPerHour:  8.5,     // loads per hour                                    // new-format only
+  avgKD:            12.4,    // community MEDIAN K/D ratio (stalkers + mutants)   // new-format only
+  avgNpcKD:         6.9,     // community MEDIAN K/D ratio (stalkers only)        // new-format only
+  avgStreakAll:     85,       // longest kill streak - all enemies (stalkers + mutants)  // new-format only
+  avgStreakStalker: 60,       // longest kill streak - stalkers only                     // new-format only
+  avgKills:         598,      // avg kills per player (stalkers + mutants)
+  stalkerFrac:      0.74,     // NPC kill fraction (stalker/mutant split)
   longestKill:      157,      // avg longest kill distance in metres                    // new-format only
-  fallDeaths:       0,        // avg fall deaths per player                             // new-format only
+  fallDeaths:       1,        // avg fall deaths per player                             // new-format only
 
   // New-format totals (used for community view Overview cards)
-  newFormatKillEntries: 5079, // kill entries from new-format players only
-  newFormatTotalDeaths:  439, // total deaths from new-format players only
+  newFormatKillEntries: 19849, // kill entries from new-format players only
+  newFormatTotalDeaths:  1548, // total deaths from new-format players only
 
   // Top causes of death for the average player
   topKillers: [
-    { label: '∿ Shock Anomaly',    color: '#60a5fa', deaths: 16 },
-    { label: '▲ Fire Anomaly',     color: '#f97316', deaths: 14 },
-    { label: '◉ Psi Anomaly',      color: '#c084fc', deaths: 13 },
-    { label: '☢ Radiation',        color: '#86efac', deaths: 11 },
-    { label: '◆ Physical Anomaly', color: '#fbbf24', deaths: 7  },
-    { label: '☣ Chemical Anomaly', color: '#a78bfa', deaths: 2  },
+    { label: '▲ Fire Anomaly',     color: '#8a5030', deaths: 68 },
+    { label: '∿ Shock Anomaly',    color: '#3a6a9a', deaths: 52 },
+    { label: '◉ Psi Anomaly',      color: '#6a5a98', deaths: 50 },
+    { label: '☢ Radiation',        color: '#4a8a60', deaths: 38 },
+    { label: '◆ Physical Anomaly', color: '#8a7040', deaths: 29 },
+    { label: '☣ Chemical Anomaly', color: '#507a70', deaths: 7  },
   ],
-  // Raw community totals — new-format players only (33 players)
-  totalNpcDeaths:    249,   // total deaths caused by all NPC factions combined
-  totalMutantDeaths: 110,   // total deaths caused by all mutant types combined
+  // Raw community totals - new-format players only
+  totalNpcDeaths:    853,   // total deaths caused by all NPC factions combined
+  totalMutantDeaths: 373,   // total deaths caused by all mutant types combined
 
   // Per-faction breakdown for Worst NPCs / Worst Mutants panels
-  npcDeathsBreakdown:    { 'Monolith': 50, 'Military': 43, 'Bandit': 42, 'Renegade': 33, 'Mercenary': 30 },
-  mutantDeathsBreakdown: { 'Boar': 15, 'Pseudogiant': 12, 'Chimera': 12, 'Dog': 11, 'Pseudodog': 11 },
+  npcDeathsBreakdown:    { 'Monolith': 232, 'Sin': 102, 'Military': 93, 'Mercenary': 87, 'Bandit': 80 },
+  mutantDeathsBreakdown: { 'Chimera': 64, 'Pseudogiant': 45, 'Bloodsucker': 26, 'Boar': 25 },
 
   topWeapons: {
-    'Melee':   ['OTs-4 Combat Knife', '6h4 Bayonet', 'Hunting Knife', 'Kukri', 'Monolith Blade', 'M9 Bayonet'],
-    'Pistol':  ['Glock 19 "Hornet"', 'FNX-45', 'MP-412 Rex', 'Desert Eagle', 'Desert Eagle "Steppe Eagle"', 'FNP-45'],
-    'Shotgun': ['Saiga-12 Tactical', 'KSG-23', 'TOZ-34 "Chimera Hunter"', 'M1014', 'Mossberg 590A1', 'RAPTR'],
-    'SMG':     ['MP5A3 "Frasier"', 'PP-19-01 Vityaz', 'SR-2M Veresk', 'OTs-02 Kiparis', 'SR-2M Veresk "Tactical"', 'UMP45'],
-    'Rifle':   ['AK-74 "PMC"', 'BRN-180', 'Thales EF88', 'AK-105 "Shakal"', 'SIG SG 550', 'PKP Pecheneg'],
-    'Sniper':  ['Remington 700 "Magpul PRO"', 'SVDS', 'Mosin Nagant', 'Barrett M98B', 'Mauser 98k Forester mk.1', 'SVD'],
+    'Melee':   ['OTs-4 Combat Knife', '6h4 Bayonet', 'Kukri', 'Hunting Knife', 'M9 Bayonet', 'Monolith Blade'],
+    'Pistol':  ['Glock 19 "Hornet"', 'Desert Eagle', 'FNX-45', 'MP-412 Rex', 'FNP-45', 'Desert Eagle "Steppe Eagle"'],
+    'Shotgun': ['Saiga-12 Tactical', 'KSG-23', 'TOZ-34 "Chimera Hunter"', 'Mossberg 590A1', 'M1014', 'Saiga-12'],
+    'SMG':     ['PP-19-01 Vityaz', 'MP5A3 "Frasier"', 'SR-2M Veresk', 'SR-2M Veresk "Tactical"', 'MP5SD6', 'UMP45'],
+    'Rifle':   ['AK-74 "PMC"', 'BRN-180', 'AK-105 "Shakal"', 'AEK-971', 'Rifle Dynamics RD-74N ISG Tactical', 'Thales EF88'],
+    'Sniper':  ['Remington 700 "Magpul PRO"', 'SVD', 'SVDS', 'Winchester Model 1873', 'Mosin Nagant', 'Barrett M98B'],
   },
 
   // Top 20 weapons overall by usage (selective ranking)
   // Each entry carries its category directly from the community averages report.
   top20: [
-    { name: 'AK-74 "PMC"',                cat: 'Rifle',   entries: 301 },
-    { name: 'Saiga-12 Tactical',           cat: 'Shotgun', entries: 300 },
-    { name: 'Remington 700 "Magpul PRO"', cat: 'Sniper',  entries: 281 },
-    { name: 'KSG-23',                      cat: 'Shotgun', entries: 281 },
-    { name: 'MP5A3 "Frasier"',             cat: 'SMG',     entries: 259 },
-    { name: 'PP-19-01 Vityaz',             cat: 'SMG',     entries: 230 },
-    { name: 'Glock 19 "Hornet"',           cat: 'Pistol',  entries: 219 },
-    { name: 'FN P90',                      cat: 'SMG',     entries: 195 },
-    { name: 'SR-2M Veresk',               cat: 'SMG',     entries: 191 },
-    { name: 'TOZ-34 "Chimera Hunter"',     cat: 'Shotgun', entries: 185 },
-    { name: 'Karabiner 98k Forester mk.2', cat: 'Sniper',  entries: 171 },
-    { name: 'SVDS',                        cat: 'Sniper',  entries: 163 },
-    { name: 'RPK-16 LMG',                  cat: 'Rifle',   entries: 159 },
-    { name: 'BRN-180',                     cat: 'Rifle',   entries: 157 },
-    { name: 'M1014',                       cat: 'Shotgun', entries: 155 },
-    { name: 'Mosin Nagant',               cat: 'Sniper',  entries: 143 },
-    { name: 'Thales EF88',                 cat: 'Rifle',   entries: 125 },
-    { name: 'OTs-02 Kiparis',             cat: 'SMG',     entries: 123 },
-    { name: 'Mossberg 590A1',             cat: 'Shotgun', entries: 122 },
-    { name: 'SR-2M Veresk "Tactical"',    cat: 'SMG',     entries: 122 },
+    { name: 'Saiga-12 Tactical',           cat: 'Shotgun', entries: 399 },
+    { name: 'AK-74 "PMC"',                 cat: 'Rifle',   entries: 376 },
+    { name: 'KSG-23',                      cat: 'Shotgun', entries: 364 },
+    { name: 'Remington 700 "Magpul PRO"',  cat: 'Sniper',  entries: 315 },
+    { name: 'PP-19-01 Vityaz',             cat: 'SMG',     entries: 284 },
+    { name: 'Glock 19 "Hornet"',           cat: 'Pistol',  entries: 275 },
+    { name: 'MP5A3 "Frasier"',             cat: 'SMG',     entries: 272 },
+    { name: 'TOZ-34 "Chimera Hunter"',     cat: 'Shotgun', entries: 245 },
+    { name: 'FN P90',                      cat: 'Unknown', entries: 226 },
+    { name: 'SR-2M Veresk',               cat: 'SMG',     entries: 221 },
+    { name: 'RPK-16 LMG',                  cat: 'Unknown', entries: 220 },
+    { name: 'Karabiner 98k Forester mk.2', cat: 'Unknown', entries: 207 },
+    { name: 'Mossberg 590A1',             cat: 'Shotgun', entries: 197 },
+    { name: 'SR-2M Veresk "Tactical"',    cat: 'SMG',     entries: 193 },
+    { name: 'BRN-180',                     cat: 'Rifle',   entries: 189 },
+    { name: 'M1014',                       cat: 'Shotgun', entries: 189 },
+    { name: 'SVD',                         cat: 'Sniper',  entries: 170 },
+    { name: 'AK-105 "Shakal"',            cat: 'Rifle',   entries: 169 },
+    { name: 'AEK-971',                     cat: 'Rifle',   entries: 168 },
+    { name: 'SVDS',                        cat: 'Sniper',  entries: 167 },
   ],
 
   // Gameplay duration - new-format .log only
-  communityTotalPlaytime:  '355h 06m',   // total combined playtime
-  avgPlayerDuration:       '9h 52m',     // avg per player (display string)
-  avgPlayerDurationHours:  9.87,         // avg per player in hours (used for derived totals in community preview)
-  avgSessionLength:        '1h 01m',     // avg gaming session
+  communityTotalPlaytime:  '1344h 46m',  // total combined playtime
+  avgPlayerDuration:       '21h 01m',    // avg per player (display string)
+  avgPlayerDurationHours:  21.017,       // avg per player in hours (used for derived totals in community preview)
+  avgSessionLength:        '58m',        // avg gaming session
 
-  // Avg kills per player broken down by weapon category (baseKills column from txt report).
+  // Avg kills per player broken down by weapon category (baseKills column from report).
   // Used by buildCommunityPreviewStats() to generate ranked weapon kill counts.
-  // Keep in sync with the "Kills by weapon category" table in 01_community_averages.txt.
-  baseKillsByCategory: { Melee: 7, Pistol: 36, Shotgun: 72, SMG: 109, Rifle: 234, Sniper: 69 },
+  // Keep in sync with the "Kills by weapon category" table in the report
+  baseKillsByCategory: { Melee: 8, Pistol: 35, Shotgun: 76, SMG: 99, Rifle: 235, Sniper: 66 },
 
   // Difficulty distribution by UNIQUE PLAYER COUNT.
   // A player may appear under multiple difficulties, so the sum of `players` can exceed the total
   // unique player count. Percentages are derived from the player counts alone (kill counts and
   // kill % are intentionally ignored): pct = (players / sum_of_all_difficulty_players) × 100.
-  // e.g. Novice: 18/(18+20+55) = 18/93 ≈ 19.4%
+  // e.g. Novice: 20/(20+26+60) = 20/106 ≈ 19.0%
   difficultyDistribution: [
-    { label: 'Novice',  players: 18, pct: 19.4, color: '#4ade80' },
-    { label: 'Stalker', players: 20, pct: 21.5, color: '#fbbf24' },
-    { label: 'Veteran', players: 55, pct: 59.1, color: '#f87171' },
+    { label: 'Novice',  players: 25, pct: 20.0, color: '#4a9a5e' },
+    { label: 'Stalker', players: 32, pct: 25.6, color: '#c9973a' },
+    { label: 'Veteran', players: 68, pct: 54.4, color: '#c0484a' },
   ],
 };
 // ============================================================
@@ -1462,12 +1803,12 @@ function getCategory(weaponId, weaponName) {
 
 // ── Anomaly color map ──
 const ANOMALY_COLORS = {
-  'Chemical': '#86efac',
-  'Psi':      '#c084fc',
-  'Shock':    '#60a5fa',
-  'Physical': '#fbbf24',
-  'Fire':     '#f97316',
-  'Other':    '#6b7280',
+  'Chemical': '#5aaa78',
+  'Psi':      '#8a78be',
+  'Shock':    '#4a88c8',
+  'Physical': '#aa9050',
+  'Fire':     '#b86840',
+  'Other':    '#7a8090',
 };
 
 // ── Parser ──
@@ -1492,7 +1833,7 @@ function parseLog(text) {
     if (line.startsWith('=== Session:')) {
       // ── Rage quit check: compare death ts against this session's header timestamp ──
       // Excluded if the player saved within 5 min before the death (likely just took a break).
-      const sessionTsMatch = line.match(/=== Session: (.+?) ===/);
+      const sessionTsMatch = line.match(/=== Session: (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})/);
       if (sessionTsMatch && lastDeathTs) {
         const sessionTs = new Date(sessionTsMatch[1].trim());
         const savedRecently = lastSaveTs && (lastDeathTs - lastSaveTs) < 5 * 60 * 1000;
@@ -1519,8 +1860,8 @@ function parseLog(text) {
     const parts = line.split('|').map(s => s.trim());
     if (parts.length < 2) continue;
 
-    // Skip the header row (present once per file when multiple files are joined)
-    if (parts[0] === 'Timestamp') continue;
+    // Skip header rows from both old and new format files
+    if (parts[0] === 'Timestamp' || parts[0].endsWith('] Timestamp')) continue;
 
     const ts = parts[0];
     const type = parts[1];
@@ -1543,6 +1884,26 @@ function parseLog(text) {
     }
     justStartedSession = false;
 
+    // New v1.30 entry types - parsed and stored for future use
+    if (type === 'Emission' || type === 'Psi Storm') {
+      // e.g. parts[2] === 'Start'
+      // No collection yet - skip cleanly
+      continue;
+    }
+
+    if (type === 'Artefact') {
+      // parts[2] = section (e.g. 'af_tapeworm')
+      // parts[3] = display_name (e.g. 'Tapeworm')
+      // parts[4] = position (e.g. '34.6,0.6,-93.7')
+      // No collection yet - skip cleanly
+      continue;
+    }
+
+    // v1.32 additions — not yet implemented
+    if (type === 'Quick Load' || type === 'First Find' || type === 'Campfire') {
+      continue;
+    }
+
     // Kill line: Timestamp | Difficulty | Enemy | Armor | WeaponID | WeaponName | Ammo | HTK | TTK | HS | Acc | Dist | Overkill | SB/NS
     if (parts.length >= 14 && !['Death','Game Saved','Game Loaded'].includes(type)) {
       const acc = parseFloat(parts[10]) || 0;
@@ -1563,13 +1924,14 @@ function parseLog(text) {
         accuracy: acc,
         distance: dist,
         overkill,
+        position:   parts[14] || null,  // null for old-format kills
       });
       continue;
     }
 
     // Death line: Timestamp | Death | Cause | Armor
     if (type === 'Death' && parts.length >= 3) {
-      deaths.push({ ts, cause: parts[2], armor: parts[3] || '' });
+      deaths.push({ ts, cause: parts[2], armor: parts[3] || '', position: parts[4] || null });  // position null for old-format deaths
       lastDeathTs = tsToDate(ts); // track in case this is the last thing before a rage quit
       continue;
     }
@@ -1859,9 +2221,9 @@ function renderBellCurve(st) {
 
   // Colour score by percentile
   const scoreEl = document.getElementById('bc-score');
-  if (percentile >= 75) scoreEl.style.color = '#4ade80';
-  else if (percentile >= 45) scoreEl.style.color = '#fbbf24';
-  else scoreEl.style.color = '#f87171';
+  if (percentile >= 75) scoreEl.style.color = '#4a9a5e';
+  else if (percentile >= 45) scoreEl.style.color = '#c9973a';
+  else scoreEl.style.color = '#c0484a';
 
   // Factor breakdown
   document.getElementById('bc-dph').textContent = fmt(st.dph, 1);
@@ -1871,7 +2233,7 @@ function renderBellCurve(st) {
 
   const fmtContrib = (score, weight) => {
     const contrib = (score * weight / 100).toFixed(1);
-    const color = score >= 55 ? '#4ade80' : score >= 40 ? '#fbbf24' : '#f87171';
+    const color = score >= 55 ? '#4a9a5e' : score >= 40 ? '#c9973a' : '#c0484a';
     return `<span style="color:${color}">+${contrib} pts</span>`;
   };
   document.getElementById('bc-dph-contrib').innerHTML  = fmtContrib(dphScore, 30);
@@ -1899,9 +2261,9 @@ function renderBellCurve(st) {
 
   // Shaded fill under curve
   const gradient = ctx.createLinearGradient(0, 0, W, 0);
-  gradient.addColorStop(0,   'rgba(156,163,175,0.15)');
-  gradient.addColorStop(0.5, 'rgba(156,163,175,0.35)');
-  gradient.addColorStop(1,   'rgba(156,163,175,0.15)');
+  gradient.addColorStop(0,   'rgba(58,90,122,0.10)');
+  gradient.addColorStop(0.5, 'rgba(58,90,122,0.22)');
+  gradient.addColorStop(1,   'rgba(58,90,122,0.10)');
 
   ctx.beginPath();
   ctx.moveTo(toX(xMin), H - 8);
@@ -1923,7 +2285,7 @@ function renderBellCurve(st) {
   }
   ctx.lineTo(toX(playerX + sliceW), H - 8);
   ctx.closePath();
-  const sliceColor = percentile >= 75 ? 'rgba(74,222,128,0.25)' : percentile >= 45 ? 'rgba(251,191,36,0.3)' : 'rgba(248,113,113,0.25)';
+  const sliceColor = percentile >= 75 ? 'rgba(45,106,74,0.3)' : percentile >= 45 ? 'rgba(201,151,58,0.22)' : 'rgba(192,72,74,0.22)';
   ctx.fillStyle = sliceColor;
   ctx.fill();
 
@@ -1933,24 +2295,24 @@ function renderBellCurve(st) {
   for (let x = xMin; x <= xMax; x += 0.2) {
     ctx.lineTo(toX(x), toY(normalPDF(x, mu, sigma)));
   }
-  ctx.strokeStyle = '#374151';
-  ctx.lineWidth = 2;
+  ctx.strokeStyle = '#28323e';
+  ctx.lineWidth = 1.5;
   ctx.stroke();
 
   // Community marker (vertical dashed line at mu)
   const commXpx = toX(mu);
-  ctx.setLineDash([4, 4]);
+  ctx.setLineDash([3, 4]);
   ctx.beginPath();
   ctx.moveTo(commXpx, H - 8);
   ctx.lineTo(commXpx, toY(peak) - 4);
-  ctx.strokeStyle = '#d1d5db';
-  ctx.lineWidth = 1.5;
+  ctx.strokeStyle = '#9da3ac';
+  ctx.lineWidth = 1;
   ctx.stroke();
   ctx.setLineDash([]);
 
   // Player marker
   const youXpx = toX(playerX);
-  const markerColor = percentile >= 75 ? '#4ade80' : percentile >= 45 ? '#fbbf24' : '#f87171';
+  const markerColor = percentile >= 75 ? '#4a9a5e' : percentile >= 45 ? '#c9973a' : '#c0484a';
 
   // Vertical line from baseline to curve
   ctx.beginPath();
@@ -2018,12 +2380,12 @@ function setBar(barId, markerId, value, max, commValue, lowerIsBetter = false, c
     const midWarm = (commPct / 2).toFixed(1);
     const midCool = (commPct + (100 - commPct) / 2).toFixed(1);
     const gradientStops = lowerIsBetter
-      ? `linear-gradient(to right, #4ade80 0%, #facc15 ${cp}%, #fb923c ${midCool}%, #f87171 100%)`
-      : `linear-gradient(to right, #f87171 0%, #fb923c ${midWarm}%, #facc15 ${cp}%, #4ade80 100%)`;
+      ? `linear-gradient(to right, #3d8060 0%, #4a7aa0 ${cp}%, #6a8a7a ${midCool}%, #4a5a6a 100%)`
+      : `linear-gradient(to right, #4a5a6a 0%, #4a6a8a ${midWarm}%, #4d7aa0 ${cp}%, #3a8a6a 100%)`;
     gradEl.style.background = gradientStops;
     gradEl.style.position = 'absolute';
     gradEl.style.inset = '0';
-    gradEl.style.borderRadius = '3px';
+    gradEl.style.borderRadius = '1px';
   }
 }
 
@@ -2051,7 +2413,7 @@ function renderAnomalies(st) {
     return `<div class="anomaly-row">
       <div class="anomaly-header">
         <span class="anomaly-name"><span style="color:${color}">${glyph}</span> ${type}</span>
-        <span class="anomaly-count" style="color:${count > 0 ? '#f87171' : '#4b5563'}">${count}</span>
+        <span class="anomaly-count" style="color:${count > 0 ? '#c0484a' : '#64686e'}">${count}</span>
       </div>
       <div class="anomaly-bar-track">
         <div class="anomaly-bar-fill" style="width:${pct}%; background:${color};"></div>
@@ -2063,7 +2425,7 @@ function renderAnomalies(st) {
 function renderWeapons(byCat) {
   const catOrder   = ['Melee', 'Pistol', 'Shotgun', 'SMG', 'Rifle', 'Sniper'];
   const catDisplay = { Melee:'Melee', Pistol:'Pistol', Shotgun:'Shotgun', SMG:'SMG', Rifle:'Rifle', Sniper:'Sniper' };
-  const catColor   = { Melee:'#fca5a5', Pistol:'#93c5fd', Shotgun:'#fdba74', SMG:'#c4b5fd', Rifle:'#86efac', Sniper:'#fcd34d' };
+  const catColor   = { Melee:'#8a6060', Pistol:'#4a7aa8', Shotgun:'#8a7040', SMG:'#6a6a98', Rifle:'#3d7a56', Sniper:'#7a8a4a' };
   const rankClass  = ['gold','silver','bronze','','',''];
   const el = document.getElementById('weapons-breakdown');
 
@@ -2073,7 +2435,7 @@ function renderWeapons(byCat) {
   let html = '<div class="weapon-grid weapon-grid-3col">';
   for (const cat of catOrder) {
     const weapons = byCat[cat] || [];
-    const color   = catColor[cat] || '#6b7280';
+    const color   = catColor[cat] || '#5a6070';
     const topSlice = weapons.slice(0, topN);
     const total   = weapons.reduce((s, w) => s + w.kills, 0);
     const maxK    = topSlice[0]?.kills || 1;
@@ -2112,7 +2474,7 @@ function renderWeapons(byCat) {
 }
 
 function renderTop20() {
-  const catColor = { Melee:'#fca5a5', Pistol:'#93c5fd', Shotgun:'#fdba74', SMG:'#c4b5fd', Rifle:'#86efac', Sniper:'#fcd34d' };
+  const catColor = { Melee:'#8a6060', Pistol:'#4a7aa8', Shotgun:'#8a7040', SMG:'#6a6a98', Rifle:'#3d7a56', Sniper:'#7a8a4a' };
   const rankClass = ['gold','silver','bronze'];
 
   const el = document.getElementById('top20-list');
@@ -2125,11 +2487,11 @@ function renderTop20() {
     const name    = entry.name;
     const cat     = entry.cat || '';
     const entries = entry.entries || 0;
-    const color   = catColor[cat] || '#6b7280';
+    const color   = catColor[cat] || '#5a6070';
     const rc      = rankClass[i] || '';
     const barW    = Math.round(entries / maxEntries * 100);
     const barOpacity = i === 0 ? '1' : i <= 2 ? '0.75' : i <= 5 ? '0.55' : '0.38';
-    const countColor  = i === 0 ? '#4ade80' : '#6b7280';
+    const countColor  = i === 0 ? '#4a9a5e' : '#767b82';
 
     return `<div>
       <div class="top20-row">
@@ -2170,18 +2532,18 @@ function renderCommunityKillers() {
 
   // Build merged list: aggregate NPC + mutant totals, plus each environmental entry
   const allKillers = [
-    { label: '⚔ Stalkers',  color: '#f87171', deaths: COMMUNITY.totalNpcDeaths    || 0 },
-    { label: '◈ Mutants',   color: '#c084fc', deaths: COMMUNITY.totalMutantDeaths || 0 },
+    { label: '⚔ Stalkers',  color: '#c0484a', deaths: COMMUNITY.totalNpcDeaths    || 0 },
+    { label: '◈ Mutants',   color: '#6a5a98', deaths: COMMUNITY.totalMutantDeaths || 0 },
     ...COMMUNITY.topKillers,
   ].sort((a, b) => b.deaths - a.deaths).slice(0, 5);
 
   el.innerHTML = allKillers.map((item, i) => {
     const deathsHtml = item.deaths != null
-      ? `<span style="font-size:0.82rem;font-weight:400;color:#6b7280;font-variant-numeric:tabular-nums;">${item.deaths.toLocaleString()} deaths</span>`
+      ? `<span style="font-size:0.72rem;font-weight:400;color:#767b82;font-variant-numeric:tabular-nums;">${item.deaths.toLocaleString()} deaths</span>`
       : '';
-    return `<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #374151;">
-      <span style="font-size:0.72rem;font-weight:700;color:#4b5563;width:16px;flex-shrink:0;">${i+1}.</span>
-      <span style="font-size:0.82rem;font-weight:700;color:#d1d5db;flex:1;">${item.label}</span>
+    return `<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #28323e;">
+      <span style="font-size:0.65rem;font-weight:700;color:#64686e;width:14px;flex-shrink:0;">${i+1}.</span>
+      <span style="font-size:0.78rem;font-weight:600;color:#d7dde3;flex:1;">${item.label}</span>
       ${deathsHtml}
     </div>`;
   }).join('');
@@ -2223,12 +2585,12 @@ function renderKillPie(st) {
   if (total === 0) {
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.fillStyle = '#374151';
+    ctx.fillStyle = '#28323e';
     ctx.fill();
   } else {
     const slices = [
-      { value: stalker, color: '#fbbf24', label: 'Stalkers' },
-      { value: mutant,  color: '#93c5fd', label: 'Mutants'  },
+      { value: stalker, color: '#8a9aaa', label: 'Stalkers' },
+      { value: mutant,  color: '#4a7aa8', label: 'Mutants'  },
     ];
     let startAngle = -Math.PI / 2;
     const angleData = [];
@@ -2247,17 +2609,17 @@ function renderKillPie(st) {
     const holeR = r * 0.52;
     ctx.beginPath();
     ctx.arc(cx, cy, holeR, 0, Math.PI * 2);
-    ctx.fillStyle = '#1f2937';
+    ctx.fillStyle = '#1d2530';
     ctx.fill();
     // centre: total number
-    ctx.fillStyle = '#f9fafb';
-    ctx.font = 'bold ' + Math.round(size * 0.17) + 'px sans-serif';
+    ctx.fillStyle = '#e6edf3';
+    ctx.font = 'bold ' + Math.round(size * 0.17) + 'px IBM Plex Mono,monospace';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(fmtInt(total), cx, cy - size * 0.055);
     // "Total Kills" label
-    ctx.fillStyle = '#6b7280';
-    ctx.font = Math.round(size * 0.082) + 'px sans-serif';
+    ctx.fillStyle = '#767b82';
+    ctx.font = Math.round(size * 0.08) + 'px IBM Plex Sans,sans-serif';
     ctx.fillText('Total Kills', cx, cy + size * 0.09);
   }
 
@@ -2265,17 +2627,17 @@ function renderKillPie(st) {
   const legend = document.getElementById('kill-pie-legend');
   legend.innerHTML = '';
   const items = [
-    { label: 'Stalkers', value: stalker, color: '#fbbf24' },
-    { label: 'Mutants',  value: mutant,  color: '#93c5fd' },
+    { label: 'Stalkers', value: stalker, color: '#8a9aaa' },
+    { label: 'Mutants',  value: mutant,  color: '#4a7aa8' },
   ];
   for (const item of items) {
     const pct = total > 0 ? ((item.value / total) * 100).toFixed(1) : '0.0';
     legend.innerHTML += `
-      <div style="display:flex;align-items:center;gap:8px;">
-        <span style="width:10px;height:10px;border-radius:50%;background:${item.color};flex-shrink:0;display:inline-block;"></span>
-        <span style="font-size:0.78rem;color:#d1d5db;font-weight:600;">${item.label}</span>
-        <span style="font-size:0.92rem;font-weight:800;color:${item.color};">${fmtInt(item.value)}</span>
-        <span style="font-size:0.68rem;color:#6b7280;">${pct}%</span>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span style="width:8px;height:8px;border-radius:0;background:${item.color};flex-shrink:0;display:inline-block;"></span>
+        <span style="font-size:0.72rem;color:#d7dde3;font-weight:500;">${item.label}</span>
+        <span style="font-size:0.82rem;font-weight:700;color:${item.color};font-family:'IBM Plex Mono',monospace;">${fmtInt(item.value)}</span>
+        <span style="font-size:0.62rem;color:#767b82;">${pct}%</span>
       </div>`;
   }
 }
@@ -2291,9 +2653,15 @@ function buildCommunityPreviewStats() {
   const avgKills        = COMMUNITY.avgKills;
   const avgHours        = COMMUNITY.avgPlayerDurationHours;
 
+  // NOTE: Use newFormatKillEntries (not avgKills) as the base for the kills pie chart
+  // and killCount. avgKills is a per-player average and will produce a misleadingly small
+  // number in the community view. newFormatKillEntries is the true total across all
+  // new-format players and is what drives the Kills Breakdown pie and the kills overview card.
+  // stalkerFrac is applied to this total to split into Stalkers vs Mutants.
+  const totalKills      = COMMUNITY.newFormatKillEntries;
   const stalkerFrac     = COMMUNITY.stalkerFrac;
-  const stalkerKills    = Math.round(avgKills * stalkerFrac);
-  const mutantKills     = avgKills - stalkerKills;
+  const stalkerKills    = Math.round(totalKills * stalkerFrac);
+  const mutantKills     = totalKills - stalkerKills;
 
   const avgSavesTotal   = Math.round(COMMUNITY.avgSavesPerHour * avgHours);
   const avgLoadsTotal   = Math.round(COMMUNITY.avgLoadsPerHour * avgHours);
@@ -2335,7 +2703,7 @@ function buildCommunityPreviewStats() {
   const mutantDeaths = COMMUNITY.mutantDeathsBreakdown || {};
 
   return {
-    killCount        : avgKills,
+    killCount        : totalKills,
     deathCount       : COMMUNITY.newFormatTotalDeaths,
     totalHours       : avgHours,
     difficulty       : COMMUNITY.difficultyDistribution.reduce((a, b) => b.players > a.players ? b : a).label,
@@ -2404,8 +2772,8 @@ function showCommunityPreview() {
     'The <strong>average STALKER</strong> scores exactly <strong>50</strong> - right in the middle of the community.';
 
   // Override Total Kills with new-format community total
-  // (renderStats() sets this from avgKills which is a per-player average — not what we want here)
-  // Note: stat-deaths no longer needs overriding — buildCommunityPreviewStats() now sets
+  // (renderStats() sets this from avgKills which is a per-player average - not what we want here)
+  // Note: stat-deaths no longer needs overriding - buildCommunityPreviewStats() now sets
   // deathCount directly to COMMUNITY.newFormatTotalDeaths, so renderStats() handles it correctly.
   document.getElementById('stat-kills').textContent  = COMMUNITY.newFormatKillEntries.toLocaleString();
   // Rename 'Total Kills' → 'Total Community Kills' in community view only
@@ -2444,16 +2812,16 @@ function showCommunityPreview() {
       if (!window._diffCardOrigHTML) window._diffCardOrigHTML = card.innerHTML;
       const dist = COMMUNITY.difficultyDistribution;
       card.innerHTML = `
-        <div style="font-size:0.62rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#6b7280;margin-bottom:4px;">Difficulty</div>
-        <div style="font-size:0.6rem;color:#4b5563;margin-bottom:10px;">Most Played Difficulty</div>
+        <div style="font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#767b82;margin-bottom:3px;">Difficulty</div>
+        <div style="font-size:0.58rem;color:#64686e;margin-bottom:8px;">Most Played Difficulty</div>
         ${dist.map(d => `
-          <div style="margin-bottom:8px;">
-            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px;">
-              <span style="font-size:0.72rem;font-weight:600;color:#9ca3af;">${d.label}</span>
-              <span style="font-size:0.72rem;font-weight:800;color:${d.color};">${d.pct}%</span>
+          <div style="margin-bottom:6px;">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px;">
+              <span style="font-size:0.68rem;font-weight:500;color:#9da3ac;">${d.label}</span>
+              <span style="font-size:0.68rem;font-weight:700;color:${d.color};">${d.pct}%</span>
             </div>
-            <div style="height:5px;background:#374151;border-radius:3px;overflow:hidden;">
-              <div style="width:${d.pct}%;height:100%;background:${d.color};border-radius:3px;transition:width 0.6s ease;"></div>
+            <div style="height:6px;background:#28323e;border-radius:0;overflow:hidden;">
+              <div style="width:${d.pct}%;height:100%;background:${d.color};border-radius:0;transition:width 0.6s ease;"></div>
             </div>
           </div>
         `).join('')}
@@ -2599,12 +2967,12 @@ function renderStats(st) {
     // Ratio: rage quits / total deaths. Bar is full at 50% ratio (1 rage quit per 2 deaths).
     const ratio = st.deathCount > 0 ? rq / st.deathCount : 0;
     const TIERS = [
-      { max: 0,    label: 'Not a single rage quit. A true Stalker.',      color: '#4ade80' },
-      { max: 0.10, label: 'Barely tilted.',                               color: '#a3e635' },
-      { max: 0.20, label: 'Slight tilt detected.',                        color: '#fbbf24' },
-      { max: 0.35, label: 'Maybe try a lower difficulty?',                color: '#f97316' },
-      { max: 0.50, label: 'Serious Psi-damage.',                          color: '#f87171' },
-      { max: Infinity, label: 'Even the Wishgranter can\'t save you.',    color: '#ef4444' },
+      { max: 0,    label: 'Not a single rage quit. A true Stalker.',      color: '#4a9a5e' },
+      { max: 0.10, label: 'Barely tilted.',                               color: '#7a9a40' },
+      { max: 0.20, label: 'Slight tilt detected.',                        color: '#c9973a' },
+      { max: 0.35, label: 'Maybe try a lower difficulty?',                color: '#9a6030' },
+      { max: 0.50, label: 'Serious Psi-damage.',                          color: '#c0484a' },
+      { max: Infinity, label: 'Even the Wishgranter can\'t save you.',    color: '#8a2020' },
     ];
     const tier = TIERS.find(t => ratio <= t.max);
     const verdictEl = document.getElementById('rage-quit-verdict');
@@ -2644,6 +3012,12 @@ function renderStats(st) {
   document.getElementById('upload-wrapper').style.display = 'none';
   document.getElementById('overall-performance-section').style.display = window._isCommunityPreview ? 'none' : '';
 
+  // Show/hide Faction & Starting Area coming soon card - community view only
+  const factionComingSoon = document.getElementById('overview-faction-coming-soon');
+  if (factionComingSoon) {
+    factionComingSoon.style.display = window._isCommunityPreview ? 'block' : 'none';
+  }
+
   // Show/hide Top 20 toggle - community view only
   const top20Wrap = document.getElementById('top20-toggle-wrap');
   if (top20Wrap) {
@@ -2682,6 +3056,14 @@ function hideVersionModal() {
   overlay.classList.remove('modal-visible');
 }
 
+function showOutdatedModal() {
+  document.getElementById('outdated-modal-overlay').classList.add('modal-visible');
+}
+
+function hideOutdatedModal() {
+  document.getElementById('outdated-modal-overlay').classList.remove('modal-visible');
+}
+
 function processFiles(files, submitToSupabase, nickname) {
   const readers = [...files].map(f => new Promise((res, rej) => {
     const r = new FileReader();
@@ -2691,14 +3073,41 @@ function processFiles(files, submitToSupabase, nickname) {
   }));
 
   Promise.all(readers).then(texts => {
-    const REQUIRED_HEADER = 'Timestamp | Difficulty | Enemy | Armor | WeaponID | Weapon | Ammo | HTK | TTK | Headshots | Acc | Dist | Overkill | SB/NS';
+    const LEGACY_HEADER    = 'Timestamp | Difficulty | Enemy | Armor | WeaponID | Weapon | Ammo | HTK | TTK | Headshots | Acc | Dist | Overkill | SB/NS';
+    const VERSION_PREFIX   = /^\[cn_v(\d+)\.(\d+)\]/; // matches [cn_vX.XX]
+
+    // Parse the current version once for comparison
+    const [, curMaj, curMin] = CURRENT_LOG_VERSION.match(/(\d+)\.(\d+)$/) || [];
+
+    let showOutdated = false;
+
     for (const text of texts) {
       const firstLine = text.replace(/^\uFEFF/, '').split(/\r?\n/)[0].trim();
-      if (firstLine !== REQUIRED_HEADER) {
+      const versionMatch = firstLine.match(VERSION_PREFIX);
+
+      if (versionMatch) {
+        // File has a [cn_vX.XX] tag - check if it's current
+        const fileMaj = parseInt(versionMatch[1], 10);
+        const fileMin = parseInt(versionMatch[2], 10);
+        const currMajInt = parseInt(curMaj, 10);
+        const currMinInt = parseInt(curMin, 10);
+        const isOutdated = fileMaj < currMajInt || (fileMaj === currMajInt && fileMin < currMinInt);
+        if (isOutdated) showOutdated = true;
+        // Current or newer version: passes through cleanly (no flag set)
+
+      } else if (firstLine === LEGACY_HEADER) {
+        // Old format without version tag - warn but allow
+        showOutdated = true;
+
+      } else {
+        // Completely unrecognized - hard reject
         showVersionModal();
         return;
       }
     }
+
+    if (showOutdated) showOutdatedModal();
+    // Execution continues regardless - stats are computed and shown
     const combined = texts.join('\n');
     window._lastRawLog = combined; // stash raw text for optional submission
     const raw = parseLog(combined);
@@ -2739,10 +3148,15 @@ document.addEventListener('DOMContentLoaded', function () {
       if (e.target === this) hideVersionModal();
     });
 
+    document.getElementById('outdated-modal-close-btn').addEventListener('click', hideOutdatedModal);
+    document.getElementById('outdated-modal-overlay').addEventListener('click', function (e) {
+      if (e.target === this) hideOutdatedModal();
+    });
+
     document.getElementById('btn-community-preview').addEventListener('click', toggleCommunityPreview);
 
     // Auto-enter community preview when linked from the Community Stats card on the index page
-    // (URL contains #community hash — e.g. submit_stats.html#community)
+    // (URL contains #community hash - e.g. submit_stats.html#community)
     if (window.location.hash === '#community') {
       toggleCommunityPreview();
     }
