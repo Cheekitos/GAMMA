@@ -5,128 +5,98 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kill Data Contributors | Cheeki's Mods Archive</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
 
   body {
-    background: #111827;
-    color: #f3f4f6;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    font-size: 14px;
-    line-height: 1.6;
+    background: #111927;
+    color: #d7dde3;
+    font-family: 'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
     min-height: 100vh;
     padding: 20px;
   }
 
-  a { color: #60a5fa; text-decoration: none; transition: color 0.2s; }
-  a:hover { color: #93c5fd; }
+  a { color: #4d8fc9; text-decoration: none; transition: color 0.2s; }
+  a:hover { color: #7bb8e8; }
 
   .container { max-width: 960px; margin: 0 auto; }
 
   /* ── Site header ── */
-  .page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-  .site-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #f3f4f6;
-    cursor: pointer;
-    transition: color 0.2s;
-  }
-  .site-title:hover { color: #fbbf24; }
+  .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; gap: 12px; flex-wrap: wrap; }
+  .site-title { font-size: 0.95rem; font-weight: 700; color: #e6edf3; cursor: pointer; transition: color 0.2s; letter-spacing: 0.03em; }
+  .site-title:hover { color: #e0a840; }
 
   /* ── Breadcrumb ── */
-  .breadcrumb {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.875rem;
-    margin-bottom: 24px;
-    color: #9ca3af;
-  }
-  .breadcrumb a { color: #60a5fa; }
-  .breadcrumb-sep { color: #9ca3af; }
+  .breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 0.72rem; margin-bottom: 18px; color: #767b82; }
+  .breadcrumb a { color: #4d8fc9; }
+  .breadcrumb-sep { color: #64686e; }
 
-  /* ── Page title ── */
-  .page-title {
-    font-size: 1.75rem;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 6px;
-    color: #fbbf24;
-  }
-  .page-subtitle {
-    text-align: center;
-    color: #9ca3af;
-    margin-bottom: 32px;
-    font-size: 0.875rem;
-  }
+  /* ── Hero / page title ── */
+  .hero { padding: 10px 0 18px; }
+  .page-title { font-size: 1.2rem; font-weight: 700; color: #e0a840; margin-bottom: 5px; letter-spacing: 0.02em; }
+  .page-subtitle { color: #b0b8c4; font-size: 0.78rem; }
 
   /* ── Section label ── */
-  .section-label {
-    font-size: 0.75rem;
+  .section-label { font-size: 0.69rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #e6edf3; border-left: 2px solid #e0a840; padding-left: 8px; margin-bottom: 10px; }
+  .section-divider { border: none; border-top: 1px solid #2e3d50; margin: 22px 0; }
+
+  /* ── Summary strip ── */
+  .summary-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-bottom: 22px;
+  }
+  .summary-card {
+    background: rgba(33, 43, 55, 0.8);
+    border: 1px solid #2e3d50;
+    border-top: 2px solid #e0a840;
+    border-radius: 2px;
+    padding: 10px 12px;
+    text-align: center;
+  }
+  .summary-val {
+    display: block;
+    font-size: 1.2rem;
     font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: #fbbf24;
-    border-left: 3px solid #fbbf24;
-    padding-left: 10px;
-    margin-bottom: 16px;
+    color: #e0a840;
+    font-variant-numeric: tabular-nums;
+    font-family: 'IBM Plex Mono', 'Consolas', monospace;
   }
-
-  .section-divider { border: none; border-top: 1px solid #374151; margin: 32px 0; }
-
-  /* ── Info box ── */
-  .info-box {
-    background: #1f2937;
-    border: 1px solid #374151;
-    border-left: 4px solid #fbbf24;
-    border-radius: 6px;
-    padding: 16px 20px;
-    margin-bottom: 32px;
-    font-size: 0.875rem;
-    color: #d1d5db;
-    line-height: 1.7;
-  }
-  .info-box b { color: #f9fafb; }
+  .summary-lbl { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.12em; color: #8a9199; margin-top: 2px; }
 
   /* ── Podium ── */
   .podium {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 10px;
+    gap: 6px;
     align-items: end;
-    margin-bottom: 24px;
+    margin-bottom: 22px;
   }
 
   .podium-card {
-    background: #1f2937;
-    border: 1px solid #374151;
-    border-radius: 8px;
-    padding: 15px 12px 12px;
+    background: rgba(33, 43, 55, 0.8);
+    border: 1px solid #2e3d50;
+    border-radius: 2px;
+    padding: 14px 12px 12px;
     text-align: center;
     position: relative;
     transition: border-color 0.2s;
   }
 
   .podium-card.rank-1 {
-    border-color: #d97706;
-    background: rgba(251,191,36,0.06);
-    padding-top: 21px;
+    border-color: #e0a840;
+    background: rgba(224, 168, 64, 0.08);
+    padding-top: 20px;
   }
-  .podium-card.rank-2 { border-color: #6b7280; }
-  .podium-card.rank-3 { border-color: #78350f; }
+  .podium-card.rank-2 { border-color: #4d6680; }
+  .podium-card.rank-3 { border-color: #4a3820; }
 
-  .podium-medal {
-    font-size: 1.5rem;
-    display: block;
-    margin-bottom: 5px;
-  }
+  .podium-medal { font-size: 1.4rem; display: block; margin-bottom: 5px; }
 
   .podium-rank {
     font-size: 0.6rem;
@@ -134,86 +104,78 @@
     letter-spacing: 0.14em;
     text-transform: uppercase;
     margin-bottom: 4px;
+    font-family: 'IBM Plex Mono', monospace;
   }
-  .rank-1 .podium-rank { color: #fbbf24; }
-  .rank-2 .podium-rank { color: #9ca3af; }
-  .rank-3 .podium-rank { color: #92400e; }
+  .rank-1 .podium-rank { color: #e0a840; }
+  .rank-2 .podium-rank { color: #8a9199; }
+  .rank-3 .podium-rank { color: #9a7030; }
 
   .podium-name {
-    font-size: 1.05rem;
+    font-size: 0.98rem;
     font-weight: 700;
-    color: #f9fafb;
+    color: #e6edf3;
     margin-bottom: 4px;
     min-height: 1.1rem;
   }
-
-  .podium-name.blank {
-    color: #374151;
-    font-style: italic;
-    font-weight: 400;
-    font-size: 0.8rem;
-  }
+  .podium-name.blank { color: #2a3545; font-style: italic; font-weight: 400; font-size: 0.8rem; }
 
   .podium-kills {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
     font-weight: 700;
     font-variant-numeric: tabular-nums;
+    font-family: 'IBM Plex Mono', 'Consolas', monospace;
     display: block;
     margin-bottom: 2px;
   }
-  .rank-1 .podium-kills { color: #fbbf24; }
-  .rank-2 .podium-kills { color: #9ca3af; }
-  .rank-3 .podium-kills { color: #b45309; }
+  .rank-1 .podium-kills { color: #e0a840; }
+  .rank-2 .podium-kills { color: #8a9199; }
+  .rank-3 .podium-kills { color: #a87838; }
+  .podium-kills.blank { color: #2a3545; font-size: 0.875rem; font-weight: 400; font-style: italic; }
 
-  .podium-kills.blank { color: #374151; font-size: 0.875rem; font-weight: 400; font-style: italic; }
-
-  .podium-kills-label {
-    font-size: 0.65rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #6b7280;
-  }
+  .podium-kills-label { font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: #6a7480; }
 
   /* ── Leaderboard table ── */
   .lb-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.875rem;
+    font-size: 0.8rem;
   }
 
   .lb-table th {
-    background: #1f2937;
-    color: #9ca3af;
-    font-size: 0.7rem;
-    letter-spacing: 0.08em;
+    background: rgba(33, 43, 55, 0.9);
+    color: #8a9199;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    padding: 8px 12px;
+    padding: 7px 10px;
     text-align: left;
-    border-bottom: 2px solid #374151;
-    font-weight: 600;
+    border-bottom: 1px solid #2e3d50;
+    font-weight: 700;
+    font-family: 'IBM Plex Sans', sans-serif;
   }
 
   .lb-table th.right { text-align: right; }
 
   .lb-table td {
-    padding: 10px 12px;
-    border-bottom: 1px solid #1f2937;
+    padding: 8px 10px;
+    border-bottom: 1px solid #1e2d3d;
     vertical-align: middle;
-    color: #d1d5db;
+    color: #b0b8c4;
   }
 
-  .lb-table tr:hover td { background: #1a2535; }
+  .lb-table tr:hover td { background: rgba(224, 168, 64, 0.04); }
 
   .lb-rank-num {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 700;
-    color: #6b7280;
+    color: #4d6680;
     font-variant-numeric: tabular-nums;
-    width: 40px;
+    font-family: 'IBM Plex Mono', monospace;
+    width: 36px;
   }
 
   .lb-name {
-    color: #f3f4f6;
+    color: #d8e0e8;
     font-weight: 600;
     display: flex;
     align-items: center;
@@ -221,85 +183,33 @@
   }
 
   /* ── Social Links ── */
-  .social-links {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .social-icon {
-    color: #6b7280;
-    display: inline-flex;
-    transition: color 0.2s, transform 0.2s;
-  }
-  
+  .social-links { display: inline-flex; align-items: center; gap: 6px; }
+  .social-icon { color: #4d6680; display: inline-flex; transition: color 0.2s, transform 0.2s; }
   .social-icon:hover { transform: scale(1.1); }
-  .social-icon.yt:hover { color: #ef4444; } /* YouTube Red */
-  .social-icon.tw:hover { color: #a855f7; } /* Twitch Purple */
-
-  .social-icon svg {
-    width: 16px;
-    height: 16px;
-    fill: currentColor;
-  }
+  .social-icon.yt:hover { color: #ef4444; }
+  .social-icon.tw:hover { color: #a855f7; }
+  .social-icon svg { width: 14px; height: 14px; fill: currentColor; }
 
   .lb-kills {
     text-align: right;
     font-weight: 700;
     font-variant-numeric: tabular-nums;
-    color: #4ade80;
-    font-family: 'SF Mono', 'Consolas', monospace;
+    font-family: 'IBM Plex Mono', 'Consolas', monospace;
   }
 
-  .lb-bar-cell {
-    width: 200px;
-    padding-right: 16px;
-  }
+  .lb-bar-cell { width: 180px; padding-right: 14px; }
 
   .lb-bar-track {
-    background: #1f2937;
-    border-radius: 3px;
-    height: 6px;
+    background: #1e2d3d;
+    border-radius: 1px;
+    height: 4px;
     overflow: hidden;
   }
 
   .lb-bar-fill {
     height: 100%;
-    border-radius: 3px;
+    border-radius: 1px;
     transition: width 0.4s ease;
-    /* color set inline per-row via JS */
-  }
-
-  /* ── Stat summary ── */
-  .summary-strip {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-bottom: 32px;
-  }
-
-  .summary-card {
-    background: #1f2937;
-    border: 1px solid #374151;
-    border-radius: 6px;
-    padding: 14px;
-    text-align: center;
-  }
-
-  .summary-val {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #4ade80;
-    display: block;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .summary-lbl {
-    font-size: 0.7rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #6b7280;
-    margin-top: 2px;
   }
 
   /* ── New-contributor star ── */
@@ -307,8 +217,8 @@
     display: inline-flex;
     align-items: center;
     cursor: default;
-    font-size: 0.8rem;
-    color: #fbbf24;
+    font-size: 0.75rem;
+    color: #e0a840;
     position: relative;
     line-height: 1;
   }
@@ -318,35 +228,36 @@
     bottom: calc(100% + 4px);
     left: 50%;
     transform: translateX(-50%);
-    background: #1f2937;
-    color: #f9fafb;
-    border: 1px solid #374151;
-    border-radius: 4px;
+    background: #1e2d3d;
+    color: #e6edf3;
+    border: 1px solid #2e3d50;
+    border-radius: 2px;
     padding: 3px 10px;
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     white-space: nowrap;
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.15s;
     z-index: 20;
+    font-family: 'IBM Plex Sans', sans-serif;
+    letter-spacing: 0.04em;
   }
   .new-star:hover::after { opacity: 1; }
 
   /* ── Kill-delta badge (+N) ── */
   .kills-delta {
-    font-size: 0.72rem;
+    font-size: 0.68rem;
     font-weight: 700;
-    color: #4ade80;
-    font-family: 'SF Mono', 'Consolas', monospace;
+    color: #5cb870;
+    font-family: 'IBM Plex Mono', 'Consolas', monospace;
     margin-left: 4px;
   }
 
-  /* podium delta sits below the main kills number */
   .podium-kills-delta {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 700;
-    color: #4ade80;
-    font-family: 'SF Mono', 'Consolas', monospace;
+    color: #5cb870;
+    font-family: 'IBM Plex Mono', 'Consolas', monospace;
     display: block;
     margin-top: 2px;
   }
@@ -366,18 +277,20 @@
   </div>
 
   <nav class="breadcrumb" aria-label="Breadcrumb">
-    <svg fill="currentColor" viewBox="0 0 20 20" width="14" height="14" style="flex-shrink:0">
+    <svg fill="currentColor" viewBox="0 0 20 20" width="12" height="12" style="flex-shrink:0">
       <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
     </svg>
     <a href="https://cheeki.zone">Archive</a>
     <span class="breadcrumb-sep">›</span>
     <a href="../index.html">GAMMA Tools</a>
     <span class="breadcrumb-sep">›</span>
-    <span style="color:#d1d5db;">Kill Data Contributors</span>
+    <span style="color:#9da3ac;">Kill Data Contributors</span>
   </nav>
 
-  <h1 class="page-title">Kill Data Contributors</h1>
-  <p class="page-subtitle">S.T.A.L.K.E.R. GAMMA · Rankings by kills submitted</p>
+  <div class="hero">
+    <h1 class="page-title">Kill Data Contributors</h1>
+    <p class="page-subtitle">S.T.A.L.K.E.R. GAMMA · Rankings by kills submitted</p>
+  </div>
 
   <div class="summary-strip">
     <div class="summary-card">
@@ -541,9 +454,10 @@ const CONTRIBUTORS = [
   const totalEntries = sorted.length;
   function barColor(rankIndex) {
     const t = totalEntries > 1 ? 1 - (rankIndex / (totalEntries - 1)) : 1;
-    const r = Math.round(251 * t + 74  * (1 - t));
-    const g = Math.round(191 * t + 222 * (1 - t));
-    const b = Math.round(36  * t + 128 * (1 - t));
+    // Amber (#e0a840) → muted blue-grey (#4d6680)
+    const r = Math.round(224 * t + 77  * (1 - t));
+    const g = Math.round(168 * t + 102 * (1 - t));
+    const b = Math.round(64  * t + 128 * (1 - t));
     const toHex = n => n.toString(16).padStart(2, '0');
     return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
   }
