@@ -139,8 +139,6 @@
   /* ── Stat cards ── */
   .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 0; }
   .stat-grid.three-col { grid-template-columns: 1fr 1fr 1fr; }
-  .stat-grid.four-col  { grid-template-columns: repeat(4, 1fr); }
-  .stat-grid.one-col { grid-template-columns: 1fr; }
 
   .stat-card {
     background: rgba(33, 43, 55, 0.63);
@@ -402,14 +400,12 @@
   @media (max-width: 768px) {
     .weapon-grid { grid-template-columns: repeat(2, 1fr); }
     .weapon-grid-3col { grid-template-columns: repeat(2, 1fr); }
-    .stat-grid.four-col { grid-template-columns: repeat(2, 1fr); }
   }
 
   @media (max-width: 640px) {
     .summary-strip { grid-template-columns: repeat(2, 1fr); }
     .stat-grid { grid-template-columns: 1fr; }
     .stat-grid.three-col { grid-template-columns: 1fr; }
-    .stat-grid.four-col  { grid-template-columns: 1fr; }
     .weapon-grid { grid-template-columns: 1fr; }
     .weapon-grid-3col { grid-template-columns: 1fr; }
     .save-grid { grid-template-columns: 1fr 1fr; }
@@ -853,8 +849,6 @@
   <div id="submit-banner" style="display:none;border-radius:6px;padding:10px 14px;font-size:0.82rem;margin-bottom:12px;"></div>
 
   <div id="results">
-    <div id="community-data-credit" style="display:none;"></div>
-
 
     <div class="section-label">Overview</div>
     <div class="summary-strip">
@@ -1271,19 +1265,21 @@
 
       <div class="stat-card">
         <div class="stat-card-title"><span class="icon">↓</span> Deaths per Hour</div>
-        <div class="stat-big" id="s-dph">--</div>
-        <div class="stat-sub">The lower the better!</div>
-        <div class="comparison">
-          <div class="bar-track">
-            <div class="bar-comm-label" id="comm-label-dph">Average</div>
-            <div class="bar-track-inner">
-              <div class="bar-gradient-bg" id="grad-dph"></div>
-              <div class="bar-mask" id="bar-dph" style="width:100%"></div>
+        <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+          <div class="stat-big" id="s-dph">--</div>
+          <div class="stat-sub">The lower the better!</div>
+          <div class="comparison" style="margin-top:0;">
+            <div class="bar-track">
+              <div class="bar-comm-label" id="comm-label-dph">Average</div>
+              <div class="bar-track-inner">
+                <div class="bar-gradient-bg" id="grad-dph"></div>
+                <div class="bar-mask" id="bar-dph" style="width:100%"></div>
+              </div>
+              <div class="bar-comm-marker" id="marker-dph"></div>
             </div>
-            <div class="bar-comm-marker" id="marker-dph"></div>
+            <div class="bar-labels"><span>0</span><span id="dph-max-label">20</span></div>
+            <div class="bar-comm-value" id="comm-value-dph"></div>
           </div>
-          <div class="bar-labels"><span>0</span><span id="dph-max-label">20</span></div>
-          <div class="bar-comm-value" id="comm-value-dph"></div>
         </div>
       </div>
 
@@ -1580,7 +1576,10 @@ function initSupabase() {
   }
 }
 
-const SUBMIT_COOLDOWN_MS = 5 * 24 * 60 * 60 * 1000; // 5 days (7 was too much)
+// INTENTIONAL: cooldown is enforced at 5 days but UI says "once per week" (7 days).
+// This is a safety buffer — users are never burned by a near-miss submission.
+// Do not "fix" the string to match the constant.
+const SUBMIT_COOLDOWN_MS = 5 * 24 * 60 * 60 * 1000;
 const CURRENT_LOG_VERSION = 'cn_v1.32'; // ← mod version
 
 async function submitRawLog(rawText, nickname) {
@@ -1675,99 +1674,91 @@ function startRateLimitCountdown(unlockAt) {
 const COMMUNITY = {
   // ── DATA DECISIONS (source data updates) ──────────────────
   // avgKD / avgNpcKD        → use MEDIAN of per-player KD ratios (marked "recommended" in the report)
-  // killEntries             → total pooled kill count (all formats). Used for the data-credit strip.
   // newFormatKillEntries /  → new-format players only. Used for community view Total Kills /
   // newFormatTotalDeaths       Total Deaths cards. Do NOT use avgKills here - this is a per-player average, not a community total.
   // avgPlayerDurationHours  → numeric hours from avgPlayerDuration. Used directly in buildCommunityPreviewStats() to compute saves/loads totals.
   // ────────────────────────────────────────────────────────────────────────────────────────────
 
-  killEntries:      66407,   // total kill entries used for community averages
-  playerCount:      111,     // number of players in the dataset
-
-  medianHTK:        3,       // median hits-to-kill (all difficulties combined)
-  medianTTK:        0.84,    // median time-to-kill in seconds (all difficulties combined)
-
   avgAccuracyPct:   68.8,    // % - average shot accuracy across all kills
-  avgDistanceM:     25.0,    // metres - average engagement distance
-  avgHeadshotPct:   22.6,    // % - headshots per kill (headshots / kills * 100)  // new-format only
-  avgDeathsPerHour: 2.9,     // deaths per hour of active playtime                // new-format only
-  avgOverkillPct:   61.5,    // % - average overkill % across all kills
-  avgSavesPerHour:  14.3,    // saves per hour                                    // new-format only
+  avgDistanceM:     24.9,    // metres - average engagement distance
+  avgHeadshotPct:   22.0,    // % - headshots per kill (headshots / kills * 100)  // new-format only
+  avgDeathsPerHour: 2.8,     // deaths per hour of active playtime                // new-format only
+  avgOverkillPct:   60.7,    // % - average overkill % across all kills
+  avgSavesPerHour:  14.0,    // saves per hour                                    // new-format only
   avgLoadsPerHour:  8.5,     // loads per hour                                    // new-format only
-  avgKD:            12.4,    // community MEDIAN K/D ratio (stalkers + mutants)   // new-format only
-  avgNpcKD:         6.9,     // community MEDIAN K/D ratio (stalkers only)        // new-format only
-  avgStreakAll:     85,       // longest kill streak - all enemies (stalkers + mutants)  // new-format only
-  avgStreakStalker: 60,       // longest kill streak - stalkers only                     // new-format only
-  avgKills:         598,      // avg kills per player (stalkers + mutants)
+  avgNpcKD:         6.4,     // community MEDIAN K/D ratio (stalkers only)        // new-format only
+  avgStreakAll:     83,       // longest kill streak - all enemies (stalkers + mutants)  // new-format only
+  avgStreakStalker: 59,       // longest kill streak - stalkers only                     // new-format only
+  avgKills:         603,      // avg kills per player (stalkers + mutants)
   stalkerFrac:      0.74,     // NPC kill fraction (stalker/mutant split)
-  longestKill:      157,      // avg longest kill distance in metres                    // new-format only
+  longestKill:      156,      // avg longest kill distance in metres                    // new-format only
   fallDeaths:       1,        // avg fall deaths per player                             // new-format only
 
   // New-format totals (used for community view Overview cards)
-  newFormatKillEntries: 19849, // kill entries from new-format players only
-  newFormatTotalDeaths:  1548, // total deaths from new-format players only
+  newFormatKillEntries: 23433, // kill entries from new-format players only
+  newFormatTotalDeaths:  1940, // total deaths from new-format players only
 
   // Top causes of death for the average player
   topKillers: [
-    { label: '▲ Fire Anomaly',     color: '#8a5030', deaths: 68 },
-    { label: '∿ Shock Anomaly',    color: '#3a6a9a', deaths: 52 },
-    { label: '◉ Psi Anomaly',      color: '#6a5a98', deaths: 50 },
-    { label: '☢ Radiation',        color: '#4a8a60', deaths: 38 },
-    { label: '◆ Physical Anomaly', color: '#8a7040', deaths: 29 },
-    { label: '☣ Chemical Anomaly', color: '#507a70', deaths: 7  },
+    { label: '▲ Fire Anomaly',     color: '#8a5030', deaths: 78 },
+    { label: '◉ Psi Anomaly',      color: '#6a5a98', deaths: 75 },
+    { label: '∿ Shock Anomaly',    color: '#3a6a9a', deaths: 64 },
+    { label: '☢ Radiation',        color: '#4a8a60', deaths: 44 },
+    { label: '◆ Physical Anomaly', color: '#8a7040', deaths: 37 },
+    { label: '☣ Chemical Anomaly', color: '#507a70', deaths: 11 },
   ],
   // Raw community totals - new-format players only
-  totalNpcDeaths:    853,   // total deaths caused by all NPC factions combined
-  totalMutantDeaths: 373,   // total deaths caused by all mutant types combined
+  totalNpcDeaths:    1093,   // total deaths caused by all NPC factions combined
+  totalMutantDeaths: 439,    // total deaths caused by all mutant types combined
 
   // Per-faction breakdown for Worst NPCs / Worst Mutants panels
-  npcDeathsBreakdown:    { 'Monolith': 232, 'Sin': 102, 'Military': 93, 'Mercenary': 87, 'Bandit': 80 },
-  mutantDeathsBreakdown: { 'Chimera': 64, 'Pseudogiant': 45, 'Bloodsucker': 26, 'Boar': 25 },
+  npcDeathsBreakdown:    { 'Monolith': 287, 'Sin': 107, 'Military': 100, 'Bandit': 92, 'Mercenary': 90 },
+  mutantDeathsBreakdown: { 'Pseudogiant': 91, 'Chimera': 68, 'Bloodsucker': 31, 'Boar': 30, 'Controller': 29 },
 
   topWeapons: {
-    'Melee':   ['OTs-4 Combat Knife', '6h4 Bayonet', 'Kukri', 'Hunting Knife', 'M9 Bayonet', 'Monolith Blade'],
-    'Pistol':  ['Glock 19 "Hornet"', 'Desert Eagle', 'FNX-45', 'MP-412 Rex', 'FNP-45', 'Desert Eagle "Steppe Eagle"'],
-    'Shotgun': ['Saiga-12 Tactical', 'KSG-23', 'TOZ-34 "Chimera Hunter"', 'Mossberg 590A1', 'M1014', 'Saiga-12'],
-    'SMG':     ['PP-19-01 Vityaz', 'MP5A3 "Frasier"', 'SR-2M Veresk', 'SR-2M Veresk "Tactical"', 'MP5SD6', 'UMP45'],
-    'Rifle':   ['AK-74 "PMC"', 'BRN-180', 'AK-105 "Shakal"', 'AEK-971', 'Rifle Dynamics RD-74N ISG Tactical', 'Thales EF88'],
-    'Sniper':  ['Remington 700 "Magpul PRO"', 'SVD', 'SVDS', 'Winchester Model 1873', 'Mosin Nagant', 'Barrett M98B'],
+    'Melee':   ['OTs-4 Combat Knife', 'Kukri', '6h4 Bayonet', 'Hunting Knife', 'M9 Bayonet', 'Monolith Blade'],
+    'Pistol':  ['Glock 19 "Hornet"', 'Desert Eagle', 'FNX-45', 'MP-412 Rex', 'FNP-45', 'FN Five-seveN'],
+    'Shotgun': ['Saiga-12 Tactical', 'KSG-23', 'TOZ-34 "Chimera Hunter"', 'M1014', 'Mossberg 590A1', 'Saiga-12'],
+    'SMG':     ['PP-19-01 Vityaz', 'MP5A3 "Frasier"', 'SR-2M Veresk', 'SR-2M Veresk "Tactical"', 'OTs-02 Kiparis', 'MP5SD6'],
+    'Rifle':   ['AK-74 "PMC"', 'BRN-180', 'AEK-971', 'AK-105 "Shakal"', 'AN-94', 'Rifle Dynamics RD-74N ISG Tactical'],
+    'Sniper':  ['Remington 700 "Magpul PRO"', 'SVD', 'Winchester Model 1873', 'SVDS', 'Mosin Nagant', 'Barrett M98B'],
   },
 
   // Top 20 weapons overall by usage (selective ranking)
   // Each entry carries its category directly from the community averages report.
   top20: [
-    { name: 'Saiga-12 Tactical',           cat: 'Shotgun', entries: 399 },
-    { name: 'AK-74 "PMC"',                 cat: 'Rifle',   entries: 376 },
-    { name: 'KSG-23',                      cat: 'Shotgun', entries: 364 },
-    { name: 'Remington 700 "Magpul PRO"',  cat: 'Sniper',  entries: 315 },
+    { name: 'Saiga-12 Tactical',           cat: 'Shotgun', entries: 422 },
+    { name: 'AK-74 "PMC"',                 cat: 'Rifle',   entries: 396 },
+    { name: 'KSG-23',                      cat: 'Shotgun', entries: 366 },
+    { name: 'Remington 700 "Magpul PRO"',  cat: 'Sniper',  entries: 316 },
+    { name: 'Glock 19 "Hornet"',           cat: 'Pistol',  entries: 285 },
     { name: 'PP-19-01 Vityaz',             cat: 'SMG',     entries: 284 },
-    { name: 'Glock 19 "Hornet"',           cat: 'Pistol',  entries: 275 },
     { name: 'MP5A3 "Frasier"',             cat: 'SMG',     entries: 272 },
-    { name: 'TOZ-34 "Chimera Hunter"',     cat: 'Shotgun', entries: 245 },
+    { name: 'SR-2M Veresk',               cat: 'SMG',     entries: 268 },
+    { name: 'TOZ-34 "Chimera Hunter"',     cat: 'Shotgun', entries: 249 },
     { name: 'FN P90',                      cat: 'Unknown', entries: 226 },
-    { name: 'SR-2M Veresk',               cat: 'SMG',     entries: 221 },
     { name: 'RPK-16 LMG',                  cat: 'Unknown', entries: 220 },
     { name: 'Karabiner 98k Forester mk.2', cat: 'Unknown', entries: 207 },
-    { name: 'Mossberg 590A1',             cat: 'Shotgun', entries: 197 },
-    { name: 'SR-2M Veresk "Tactical"',    cat: 'SMG',     entries: 193 },
-    { name: 'BRN-180',                     cat: 'Rifle',   entries: 189 },
-    { name: 'M1014',                       cat: 'Shotgun', entries: 189 },
-    { name: 'SVD',                         cat: 'Sniper',  entries: 170 },
+    { name: 'M1014',                       cat: 'Shotgun', entries: 205 },
+    { name: 'Mossberg 590A1',             cat: 'Shotgun', entries: 199 },
+    { name: 'SR-2M Veresk "Tactical"',    cat: 'SMG',     entries: 196 },
+    { name: 'BRN-180',                     cat: 'Rifle',   entries: 213 },
+    { name: 'SVD',                         cat: 'Sniper',  entries: 184 },
+    { name: 'Winchester Model 1873',       cat: 'Sniper',  entries: 181 },
+    { name: 'AEK-971',                     cat: 'Rifle',   entries: 181 },
     { name: 'AK-105 "Shakal"',            cat: 'Rifle',   entries: 169 },
-    { name: 'AEK-971',                     cat: 'Rifle',   entries: 168 },
-    { name: 'SVDS',                        cat: 'Sniper',  entries: 167 },
   ],
 
   // Gameplay duration - new-format .log only
-  communityTotalPlaytime:  '1344h 46m',  // total combined playtime
-  avgPlayerDuration:       '21h 01m',    // avg per player (display string)
-  avgPlayerDurationHours:  21.017,       // avg per player in hours (used for derived totals in community preview)
-  avgSessionLength:        '58m',        // avg gaming session
+  communityTotalPlaytime:  '1610h 43m',  // total combined playtime
+  avgPlayerDuration:       '23h 01m',    // avg per player (display string)
+  avgPlayerDurationHours:  23.017,       // avg per player in hours (used for derived totals in community preview)
+  avgSessionLength:        '57m',        // avg gaming session
 
   // Avg kills per player broken down by weapon category (baseKills column from report).
   // Used by buildCommunityPreviewStats() to generate ranked weapon kill counts.
   // Keep in sync with the "Kills by weapon category" table in the report
-  baseKillsByCategory: { Melee: 8, Pistol: 35, Shotgun: 76, SMG: 99, Rifle: 235, Sniper: 66 },
+  baseKillsByCategory: { Melee: 8, Pistol: 35, Shotgun: 75, SMG: 100, Rifle: 237, Sniper: 66 },
 
   // Difficulty distribution by UNIQUE PLAYER COUNT.
   // A player may appear under multiple difficulties, so the sum of `players` can exceed the total
@@ -1775,9 +1766,9 @@ const COMMUNITY = {
   // kill % are intentionally ignored): pct = (players / sum_of_all_difficulty_players) × 100.
   // e.g. Novice: 20/(20+26+60) = 20/106 ≈ 19.0%
   difficultyDistribution: [
-    { label: 'Novice',  players: 25, pct: 20.0, color: '#4a9a5e' },
-    { label: 'Stalker', players: 32, pct: 25.6, color: '#c9973a' },
-    { label: 'Veteran', players: 68, pct: 54.4, color: '#c0484a' },
+    { label: 'Novice',  players: 26, pct: 19.8, color: '#4a9a5e' },
+    { label: 'Stalker', players: 34, pct: 25.9, color: '#c9973a' },
+    { label: 'Veteran', players: 71, pct: 54.2, color: '#c0484a' },
   ],
 };
 // ============================================================
@@ -2106,9 +2097,6 @@ function computeStats(data) {
   const stalkerKillCount = kills.filter(k => k.armor !== 'Mutant').length;
   const mutantKillCount  = kills.filter(k => k.armor === 'Mutant').length;
 
-  // ── Median HTK / TTK ──
-  const medianHTK = median(kills.map(k => k.htk));
-  const medianTTK = median(kills.map(k => k.ttk));
 
   return {
     killCount: kills.length,
@@ -2134,14 +2122,11 @@ function computeStats(data) {
     anomalyDeaths,
     radiationDeaths,
     fallDeaths,
-    deathCauses,
     bestStreakAll,
     bestStreakStalker,
     stalkerKillCount,
     mutantKillCount,
     rageQuits,
-    medianHTK,
-    medianTTK,
   };
 }
 
@@ -2391,7 +2376,7 @@ function setBar(barId, markerId, value, max, commValue, lowerIsBetter = false, c
 
 function renderEnemyList(elId, deathMap, label) {
   const el = document.getElementById(elId);
-  const sorted = Object.entries(deathMap).sort((a,b) => b[1]-a[1]).slice(0,3);
+  const sorted = Object.entries(deathMap).sort((a,b) => b[1]-a[1]).slice(0,5);
   if (!sorted.length) { el.innerHTML = '<div class="no-data">No '+label+' deaths found.</div>'; return; }
   el.innerHTML = sorted.map(([name, count]) =>
     `<div class="enemy-row"><span class="enemy-name">${name}</span><span class="enemy-deaths">${count} death${count>1?'s':''}</span></div>`
@@ -2521,7 +2506,6 @@ function renderTop20() {
       const open = document.getElementById('top20-panel').style.display !== 'none';
       document.getElementById('top20-panel').style.display = open ? 'none' : 'block';
       document.getElementById('btn-top20-toggle').setAttribute('aria-expanded', String(!open));
-      document.getElementById('top20-btn-label').textContent = open ? 'Most Used Weapons - Top 20' : 'Most Used Weapons - Top 20';
     });
   }
 }
@@ -2643,11 +2627,12 @@ function renderKillPie(st) {
 }
 
 // ============================================================
-// COMMUNITY PREVIEW - builds stats object from COMMUNITY
+// COMMUNITY PREVIEW
 // averages so visitors can see the full stats page without a log.
 // ============================================================
 function buildCommunityPreviewStats() {
   // Derived from COMMUNITY averages + plausible placeholders
+  // (marked with **PLACEHOLDER** below - replace when you have real data)
 
   const avgKills        = COMMUNITY.avgKills;
   const avgHours        = COMMUNITY.avgPlayerDurationHours;
@@ -2655,7 +2640,7 @@ function buildCommunityPreviewStats() {
   // newFormatKillEntries (not avgKills) are the base for the kills pie chart
   // and killCount. avgKills is a per-player average and will produce a misleadingly small
   // number in the community view. newFormatKillEntries is the true total across all
-  // new-format players and is what drives the Kills Breakdown pie and the kills overview card.
+  // new-format players and what drives the Kills Breakdown pie and the kills overview card.
   // stalkerFrac is applied to this total to split into Stalkers vs Mutants.
   const totalKills      = COMMUNITY.newFormatKillEntries;
   const stalkerFrac     = COMMUNITY.stalkerFrac;
@@ -2758,7 +2743,7 @@ function showCommunityPreview() {
   document.getElementById('upload-wrapper').style.display = 'none';
   document.getElementById('overall-performance-section').style.display = 'none';
 
-  // percentile text for the bell curve to say "community" not "you"
+  // Patch the percentile text for the bell curve to say "community" not "you"
   window._isCommunityPreview = true;
   renderStats(st);
   window._isCommunityPreview = false;
@@ -2770,10 +2755,6 @@ function showCommunityPreview() {
   document.getElementById('bc-percentile-text').innerHTML =
     'The <strong>average STALKER</strong> scores exactly <strong>50</strong> - right in the middle of the community.';
 
-  // Override Total Kills with new-format community total
-  // (renderStats() sets this from avgKills which is a per-player average)
-  // buildCommunityPreviewStats() sets deathCount directly to COMMUNITY.newFormatTotalDeaths, so renderStats() handles it correctly.
-  document.getElementById('stat-kills').textContent  = COMMUNITY.newFormatKillEntries.toLocaleString();
   // Rename 'Total Kills' → 'Total Community Kills' in community view only
   const killsCard = document.getElementById('stat-kills').closest('.summary-card');
   const killsLbl = killsCard ? killsCard.querySelector('.summary-lbl') : null;
@@ -3202,6 +3183,8 @@ document.addEventListener('DOMContentLoaded', function () {
       processFiles(window._stagedFiles, false);
     });
 
+    // INTENTIONAL: #reset-btn has no HTML element on purpose. Users must go through "See community stats" to return to the upload screen
+    // The null-guard below keeps this handler harmless if the button is ever added back.
     const resetBtn = document.getElementById('reset-btn');
     if (resetBtn) resetBtn.addEventListener('click', () => {
       document.getElementById('results').style.display = 'none';
