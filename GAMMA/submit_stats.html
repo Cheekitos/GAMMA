@@ -558,7 +558,8 @@
 
   /* ── Version error modal ── */
   #version-modal-overlay,
-  #outdated-modal-overlay {
+  #outdated-modal-overlay,
+  #language-modal-overlay {
     position: fixed;
     inset: 0;
     background: rgba(0,0,0,0.8);
@@ -571,7 +572,8 @@
     transition: opacity 0.25s ease;
   }
   #version-modal-overlay.modal-visible,
-  #outdated-modal-overlay.modal-visible {
+  #outdated-modal-overlay.modal-visible,
+  #language-modal-overlay.modal-visible {
     opacity: 1;
     pointer-events: auto;
   }
@@ -588,7 +590,8 @@
     transition: transform 0.25s ease;
   }
   #version-modal-overlay.modal-visible #version-modal,
-  #outdated-modal-overlay.modal-visible #version-modal {
+  #outdated-modal-overlay.modal-visible #version-modal,
+  #language-modal-overlay.modal-visible #version-modal {
     transform: scale(1);
   }
   #outdated-modal-overlay #version-modal {
@@ -777,6 +780,18 @@
     </p>
     <button class="version-modal-close" id="outdated-modal-close-btn"
             style="background:#7a6020;">Got it</button>
+  </div>
+</div>
+
+<!-- Language incompatibility warning modal (soft - stats shown, submission blocked) -->
+<div id="language-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="language-modal-title">
+  <div id="version-modal" style="border-color:#3a6a9a;">
+    <span class="version-modal-icon">🌐</span>
+    <div class="version-modal-title" id="language-modal-title" style="color:#5b9bd5;">Non-English Characters Detected</div>
+    <p class="version-modal-msg">
+      Unfortunately the mod only supports English language right now. Your stats will not show correctly on the page and you can't submit your logs.
+    </p>
+    <button class="version-modal-close" id="language-modal-close-btn" style="background:#1e4060;">Understood</button>
   </div>
 </div>
 
@@ -2627,7 +2642,7 @@ function renderKillPie(st) {
 }
 
 // ============================================================
-// COMMUNITY PREVIEW
+// COMMUNITY PREVIEW - builds a fake stats object from COMMUNITY
 // averages so visitors can see the full stats page without a log.
 // ============================================================
 function buildCommunityPreviewStats() {
@@ -2637,10 +2652,10 @@ function buildCommunityPreviewStats() {
   const avgKills        = COMMUNITY.avgKills;
   const avgHours        = COMMUNITY.avgPlayerDurationHours;
 
-  // newFormatKillEntries (not avgKills) are the base for the kills pie chart
+  // NOTE: Use newFormatKillEntries (not avgKills) as the base for the kills pie chart
   // and killCount. avgKills is a per-player average and will produce a misleadingly small
   // number in the community view. newFormatKillEntries is the true total across all
-  // new-format players and what drives the Kills Breakdown pie and the kills overview card.
+  // new-format players and is what drives the Kills Breakdown pie and the kills overview card.
   // stalkerFrac is applied to this total to split into Stalkers vs Mutants.
   const totalKills      = COMMUNITY.newFormatKillEntries;
   const stalkerFrac     = COMMUNITY.stalkerFrac;
@@ -3043,6 +3058,14 @@ function hideOutdatedModal() {
   document.getElementById('outdated-modal-overlay').classList.remove('modal-visible');
 }
 
+function showLanguageModal() {
+  document.getElementById('language-modal-overlay').classList.add('modal-visible');
+}
+
+function hideLanguageModal() {
+  document.getElementById('language-modal-overlay').classList.remove('modal-visible');
+}
+
 function processFiles(files, submitToSupabase, nickname) {
   const readers = [...files].map(f => new Promise((res, rej) => {
     const r = new FileReader();
@@ -3089,6 +3112,15 @@ function processFiles(files, submitToSupabase, nickname) {
     // Execution continues regardless - stats are computed and shown
     const combined = texts.join('\n');
     window._lastRawLog = combined; // stash raw text for optional submission
+
+    // ── Language / encoding check ──
+    // Non-ASCII characters (Cyrillic, etc.) mean the log was written in a
+    // non-English locale. Stats may display incorrectly and submission is blocked.
+    const hasIncompatibleChars = /[^\x00-\x7F]/.test(combined);
+    if (hasIncompatibleChars) {
+      showLanguageModal();
+      submitToSupabase = false; // block upload regardless of which button was pressed
+    }
     const raw = parseLog(combined);
     if (!raw.kills.length && !raw.deaths.length && !raw.saves.length) {
       showError('No valid log data found. Make sure you uploaded a cheeki_numbers.log file.');
@@ -3130,6 +3162,11 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('outdated-modal-close-btn').addEventListener('click', hideOutdatedModal);
     document.getElementById('outdated-modal-overlay').addEventListener('click', function (e) {
       if (e.target === this) hideOutdatedModal();
+    });
+
+    document.getElementById('language-modal-close-btn').addEventListener('click', hideLanguageModal);
+    document.getElementById('language-modal-overlay').addEventListener('click', function (e) {
+      if (e.target === this) hideLanguageModal();
     });
 
     document.getElementById('btn-community-preview').addEventListener('click', toggleCommunityPreview);
@@ -3183,7 +3220,8 @@ document.addEventListener('DOMContentLoaded', function () {
       processFiles(window._stagedFiles, false);
     });
 
-    // INTENTIONAL: #reset-btn has no HTML element on purpose. Users must go through "See community stats" to return to the upload screen
+    // INTENTIONAL: #reset-btn has no HTML element on purpose. Users must go through
+    // "See community stats" to return to the upload screen — deliberate engagement nudge.
     // The null-guard below keeps this handler harmless if the button is ever added back.
     const resetBtn = document.getElementById('reset-btn');
     if (resetBtn) resetBtn.addEventListener('click', () => {
