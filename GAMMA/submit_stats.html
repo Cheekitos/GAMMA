@@ -558,8 +558,7 @@
 
   /* ── Version error modal ── */
   #version-modal-overlay,
-  #outdated-modal-overlay,
-  #language-modal-overlay {
+  #outdated-modal-overlay {
     position: fixed;
     inset: 0;
     background: rgba(0,0,0,0.8);
@@ -572,8 +571,7 @@
     transition: opacity 0.25s ease;
   }
   #version-modal-overlay.modal-visible,
-  #outdated-modal-overlay.modal-visible,
-  #language-modal-overlay.modal-visible {
+  #outdated-modal-overlay.modal-visible {
     opacity: 1;
     pointer-events: auto;
   }
@@ -590,8 +588,7 @@
     transition: transform 0.25s ease;
   }
   #version-modal-overlay.modal-visible #version-modal,
-  #outdated-modal-overlay.modal-visible #version-modal,
-  #language-modal-overlay.modal-visible #version-modal {
+  #outdated-modal-overlay.modal-visible #version-modal {
     transform: scale(1);
   }
   #outdated-modal-overlay #version-modal {
@@ -780,18 +777,6 @@
     </p>
     <button class="version-modal-close" id="outdated-modal-close-btn"
             style="background:#7a6020;">Got it</button>
-  </div>
-</div>
-
-<!-- Language incompatibility warning modal (soft - stats shown, submission blocked) -->
-<div id="language-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="language-modal-title">
-  <div id="version-modal" style="border-color:#3a6a9a;">
-    <span class="version-modal-icon">🌐</span>
-    <div class="version-modal-title" id="language-modal-title" style="color:#5b9bd5;">Non-English Characters Detected</div>
-    <p class="version-modal-msg">
-      Unfortunately the mod only supports English language right now. Your stats will not show correctly on the page and you can't submit your logs.
-    </p>
-    <button class="version-modal-close" id="language-modal-close-btn" style="background:#1e4060;">Understood</button>
   </div>
 </div>
 
@@ -3058,14 +3043,6 @@ function hideOutdatedModal() {
   document.getElementById('outdated-modal-overlay').classList.remove('modal-visible');
 }
 
-function showLanguageModal() {
-  document.getElementById('language-modal-overlay').classList.add('modal-visible');
-}
-
-function hideLanguageModal() {
-  document.getElementById('language-modal-overlay').classList.remove('modal-visible');
-}
-
 function processFiles(files, submitToSupabase, nickname) {
   const readers = [...files].map(f => new Promise((res, rej) => {
     const r = new FileReader();
@@ -3112,15 +3089,6 @@ function processFiles(files, submitToSupabase, nickname) {
     // Execution continues regardless - stats are computed and shown
     const combined = texts.join('\n');
     window._lastRawLog = combined; // stash raw text for optional submission
-
-    // ── Language / encoding check ──
-    // Non-ASCII characters (Cyrillic, etc.) mean the log was written in a
-    // non-English locale. Stats may display incorrectly and submission is blocked.
-    const hasIncompatibleChars = /[^\x00-\x7F]/.test(combined);
-    if (hasIncompatibleChars) {
-      showLanguageModal();
-      submitToSupabase = false; // block upload regardless of which button was pressed
-    }
     const raw = parseLog(combined);
     if (!raw.kills.length && !raw.deaths.length && !raw.saves.length) {
       showError('No valid log data found. Make sure you uploaded a cheeki_numbers.log file.');
@@ -3162,11 +3130,6 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('outdated-modal-close-btn').addEventListener('click', hideOutdatedModal);
     document.getElementById('outdated-modal-overlay').addEventListener('click', function (e) {
       if (e.target === this) hideOutdatedModal();
-    });
-
-    document.getElementById('language-modal-close-btn').addEventListener('click', hideLanguageModal);
-    document.getElementById('language-modal-overlay').addEventListener('click', function (e) {
-      if (e.target === this) hideLanguageModal();
     });
 
     document.getElementById('btn-community-preview').addEventListener('click', toggleCommunityPreview);
