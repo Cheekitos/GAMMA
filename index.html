@@ -459,14 +459,16 @@
   <div class="section-label">Community</div>
   <div class="card-grid">
     <a class="card featured" href="GAMMA/submit_stats.html">
-      <div class="card-title"><span style="color:#38bdf8;">◈</span> Submit &amp; See my Stats</div>
+      <div class="card-title"><span style="color:#38bdf8;">◈</span> See my Stats</div>
       <p class="card-desc">Submit your logs and see a detailed breakdown of your gameplay!</p>
-      <span class="card-tag tag-community">Community</span>
+      <span class="card-tag tag-community">Submit your logs here</span>
     </a>
     <a class="card" href="GAMMA/submit_stats.html#community">
       <div class="card-title"><span style="color:#fbbf24;">👁</span> Community Stats</div>
       <p class="card-desc">See the full community stats breakdown</p>
-      <span class="card-tag tag-community">Community</span>
+      <div style="display:inline-flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:4px;">
+        <span style="color:#9ca3af; font-size:0.8rem; font-weight:600;">Last update:</span> <span class="last-updated-badge" data-lastupdate="2026-05-07"></span>
+      </div>
     </a>
     <a class="card" href="GAMMA/kills_leaderboard.html">
       <div class="card-title">🏆 Leaderboard</div>
@@ -497,7 +499,7 @@
 
   <div class="section-label">Cheeki Numbers Mod</div>
   <div class="info-box">
-   <span style="color:#fbbf24; font-weight:700; font-size:2em;">→</span> <span style="font-size:2em; font-weight:700;">Get the mod <a href="https://drive.google.com/file/d/15xa6RmX6s22eZqAJKA4pwDvasZFdGoZx/view?usp=sharing" target="_blank" rel="noopener noreferrer">here</a> to help the project!</span>
+   <span style="color:#fbbf24; font-weight:700; font-size:2em;">→</span> <span style="font-size:2em; font-weight:700;">Get the mod <a href="https://drive.google.com/file/d/15xa6RmX6s22eZqAJKA4pwDvasZFdGoZx/view" target="_blank" rel="noopener noreferrer">here</a> to help the project!</span>
     
     <div style="margin-top:14px; border-top:1px solid #374151; padding-top:12px;">
       <div style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#6b7280; margin-bottom:8px;">Update History</div>
@@ -526,7 +528,7 @@
 		<li>All the display options are opt-in and detailed in Mod Configuration Menu → Cheeki Numbers</li>
         <li>Your data will be saved automatically in <code style="background:#111827;padding:1px 5px;border-radius:3px;font-size:0.8rem;">YOUR DRIVE:\YOUR GAMMA FOLDER\overwrite\bin\[cheeki_v1.32]_name_faction.log</code></li>
         <li>All your gaming sessions will be saved inside this single log file, no need to do anything.</li>
-        <li>Submit your log file to help the rankings, community averages, and appear in the leaderboard in the <b>Submit Data &amp; See my Stats</b> section.</li>
+        <li>Submit your log file in the <a href="GAMMA/submit_stats.html" target="_blank" rel="noopener noreferrer"><b>See my Stats</b></a> section to help the rankings, community averages, and appear in the leaderboard.</li>
         <li>You can submit the same log file multiple times as you progress the game. One submission max per week.</li>
       </ul>
     </div>
@@ -581,7 +583,7 @@
 
 
   // ─── Last Updated Badges ──────────────────────────────────────────────────
-  // change the date string in data-lastupdate="YYYY-MM-DD" on each card.
+  // change date string in data-lastupdate="YYYY-MM-DD" on each card.
   // ─────────────────────────────────────────────────────────────────────────
   function renderLastUpdatedBadges() {
     var badges = document.querySelectorAll('.last-updated-badge[data-lastupdate]');
