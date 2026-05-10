@@ -3119,8 +3119,8 @@ function processFiles(files, submitToSupabase, nickname) {
     // Exception: "Item █62" (wpn_gauss_quest display name) contains a single
     // non-ASCII byte from the mod itself — strip it before checking so English
     // players using that weapon don't get a false positive.
-    const textForCharCheck = combined.replace(/"Item [^\x00-\x7F]\d+"/g, '"Item 62"');
-    const hasIncompatibleChars = /[^\x00-\x7F]/.test(textForCharCheck);
+    const nonAsciiCount = (combined.match(/[^\x00-\x7F]/g) || []).length;
+    const hasIncompatibleChars = nonAsciiCount / combined.length > 0.02;
     if (hasIncompatibleChars) {
       showLanguageModal();
       submitToSupabase = false; // block upload regardless of which button was pressed
