@@ -2379,9 +2379,11 @@ function setBar(barId, markerId, value, max, commValue, lowerIsBetter = false, c
     const cp = commPct.toFixed(1);
     const midWarm = (commPct / 2).toFixed(1);
     const midCool = (commPct + (100 - commPct) / 2).toFixed(1);
+    const quickGreen = Math.min(100, commPct + 8).toFixed(1);
+    const preGreen = Math.max(parseFloat(midWarm) + 1, commPct - 14).toFixed(1);
     const gradientStops = lowerIsBetter
       ? `linear-gradient(to right, #3d8060 0%, #4a7aa0 ${cp}%, #6a8a7a ${midCool}%, #4a5a6a 100%)`
-      : `linear-gradient(to right, #4a5a6a 0%, #4a6a8a ${midWarm}%, #4d7aa0 ${cp}%, #3a8a6a 100%)`;
+      : `linear-gradient(to right, #4a5a6a 0%, #4a6a8a ${midWarm}%, #3d7a96 ${preGreen}%, #3d9080 ${cp}%, #3aaa70 ${quickGreen}%, #3a8a6a 100%)`;
     gradEl.style.background = gradientStops;
     gradEl.style.position = 'absolute';
     gradEl.style.inset = '0';
@@ -3114,11 +3116,6 @@ function processFiles(files, submitToSupabase, nickname) {
     window._lastRawLog = combined; // stash raw text for optional submission
 
     // ── Language / encoding check ──
-    // Non-ASCII characters (Cyrillic, etc.) mean the log was written in a
-    // non-English locale. Stats may display incorrectly and submission is blocked.
-    // Exception: "Item █62" (wpn_gauss_quest display name) contains a single
-    // non-ASCII byte from the mod itself — strip it before checking so English
-    // players using that weapon don't get a false positive.
     const nonAsciiCount = (combined.match(/[^\x00-\x7F]/g) || []).length;
     const hasIncompatibleChars = nonAsciiCount / combined.length > 0.02;
     if (hasIncompatibleChars) {
@@ -3224,8 +3221,8 @@ document.addEventListener('DOMContentLoaded', function () {
       processFiles(window._stagedFiles, false);
     });
 
-    // INTENTIONAL: #reset-btn has no HTML element on purpose. Users must go through
-    // "See community stats" to return to the upload screen — deliberate engagement nudge.
+    // #reset-btn has no HTML element on purpose. Users must go through
+    // "See community stats" to return to the upload screen
     // The null-guard below keeps this handler harmless if the button is ever added back.
     const resetBtn = document.getElementById('reset-btn');
     if (resetBtn) resetBtn.addEventListener('click', () => {
