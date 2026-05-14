@@ -262,6 +262,25 @@
     margin-top: 2px;
   }
 
+  /* ── Search bar in header ── */
+  .lb-search {
+    background: #0d1a26;
+    border: 1px solid #2e3d50;
+    border-radius: 2px;
+    color: #d7dde3;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    padding: 3px 7px;
+    outline: none;
+    width: 120px;
+    transition: border-color 0.2s;
+    vertical-align: middle;
+  }
+  .lb-search::placeholder { color: #4d6680; }
+  .lb-search:focus { border-color: #e0a840; }
+
+
   @media (max-width: 600px) {
     .podium { grid-template-columns: 1fr; align-items: start; }
     .summary-strip { grid-template-columns: 1fr 1fr; }
@@ -317,7 +336,7 @@
     <thead>
       <tr>
         <th>#</th>
-        <th>Name</th>
+        <th><span style="display:inline-flex; align-items:center; gap:8px;">Name <input class="lb-search" id="lb-search" type="search" placeholder="Search player…" oninput="filterTable(this.value)"></span></th>
         <th class="lb-bar-cell"></th>
         <th class="right">Kills</th>
       </tr>
@@ -335,7 +354,7 @@ const CONTRIBUTORS = [
   { name: "DeadPain",        kills: 2126, legacy: 1755, newKills: 54, youtube: "https://www.youtube.com/@DeadPain121", twitch: "https://www.twitch.tv/dead_pain" },
   { name: "Bigdaddy",        kills: 140   },
   { name: "Jeffersonpike",   kills: 164   },
-  { name: "Vlad",            kills: 664   },
+  { name: "Vlad",            kills: 781, legacy: 664, newKills: 117   },
   { name: "Firemoth",        kills: 18    },
   { name: "LemonadeDog",     kills: 158   },
   { name: "Spacecheese",     kills: 1559  },
@@ -354,7 +373,7 @@ const CONTRIBUTORS = [
   { name: "Zewjark",         kills: 3252  },
   { name: "Nem",             kills: 547   },
   { name: "Skjemme",         kills: 964   },
-  { name: "Mishotaki",       kills: 415, legacy: 252   },
+  { name: "Mishotaki",       kills: 624, legacy: 252, newKills: 209   },
   { name: "MRgoodwine",      kills: 312   },
   { name: "DeadZone",        kills: 363   },
   { name: "Vedmahel",        kills: 272   },
@@ -428,7 +447,7 @@ const CONTRIBUTORS = [
   { name: "MagicSucks",              kills: 171, legacy: 0   },
   { name: "Pip",                     kills: 2535, legacy: 0   },
   { name: "PlutoniumShovel",         kills: 100, legacy: 0   },
-  { name: "ixo",                     kills: 291, legacy: 0   },
+  { name: "ixo",                     kills: 450, legacy: 0, newKills: 159   },
   { name: "Mordecai_RSA",            kills: 314, legacy: 0   },
   { name: "PazitiF",                 kills: 210, legacy: 0   },
   { name: "solko",                   kills: 279, legacy: 0   },
@@ -461,7 +480,7 @@ const CONTRIBUTORS = [
   { name: "Vortex",                  kills: 61, legacy: 0, isNew: true   },
   { name: "yosh",                    kills: 7, legacy: 0, isNew: true   },
   { name: "Zaymond",                 kills: 40, legacy: 0, isNew: true   },
-  { name: "arilenkox",               kills: 21, legacy: 0, isNew: true   },
+  { name: "arilenkox",               kills: 66, legacy: 0, newKills: 45, isNew: true   },
   { name: "CamillaHectic",           kills: 269, legacy: 0, isNew: true   },
   { name: "Massivecombat",           kills: 11, legacy: 0, isNew: true   },
   { name: "Me Namo Jeff",            kills: 11, legacy: 0, isNew: true   },
@@ -493,6 +512,35 @@ const CONTRIBUTORS = [
   { name: "Smiff",                   kills: 124, legacy: 0, isNew: true   },
   { name: "StalkerL",                kills: 58, legacy: 0, isNew: true   },
   { name: "xSpite",                  kills: 24, legacy: 0, isNew: true   },
+  { name: "Adelta",                  kills: 43, legacy: 0, isNew: true   },
+  { name: "ApB",                     kills: 575, legacy: 0, isNew: true   },
+  { name: "Axolotl",                 kills: 21, legacy: 0, isNew: true   },
+  { name: "Burschi",                 kills: 239, legacy: 0, isNew: true   },
+  { name: "CarlosKSK",               kills: 280, legacy: 0, isNew: true   },
+  { name: "Darrion",                 kills: 6, legacy: 0, isNew: true   },
+  { name: "Dredzik _3",              kills: 151, legacy: 0, isNew: true   },
+  { name: "DrinktheBleach",          kills: 320, legacy: 0, isNew: true   },
+  { name: "Eney",                    kills: 198, legacy: 0, isNew: true   },
+  { name: "Falks",                   kills: 117, legacy: 0, isNew: true   },
+  { name: "Foyz",                    kills: 236, legacy: 0, isNew: true   },
+  { name: "freedominator",           kills: 46, legacy: 0, isNew: true   },
+  { name: "Hellgreend",              kills: 16, legacy: 0, isNew: true   },
+  { name: "John Stalker",            kills: 24, legacy: 0, isNew: true   },
+  { name: "Kee",                     kills: 205, legacy: 0, isNew: true   },
+  { name: "Kiwi",                    kills: 526, legacy: 0, isNew: true   },
+  { name: "KristJun",                kills: 82, legacy: 0, isNew: true   },
+  { name: "Mr. Pistolero",           kills: 310, legacy: 0, isNew: true   },
+  { name: "ph",                      kills: 3, legacy: 0, isNew: true   },
+  { name: "Phobos12",                kills: 32, legacy: 0, isNew: true   },
+  { name: "SaltyDishrag",            kills: 114, legacy: 0, isNew: true   },
+  { name: "Sowilo",                  kills: 361, legacy: 0, isNew: true   },
+  { name: "Stalin",                  kills: 198, legacy: 0, isNew: true   },
+  { name: "Stanky Mike",             kills: 89, legacy: 0, isNew: true   },
+  { name: "TheManWhoWouldbeKing",    kills: 86, legacy: 0, isNew: true   },
+  { name: "TrashDotExe",             kills: 73, legacy: 0, isNew: true   },
+  { name: "Valdar",                  kills: 326, legacy: 0, isNew: true   },
+  { name: "Vinagretsky",             kills: 19, legacy: 0, isNew: true   },
+  { name: "Yawbster",                kills: 111, legacy: 0, isNew: true   },
 ];
 // ============================================================
 
@@ -621,6 +669,22 @@ const CONTRIBUTORS = [
       </tr>`;
   }
 })();
+
+function filterTable(query) {
+  const q = query.trim().toLowerCase();
+  const rows = document.querySelectorAll('#lb-tbody tr');
+  let firstMatch = null;
+  rows.forEach(row => {
+    const nameCell = row.querySelector('.lb-name');
+    if (!nameCell) { row.style.display = q ? 'none' : ''; return; }
+    const name = nameCell.textContent.trim().toLowerCase();
+    const match = !q || name.includes(q);
+    row.style.display = match ? '' : 'none';
+
+    if (match && q && !firstMatch) firstMatch = row;
+  });
+  if (firstMatch) firstMatch.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
 </script>
 </body>
 </html>
