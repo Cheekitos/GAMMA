@@ -1437,50 +1437,53 @@
 
       <div id="emission-community" style="display:none;">
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
-        <div style="background:#151c26;border-radius:1px;padding:10px 12px;border:1px solid #28323e;">
+          <div style="background:#151c26;border-radius:1px;padding:10px 12px;border:1px solid #28323e;">
             <div style="font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#9da3ac;margin-bottom:8px;">Emissions</div>
+            <div style="font-size:1.45rem;font-weight:700;color:#4a9a5e;font-family:'IBM Plex Mono',monospace;line-height:1;margin-bottom:2px;" id="comm-em-pct">--%</div>
+            <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.1em;color:#767b82;margin-bottom:8px;">Survival Rate</div>
             <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
               <span style="font-size:0.75rem;color:#9da3ac;">Survived</span>
               <span style="font-size:0.88rem;font-weight:700;color:#4a9a5e;font-family:'IBM Plex Mono',monospace;" id="comm-em-survived">--</span>
             </div>
-            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
               <span style="font-size:0.75rem;color:#9da3ac;">Deaths</span>
               <span style="font-size:0.88rem;font-weight:700;color:#c0484a;font-family:'IBM Plex Mono',monospace;" id="comm-em-deaths">--</span>
             </div>
-            <div style="height:4px;background:#28323e;border-radius:1px;overflow:hidden;margin-top:6px;">
+            <div style="height:4px;background:#28323e;border-radius:1px;overflow:hidden;">
               <div id="comm-em-bar" style="height:100%;border-radius:1px;background:#4a9a5e;transition:width 0.6s ease;"></div>
             </div>
-            <div style="font-size:0.62rem;color:#767b82;margin-top:3px;text-align:right;" id="comm-em-pct">--%</div>
           </div>
           <div style="background:#151c26;border-radius:1px;padding:10px 12px;border:1px solid #28323e;">
             <div style="font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#9da3ac;margin-bottom:8px;">Psi Storms</div>
+            <div style="font-size:1.45rem;font-weight:700;color:#8a78be;font-family:'IBM Plex Mono',monospace;line-height:1;margin-bottom:2px;" id="comm-psi-pct">--%</div>
+            <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.1em;color:#767b82;margin-bottom:8px;">Survival Rate</div>
             <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
               <span style="font-size:0.75rem;color:#9da3ac;">Survived</span>
               <span style="font-size:0.88rem;font-weight:700;color:#4a9a5e;font-family:'IBM Plex Mono',monospace;" id="comm-psi-survived">--</span>
             </div>
-            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
               <span style="font-size:0.75rem;color:#9da3ac;">Deaths</span>
               <span style="font-size:0.88rem;font-weight:700;color:#c0484a;font-family:'IBM Plex Mono',monospace;" id="comm-psi-deaths">--</span>
             </div>
-            <div style="height:4px;background:#28323e;border-radius:1px;overflow:hidden;margin-top:6px;">
+            <div style="height:4px;background:#28323e;border-radius:1px;overflow:hidden;">
               <div id="comm-psi-bar" style="height:100%;border-radius:1px;background:#8a78be;transition:width 0.6s ease;"></div>
             </div>
-            <div style="font-size:0.62rem;color:#767b82;margin-top:3px;text-align:right;" id="comm-psi-pct">--%</div>
           </div>
           <div style="background:#151c26;border-radius:1px;padding:10px 12px;border:1px solid #28323e;">
             <div style="font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#9da3ac;margin-bottom:8px;">Combined (Em + Psi)</div>
+            <div style="font-size:1.45rem;font-weight:700;color:#c9973a;font-family:'IBM Plex Mono',monospace;line-height:1;margin-bottom:2px;" id="comm-total-pct">--%</div>
+            <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.1em;color:#767b82;margin-bottom:8px;">Survival Rate</div>
             <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
               <span style="font-size:0.75rem;color:#9da3ac;">Survived</span>
               <span style="font-size:0.88rem;font-weight:700;color:#4a9a5e;font-family:'IBM Plex Mono',monospace;" id="comm-total-survived">--</span>
             </div>
-            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
               <span style="font-size:0.75rem;color:#9da3ac;">Deaths</span>
               <span style="font-size:0.88rem;font-weight:700;color:#c0484a;font-family:'IBM Plex Mono',monospace;" id="comm-total-deaths">--</span>
             </div>
-            <div style="height:4px;background:#28323e;border-radius:1px;overflow:hidden;margin-top:6px;">
+            <div style="height:4px;background:#28323e;border-radius:1px;overflow:hidden;">
               <div id="comm-total-bar" style="height:100%;border-radius:1px;background:#c9973a;transition:width 0.6s ease;"></div>
             </div>
-            <div style="font-size:0.62rem;color:#767b82;margin-top:3px;text-align:right;" id="comm-total-pct">--%</div>
           </div>
         </div>
       </div>
@@ -1702,143 +1705,146 @@ const COMMUNITY = {
   // newFormatTotalDeaths    → "Total Deaths" line directly; do NOT use avgKills (per-player avg)
   // avgPlayerDurationHours  → used by buildCommunityPreviewStats() to derive saves/loads totals
 
-  contributorCount:  192,    // not in the .txt, added manually
-  playthroughCount:  224,    // not in the .txt, added manually
+  contributorCount:  307,    // not in the .txt, added manually
+  playthroughCount:  459,    // not in the .txt, added manually
 
-  avgAccuracyPct:   68.9,    // %
-  avgDistanceM:     24.6,    // metres
-  avgHeadshotPct:   22.8,    // % headshots/kill                           
-  avgDeathsPerHour: 1.6,     //                                            
-  avgOverkillPct:   54.7,    // %
-  avgSavesPerHour:  16.3,    //                                            
-  avgLoadsPerHour:  8.0,     //                                            
+  avgAccuracyPct:   69.6,    // %
+  avgDistanceM:     24.0,    // metres
+  avgHeadshotPct:   25.6,    // % headshots/kill                           
+  avgDeathsPerHour: 1.9,     //                                            
+  avgOverkillPct:   53.7,    // %
+  avgSavesPerHour:  16.6,    //                                            
+  avgLoadsPerHour:  8.6,     //                                            
   avgNpcKD:         5.8,     // MEDIAN (stalkers only)                     
-  avgStreakAll:     52,       // all enemies                                
-  avgStreakStalker: 38,       // stalkers only                              
-  avgKills:         425,      // avg per player (stalkers + mutants)
-  stalkerFrac:      0.73,     // NPC kill fraction
-  longestKill:      126,      // metres                                     
-  fallDeaths:       2,        // avg per player                             
+  avgStreakAll:     60,       // all enemies                                
+  avgStreakStalker: 43,       // stalkers only                              
+  avgKills:         382,      // avg per player (stalkers + mutants)
+  stalkerFrac:      0.72,     // NPC kill fraction
+  longestKill:      118,      // metres                                     
+  fallDeaths:       1,        // avg per player (used in personal view)
+  communityFallDeaths: 139,   // total from environmental deaths table (used in community view)
 
   // Community totals: we use deduped "Kill entries" here, NOT raw "Total Kill entries"
-  newFormatKillEntries: 30334,
-  newFormatTotalDeaths:  3025,
+  newFormatKillEntries: 73815,
+  newFormatTotalDeaths:  8633,
 
   topKillers: [
-    { label: '◉ Psi Anomaly',      color: '#6a5a98', deaths: 113 },
-    { label: '▲ Fire Anomaly',     color: '#8a5030', deaths: 103 },
-    { label: '∿ Shock Anomaly',    color: '#3a6a9a', deaths: 91  },
-    { label: '☢ Radiation',        color: '#4a8a60', deaths: 76  },
-    { label: '◆ Physical Anomaly', color: '#8a7040', deaths: 76  },
-    { label: '☣ Chemical Anomaly', color: '#507a70', deaths: 13  },
+    { label: '◉ Psi Anomaly',      color: '#6a5a98', deaths: 315 },
+    { label: '▲ Fire Anomaly',     color: '#8a5030', deaths: 280 },
+    { label: '◆ Physical Anomaly', color: '#8a7040', deaths: 239 },
+    { label: '☢ Radiation',        color: '#4a8a60', deaths: 223 },
+    { label: '∿ Shock Anomaly',    color: '#3a6a9a', deaths: 206 },
+    { label: '☣ Chemical Anomaly', color: '#507a70', deaths: 35  },
   ],
-  totalNpcDeaths:    1767,
-  totalMutantDeaths: 656,
+  totalNpcDeaths:    5122,
+  totalMutantDeaths: 1908,
 
-  npcDeathsBreakdown:    { 'Monolith': 338, 'Bandit': 200, 'Mercenary': 188, 'Military': 187, 'Renegade': 146 },
-  mutantDeathsBreakdown: { 'Pseudogiant': 109, 'Chimera': 93, 'Boar': 69, 'Bloodsucker': 44, 'Controller': 43 },
+  npcDeathsBreakdown:    { 'Bandit': 788, 'Monolith': 783, 'Military': 650, 'Mercenary': 602, 'Duty': 463 },
+  mutantDeathsBreakdown: { 'Pseudogiant': 267, 'Chimera': 244, 'Boar': 236, 'Bloodsucker': 126, 'Controller': 107 },
 
   topWeapons: {
-    'Melee':   ['6h4 Bayonet', 'OTs-4 Combat Knife', 'Kukri', 'Hunting Knife', 'M9 Bayonet', 'Monolith Blade'],
-    'Pistol':  ['Glock 19 "Hornet"', 'FNX-45', 'Desert Eagle', 'MP-412 Rex', 'FNP-45', 'FN Five-seveN'],
-    'Shotgun': ['Saiga-12 Tactical', 'KSG-23', 'TOZ-34 "Chimera Hunter"', 'Mossberg 590A1', 'M1014', 'Saiga-12'],
-    'SMG':     ['PP-19-01 Vityaz', 'MP5A3 "Frasier"', 'SR-2M Veresk', 'MP5SD6', 'SR-2M Veresk "Tactical"', 'OTs-02 Kiparis'],
-    'Rifle':   ['AK-74 "PMC"', 'BRN-180', 'AEK-971', 'AK-105 "Shakal"', 'AN-94', 'Rifle Dynamics RD-74N ISG Tactical'],
-    'Sniper':  ['Remington 700 "Magpul PRO"', 'Mosin Nagant', 'SVD', 'Winchester Model 1873', 'SVDS', 'Barrett M98B'],
+    'Melee':   ['6h4 Bayonet', 'OTs-4 Combat Knife', 'Kukri', 'Hunting Knife', 'Monolith Blade', 'M9 Bayonet'],
+    'Pistol':  ['Glock 19 "Hornet"', 'FNX-45', 'MP-412 Rex', 'Desert Eagle', 'FNP-45', 'FN Five-seveN'],
+    'Shotgun': ['Saiga-12 Tactical', 'Mossberg 590A1', 'KSG-23', 'M1014', 'Saiga-12', 'TOZ-34 "Chimera Hunter"'],
+    'SMG':     ['PP-19-01 Vityaz', 'SR-2M Veresk', 'MP5A3 "Frasier"', 'MP5A3', 'MP5SD6', 'UMP45'],
+    'Rifle':   ['M4A1 "Protector"', 'AK-74 "PMC"', 'BRN-180', 'AEK-971', 'SIG SG 550', 'AN-94'],
+    'Sniper':  ['Remington 700 "Magpul PRO"', 'SVD', 'Mosin Nagant', 'Winchester Model 1873', 'SV98', 'Mauser 98k Forester mk.1'],
   },
 
   top20: [
-    { name: 'Saiga-12 Tactical',           cat: 'Shotgun', entries: 483 },
-    { name: 'AK-74 "PMC"',                 cat: 'Rifle',   entries: 401 },
-    { name: 'KSG-23',                      cat: 'Shotgun', entries: 385 },
-    { name: 'PP-19-01 Vityaz',             cat: 'SMG',     entries: 363 },
-    { name: 'Remington 700 "Magpul PRO"',  cat: 'Sniper',  entries: 324 },
-    { name: 'Glock 19 "Hornet"',           cat: 'Pistol',  entries: 284 },
-    { name: 'MP5A3 "Frasier"',             cat: 'SMG',     entries: 279 },
-    { name: 'SR-2M Veresk',                cat: 'SMG',     entries: 272 },
-    { name: 'TOZ-34 "Chimera Hunter"',     cat: 'Shotgun', entries: 270 },
-    { name: 'FN P90',                      cat: 'Unknown', entries: 257 },
-    { name: 'Karabiner 98k Forester mk.2', cat: 'Unknown', entries: 234 },
-    { name: 'RPK-16 LMG',                  cat: 'Unknown', entries: 232 },
-    { name: 'Mossberg 590A1',              cat: 'Shotgun', entries: 220 },
-    { name: 'M1014',                       cat: 'Shotgun', entries: 219 },
-    { name: 'BRN-180',                     cat: 'Rifle',   entries: 209 },
-    { name: 'Mosin Nagant',                cat: 'Sniper',  entries: 205 },
-    { name: 'SVD',                         cat: 'Sniper',  entries: 205 },
-    { name: 'MP5SD6',                      cat: 'SMG',     entries: 203 },
-    { name: 'SR-2M Veresk "Tactical"',     cat: 'SMG',     entries: 196 },
-    { name: 'AEK-971',                     cat: 'Rifle',   entries: 194 },
+    { name: 'Saiga-12 Tactical',           cat: 'Shotgun', entries: 707 },
+    { name: 'M4A1 "Protector"',            cat: 'Rifle',   entries: 628 },
+    { name: 'PP-19-01 Vityaz',             cat: 'SMG',     entries: 605 },
+    { name: 'AK-74 "PMC"',                 cat: 'Rifle',   entries: 528 },
+    { name: 'Mossberg 590A1',              cat: 'Shotgun', entries: 476 },
+    { name: 'KSG-23',                      cat: 'Shotgun', entries: 468 },
+    { name: 'Glock 19 "Hornet"',           cat: 'Pistol',  entries: 451 },
+    { name: 'SR-2M Veresk',                cat: 'SMG',     entries: 398 },
+    { name: 'Remington 700 "Magpul PRO"',  cat: 'Sniper',  entries: 397 },
+    { name: 'M1014',                       cat: 'Shotgun', entries: 392 },
+    { name: 'MP5A3 "Frasier"',             cat: 'SMG',     entries: 389 },
+    { name: 'Karabiner 98k Forester mk.2', cat: 'Unknown', entries: 378 },
+    { name: 'SVD',                         cat: 'Sniper',  entries: 372 },
+    { name: 'Saiga-12',                    cat: 'Shotgun', entries: 356 },
+    { name: 'Mosin Nagant',                cat: 'Sniper',  entries: 355 },
+    { name: 'FN P90',                      cat: 'Unknown', entries: 347 },
+    { name: 'MP5A3',                       cat: 'SMG',     entries: 343 },
+    { name: 'HK MK23',                     cat: 'Unknown', entries: 324 },
+    { name: 'Winchester Model 1873',       cat: 'Sniper',  entries: 304 },
+    { name: 'BRN-180',                     cat: 'Rifle',   entries: 301 },
   ],
 
-  communityTotalPlaytime:  '2279h 14m',
-  avgPlayerDuration:       '16h 46m',
-  avgPlayerDurationHours:  16 + 46/60,   // numeric hours; used by buildCommunityPreviewStats() for derived totals
+  communityTotalPlaytime:  '5619h 22m',
+  avgPlayerDuration:       '20h 53m',
+  avgPlayerDurationHours:  20 + 53/60,   // numeric hours; used by buildCommunityPreviewStats() for derived totals
   avgSessionLength:        '59m',
 
-  campfireAvgStayDuration:    45,        // seconds
-  campfireAvgHpPerStay:       14,        // HP healed per stay (0-HP stays excluded)
+  campfireAvgStayDuration:    41,        // seconds
+  campfireAvgHpPerStay:       13,        // HP healed per stay (0-HP stays excluded)
   campfireTotalTime:        '75h 21m',
   campfireTotalHp:           51322,
 
   // "Kills by weapon category" table in the report
-  baseKillsByCategory: { Melee: 6, Pistol: 26, Shotgun: 54, SMG: 77, Rifle: 159, Sniper: 47 },
+  baseKillsByCategory: { Melee: 5, Pistol: 23, Shotgun: 51, SMG: 63, Rifle: 132, Sniper: 42 },
 
-  emissionSurvived:    137,
-  emissionDeaths:        1,
-  emissionTotal:       138,  // emissionSurvived + emissionDeaths
+  emissionSurvived:    972,
+  emissionDeaths:       14,
+  emissionTotal:       986,  // emissionSurvived + emissionDeaths
   emissionSurvivalPct:  99,  // %
-  psiStormSurvived:     55,
-  psiStormDeaths:        3,
-  psiStormTotal:        58,
-  psiStormSurvivalPct:  95,  // %
-  totalEmPsiSurvived:  192,
-  totalEmPsiDeaths:      4,
-  totalEmPsiTotal:     196,
-  totalEmPsiSurvivalPct: 98, // %
+  psiStormSurvived:    411,
+  psiStormDeaths:       26,
+  psiStormTotal:       437,
+  psiStormSurvivalPct:  94,  // %
+  totalEmPsiSurvived:  1383,
+  totalEmPsiDeaths:      40,
+  totalEmPsiTotal:     1423,
+  totalEmPsiSurvivalPct: 97, // %
 
   // avgHours / fastestHours / slowestHours are floating-point hours; null = insufficient data
   toolDiscovery: {
-    basicKit:    { avgHours: 4 + 44/60,  fastestHours: 32/60,       slowestHours: 25 + 17/60, players: 26 },
-    advancedKit: { avgHours: 10 + 28/60, fastestHours: 2 + 21/60,   slowestHours: 21 + 44/60, players: 13 },
-    expertKit:   null,  // not enough data yet
-    gunsKit:     { avgHours: 5 + 35/60,  fastestHours: 35/60,         slowestHours: 16 + 23/60, players: 22 },
-    drugKit:     { avgHours: 5 + 56/60,  fastestHours: 1 + 46/60,   slowestHours: 16 + 2/60,  players: 19 },
+    basicKit:    { avgHours: 4 + 29/60,  fastestHours: 20/60,       slowestHours: 9 + 22/60,  players: 89 },
+    advancedKit: { avgHours: 10 + 32/60, fastestHours: 1 + 24/60,   slowestHours: 25 + 15/60, players: 54 },
+    expertKit:   { avgHours: 22 + 45/60, fastestHours: 4 + 5/60,    slowestHours: 35 + 30/60, players: 4  },
+    gunsKit:     { avgHours: 6 + 51/60,  fastestHours: 36/60,        slowestHours: 18 + 32/60, players: 71 },
+    drugKit:     { avgHours: 7 + 32/60,  fastestHours: 20/60,        slowestHours: 22 + 11/60, players: 68 },
   },
 
   // Players may appear under multiple difficulties, so sum of `players` can exceed total unique players.
   // pct = players / sum_of_all_difficulty_players × 100
   difficultyDistribution: [
-    { label: 'Novice',  players: 29, pct: 15, color: '#4a9a5e' },
-    { label: 'Stalker', players: 50, pct: 25, color: '#c9973a' },
-    { label: 'Veteran', players: 119, pct: 60, color: '#c0484a' },
+    { label: 'Novice',  players: 44,  pct: 13, color: '#4a9a5e' },
+    { label: 'Stalker', players: 71,  pct: 22, color: '#c9973a' },
+    { label: 'Veteran', players: 215, pct: 65, color: '#c0484a' },
   ],
 
-  // IDs must match FACTION_MAP keys; pct = faction_players / 71 total × 100
+  // IDs must match FACTION_MAP keys; pct = faction_players / 207 total × 100
   factionDistribution: [
-    { id: 'stalker',  players: 29, pct: 41 },
-    { id: 'csky',     players: 12, pct: 17 },
-    { id: 'dolg',     players: 11, pct: 15 },
-    { id: 'killer',   players:  9, pct: 13 },
-    { id: 'army',     players:  3, pct:  4 },
-    { id: 'ecolog',   players:  2, pct:  3 },
-    { id: 'freedom',  players:  2, pct:  3 },
-    { id: 'renegade', players:  1, pct:  1 },
-    { id: 'greh',     players:  1, pct:  1 },
-    { id: 'isg',      players:  1, pct:  1 },
+    { id: 'stalker',  players: 84, pct: 41 },
+    { id: 'killer',   players: 36, pct: 17 },
+    { id: 'dolg',     players: 25, pct: 12 },
+    { id: 'csky',     players: 23, pct: 11 },
+    { id: 'bandit',   players: 10, pct:  5 },
+    { id: 'army',     players:  7, pct:  3 },
+    { id: 'isg',      players:  6, pct:  3 },
+    { id: 'freedom',  players:  5, pct:  2 },
+    { id: 'renegade', players:  4, pct:  2 },
+    { id: 'ecolog',   players:  3, pct:  1 },
   ],
 
   // Area IDs must match AREA_MAP keys; sorted descending by pct
   startingAreaByFaction: {
-    stalker:  [ { id: 'l01_escape', pct: 68, players: 13 }, { id: 'l05_bar', pct: 32, players: 6 } ],
-    csky:     [ { id: 'l01_escape', pct: 50, players: 4 }, { id: 'k00_marsh', pct: 50, players: 4 } ],
-    killer:   [ { id: 'l09_deadcity', pct: 86, players: 6 }, { id: 'l06_rostok', pct: 14, players: 1 } ],
-    dolg:     [ { id: 'l05_bar', pct: 100, players: 8 } ],
+    stalker:  [ { id: 'l01_escape', pct: 61, players: 31 }, { id: 'l05_bar', pct: 31, players: 16 }, { id: 'k00_marsh', pct: 8, players: 4 } ],
+    csky:     [ { id: 'k00_marsh', pct: 62, players: 8 }, { id: 'l01_escape', pct: 38, players: 5 } ],
+    killer:   [ { id: 'l09_deadcity', pct: 93, players: 26 }, { id: 'l06_rostok', pct: 4, players: 1 }, { id: 'l04_darkvalley', pct: 4, players: 1 } ],
+    dolg:     [ { id: 'l05_bar', pct: 100, players: 18 } ],
     ecolog:   [ { id: 'l08_yantar', pct: 100, players: 1 } ],
-    freedom:  [ { id: 'l07_military', pct: 100, players: 1 } ],
-    army:     [ { id: 'l03_agroprom', pct: 100, players: 3 } ],
-    renegade: [ { id: 'k00_marsh', pct: 100, players: 1 } ],
-    greh:     [ { id: 'l10_radar', pct: 100, players: 1 } ],
-    isg:      [ { id: 'k01_darkscape', pct: 100, players: 1 } ],
+    freedom:  [ { id: 'l07_military', pct: 67, players: 2 }, { id: 'k02_trucks_cemetery', pct: 33, players: 1 } ],
+    army:     [ { id: 'l03_agroprom', pct: 100, players: 6 } ],
+    renegade: [ { id: 'k00_marsh', pct: 50, players: 2 }, { id: 'y04_pole', pct: 50, players: 2 } ],
+    greh:     [ { id: 'l10_radar', pct: 100, players: 2 } ],
+    bandit:   [ { id: 'l04_darkvalley', pct: 86, players: 6 }, { id: 'l09_deadcity', pct: 14, players: 1 } ],
+    monolith: [ { id: 'l11_pripyat', pct: 100, players: 1 } ],
+    isg:      [ { id: 'k01_darkscape', pct: 100, players: 4 } ],
   },
 };
 // ============================================================
@@ -3088,7 +3094,6 @@ function renderAnomalies(st) {
     const glyph = emojiMap[type] || '▪';
     const infoTips = {
       Psi:   'Includes Emissions, Yantar/Radar Psi-fields, Phantoms and any other psi-related deaths',
-      Shock: 'Includes Psi-storm deaths while I gather more data',
     };
     const infoIcon = infoTips[type]
       ? ` <span class="anomaly-info"><i class="anomaly-info-icon">i</i><span class="anomaly-info-tooltip">${infoTips[type]}</span></span>`
@@ -3398,7 +3403,7 @@ function buildCommunityPreviewStats() {
     anomalyDeaths,
 
     radiationDeaths,
-    fallDeaths       : COMMUNITY.fallDeaths,
+    fallDeaths       : COMMUNITY.communityFallDeaths,
 
     // campfireCount/etc. not used in community preview — renderCampfireStats reads COMMUNITY directly
     campfireCount        : 0,
@@ -3971,18 +3976,18 @@ function renderEmissionSurvival(st) {
     personalDiv.style.display  = 'none';
     communityDiv.style.display = 'block';
     const c = COMMUNITY;
+    document.getElementById('comm-em-pct').textContent       = c.emissionSurvivalPct + '%';
     document.getElementById('comm-em-survived').textContent  = c.emissionSurvived + ' / ' + c.emissionTotal;
     document.getElementById('comm-em-deaths').textContent    = c.emissionDeaths;
     document.getElementById('comm-em-bar').style.width       = c.emissionSurvivalPct + '%';
-    document.getElementById('comm-em-pct').textContent       = c.emissionSurvivalPct + '% survival';
+    document.getElementById('comm-psi-pct').textContent      = c.psiStormSurvivalPct + '%';
     document.getElementById('comm-psi-survived').textContent = c.psiStormSurvived + ' / ' + c.psiStormTotal;
     document.getElementById('comm-psi-deaths').textContent   = c.psiStormDeaths;
     document.getElementById('comm-psi-bar').style.width      = c.psiStormSurvivalPct + '%';
-    document.getElementById('comm-psi-pct').textContent      = c.psiStormSurvivalPct + '% survival';
+    document.getElementById('comm-total-pct').textContent      = c.totalEmPsiSurvivalPct + '%';
     document.getElementById('comm-total-survived').textContent = c.totalEmPsiSurvived + ' / ' + c.totalEmPsiTotal;
     document.getElementById('comm-total-deaths').textContent   = c.totalEmPsiDeaths;
     document.getElementById('comm-total-bar').style.width      = c.totalEmPsiSurvivalPct + '%';
-    document.getElementById('comm-total-pct').textContent      = c.totalEmPsiSurvivalPct + '% survival';
   } else {
     communityDiv.style.display = 'none';
     personalDiv.style.display  = 'block';
