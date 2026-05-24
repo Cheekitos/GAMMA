@@ -819,6 +819,86 @@
   }
   .top20-bar-track { height: 2px; background: #1d2530; border-radius: 0; overflow: hidden; }
   .top20-bar { height: 100%; border-radius: 0; transition: width 0.4s ease; }
+
+  /* Compact expand toggle for community Faction / Starting Area cards */
+  .card-expand-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 5px 0 0;
+    margin-top: 9px;
+    background: transparent;
+    border: none;
+    border-top: 1px solid #28323e;
+    color: #6e7780;
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: inherit;
+    transition: color 0.18s;
+  }
+  .card-expand-btn:hover { color: #9da3ac; }
+  .card-expand-btn[aria-expanded="true"] { color: #767b82; }
+  .card-expand-chevron {
+    font-size: 0.65rem;
+    line-height: 1;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-block;
+    margin-left: 4px;
+    animation: chevron-nudge 6.3s linear 0.7s infinite both;
+  }
+  .card-expand-btn[aria-expanded="true"] .card-expand-chevron {
+    transform: rotate(180deg);
+    animation: none;
+  }
+  @keyframes chevron-nudge {
+    /* bounce 1 (0s – 0.65s mapped into 6.3s cycle) */
+    0%      { transform: translateY(0); }
+    3.61%   { transform: translateY(4px); }
+    6.71%   { transform: translateY(-2px); }
+    10.32%  { transform: translateY(0); }
+    /* bounce 2 (0.65s – 1.3s) */
+    13.93%  { transform: translateY(4px); }
+    17.03%  { transform: translateY(-2px); }
+    20.63%  { transform: translateY(0); }
+    /* 5s pause — holds at 0 for the rest of the cycle */
+    100%    { transform: translateY(0); }
+  }
+  .card-expand-panel {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .card-expand-panel.is-open {
+    max-height: 900px;
+  }
+
+  /* top20 toggle: full-rectangle variant of card-expand-btn */
+  #btn-top20-toggle {
+    justify-content: space-between;
+    padding: 9px 16px;
+    margin-top: 0;
+    border: 1px solid #28323e;
+    border-radius: 2px;
+    background: #1d2530;
+    color: #d7dde3;
+    font-size: 0.68rem;
+    transition: background 0.2s, border-color 0.2s, color 0.18s;
+  }
+  #btn-top20-toggle:hover {
+    background: #28323e;
+    border-color: #767b82;
+    color: #e6edf3;
+  }
+  #btn-top20-toggle[aria-expanded="true"] {
+    border-radius: 2px 2px 0 0;
+    color: #d7dde3;
+  }
+  /* hide panel box border while collapsed so only the button shows */
+  #top20-panel:not(.is-open) { border: none; }
 </style>
 </head>
 <body>
@@ -1275,7 +1355,7 @@
     <div class="stat-grid" style="margin-top:6px;grid-template-columns:1fr 2fr;">
 
       <div class="stat-card" id="campfire-card">
-        <div class="stat-card-title"><span class="icon">🔥</span> Campfire Stats</div>
+        <div class="stat-card-title"><span class="icon">∴</span> Campfire Stats</div>
 
         <div id="campfire-personal" style="display:none;">
           <div style="display:flex;flex-direction:column;gap:5px;">
@@ -1318,7 +1398,7 @@
       </div>
 
       <div class="stat-card" id="tools-card">
-        <div class="stat-card-title" id="tools-card-title"><span class="icon">🔧</span> Time to find Crafting Tools</div>
+        <div class="stat-card-title" id="tools-card-title"><span class="icon">⬡</span> Time to find Crafting Tools</div>
 
         <div id="tools-personal" style="display:none;">
           <div id="tools-no-data" style="display:none;">
@@ -1340,11 +1420,12 @@
     <div id="weapons-breakdown"></div>
 
     <div id="top20-toggle-wrap" style="display:none;margin-top:14px;">
-      <button id="btn-top20-toggle" class="top20-toggle-btn" aria-expanded="false">
+      <button id="btn-top20-toggle" class="card-expand-btn" aria-expanded="false">
+        <span class="card-expand-chevron">▾</span>
         <span id="top20-btn-label">Most Used Weapons - Top 20</span>
-        <span id="top20-btn-chevron" class="top20-chevron">▾</span>
+        <span id="top20-btn-chevron" class="card-expand-chevron">▾</span>
       </button>
-      <div id="top20-panel" class="top20-panel" style="display:none;">
+      <div id="top20-panel" class="top20-panel card-expand-panel">
         <div id="top20-list" class="top20-list"></div>
       </div>
     </div>
@@ -1730,7 +1811,7 @@ const COMMUNITY = {
   stalkerFrac:      0.72,     // NPC kill fraction
   longestKill:      118,      // Avg longest kill (longestKill)
   longestKillMax:   394,      // Longest kill — max (longestKillMax)
-  fallDeaths:       139,      // Fall/Strike count from environmental deaths table
+  fallDeaths:       139,      // Fall/Strike count from environmental deaths table (community view only; personal view uses parsed log)
 
   // Community totals: we use deduped "Kill entries" here, NOT raw "Total Kill entries"
   newFormatKillEntries: 73815,
@@ -1837,6 +1918,8 @@ const COMMUNITY = {
     { id: 'freedom',  players:  5, pct:  2 },
     { id: 'renegade', players:  4, pct:  2 },
     { id: 'ecolog',   players:  3, pct:  1 },
+    { id: 'greh',     players:  2, pct:  1 },
+    { id: 'monolith', players:  1, pct:  0 },
   ],
 
   // Area IDs must match AREA_MAP keys; sorted descending by pct
@@ -3211,10 +3294,11 @@ function renderTop20() {
     // Clone node to remove any previously attached listener
     const newBtn = btn.cloneNode(true);
     btn.parentNode.replaceChild(newBtn, btn);
-    document.getElementById('btn-top20-toggle').addEventListener('click', () => {
-      const open = document.getElementById('top20-panel').style.display !== 'none';
-      document.getElementById('top20-panel').style.display = open ? 'none' : 'block';
-      document.getElementById('btn-top20-toggle').setAttribute('aria-expanded', String(!open));
+    document.getElementById('btn-top20-toggle').addEventListener('click', function() {
+      const panel = document.getElementById('top20-panel');
+      const expanded = this.getAttribute('aria-expanded') === 'true';
+      panel.classList.toggle('is-open', !expanded);
+      this.setAttribute('aria-expanded', expanded ? 'false' : 'true');
     });
   }
 }
@@ -3706,7 +3790,7 @@ function renderPersonalOverrides(st) {
   }
 
   const toolsCardTitleP = document.getElementById('tools-card-title');
-  if (toolsCardTitleP) toolsCardTitleP.innerHTML = '<span class="icon">🔧</span> Time to find Crafting Tools';
+  if (toolsCardTitleP) toolsCardTitleP.innerHTML = '<span class="icon">⬡</span> Time to find Crafting Tools';
 
   const rageQuitSection = document.getElementById('rage-quit-section');
   const rq = st.rageQuits;
@@ -3755,7 +3839,8 @@ function renderCommunityOverrides() {
   if (factionCardEl) {
     if (!window._factionCardOrigHTML) window._factionCardOrigHTML = factionCardEl.innerHTML;
     if (COMMUNITY.factionDistribution && COMMUNITY.factionDistribution.length) {
-      const top5 = COMMUNITY.factionDistribution.slice(0, 5);
+      const allFactions = COMMUNITY.factionDistribution;
+      const top5 = allFactions.slice(0, 5);
       const maxPct = top5[0].pct;
       const barColors = ['#9da8b0', '#7a8490', '#5e6b74', '#485258', '#343d42'];
       factionCardEl.innerHTML = `
@@ -3773,7 +3858,30 @@ function renderCommunityOverrides() {
               <div style="width:${(d.pct / maxPct * 100).toFixed(1)}%;height:100%;background:${bc};border-radius:0;transition:width 0.6s ease;"></div>
             </div>
           </div>`;
-        }).join('')}`;
+        }).join('')}
+        <button class="card-expand-btn" aria-expanded="false" id="btn-faction-expand">
+          <span>All Factions</span>
+          <span class="card-expand-chevron">▾</span>
+        </button>
+        <div id="faction-expand-panel" class="card-expand-panel">
+          <div style="padding-top:6px;display:flex;flex-direction:column;gap:2px;">
+          ${allFactions.map(d => {
+            const fi = FACTION_MAP[d.id] || { name: d.id, color: '#9da3ac' };
+            return `<div style="display:flex;align-items:center;gap:8px;padding:3px 0;border-bottom:1px solid #1e2a38;">
+              <span style="width:6px;height:6px;background:${fi.color};display:inline-block;flex-shrink:0;"></span>
+              <span style="font-size:0.72rem;color:${fi.color};flex:1;">${fi.name}</span>
+              <span style="font-size:0.65rem;font-weight:700;color:#9da3ac;font-family:'IBM Plex Mono',monospace;white-space:nowrap;">${d.pct}%</span>
+            </div>`;
+          }).join('')}
+          </div>
+        </div>
+      `;
+      document.getElementById('btn-faction-expand').addEventListener('click', function() {
+        const panel = document.getElementById('faction-expand-panel');
+        const expanded = this.getAttribute('aria-expanded') === 'true';
+        panel.classList.toggle('is-open', !expanded);
+        this.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+      });
     }
   }
 
@@ -3810,12 +3918,42 @@ function renderCommunityOverrides() {
               <div style="width:${(a.pct / maxAreaPct * 100).toFixed(1)}%;height:100%;background:${c};border-radius:0;transition:width 0.6s ease;"></div>
             </div>
           </div>`;
-        }).join('')}`;
+        }).join('')}
+        <button class="card-expand-btn" aria-expanded="false" id="btn-start-area-expand">
+          <span>All Starting Areas</span>
+          <span class="card-expand-chevron">▾</span>
+        </button>
+        <div id="start-area-expand-panel" class="card-expand-panel">
+          <div style="padding-top:8px;display:flex;flex-direction:column;gap:8px;">
+          ${COMMUNITY.factionDistribution.map(fd => {
+            const fi = FACTION_MAP[fd.id] || { name: fd.id, color: '#9da3ac' };
+            const areas = COMMUNITY.startingAreaByFaction[fd.id] || [];
+            if (!areas.length) return '';
+            return `<div>
+              <div style="font-size:0.57rem;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;color:${fi.color};padding-bottom:3px;margin-bottom:3px;border-bottom:1px solid #28323e;">${fi.name}</div>
+              ${areas.map(a => {
+                const aName = AREA_MAP[a.id] || a.id;
+                return `<div style="display:flex;align-items:baseline;justify-content:space-between;padding:2px 0;">
+                  <span style="font-size:0.68rem;color:#767b82;">→ ${aName}</span>
+                  <span style="font-size:0.63rem;font-family:'IBM Plex Mono',monospace;color:#64686e;white-space:nowrap;">${a.pct}%</span>
+                </div>`;
+              }).join('')}
+            </div>`;
+          }).filter(Boolean).join('')}
+          </div>
+        </div>
+      `;
+      document.getElementById('btn-start-area-expand').addEventListener('click', function() {
+        const panel = document.getElementById('start-area-expand-panel');
+        const expanded = this.getAttribute('aria-expanded') === 'true';
+        panel.classList.toggle('is-open', !expanded);
+        this.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+      });
     }
   }
 
   const toolsCardTitle = document.getElementById('tools-card-title');
-  if (toolsCardTitle) toolsCardTitle.innerHTML = '<span class="icon">🔧</span> Average Time to find Crafting Tools';
+  if (toolsCardTitle) toolsCardTitle.innerHTML = '<span class="icon">⬡</span> Average Time to find Crafting Tools';
 
   const rageQuitSection = document.getElementById('rage-quit-section');
   rageQuitSection.style.display = 'none';
@@ -4194,7 +4332,7 @@ function renderStats(st) {
       const panel = document.getElementById('top20-panel');
       const btn   = document.getElementById('btn-top20-toggle');
       const lbl   = document.getElementById('top20-btn-label');
-      if (panel) panel.style.display = 'none';
+      if (panel) panel.classList.remove('is-open');
       if (btn)   btn.setAttribute('aria-expanded', 'false');
       if (lbl)   lbl.textContent = 'Most Used Weapons - Top 20';
       renderTop20();
