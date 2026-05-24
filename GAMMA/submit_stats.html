@@ -1187,7 +1187,7 @@
             </div>
             <div class="comparison" style="margin-top:28px;">
               <div class="bar-track">
-                <div class="bar-comm-label" id="comm-label-streak-all">Average</div>
+                <div class="bar-comm-label" id="comm-label-streak-all">Best</div>
                 <div class="bar-track-inner">
                   <div class="bar-gradient-bg" id="grad-streak-all"></div>
                   <div class="bar-mask" id="bar-streak-all" style="width:100%"></div>
@@ -1205,7 +1205,7 @@
             </div>
             <div class="comparison" style="margin-top:28px;">
               <div class="bar-track">
-                <div class="bar-comm-label" id="comm-label-streak-stalker">Average</div>
+                <div class="bar-comm-label" id="comm-label-streak-stalker">Best</div>
                 <div class="bar-track-inner">
                   <div class="bar-gradient-bg" id="grad-streak-stalker"></div>
                   <div class="bar-mask" id="bar-streak-stalker" style="width:100%"></div>
@@ -1709,15 +1709,13 @@ function startRateLimitCountdown(unlockAt) {
 // COMMUNITY AVERAGES
 // ============================================================
 const COMMUNITY = {
-  // DATA DECISIONS (keep in sync with 01_community_averages.txt on updates):
+  // Updated with data from 01_community_averages.txt
   // avgKD / avgNpcKD        → use MEDIAN of per-player KD ratios, not mean
-  // newFormatKillEntries    → "Kill entries" (deduped), NOT "Total Kill entries"
-  // newFormatTotalDeaths    → "Total Deaths" line directly; do NOT use avgKills (per-player avg)
+  // newFormatKillEntries    → "Kill entries" (deduped), not "Total Kill entries"
+  // newFormatTotalDeaths    → "Total Deaths" line directly; not avgKills (per-player avg)
   // avgPlayerDurationHours  → used by buildCommunityPreviewStats() to derive saves/loads totals
-
-  contributorCount:  307,    // not in the .txt, added manually
-  playthroughCount:  459,    // not in the .txt, added manually
-
+  contributorCount:  307,    // Submitters (real people)
+  playthroughCount:  459,    // Playthroughs (playerCount)
   avgAccuracyPct:   69.6,    // %
   avgDistanceM:     24.0,    // metres
   avgHeadshotPct:   25.6,    // % headshots/kill                           
@@ -1726,13 +1724,13 @@ const COMMUNITY = {
   avgSavesPerHour:  16.6,    //                                            
   avgLoadsPerHour:  8.6,     //                                            
   avgNpcKD:         5.8,     // MEDIAN (stalkers only)                     
-  avgStreakAll:     60,       // all enemies                                
-  avgStreakStalker: 43,       // stalkers only                              
+  maxStreakAll:     520,      // longest streak (all enemies)
+  maxStreakStalker: 373,      // longest streak (stalkers only)
   avgKills:         382,      // avg per player (stalkers + mutants)
   stalkerFrac:      0.72,     // NPC kill fraction
-  longestKill:      118,      // metres                                     
-  fallDeaths:       1,        // avg per player (used in personal view)
-  communityFallDeaths: 139,   // total from environmental deaths table (used in community view)
+  longestKill:      118,      // Avg longest kill (longestKill)
+  longestKillMax:   394,      // Longest kill — max (longestKillMax)
+  fallDeaths:       139,      // Fall/Strike count from environmental deaths table
 
   // Community totals: we use deduped "Kill entries" here, NOT raw "Total Kill entries"
   newFormatKillEntries: 73815,
@@ -3244,18 +3242,27 @@ function renderCommunityKillers() {
 }
 
 
+// Round a bar-scale max to the nearest "nice" step so end labels are clean whole numbers.
+// e.g. 37 → 40, 130 → 150, 746 → 800, 1040 → 1100
+function niceStreakMax(val) {
+  const steps = [5, 10, 20, 25, 50, 100, 200, 250, 500, 1000];
+  const step = steps.find(s => val / s <= 20) || 1000;
+  return Math.ceil(val / step) * step;
+}
+
 function renderKillStreak(st) {
   document.getElementById('s-streak-all').textContent     = fmtInt(st.bestStreakAll);
   document.getElementById('s-streak-stalker').textContent = fmtInt(st.bestStreakStalker);
 
-  const streakAllMax     = Math.max(st.bestStreakAll * 1.4, COMMUNITY.avgStreakAll * 2, 30);
-  const streakStalkerMax = Math.max(st.bestStreakStalker * 1.4, COMMUNITY.avgStreakStalker * 2, 20);
+  // Use community max (best recorded) streak as the bar reference marker, not the average
+  const streakAllMax     = niceStreakMax(Math.max(st.bestStreakAll * 1.4, COMMUNITY.maxStreakAll * 2, 30));
+  const streakStalkerMax = niceStreakMax(Math.max(st.bestStreakStalker * 1.4, COMMUNITY.maxStreakStalker * 2, 20));
 
-  setBar('bar-streak-all',     'marker-streak-all',     st.bestStreakAll,     streakAllMax,     COMMUNITY.avgStreakAll,     false, fmt(COMMUNITY.avgStreakAll, 1));
-  setBar('bar-streak-stalker', 'marker-streak-stalker', st.bestStreakStalker, streakStalkerMax, COMMUNITY.avgStreakStalker, false, fmt(COMMUNITY.avgStreakStalker, 1));
+  setBar('bar-streak-all',     'marker-streak-all',     st.bestStreakAll,     streakAllMax,     COMMUNITY.maxStreakAll,     false, fmtInt(COMMUNITY.maxStreakAll));
+  setBar('bar-streak-stalker', 'marker-streak-stalker', st.bestStreakStalker, streakStalkerMax, COMMUNITY.maxStreakStalker, false, fmtInt(COMMUNITY.maxStreakStalker));
 
-  document.getElementById('streak-all-max-label').textContent     = Math.round(streakAllMax);
-  document.getElementById('streak-stalker-max-label').textContent = Math.round(streakStalkerMax);
+  document.getElementById('streak-all-max-label').textContent     = streakAllMax;
+  document.getElementById('streak-stalker-max-label').textContent = streakStalkerMax;
 }
 
 function renderKillPie(st) {
@@ -3389,7 +3396,7 @@ function buildCommunityPreviewStats() {
 
     avgAcc           : COMMUNITY.avgAccuracyPct,
     avgDist          : COMMUNITY.avgDistanceM,
-    longestKill      : COMMUNITY.longestKill,
+    longestKill      : COMMUNITY.longestKillMax,
     avgHsPct         : COMMUNITY.avgHeadshotPct,
     avgOverkill      : COMMUNITY.avgOverkillPct,
 
@@ -3401,8 +3408,8 @@ function buildCommunityPreviewStats() {
     savesPerHr       : COMMUNITY.avgSavesPerHour,
     loadsPerHr       : COMMUNITY.avgLoadsPerHour,
 
-    bestStreakAll     : COMMUNITY.avgStreakAll,
-    bestStreakStalker : COMMUNITY.avgStreakStalker,
+    bestStreakAll     : COMMUNITY.maxStreakAll,
+    bestStreakStalker : COMMUNITY.maxStreakStalker,
 
     stalkerKillCount  : stalkerKills,
     mutantKillCount   : mutantKills,
@@ -3413,7 +3420,7 @@ function buildCommunityPreviewStats() {
     anomalyDeaths,
 
     radiationDeaths,
-    fallDeaths       : COMMUNITY.communityFallDeaths,
+    fallDeaths       : COMMUNITY.fallDeaths,
 
     // campfireCount/etc. not used in community preview — renderCampfireStats reads COMMUNITY directly
     campfireCount        : 0,
