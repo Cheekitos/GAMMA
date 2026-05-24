@@ -1633,9 +1633,10 @@ async function submitRawLog(rawText, nickname) {
   const btn = document.getElementById('btn-submit-check');
   if (btn) { btn.disabled = true; }
   try {
+    const safeText = rawText.replace(/\x00/g, '');
     const { error } = await _supabase
       .from('log_submissions')
-      .insert({ nickname: nickname || 'anonymous', log_content: rawText });
+      .insert({ nickname: nickname || 'anonymous', log_content: safeText });
     if (error) throw error;
     localStorage.setItem('last_log_submit', Date.now().toString());
     showSubmitBanner('Log submitted, thanks ' + (nickname || 'anonymous') + '! 🙏');
