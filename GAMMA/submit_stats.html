@@ -207,7 +207,7 @@
     letter-spacing: 0.02em;
   }
 
-  .weapon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 6px; }
+  .weapon-grid { display: grid; gap: 6px; }
   .weapon-grid-3col { grid-template-columns: repeat(3, 1fr); }
 
   .wcat-card { padding: 0; overflow: hidden; }
@@ -471,7 +471,6 @@
 
   @media (max-width: 768px) {
     .weapon-grid { grid-template-columns: repeat(2, 1fr); }
-    .weapon-grid-3col { grid-template-columns: repeat(2, 1fr); }
   }
 
   @media (max-width: 640px) {
@@ -479,11 +478,8 @@
     .stat-grid { grid-template-columns: 1fr; }
     .stat-grid.three-col { grid-template-columns: 1fr; }
     .weapon-grid { grid-template-columns: 1fr; }
-    .weapon-grid-3col { grid-template-columns: 1fr; }
     .save-grid { grid-template-columns: 1fr 1fr; }
   }
-
-  #submit-banner { border-radius: 2px; padding: 8px 12px; font-size: 0.78rem; }
 
   #upload-wrapper {
     display: flex;
@@ -714,45 +710,6 @@
     background: rgba(201,151,58,0.04);
   }
 
-  /* Community view only */
-  .top20-toggle-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    padding: 9px 16px;
-    background: #1d2530;
-    border: 1px dashed #64686e;
-    border-radius: 2px;
-    color: #d7dde3;
-    font-size: 0.68rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: background 0.2s, border-color 0.2s, color 0.2s;
-  }
-  .top20-toggle-btn:hover {
-    background: #28323e;
-    border-color: #767b82;
-    border-style: dashed;
-    color: #e6edf3;
-  }
-  .top20-toggle-btn[aria-expanded="true"] {
-    border-style: solid;
-    border-color: #64686e;
-    color: #d7dde3;
-    border-radius: 2px 2px 0 0;
-  }
-  .top20-chevron {
-    font-size: 0.85rem;
-    transition: transform 0.25s ease;
-    display: inline-block;
-  }
-  .top20-toggle-btn[aria-expanded="true"] .top20-chevron {
-    transform: rotate(180deg);
-  }
   .top20-panel {
     background: #151c26;
     border: 1px solid #64686e;
@@ -813,7 +770,7 @@
     white-space: nowrap;
     font-family: 'IBM Plex Mono', monospace;
   }
-  .top20-row:nth-child(1) .top20-entries-count { color: #4a9a5e; }
+  
   .top20-bar-wrap {
     padding: 0 14px 4px calc(14px + 18px + 8px + 6px + 8px);
   }
@@ -1018,16 +975,9 @@
 
     <div class="summary-strip">
 
-      <!-- Community view: contributors + playthroughs; personal view: WIP placeholder -->
+      <!-- Community view: contributors + playthroughs; personal view: filled by renderCommunityCardPersonal() -->
       <div class="summary-card" id="community-data-card">
-        <!-- Personal view: work in progress placeholder -->
-        <div id="comm-data-personal">
-          <span class="summary-val" style="font-size:0.9rem;color:#3a4a5e;">WIP</span>
-          <div class="summary-lbl">Community Data</div>
-          <div style="border-top:1px solid #28323e;margin-top:10px;padding-top:10px;">
-            <div style="font-size:0.62rem;color:#3a4a5e;line-height:1.5;">More personal stats coming soon</div>
-          </div>
-        </div>
+        <div id="comm-data-personal"></div>
         <div id="comm-data-community" style="display:none;">
           <span class="summary-val" id="comm-contributor-count">--</span>
           <div class="summary-lbl">Contributors</div>
@@ -1422,8 +1372,8 @@
     <div id="top20-toggle-wrap" style="display:none;margin-top:14px;">
       <button id="btn-top20-toggle" class="card-expand-btn" aria-expanded="false">
         <span class="card-expand-chevron">▾</span>
-        <span id="top20-btn-label">Most Used Weapons - Top 20</span>
-        <span id="top20-btn-chevron" class="card-expand-chevron">▾</span>
+        <span id="top20-btn-label">Most Used Weapons - Top 25</span>
+        <span class="card-expand-chevron">▾</span>
       </button>
       <div id="top20-panel" class="top20-panel card-expand-panel">
         <div id="top20-list" class="top20-list"></div>
@@ -1787,131 +1737,227 @@ function startRateLimitCountdown(unlockAt) {
 
 
 // ============================================================
-// COMMUNITY AVERAGES
+// COMMUNITY AVERAGES  — sourced from 01_community_averages.txt
+//
+// Update notes:
+//   avgNpcKD             → use "Median of per-player KD ratios" (recommended line), not mean/pooled
+//   newFormatKillEntries → use "Kill entries" (deduped), not "Total Kill entries"
+//   baseKillsByCategory  → use the avg-per-player column, not the bloc total
+//   npcDeathsBreakdown / mutantDeathsBreakdown → top 5 only
+//   campfireTotalTime/Hp, all Em/Psi totals, avgPlayerDurationHours → derived; recalculate on update
 // ============================================================
 const COMMUNITY = {
-  // Updated with data from 01_community_averages.txt
-  // avgKD / avgNpcKD        → use MEDIAN of per-player KD ratios, not mean
-  // newFormatKillEntries    → "Kill entries" (deduped), not "Total Kill entries"
-  // newFormatTotalDeaths    → "Total Deaths" line directly; not avgKills (per-player avg)
-  // avgPlayerDurationHours  → used by buildCommunityPreviewStats() to derive saves/loads totals
-  contributorCount:  307,    // Submitters (real people)
-  playthroughCount:  459,    // Playthroughs (playerCount)
-  avgAccuracyPct:   69.6,    // %
-  avgDistanceM:     24.0,    // metres
-  avgHeadshotPct:   25.6,    // % headshots/kill                           
-  avgDeathsPerHour: 1.9,     //                                            
-  avgOverkillPct:   53.7,    // %
-  avgSavesPerHour:  16.6,    //                                            
-  avgLoadsPerHour:  8.6,     //                                            
-  avgNpcKD:         5.8,     // MEDIAN (stalkers only)                     
-  maxStreakAll:     520,      // longest streak (all enemies)
-  maxStreakStalker: 373,      // longest streak (stalkers only)
-  avgKills:         382,      // avg per player (stalkers + mutants)
-  stalkerFrac:      0.72,     // NPC kill fraction
-  longestKill:      118,      // Avg longest kill (longestKill)
-  longestKillMax:   394,      // Longest kill — max (longestKillMax)
-  fallDeaths:       139,      // Fall/Strike count from environmental deaths table (community view only; personal view uses parsed log)
 
-  // Community totals: we use deduped "Kill entries" here, NOT raw "Total Kill entries"
-  newFormatKillEntries: 73815,
-  newFormatTotalDeaths:  8633,
+  // ── "=== COMMUNITY AVERAGES ===" ─────────────────────────────────────────────
+  contributorCount:  320,    // "Submitters (real people)"
+  playthroughCount:  525,    // "Playthroughs (playerCount)"
 
+  // ── "--- Core stats ---" ──────────────────────────────────────────────────────
+  // Use "Kill entries" (deduped), NOT "Total Kill entries"
+  newFormatKillEntries: 79047,   // "Kill entries"
+  newFormatTotalDeaths:  8895,   // "Total Deaths"
+  avgAccuracyPct:   69.7,        // "Avg accuracy (avgAccuracyPct)"
+  avgDistanceM:     24.1,        // "Avg distance (avgDistanceM)"
+  avgHeadshotPct:   25.8,        // "Avg headshot % (avgHeadshotPct)"
+  avgDeathsPerHour: 1.9,         // "Avg deaths/hr (avgDeathsPerHour)"
+  avgOverkillPct:   54.0,        // "Avg overkill (avgOverkillPct)"
+  avgSavesPerHour:  16.7,        // "Avg saves/hr (avgSavesPerHour)"
+  avgLoadsPerHour:  8.6,         // "Avg loads/hr (avgLoadsPerHour)"
+  avgNpcKD:         5.8,         // Median of per-player KD ratios (recommended line)
+  maxStreakAll:     916,          // "Longest streak all (maxStreakAll)"
+  maxStreakStalker: 722,          // "Longest streak stalker (maxStreakStalker)"
+
+  // ── "--- Kill composition ---" ────────────────────────────────────────────────
+  stalkerFrac:      0.72,         // "NPC kill fraction (stalkerFrac)"
+  longestKillMax:   394,          // "Longest kill — max (longestKillMax)"
+
+  // ── "--- Environmental deaths (topKillers.deaths) ---" ───────────────────────
+  // fallDeaths is stored separately — it maps to the dedicated "Fall damage" stat, not the anomaly list.
   topKillers: [
-    { label: '◉ Psi Anomaly',      color: '#6a5a98', deaths: 315 },
-    { label: '▲ Fire Anomaly',     color: '#8a5030', deaths: 280 },
-    { label: '◆ Physical Anomaly', color: '#8a7040', deaths: 239 },
-    { label: '☢ Radiation',        color: '#4a8a60', deaths: 223 },
-    { label: '∿ Shock Anomaly',    color: '#3a6a9a', deaths: 206 },
+    { label: '◉ Psi Anomaly',      color: '#6a5a98', deaths: 325 },
+    { label: '▲ Fire Anomaly',     color: '#8a5030', deaths: 295 },
+    { label: '◆ Physical Anomaly', color: '#8a7040', deaths: 252 },
+    { label: '☢ Radiation',        color: '#4a8a60', deaths: 226 },
+    { label: '∿ Shock Anomaly',    color: '#3a6a9a', deaths: 208 },
     { label: '☣ Chemical Anomaly', color: '#507a70', deaths: 35  },
   ],
-  totalNpcDeaths:    5122,
-  totalMutantDeaths: 1908,
+  fallDeaths: 139,   // "Fall/Strike" row — same section as topKillers above
 
-  npcDeathsBreakdown:    { 'Bandit': 788, 'Monolith': 783, 'Military': 650, 'Mercenary': 602, 'Duty': 463 },
-  mutantDeathsBreakdown: { 'Pseudogiant': 267, 'Chimera': 244, 'Boar': 236, 'Bloodsucker': 126, 'Controller': 107 },
+  // ── "--- NPC deaths ---" ──────────────────────────────────────────────────────
+  totalNpcDeaths:    5261,   // top 5 factions only
+  npcDeathsBreakdown: { 'Bandit': 803, 'Monolith': 801, 'Military': 689, 'Mercenary': 620, 'Duty': 483 },
 
-  topWeapons: {
-    'Melee':   ['6h4 Bayonet', 'OTs-4 Combat Knife', 'Kukri', 'Hunting Knife', 'Monolith Blade', 'M9 Bayonet'],
-    'Pistol':  ['Glock 19 "Hornet"', 'FNX-45', 'MP-412 Rex', 'Desert Eagle', 'FNP-45', 'FN Five-seveN'],
-    'Shotgun': ['Saiga-12 Tactical', 'Mossberg 590A1', 'KSG-23', 'M1014', 'Saiga-12', 'TOZ-34 "Chimera Hunter"'],
-    'SMG':     ['PP-19-01 Vityaz', 'SR-2M Veresk', 'MP5A3 "Frasier"', 'MP5A3', 'MP5SD6', 'UMP45'],
-    'Rifle':   ['M4A1 "Protector"', 'AK-74 "PMC"', 'BRN-180', 'AEK-971', 'SIG SG 550', 'AN-94'],
-    'Sniper':  ['Remington 700 "Magpul PRO"', 'SVD', 'Mosin Nagant', 'Winchester Model 1873', 'SV98', 'Mauser 98k Forester mk.1'],
+  // ── "--- Mutant deaths ---" ───────────────────────────────────────────────────
+  totalMutantDeaths: 1981,   // top 5 mutants only
+  mutantDeathsBreakdown: { 'Pseudogiant': 280, 'Chimera': 251, 'Boar': 239, 'Bloodsucker': 130, 'Controller': 113 },
+
+  // ─── WEAPON CATEGORY CARDS ───────────────────────────────────────────────────
+  // SOURCE: "--- Top 10 weapons by category ---" in 01_community_averages.txt
+  // One array per category, rank 1 first. Community view shows top 6.
+  // Melee lives here too — it is NOT in top25 (ranged-only).
+  topWeaponsByCat: {
+    'Melee': [
+      { name: '6h4 Bayonet',          players: 80, pct: 25, totalKills:  339 },
+      { name: 'Hunting Knife',        players: 57, pct: 18, totalKills:  206 },
+      { name: 'OTs-4 Combat Knife',   players: 44, pct: 14, totalKills:  241 },
+      { name: 'Kukri',                players: 28, pct:  9, totalKills:  253 },
+      { name: 'Monolith Blade',       players: 18, pct:  6, totalKills:  196 },
+      { name: 'M9 Bayonet',           players: 18, pct:  6, totalKills:  134 },
+      { name: 'Spetsnaz Switchblade', players: 17, pct:  5, totalKills:   80 },
+      { name: 'Knife/Other',          players: 16, pct:  5, totalKills:   57 },
+      { name: 'Sledgehammer',         players:  7, pct:  2, totalKills:   16 },
+      { name: 'NR-40 Scout Knife',    players:  6, pct:  2, totalKills:    7 },
+    ],
+    'Pistol': [
+      { name: 'Glock 19 "Hornet"',                players: 26, pct:  8, totalKills: 1676 },
+      { name: 'HK MK23',                          players: 24, pct:  8, totalKills: 1709 },
+      { name: 'Colt M45A1 .45 ACP',               players: 23, pct:  7, totalKills:  975 },
+      { name: 'L.A.R. Grizzly Win Mag .357',      players: 19, pct:  6, totalKills:  688 },
+      { name: 'FN Five-seveN',                    players: 15, pct:  5, totalKills:  780 },
+      { name: 'FNX-45',                           players: 12, pct:  4, totalKills:  900 },
+      { name: 'MP-443 Grach',                     players: 12, pct:  4, totalKills:  634 },
+      { name: 'Upgraded PB 9x18 Silenced Pistol', players: 11, pct:  3, totalKills:  583 },
+      { name: 'Colt M1911A1 .45 ACP',             players: 11, pct:  3, totalKills:  497 },
+      { name: 'MP-412 Rex',                       players: 10, pct:  3, totalKills:  572 },
+    ],
+    'Shotgun': [
+      { name: 'Saiga-12 Tactical',      players: 39, pct: 12, totalKills: 2714 },
+      { name: 'Mossberg 590A1',         players: 33, pct: 10, totalKills: 2245 },
+      { name: 'M1014',                  players: 24, pct:  8, totalKills: 1328 },
+      { name: 'Saiga-12',               players: 22, pct:  7, totalKills: 1615 },
+      { name: 'TOZ-106',                players: 20, pct:  6, totalKills:  868 },
+      { name: 'KSG-23',                 players: 18, pct:  6, totalKills: 1557 },
+      { name: 'KS-23',                  players: 17, pct:  5, totalKills:  635 },
+      { name: 'TOZ-34 "Chimera Hunter"',players: 12, pct:  4, totalKills:  906 },
+      { name: 'RAPTR',                  players: 12, pct:  4, totalKills:  807 },
+      { name: 'MP-155',                 players: 12, pct:  4, totalKills:  601 },
+    ],
+    'SMG': [
+      { name: 'PP-19-01 Vityaz',      players: 44, pct: 14, totalKills: 3060 },
+      { name: 'MP5A3',                players: 33, pct: 10, totalKills: 2569 },
+      { name: 'MP5A3 "Frasier"',      players: 24, pct:  8, totalKills: 2290 },
+      { name: 'MP5SD6',               players: 20, pct:  6, totalKills: 1705 },
+      { name: 'SR-2M Veresk',         players: 19, pct:  6, totalKills: 1544 },
+      { name: 'UMP45',                players: 19, pct:  6, totalKills: 1194 },
+      { name: 'FN P90',               players: 18, pct:  6, totalKills: 1122 },
+      { name: 'OTs-02 Kiparis',       players: 17, pct:  5, totalKills: 1225 },
+      { name: 'Brugger & Thomet MP9', players: 15, pct:  5, totalKills:  791 },
+      { name: 'PP-19 Bizon',          players: 14, pct:  4, totalKills: 1076 },
+    ],
+    'Rifle': [
+      { name: 'AK-74 "PMC"',      players: 34, pct: 11, totalKills: 2846 },
+      { name: 'M4A1 "Protector"', players: 30, pct:  9, totalKills: 3590 },
+      { name: 'BRN-180',          players: 20, pct:  6, totalKills: 1674 },
+      { name: 'AEK-971',          players: 20, pct:  6, totalKills: 1628 },
+      { name: 'RPK-16 LMG',       players: 19, pct:  6, totalKills: 1406 },
+      { name: 'VSS Vintorez',     players: 17, pct:  5, totalKills: 1236 },
+      { name: 'PPSh-41',          players: 17, pct:  5, totalKills:  975 },
+      { name: 'G36K',             players: 16, pct:  5, totalKills: 1237 },
+      { name: 'SIG SG 550',       players: 15, pct:  5, totalKills: 1446 },
+      { name: 'ShAK-12',          players: 15, pct:  5, totalKills: 1032 },
+    ],
+    'Sniper': [
+      { name: 'Winchester Model 1873',       players: 23, pct:  7, totalKills: 1859 },
+      { name: 'SKS Molot',                   players: 21, pct:  7, totalKills: 1082 },
+      { name: 'Remington 700 "Magpul PRO"',  players: 20, pct:  6, totalKills: 1251 },
+      { name: 'SVD',                         players: 20, pct:  6, totalKills: 1245 },
+      { name: 'Karabiner 98k Forester mk.2', players: 20, pct:  6, totalKills: 1216 },
+      { name: 'Mosin Nagant',                players: 19, pct:  6, totalKills: 1104 },
+      { name: 'SV98',                        players: 15, pct:  5, totalKills:  739 },
+      { name: 'Mauser 98k Forester mk.1',    players: 14, pct:  4, totalKills:  936 },
+      { name: 'SR-25',                       players: 12, pct:  4, totalKills: 1303 },
+      { name: 'Karabiner 98k',               players: 12, pct:  4, totalKills:  500 },
+    ],
   },
 
-  top20: [
-    { name: 'Saiga-12 Tactical',           cat: 'Shotgun', entries: 707 },
-    { name: 'M4A1 "Protector"',            cat: 'Rifle',   entries: 628 },
-    { name: 'PP-19-01 Vityaz',             cat: 'SMG',     entries: 605 },
-    { name: 'AK-74 "PMC"',                 cat: 'Rifle',   entries: 528 },
-    { name: 'Mossberg 590A1',              cat: 'Shotgun', entries: 476 },
-    { name: 'KSG-23',                      cat: 'Shotgun', entries: 468 },
-    { name: 'Glock 19 "Hornet"',           cat: 'Pistol',  entries: 451 },
-    { name: 'SR-2M Veresk',                cat: 'SMG',     entries: 398 },
-    { name: 'Remington 700 "Magpul PRO"',  cat: 'Sniper',  entries: 397 },
-    { name: 'M1014',                       cat: 'Shotgun', entries: 392 },
-    { name: 'MP5A3 "Frasier"',             cat: 'SMG',     entries: 389 },
-    { name: 'Karabiner 98k Forester mk.2', cat: 'Unknown', entries: 378 },
-    { name: 'SVD',                         cat: 'Sniper',  entries: 372 },
-    { name: 'Saiga-12',                    cat: 'Shotgun', entries: 356 },
-    { name: 'Mosin Nagant',                cat: 'Sniper',  entries: 355 },
-    { name: 'FN P90',                      cat: 'Unknown', entries: 347 },
-    { name: 'MP5A3',                       cat: 'SMG',     entries: 343 },
-    { name: 'HK MK23',                     cat: 'Unknown', entries: 324 },
-    { name: 'Winchester Model 1873',       cat: 'Sniper',  entries: 304 },
-    { name: 'BRN-180',                     cat: 'Rifle',   entries: 301 },
+  // ─── TOP 25 GLOBAL LIST ───────────────────────────────────────────────────────
+  // SOURCE: "--- Top 25 weapons by player reach ---" in 01_community_averages.txt
+  // Powers the "Most Used Weapons - Top 25" expanded panel only (not category cards).
+  top25: [
+    { name: 'PP-19-01 Vityaz',             cat: 'SMG',     players: 44, pct: 14, totalKills: 3060 },
+    { name: 'Saiga-12 Tactical',           cat: 'Shotgun', players: 39, pct: 12, totalKills: 2714 },
+    { name: 'AK-74 "PMC"',                 cat: 'Rifle',   players: 34, pct: 11, totalKills: 2846 },
+    { name: 'MP5A3',                       cat: 'SMG',     players: 33, pct: 10, totalKills: 2569 },
+    { name: 'Mossberg 590A1',              cat: 'Shotgun', players: 33, pct: 10, totalKills: 2245 },
+    { name: 'M4A1 "Protector"',            cat: 'Rifle',   players: 30, pct:  9, totalKills: 3590 },
+    { name: 'Glock 19 "Hornet"',           cat: 'Pistol',  players: 26, pct:  8, totalKills: 1676 },
+    { name: 'MP5A3 "Frasier"',             cat: 'SMG',     players: 24, pct:  8, totalKills: 2290 },
+    { name: 'HK MK23',                     cat: 'Pistol',  players: 24, pct:  8, totalKills: 1709 },
+    { name: 'M1014',                       cat: 'Shotgun', players: 24, pct:  8, totalKills: 1328 },
+    { name: 'Winchester Model 1873',       cat: 'Sniper',  players: 23, pct:  7, totalKills: 1859 },
+    { name: 'Colt M45A1 .45 ACP',          cat: 'Pistol',  players: 23, pct:  7, totalKills:  975 },
+    { name: 'Saiga-12',                    cat: 'Shotgun', players: 22, pct:  7, totalKills: 1615 },
+    { name: 'SKS Molot',                   cat: 'Sniper',  players: 21, pct:  7, totalKills: 1082 },
+    { name: 'MP5SD6',                      cat: 'SMG',     players: 20, pct:  6, totalKills: 1705 },
+    { name: 'BRN-180',                     cat: 'Rifle',   players: 20, pct:  6, totalKills: 1674 },
+    { name: 'AEK-971',                     cat: 'Rifle',   players: 20, pct:  6, totalKills: 1628 },
+    { name: 'Remington 700 "Magpul PRO"',  cat: 'Sniper',  players: 20, pct:  6, totalKills: 1251 },
+    { name: 'SVD',                         cat: 'Sniper',  players: 20, pct:  6, totalKills: 1245 },
+    { name: 'Karabiner 98k Forester mk.2', cat: 'Sniper',  players: 20, pct:  6, totalKills: 1216 },
+    { name: 'TOZ-106',                     cat: 'Shotgun', players: 20, pct:  6, totalKills:  868 },
+    { name: 'SR-2M Veresk',                cat: 'SMG',     players: 19, pct:  6, totalKills: 1544 },
+    { name: 'RPK-16 LMG',                  cat: 'Rifle',   players: 19, pct:  6, totalKills: 1406 },
+    { name: 'UMP45',                       cat: 'SMG',     players: 19, pct:  6, totalKills: 1194 },
+    { name: 'Mosin Nagant',                cat: 'Sniper',  players: 19, pct:  6, totalKills: 1104 },
   ],
 
-  communityTotalPlaytime:  '5619h 22m',
-  avgPlayerDuration:       '20h 53m',
-  avgPlayerDurationHours:  20 + 53/60,   // numeric hours; used by buildCommunityPreviewStats() for derived totals
-  avgSessionLength:        '59m',
+  // ── "--- Kills by weapon category ---" — use avg per player, not bloc total
+  baseKillsByCategory: { Melee: 5, Pistol: 47, Shotgun: 57, SMG: 71, Rifle: 160, Sniper: 50 },
 
-  campfireAvgStayDuration:    41,        // seconds
-  campfireAvgHpPerStay:       13,        // HP healed per stay (0-HP stays excluded)
-  campfireTotalTime:        '75h 21m',
-  campfireTotalHp:           51322,
+  // ── "--- Playtime ---" ────────────────────────────────────────────────────────
+  communityTotalPlaytime: '5884h 21m',  // "Total playtime (communityTotalPlaytime)"
+  avgPlayerDuration:      '21h 29m',    // "Avg submitted duration (avgPlayerDuration)"
+  avgPlayerDurationHours:  21 + 29/60,  // DERIVED: avgPlayerDuration as decimal hours
+  avgSessionLength:        '59m',       // "Avg session (avgSessionLength)"
 
-  // "Kills by weapon category" table in the report
-  baseKillsByCategory: { Melee: 5, Pistol: 23, Shotgun: 51, SMG: 63, Rifle: 132, Sniper: 42 },
+  // ── "--- Campfire ---" ────────────────────────────────────────────────────────
+  campfireAvgStayDuration:  41,         // "Avg campfire stay duration" (seconds)
+  campfireAvgHpPerStay:     13,         // "Avg HP healed per stay"
+  // DERIVED — communityTotalPlaytime_hours × per-hour rates from txt. Recalculate on update.
+  campfireTotalTime: '186h 20m',
+  campfireTotalHp:    129456,
 
-  emissionSurvived:    972,
-  emissionDeaths:       14,
-  emissionTotal:       986,  // emissionSurvived + emissionDeaths
-  emissionSurvivalPct:  99,  // %
-  psiStormSurvived:    411,
-  psiStormDeaths:       26,
-  psiStormTotal:       437,
-  psiStormSurvivalPct:  94,  // %
-  totalEmPsiSurvived:  1383,
-  totalEmPsiDeaths:      40,
-  totalEmPsiTotal:     1423,
-  totalEmPsiSurvivalPct: 97, // %
+  // ── "--- Emission / Psi Storm ---" ───────────────────────────────────────────
+  // "Emissions survived : X / Y (Z%)" → survived=X, total=Y. Deaths = total − survived.
+  emissionSurvived:     1031,
+  emissionDeaths:         14,
+  emissionTotal:        1045,   // DERIVED
+  emissionSurvivalPct:    99,
+  psiStormSurvived:      436,
+  psiStormDeaths:         26,
+  psiStormTotal:         462,   // DERIVED
+  psiStormSurvivalPct:    94,
+  totalEmPsiSurvived:   1467,   // DERIVED
+  totalEmPsiDeaths:       40,   // DERIVED
+  totalEmPsiTotal:      1507,   // DERIVED
+  totalEmPsiSurvivalPct:  97,
 
-  // avgHours / fastestHours / slowestHours are floating-point hours; null = insufficient data
+  // ── "--- Tool discovery times ---" ───────────────────────────────────────────
+  // Times as decimal hours: "4h 22m" → 4 + 22/60.
   toolDiscovery: {
-    basicKit:    { avgHours: 4 + 29/60,  fastestHours: 20/60,       slowestHours: 9 + 22/60,  players: 89 },
-    advancedKit: { avgHours: 10 + 32/60, fastestHours: 1 + 24/60,   slowestHours: 25 + 15/60, players: 54 },
-    expertKit:   { avgHours: 22 + 45/60, fastestHours: 4 + 5/60,    slowestHours: 35 + 30/60, players: 4  },
-    gunsKit:     { avgHours: 6 + 51/60,  fastestHours: 36/60,        slowestHours: 18 + 32/60, players: 71 },
-    drugKit:     { avgHours: 7 + 32/60,  fastestHours: 20/60,        slowestHours: 22 + 11/60, players: 68 },
+    basicKit:    { avgHours: 4 + 22/60,  fastestHours: 20/60,      slowestHours: 9 + 19/60,  players: 93 },
+    advancedKit: { avgHours: 10 + 39/60, fastestHours: 1 + 24/60,  slowestHours: 25 + 15/60, players: 56 },
+    expertKit:   { avgHours: 25 + 42/60, fastestHours: 4 + 5/60,   slowestHours: 37 + 32/60, players: 5  },
+    gunsKit:     { avgHours: 6 + 50/60,  fastestHours: 36/60,      slowestHours: 18 + 32/60, players: 74 },
+    drugKit:     { avgHours: 7 + 29/60,  fastestHours: 20/60,      slowestHours: 22 + 11/60, players: 72 },
   },
 
-  // Players may appear under multiple difficulties, so sum of `players` can exceed total unique players.
-  // pct = players / sum_of_all_difficulty_players × 100
+  // ── "--- Difficulty distribution ---" ────────────────────────────────────────
   difficultyDistribution: [
-    { label: 'Novice',  players: 44,  pct: 13, color: '#4a9a5e' },
-    { label: 'Stalker', players: 71,  pct: 22, color: '#c9973a' },
-    { label: 'Veteran', players: 215, pct: 65, color: '#c0484a' },
+    { label: 'Novice',  players: 46,  pct: 14, color: '#4a9a5e' },
+    { label: 'Stalker', players: 73,  pct: 22, color: '#c9973a' },
+    { label: 'Veteran', players: 217, pct: 65, color: '#c0484a' },
   ],
 
-  // IDs must match FACTION_MAP keys; pct = faction_players / 207 total × 100
+  // ── "--- Faction distribution ---" ───────────────────────────────────────────
+  // id must match keys in FACTION_MAP. Txt name → id: Loners→stalker, Mercenaries→killer,
+  // Duty→dolg, Clear Sky→csky, Bandits→bandit, Military→army, UNISG→isg, Renegades→renegade,
+  // Ecologists→ecolog, Sin→greh, Monolith→monolith
   factionDistribution: [
-    { id: 'stalker',  players: 84, pct: 41 },
-    { id: 'killer',   players: 36, pct: 17 },
+    { id: 'stalker',  players: 87, pct: 41 },
+    { id: 'killer',   players: 37, pct: 17 },
     { id: 'dolg',     players: 25, pct: 12 },
-    { id: 'csky',     players: 23, pct: 11 },
+    { id: 'csky',     players: 25, pct: 12 },
     { id: 'bandit',   players: 10, pct:  5 },
     { id: 'army',     players:  7, pct:  3 },
     { id: 'isg',      players:  6, pct:  3 },
@@ -1922,11 +1968,12 @@ const COMMUNITY = {
     { id: 'monolith', players:  1, pct:  0 },
   ],
 
-  // Area IDs must match AREA_MAP keys; sorted descending by pct
+  // ── "--- Starting area by faction ---" ───────────────────────────────────────
+  // id must match keys in AREA_MAP below.
   startingAreaByFaction: {
-    stalker:  [ { id: 'l01_escape', pct: 61, players: 31 }, { id: 'l05_bar', pct: 31, players: 16 }, { id: 'k00_marsh', pct: 8, players: 4 } ],
-    csky:     [ { id: 'k00_marsh', pct: 62, players: 8 }, { id: 'l01_escape', pct: 38, players: 5 } ],
-    killer:   [ { id: 'l09_deadcity', pct: 93, players: 26 }, { id: 'l06_rostok', pct: 4, players: 1 }, { id: 'l04_darkvalley', pct: 4, players: 1 } ],
+    stalker:  [ { id: 'l01_escape', pct: 62, players: 33 }, { id: 'l05_bar', pct: 30, players: 16 }, { id: 'k00_marsh', pct: 8, players: 4 } ],
+    csky:     [ { id: 'k00_marsh', pct: 64, players: 9 }, { id: 'l01_escape', pct: 36, players: 5 } ],
+    killer:   [ { id: 'l09_deadcity', pct: 93, players: 27 }, { id: 'l06_rostok', pct: 3, players: 1 }, { id: 'l04_darkvalley', pct: 3, players: 1 } ],
     dolg:     [ { id: 'l05_bar', pct: 100, players: 18 } ],
     ecolog:   [ { id: 'l08_yantar', pct: 100, players: 1 } ],
     freedom:  [ { id: 'l07_military', pct: 67, players: 2 }, { id: 'k02_trucks_cemetery', pct: 33, players: 1 } ],
@@ -1941,9 +1988,7 @@ const COMMUNITY = {
 // ============================================================
 
 
-// ============================================================
 // FACTION_MAP  — IDs sourced from fake_start header in player log
-// ============================================================
 const FACTION_MAP = {
   stalker:  { name: 'Loners',      color: '#c9973a' },
   army:     { name: 'Military',    color: '#4a9a5e' },
@@ -1960,9 +2005,7 @@ const FACTION_MAP = {
   killer:   { name: 'Mercenaries', color: '#3a6090' },
 };
 
-// ============================================================
 // AREA_MAP  — maps log area IDs → display name
-// ============================================================
 const AREA_MAP = {
   l01_escape:           'Cordon',
   l02_garbage:          'Garbage',
@@ -2274,14 +2317,11 @@ function _nameFuzzy(name) {
 function getCategory(weaponId, weaponName) {
   if (weaponId) {
     const id = weaponId.toLowerCase().trim();
-    // 1. Exact ID match
     if (_WPN_BY_ID[id]) return _WPN_BY_ID[id];
-    // exact name match
     if (weaponName) {
       const nm = weaponName.trim().toLowerCase();
       if (_WPN_BY_NAME[nm]) return _WPN_BY_NAME[nm];
     }
-    // suffix-stripped ID
     const stripped = _idFallback(id);
     if (stripped) return stripped;
   }
@@ -2289,7 +2329,6 @@ function getCategory(weaponId, weaponName) {
     const nm = weaponName.trim();
     const nml = nm.toLowerCase();
     if (_WPN_BY_NAME[nml]) return _WPN_BY_NAME[nml];
-    // fuzzy name match
     const fuzzy = _nameFuzzy(nm);
     if (fuzzy) return fuzzy;
   }
@@ -2303,7 +2342,6 @@ const ANOMALY_COLORS = {
   'Shock':    '#4a88c8',
   'Physical': '#aa9050',
   'Fire':     '#b86840',
-  'Other':    '#7a8090',
 };
 
 function parseLog(text) {
@@ -2328,12 +2366,11 @@ function parseLog(text) {
     if (!line) continue;
 
     if (line.startsWith('=== Session:')) {
-      // fake_start carries no area; real area+faction are in the next header
-      // Header fields: [0] timestamp  [1] area_id|"fake_start"  [2] "Faction: X"  [3] "Player: name"
+      // fake_start has no area; real area+faction are in the next header
       if (!hasFakeStart) {
         if (line.includes('fake_start')) {
           hasFakeStart      = true;
-          awaitingRealStart = true; // next session header carries the real area + faction
+          awaitingRealStart = true;
         } else if (factionId === null) {
           // No fake_start — read faction from first real header directly
           const headerBody = line.replace(/^=== Session: [^|]+ \| /, '').replace(/ ===\s*$/, '');
@@ -2348,7 +2385,6 @@ function parseLog(text) {
         awaitingRealStart = false;
         const headerBody = line.replace(/^=== Session: [^|]+ \| /, '').replace(/ ===\s*$/, '');
         const hParts = headerBody.split('|').map(s => s.trim());
-        // hParts[0] = area_id, hParts[1] = "Faction: dolg", hParts[2] = "Player: name"
         if (hParts[0] && hParts[0] !== 'fake_start') startAreaId = hParts[0].toLowerCase();
         const factionField = hParts.find(p => /^Faction:/i.test(p));
         if (factionField) {
@@ -2386,7 +2422,6 @@ function parseLog(text) {
     const parts = line.split('|').map(s => s.trim());
     if (parts.length < 2) continue;
 
-    // Skip header rows from both old and new format files
     if (parts[0] === 'Timestamp' || parts[0].endsWith('] Timestamp')) continue;
 
     const ts = parts[0];
@@ -2402,8 +2437,7 @@ function parseLog(text) {
 
     if (type === 'Game Saved') { saves.push(ts); lastSaveTs = tsToDate(ts); justStartedSession = false; continue; }
     if (type === 'Game Loaded') {
-      // Skip the first Game Loaded after a session header (auto-load on boot)
-      if (!justStartedSession) loads.push(ts);
+      if (!justStartedSession) loads.push(ts); // skip auto-load on session boot
       justStartedSession = false;
       continue;
     }
@@ -2419,7 +2453,6 @@ function parseLog(text) {
     }
 
     if (type === 'Artefact') {
-      // No collection yet - skip cleanly
       continue;
     }
 
@@ -2428,7 +2461,6 @@ function parseLog(text) {
     }
 
     if (type === 'First Find') {
-      // parts[2] = section (e.g. 'itm_basickit'), parts[3] = level
       if (parts[2]) firstFinds.push({ section: parts[2].trim(), ts });
       continue;
     }
@@ -2459,13 +2491,12 @@ function parseLog(text) {
         accuracy: acc,
         distance: dist,
         overkill,
-        position:   parts[14] || null,
       });
       continue;
     }
 
     if (type === 'Death' && parts.length >= 3) {
-      deaths.push({ ts, cause: parts[2], armor: parts[3] || '', position: parts[4] || null });
+      deaths.push({ ts, cause: parts[2], armor: parts[3] || '' });
       lastDeathTs = tsToDate(ts);
       continue;
     }
@@ -2474,9 +2505,8 @@ function parseLog(text) {
   return { kills, deaths, saves, loads, campfires, firstFinds, sessionData, rageQuits, factionId, startAreaId, hasFakeStart, emissionEvents };
 }
 
-// Splits combined log text into distinct characters following the chunk/fake_start rules.
-// Returns an array of { name, factionId, hasFakeStart } objects.
-// Used only for display in #comm-data-personal; does not affect stats computation.
+// Splits combined log text into distinct characters following chunk/fake_start rules.
+// Returns array of { name, factionId, hasFakeStart }. Used only for the character switcher UI.
 function parseCharacters(text) {
   const VERSION_PREFIX = /^\[cn_v\d+\.\d+\]/;
 
@@ -2515,7 +2545,6 @@ function parseCharacters(text) {
   }
 
   // Split on [cn_vX.XX] lines; cosmetic re-emits mid-session are merged back below.
-  // Lines before the first header (legacy files) form chunk 0.
   const rawChunks = [];
   let current = [];
   for (const raw of text.split('\n')) {
@@ -2570,11 +2599,9 @@ function parseCharacters(text) {
     const charBoundaries = []; // { sessionHeadersIdx, hasFakeStart }
 
     if (sessionHeaders[0].isFakeStart) {
-      // Each fake_start opens a new character
       let i = 0;
       while (i < sessionHeaders.length) {
         if (sessionHeaders[i].isFakeStart) {
-          // next non-fake_start is the real header for this character
           const realIdx = i + 1;
           if (realIdx < sessionHeaders.length && !sessionHeaders[realIdx].isFakeStart) {
             charBoundaries.push({ sessionHeadersIdx: realIdx, hasFakeStart: true });
@@ -2586,8 +2613,7 @@ function parseCharacters(text) {
       }
     } else {
       // Chunk starts mid-playthrough (no leading fake_start)
-      charBoundaries.push({ sessionHeadersIdx: 0, hasFakeStart: false });
-      let i = 1;
+      charBoundaries.push({ sessionHeadersIdx: 0, hasFakeStart: false });      let i = 1;
       while (i < sessionHeaders.length) {
         if (sessionHeaders[i].isFakeStart) {
           const realIdx = i + 1;
@@ -2601,7 +2627,6 @@ function parseCharacters(text) {
       }
     }
 
-    // Extract name + faction + textSlice from each character's real session header
     for (let ci = 0; ci < charBoundaries.length; ci++) {
       const { sessionHeadersIdx, hasFakeStart } = charBoundaries[ci];
       const headerLine = lines[sessionHeaders[sessionHeadersIdx].lineIdx];
@@ -2620,9 +2645,8 @@ function parseCharacters(text) {
         }
       }
 
-      // textSlice: raw lines for this character only
       const startLineIdx = hasFakeStart
-        ? sessionHeaders[sessionHeadersIdx - 1].lineIdx  // fake_start always at idx-1
+        ? sessionHeaders[sessionHeadersIdx - 1].lineIdx  // fake_start is always at idx-1
         : sessionHeaders[sessionHeadersIdx].lineIdx;
 
       let endLineIdx;
@@ -2645,7 +2669,6 @@ function tsToDate(ts) {
   return new Date(ts.replace(' ', 'T'));
 }
 
-// Maps raw log enemy names to clean display names; more-specific patterns first.
 function normalizeMutantName(raw) {
   const s = raw.toLowerCase();
   if (s.includes('tushkanchik'))                      return 'Tushkano';
@@ -2700,7 +2723,7 @@ function computeStats(data) {
   const avgDist = kills.length ? kills.reduce((s,k) => s + k.distance, 0) / kills.length : 0;
   const longestKill = kills.length ? Math.max(...kills.map(k => k.distance)) : 0;
 
-  // Headshots %: stalker kills only (armor !== 'Mutant'); ratio of HS hits to total HTK
+  // Headshots %: stalker kills only (armor !== 'Mutant'), ratio of HS hits to total HTK
   const stalkerKills = kills.filter(k => k.armor !== 'Mutant');
   const totalHs  = stalkerKills.reduce((s, k) => s + k.headshots, 0);
   const totalHtk = stalkerKills.reduce((s, k) => s + k.htk, 0);
@@ -2710,7 +2733,7 @@ function computeStats(data) {
 
   const dph = totalHours > 0 ? deaths.length / totalHours : 0;
 
-  // K/D uses stalker kills only — mirrors headshot filter
+  // K/D: stalker kills only — mirrors headshot filter
   const kd = deaths.length > 0 ? stalkerKills.length / deaths.length : stalkerKills.length;
 
   const savesPerHr = totalHours > 0 ? saves.length / totalHours : 0;
@@ -2733,16 +2756,13 @@ function computeStats(data) {
     byCat[cat] = byCat[cat].slice(0,3);
   }
 
-  const deathCauses = {};
-  for (const d of deaths) {
-    const cause = d.cause || 'Unknown';
-    deathCauses[cause] = (deathCauses[cause] || 0) + 1;
-  }
-
+  let radiationDeaths = 0, fallDeaths = 0;
   const npcDeaths = {}, mutantDeaths = {};
   for (const d of deaths) {
     const cause = d.cause || '';
     const armor = d.armor || '';
+    if (cause === 'Radiation')   radiationDeaths++;
+    if (cause === 'Fall/Strike') fallDeaths++;
     if (armor === 'Mutant') {
       const displayName = normalizeMutantName(cause);
       if (displayName) mutantDeaths[displayName] = (mutantDeaths[displayName] || 0) + 1;
@@ -2750,9 +2770,6 @@ function computeStats(data) {
       npcDeaths[cause] = (npcDeaths[cause] || 0) + 1;
     }
   }
-
-  const radiationDeaths = deathCauses['Radiation'] || 0;
-  const fallDeaths = deathCauses['Fall/Strike'] || 0;
 
   const allEvents = [
     ...kills.map(k => ({ ts: k.ts, type: 'kill', isMutant: k.armor === 'Mutant' })),
@@ -2776,81 +2793,68 @@ function computeStats(data) {
   const stalkerKillCount = kills.filter(k => k.armor !== 'Mutant').length;
   const mutantKillCount  = kills.filter(k => k.armor === 'Mutant').length;
 
-  // avgCampfireHp excludes 0-HP stays (no healing occurred)
   const totalCampfireSeconds = campfires.reduce((s, c) => s + c.durSec, 0);
   const totalCampfireHp      = campfires.reduce((s, c) => s + c.hp, 0);
-  const avgCampfireStay      = campfires.length > 0 ? totalCampfireSeconds / campfires.length : 0;
-  const healingStays         = campfires.filter(c => c.hp > 0);
-  const avgCampfireHp        = healingStays.length > 0 ? healingStays.reduce((s, c) => s + c.hp, 0) / healingStays.length : 0;
 
-  // Emission/psi storm survival: pending event resolved as death if Anomaly(Psi/Shock) death within 180s, else survived.
-  {
-    const WINDOW_MS = 180 * 1000;
-    const ANOMALY_DEATH_CAUSES = new Set(['Anomaly (Psi)', 'Anomaly (Shock)']);
+  // Emission/psi storm: resolved as death if Anomaly(Psi/Shock) death within 180s, else survived.
+  const WINDOW_MS = 180 * 1000;
+  const ANOMALY_DEATH_CAUSES = new Set(['Anomaly (Psi)', 'Anomaly (Shock)']);
 
-    const evts = [];
-    for (const e of (emissionEvents || [])) {
-      evts.push({ tsMs: e.tsMs, kind: e.type });
-    }
-    for (const d of deaths) {
-      if (ANOMALY_DEATH_CAUSES.has(d.cause)) {
-        evts.push({ tsMs: tsToDate(d.ts).getTime(), kind: 'AnomalyDeath' });
-      }
-    }
-    evts.sort((a, b) => a.tsMs - b.tsMs);
-
-    const pendingEmissions  = [];
-    const pendingPsiStorms  = [];
-    let emSurvived = 0, emDeaths = 0, psiSurvived = 0, psiDeaths = 0;
-    // Tracks deaths consumed by the emission window so anomaly-deaths card doesn't double-count them.
-    const consumedDeathTsMs = new Map();
-
-    function expireQueue(queue, curMs) {
-      let count = 0;
-      while (queue.length && (curMs - queue[0]) > WINDOW_MS) {
-        queue.shift();
-        count++;
-      }
-      return count;
-    }
-
-    for (const ev of evts) {
-      emSurvived  += expireQueue(pendingEmissions, ev.tsMs);
-      psiSurvived += expireQueue(pendingPsiStorms, ev.tsMs);
-
-      if (ev.kind === 'Emission')    { pendingEmissions.push(ev.tsMs);  continue; }
-      if (ev.kind === 'PsiStorm')    { pendingPsiStorms.push(ev.tsMs);  continue; }
-
-      // AnomalyDeath: consume the oldest pending emission/storm within the window
-      let consumed = 0;
-      if (pendingEmissions.length && (ev.tsMs - pendingEmissions[0]) <= WINDOW_MS) {
-        pendingEmissions.shift();
-        emDeaths++;
-        consumed++;
-      }
-      if (pendingPsiStorms.length && (ev.tsMs - pendingPsiStorms[0]) <= WINDOW_MS) {
-        pendingPsiStorms.shift();
-        psiDeaths++;
-        consumed++;
-      }
-      if (consumed > 0) {
-        consumedDeathTsMs.set(ev.tsMs, (consumedDeathTsMs.get(ev.tsMs) || 0) + consumed);
-      }
-    }
-    emSurvived  += pendingEmissions.length;
-    psiSurvived += pendingPsiStorms.length;
-
-    data._emissionSurvived   = emSurvived;
-    data._emissionDeaths     = emDeaths;
-    data._psiStormSurvived   = psiSurvived;
-    data._psiStormDeaths     = psiDeaths;
-    data._consumedDeathTsMs  = consumedDeathTsMs;
+  const evts = [];
+  for (const e of (emissionEvents || [])) {
+    evts.push({ tsMs: e.tsMs, kind: e.type });
   }
-  const emissionSurvived    = data._emissionSurvived;
-  const emissionDeaths      = data._emissionDeaths;
-  const psiStormSurvived    = data._psiStormSurvived;
-  const psiStormDeaths      = data._psiStormDeaths;
-  const consumedDeathTsMs   = data._consumedDeathTsMs || new Map();
+  for (const d of deaths) {
+    if (ANOMALY_DEATH_CAUSES.has(d.cause)) {
+      evts.push({ tsMs: tsToDate(d.ts).getTime(), kind: 'AnomalyDeath' });
+    }
+  }
+  evts.sort((a, b) => a.tsMs - b.tsMs);
+
+  const pendingEmissions  = [];
+  const pendingPsiStorms  = [];
+  let emSurvived = 0, emDeaths = 0, psiSurvived = 0, psiDeaths = 0;
+  // Deaths consumed by the emission window (excluded from anomaly-deaths card).
+  const consumedDeathTsMs = new Map();
+
+  function expireQueue(queue, curMs) {
+    let count = 0;
+    while (queue.length && (curMs - queue[0]) > WINDOW_MS) {
+      queue.shift();
+      count++;
+    }
+    return count;
+  }
+
+  for (const ev of evts) {
+    emSurvived  += expireQueue(pendingEmissions, ev.tsMs);
+    psiSurvived += expireQueue(pendingPsiStorms, ev.tsMs);
+
+    if (ev.kind === 'Emission')    { pendingEmissions.push(ev.tsMs);  continue; }
+    if (ev.kind === 'PsiStorm')    { pendingPsiStorms.push(ev.tsMs);  continue; }
+
+    let consumed = 0;
+    if (pendingEmissions.length && (ev.tsMs - pendingEmissions[0]) <= WINDOW_MS) {
+      pendingEmissions.shift();
+      emDeaths++;
+      consumed++;
+    }
+    if (pendingPsiStorms.length && (ev.tsMs - pendingPsiStorms[0]) <= WINDOW_MS) {
+      pendingPsiStorms.shift();
+      psiDeaths++;
+      consumed++;
+    }
+    if (consumed > 0) {
+      consumedDeathTsMs.set(ev.tsMs, (consumedDeathTsMs.get(ev.tsMs) || 0) + consumed);
+    }
+  }
+  emSurvived  += pendingEmissions.length;
+  psiSurvived += pendingPsiStorms.length;
+
+  const emissionSurvived  = emSurvived;
+  const emissionDeaths    = emDeaths;
+  const psiStormSurvived  = psiSurvived;
+  const psiStormDeaths    = psiDeaths;
 
   // Anomaly deaths not already attributed to an emission/psi storm
   const anomalyDeaths = {};
@@ -2858,7 +2862,6 @@ function computeStats(data) {
     const m = (d.cause || '').match(/Anomaly \((.+)\)/);
     if (!m) continue;
     const tsMs = tsToDate(d.ts).getTime();
-    // Skip deaths already consumed by the emission algorithm to avoid double-counting
     if (consumedDeathTsMs.has(tsMs)) {
       const remaining = consumedDeathTsMs.get(tsMs) - 1;
       if (remaining <= 0) consumedDeathTsMs.delete(tsMs);
@@ -2868,7 +2871,7 @@ function computeStats(data) {
     anomalyDeaths[m[1]] = (anomalyDeaths[m[1]] || 0) + 1;
   }
 
-  // Hours of active play from game start to each First Find; requires hasFakeStart (full-run log).
+  // Hours of active play from game start to each First Find; requires hasFakeStart.
   const TOOL_SECTIONS = {
     itm_basickit:    'basicKit',
     itm_advancedkit: 'advancedKit',
@@ -2876,7 +2879,7 @@ function computeStats(data) {
     itm_ammokit:     'gunsKit',    // Gunsmithing tools
     itm_drugkit:     'drugKit',
   };
-  const toolFindHours = {}; // key = short name above, value = hours (float)
+  const toolFindHours = {};
   if (hasFakeStart && firstFinds.length > 0) {
     for (const ff of firstFinds) {
       const shortName = TOOL_SECTIONS[ff.section];
@@ -2922,15 +2925,13 @@ function computeStats(data) {
     stalkerKillCount,
     mutantKillCount,
     rageQuits,
-    factionId,    // null if log does not cover game start
-    startAreaId,  // null if log does not cover game start
-    hasFakeStart, // true only when log covers the very start of a new game
+    factionId,    // null if log doesn't cover game start
+    startAreaId,  // null if log doesn't cover game start
+    hasFakeStart, // true only when log covers the start of a new game
     campfireCount: campfires.length,
     totalCampfireSeconds,
     totalCampfireHp,
-    avgCampfireStay,   // seconds, mean of all stay durations
-    avgCampfireHp,     // HP, mean of healing stays only (0-HP excluded)
-    toolFindHours,     // { basicKit, advancedKit, expertKit, gunsKit, drugKit } - hours until found
+    toolFindHours,     // { basicKit, advancedKit, expertKit, gunsKit, drugKit }
     emissionSurvived,
     emissionDeaths,
     psiStormSurvived,
@@ -2939,7 +2940,7 @@ function computeStats(data) {
 }
 
 function computePerformanceScore(st) {
-  // Weights: dph=30, acc=30, kd=20, hs=20
+  // Weights: dph=30%, acc=30%, kd=20%, hs=20%
   const comm = COMMUNITY;
 
   const dphScore = Math.max(0, Math.min(100,
@@ -2967,7 +2968,7 @@ function computePerformanceScore(st) {
 
   const commScore = 50;
 
-  // Std deviation: derived to put ~68% of players within ±15 pts of 50
+  // sigma places ~68% of players within ±15 pts of 50
   const sigma = 15;
 
   return { composite, commScore, sigma, dphScore, accScore, hsScore, kdScore };
@@ -2993,7 +2994,8 @@ function renderBellCurve(st) {
   const { composite, commScore, sigma, dphScore, accScore, hsScore, kdScore } = computePerformanceScore(st);
   const mu = commScore;
 
-  document.getElementById('bc-score').textContent = Math.round(composite);
+  const scoreEl = document.getElementById('bc-score');
+  scoreEl.textContent = Math.round(composite);
 
   const percentile = Math.round(normalCDF(composite, mu, sigma) * 100);
   const aboveAvg = composite >= mu;
@@ -3003,7 +3005,6 @@ function renderBellCurve(st) {
   document.getElementById('bc-percentile-text').innerHTML =
     `You scored <strong>${Math.round(composite)}</strong>, ${percentileText}`;
 
-  const scoreEl = document.getElementById('bc-score');
   if (percentile >= 75) scoreEl.style.color = '#4a9a5e';
   else if (percentile >= 45) scoreEl.style.color = '#c9973a';
   else scoreEl.style.color = '#c0484a';
@@ -3023,7 +3024,6 @@ function renderBellCurve(st) {
   document.getElementById('bc-hs-contrib').innerHTML   = fmtContrib(hsScore, 20);
   document.getElementById('bc-kd-contrib').innerHTML   = fmtContrib(kdScore, 20);
 
-  // Draw bell curve
   const canvas = document.getElementById('bell-canvas');
   const dpr = window.devicePixelRatio || 1;
   const rect = canvas.getBoundingClientRect();
@@ -3055,7 +3055,6 @@ function renderBellCurve(st) {
   ctx.fillStyle = gradient;
   ctx.fill();
 
-  // Highlight player's slice
   const playerX = Math.min(Math.max(composite, xMin + 0.5), xMax - 0.5);
   const sliceW  = sigma * 0.4;
   ctx.beginPath();
@@ -3078,7 +3077,6 @@ function renderBellCurve(st) {
   ctx.lineWidth = 1.5;
   ctx.stroke();
 
-  // Community average marker (dashed vertical at mu)
   const commXpx = toX(mu);
   ctx.setLineDash([3, 4]);
   ctx.beginPath();
@@ -3180,9 +3178,9 @@ function renderAnomalies(st) {
     .sort((a, b) => b[1] - a[1]);
   const maxVal = Math.max(...entries.map(e=>e[1]), 1);
   el.innerHTML = entries.map(([type, count]) => {
-    const color = ANOMALY_COLORS[type] || ANOMALY_COLORS.Other;
+    const color = ANOMALY_COLORS[type];
     const pct = (count / maxVal * 100).toFixed(1);
-    const glyph = emojiMap[type] || '▪';
+    const glyph = emojiMap[type];
     const infoTips = {
       Psi:   'Includes Emissions, Yantar/Radar Psi-fields, Phantoms and any other psi-related deaths',
     };
@@ -3203,27 +3201,49 @@ function renderAnomalies(st) {
 
 function renderWeapons(byCat) {
   const catOrder   = ['Melee', 'Pistol', 'Shotgun', 'SMG', 'Rifle', 'Sniper'];
-  const catDisplay = { Melee:'Melee', Pistol:'Pistol', Shotgun:'Shotgun', SMG:'SMG', Rifle:'Rifle', Sniper:'Sniper' };
   const catColor   = { Melee:'#8a6060', Pistol:'#4a7aa8', Shotgun:'#8a7040', SMG:'#6a6a98', Rifle:'#3d7a56', Sniper:'#7a8a4a' };
   const rankClass  = ['gold','silver','bronze','','',''];
   const el = document.getElementById('weapons-breakdown');
 
-  // Show top 6 in community view, top 3 in personal view
   const topN = window._isCommunityPreview ? 6 : 3;
+
+  const commLookup = Object.create(null);
+  if (window._isCommunityPreview) {
+    for (const entries of Object.values(COMMUNITY.topWeaponsByCat || {})) {
+      for (const e of entries) commLookup[e.name] = e;
+    }
+  }
 
   let html = '<div class="weapon-grid weapon-grid-3col">';
   for (const cat of catOrder) {
-    const weapons = byCat[cat] || [];
-    const color   = catColor[cat] || '#5a6070';
+    const weapons  = byCat[cat] || [];
+    const color    = catColor[cat] || '#5a6070';
     const topSlice = weapons.slice(0, topN);
-    const total   = weapons.reduce((s, w) => s + w.kills, 0);
-    const maxK    = topSlice[0]?.kills || 1;
+
+    let headerStat = '';
+    if (window._isCommunityPreview) {
+      let cardTotalKills = 0;
+      for (const w of topSlice) {
+        const d = commLookup[w.name];
+        if (d) cardTotalKills += d.totalKills;
+      }
+      if (cardTotalKills > 0) {
+        headerStat = `<span class="wcat-total">${cardTotalKills.toLocaleString()} Total Kills</span>`;
+      }
+    } else {
+      const total = weapons.reduce((s, w) => s + w.kills, 0);
+      headerStat  = total ? `<span class="wcat-total">${total} kills</span>` : '';
+    }
+
+    const maxBarVal = window._isCommunityPreview
+      ? Math.max(...topSlice.map(w => commLookup[w.name]?.pct || 0), 1)
+      : (topSlice[0]?.kills || 1);
 
     html += `<div class="stat-card wcat-card">
       <div class="wcat-header">
         <span class="wcat-accent" style="background:${color}"></span>
-        <span class="wcat-title">${catDisplay[cat]}</span>
-        ${total ? `<span class="wcat-total">${total} kills</span>` : ''}
+        <span class="wcat-title">${cat}</span>
+        ${headerStat}
       </div>
       <div class="wcat-entries">`;
 
@@ -3231,13 +3251,21 @@ function renderWeapons(byCat) {
       html += '<div class="wcat-nodata">No kills recorded.</div>';
     } else {
       topSlice.forEach((w, i) => {
-        const barW      = Math.round(w.kills / maxK * 100);
         const barOpacity = i === 0 ? '1' : i === 1 ? '0.55' : i === 2 ? '0.35' : '0.22';
+        let statLabel, barW;
+        if (window._isCommunityPreview) {
+          const d = commLookup[w.name];
+          statLabel = d ? `${d.pct}%` : '-';
+          barW = d ? Math.round(d.pct / maxBarVal * 100) : 0;
+        } else {
+          statLabel = w.kills;
+          barW = Math.round(w.kills / maxBarVal * 100);
+        }
         html += `<div class="wcat-entry ${i === 0 ? 'first' : ''}">
           <div class="wcat-entry-top">
             <span class="wcat-rank ${rankClass[i]}">${i + 1}</span>
             <span class="wcat-name" title="${w.name}">${w.name}</span>
-            <span class="wcat-kills">${w.kills}</span>
+            <span class="wcat-kills">${statLabel}</span>
           </div>
           <div class="wcat-bar-track">
             <div class="wcat-bar" style="width:${barW}%;background:${color};opacity:${barOpacity}"></div>
@@ -3259,48 +3287,40 @@ function renderTop20() {
   const el = document.getElementById('top20-list');
   if (!el) return;
 
-  const maxEntries = Math.max(...COMMUNITY.top20.map(e => e.entries || 1), 1);
+  const data = COMMUNITY.top25 || [];
+  const maxKills = Math.max(...data.map(e => e.totalKills || 1), 1);
 
-  el.innerHTML = COMMUNITY.top20.map((entry, i) => {
-    const name    = entry.name;
-    const cat     = entry.cat || '';
-    const entries = entry.entries || 0;
-    const color   = catColor[cat] || '#5a6070';
-    const rc      = rankClass[i] || '';
-    const barW    = Math.round(entries / maxEntries * 100);
+  el.innerHTML = data.map((entry, i) => {
+    const name      = entry.name;
+    const cat       = entry.cat || '';
+    const players   = entry.players || 0;
+    const pct       = entry.pct || 0;
+    const kills     = entry.totalKills || 0;
+    const color     = catColor[cat] || '#5a6070';
+    const rc        = rankClass[i] || '';
+    const barW      = Math.round(kills / maxKills * 100);
     const barOpacity = i === 0 ? '1' : i <= 2 ? '0.75' : i <= 5 ? '0.55' : '0.38';
-    const countColor  = i === 0 ? '#4a9a5e' : '#767b82';
+    const killColor  = '#767b82';
 
+    const dotColor   = i === 0 ? '#c9973a' : i === 1 ? '#9da3ac' : i === 2 ? '#7a5e28' : '#3a4a5e';
+    const nameColor  = i === 0 ? '#c9973a' : i === 1 ? '#9da3ac' : i === 2 ? '#7a5e28' : '#8a9aaa';
     return `<div>
       <div class="top20-row">
         <span class="top20-rank ${rc}">${i + 1}</span>
-        <span class="top20-cat-dot" style="background:${color}"></span>
-        <span class="top20-name">${name}</span>
-        <span class="top20-cat-label" style="margin-right:10px;">${cat}</span>
-        <span class="top20-entries-count" style="color:${countColor}">${entries}</span>
+        <span class="top20-cat-dot" style="background:${dotColor}"></span>
+        <span class="top20-name" style="color:${nameColor}">${name}</span>
+        <span class="top20-cat-label" style="width:52px;flex-shrink:0;text-align:right;">${cat}</span>
+        <span style="width:62px;flex-shrink:0;text-align:right;font-size:0.65rem;font-weight:600;color:#9da3ac;font-variant-numeric:tabular-nums;white-space:nowrap;font-family:'IBM Plex Mono',monospace;">${players} <span style="font-size:0.58rem;color:#64686e;font-weight:400;">players</span></span>
+        <span style="width:28px;flex-shrink:0;text-align:right;font-size:0.65rem;font-weight:700;color:#c9973a;font-variant-numeric:tabular-nums;white-space:nowrap;font-family:'IBM Plex Mono',monospace;">${pct}%</span>
+        <span class="top20-entries-count" style="width:76px;flex-shrink:0;text-align:right;color:${killColor}">${kills.toLocaleString()} <span style="font-size:0.58rem;color:#64686e;font-weight:400;">kills</span></span>
       </div>
       <div class="top20-bar-wrap">
         <div class="top20-bar-track">
-          <div class="top20-bar" style="width:${barW}%;background:${color};opacity:${barOpacity}"></div>
+          <div class="top20-bar" style="width:${barW}%;background:${dotColor};opacity:${barOpacity}"></div>
         </div>
       </div>
     </div>`;
   }).join('');
-
-  const btn   = document.getElementById('btn-top20-toggle');
-  const panel = document.getElementById('top20-panel');
-  const label = document.getElementById('top20-btn-label');
-  if (btn && panel) {
-    // Clone node to remove any previously attached listener
-    const newBtn = btn.cloneNode(true);
-    btn.parentNode.replaceChild(newBtn, btn);
-    document.getElementById('btn-top20-toggle').addEventListener('click', function() {
-      const panel = document.getElementById('top20-panel');
-      const expanded = this.getAttribute('aria-expanded') === 'true';
-      panel.classList.toggle('is-open', !expanded);
-      this.setAttribute('aria-expanded', expanded ? 'false' : 'true');
-    });
-  }
 }
 
 function renderCommunityKillers() {
@@ -3326,8 +3346,7 @@ function renderCommunityKillers() {
 }
 
 
-// Round a bar-scale max to the nearest "nice" step so end labels are clean whole numbers.
-// e.g. 37 → 40, 130 → 150, 746 → 800, 1040 → 1100
+// Rounds a bar-scale max to a clean whole-number step.
 function niceStreakMax(val) {
   const steps = [5, 10, 20, 25, 50, 100, 200, 250, 500, 1000];
   const step = steps.find(s => val / s <= 20) || 1000;
@@ -3338,7 +3357,7 @@ function renderKillStreak(st) {
   document.getElementById('s-streak-all').textContent     = fmtInt(st.bestStreakAll);
   document.getElementById('s-streak-stalker').textContent = fmtInt(st.bestStreakStalker);
 
-  // Use community max (best recorded) streak as the bar reference marker, not the average
+  // Community max (best recorded) streak as bar reference, not average
   const streakAllMax     = niceStreakMax(Math.max(st.bestStreakAll * 1.4, COMMUNITY.maxStreakAll * 2, 30));
   const streakStalkerMax = niceStreakMax(Math.max(st.bestStreakStalker * 1.4, COMMUNITY.maxStreakStalker * 2, 20));
 
@@ -3389,7 +3408,6 @@ function renderKillPie(st) {
       angleData.push({ startAngle, sweep, value: s.value });
       startAngle += sweep;
     }
-    // donut hole
     const holeR = r * 0.52;
     ctx.beginPath();
     ctx.arc(cx, cy, holeR, 0, Math.PI * 2);
@@ -3426,11 +3444,9 @@ function renderKillPie(st) {
 // Builds a fake stats object from COMMUNITY averages for the preview view.
 function buildCommunityPreviewStats() {
 
-  const avgKills        = COMMUNITY.avgKills;
   const avgHours        = COMMUNITY.avgPlayerDurationHours;
 
-  // Use newFormatKillEntries (not avgKills) for the kills pie — it's the true total across all
-  // new-format players, not a per-player average.
+  // Use newFormatKillEntries for the kills pie — the true total across all players, not a per-player avg.
   const totalKills      = COMMUNITY.newFormatKillEntries;
   const stalkerFrac     = COMMUNITY.stalkerFrac;
   const stalkerKills    = Math.round(totalKills * stalkerFrac);
@@ -3462,9 +3478,9 @@ function buildCommunityPreviewStats() {
   const weaponsByCategory = {};
   const baseKills = COMMUNITY.baseKillsByCategory;
   const killScaleFactors = [1, 0.52, 0.28, 0.18, 0.13, 0.09];
-  for (const [cat, names] of Object.entries(COMMUNITY.topWeapons)) {
-    weaponsByCategory[cat] = names.map((name, i) => ({
-      name,
+  for (const [cat, entries] of Object.entries(COMMUNITY.topWeaponsByCat)) {
+    weaponsByCategory[cat] = entries.map((e, i) => ({
+      name:  e.name,
       kills: Math.round(baseKills[cat] * (killScaleFactors[i] ?? 0.07)),
     }));
   }
@@ -3506,12 +3522,10 @@ function buildCommunityPreviewStats() {
     radiationDeaths,
     fallDeaths       : COMMUNITY.fallDeaths,
 
-    // campfireCount/etc. not used in community preview — renderCampfireStats reads COMMUNITY directly
+    // campfire/emission/tools: community view reads COMMUNITY directly, not these fields
     campfireCount        : 0,
     totalCampfireSeconds : 0,
     totalCampfireHp      : 0,
-
-    // renderToolsCard reads COMMUNITY directly; renderEmissionSurvival too
     toolFindHours : {},
     hasFakeStart  : false,
     emissionSurvived: 0, emissionDeaths: 0, psiStormSurvived: 0, psiStormDeaths: 0,
@@ -3521,7 +3535,6 @@ function buildCommunityPreviewStats() {
 function showCommunityPreview() {
   // Restore the difficulty card HTML so IDs like #stat-difficulty exist again on repeated calls.
   if (window._diffCardOrigHTML) {
-    // Use getElementById, not querySelector — querySelector returns the first .summary-card, not the difficulty one.
     const diffValEl = document.getElementById('stat-difficulty');
     const diffCard = diffValEl ? diffValEl.closest('.summary-card') : null;
     if (diffCard) diffCard.innerHTML = window._diffCardOrigHTML;
@@ -3569,7 +3582,7 @@ function showCommunityPreview() {
   if (diffValEl && COMMUNITY.difficultyDistribution) {
     const card = diffValEl.closest('.summary-card');
     if (card) {
-      // Save original HTML the first time so we can restore it on re-entry
+      // Save original HTML so it can be restored when returning to personal view
       if (!window._diffCardOrigHTML) window._diffCardOrigHTML = card.innerHTML;
       if (!window._diffCardEl) window._diffCardEl = card;
       const dist = COMMUNITY.difficultyDistribution;
@@ -3598,7 +3611,7 @@ function toggleCommunityPreview() {
     window._communityPreviewActive = false;
     document.getElementById('results').style.display = 'none';
     document.getElementById('upload-wrapper').style.display = '';
-    // Restore difficulty card so its IDs are available for any subsequent renderStats call
+    // Restore difficulty card
     if (window._diffCardOrigHTML && window._diffCardEl) {
       window._diffCardEl.innerHTML = window._diffCardOrigHTML;
     }
@@ -3619,7 +3632,7 @@ function updateSwitcherHighlight() {
   });
 }
 
-// Called once per file upload, after _parsedCharacters and _mergedStats are set.
+// Called once per upload, after _parsedCharacters and _mergedStats are set.
 // Owns the #comm-data-personal innerHTML and click handlers.
 function renderCommunityCardPersonal() {
   const commDataPersonal = document.getElementById('comm-data-personal');
@@ -3678,7 +3691,7 @@ function renderCommunityCardPersonal() {
       });
     });
   } else {
-    // 0 characters detected — leave card as-is (WIP placeholder)
+    // 0 characters detected — leave card as-is
   }
 }
 
@@ -3688,12 +3701,11 @@ function renderPersonalOverrides(st) {
   if (commDataPersonal)  commDataPersonal.style.display  = '';
   if (commDataCommunity) commDataCommunity.style.display = 'none';
   // #comm-data-personal content is owned by renderCommunityCardPersonal; not re-rendered on character switch.
-
   const factionContent  = document.getElementById('personal-faction-content');
   const startAreaContent = document.getElementById('personal-start-area-content');
   if (window._factionCardOrigHTML  && factionContent)   factionContent.innerHTML  = window._factionCardOrigHTML;
   if (window._startAreaCardOrigHTML && startAreaContent) startAreaContent.innerHTML = window._startAreaCardOrigHTML;
-  // Reset kills label in case the user visited community view first
+  // Reset labels in case the user visited community view first
   const killsCardReset = document.getElementById('stat-kills')?.closest('.summary-card');
   const killsLblReset = killsCardReset ? killsCardReset.querySelector('.summary-lbl') : null;
   if (killsLblReset) killsLblReset.textContent = 'Total Kills';
@@ -3718,7 +3730,6 @@ function renderPersonalOverrides(st) {
     }
   }
 
-  // Show player avg session + community avg session; hide community-only block
   const personalPlaytimeExtra = document.getElementById('personal-playtime-extra');
   const commPlaytimeExtra = document.getElementById('comm-playtime-extra');
   if (personalPlaytimeExtra) {
@@ -3795,8 +3806,7 @@ function renderPersonalOverrides(st) {
   const rageQuitSection = document.getElementById('rage-quit-section');
   const rq = st.rageQuits;
   document.getElementById('s-rage-quits').textContent = rq;
-  // Bar is full at 50% ratio (1 rage quit per 2 deaths)
-  const ratio = st.deathCount > 0 ? rq / st.deathCount : 0;
+  const ratio = st.deathCount > 0 ? rq / st.deathCount : 0; // full bar = 50% ratio
   const TIERS = [
     { max: 0,    label: 'Not a single rage quit. A true Stalker.',      color: '#4a9a5e' },
     { max: 0.10, label: 'Barely tilted.',                               color: '#7a9a40' },
@@ -3824,7 +3834,6 @@ function renderCommunityOverrides() {
   if (contribCountEl)     contribCountEl.textContent    = COMMUNITY.contributorCount;
   if (playthroughCountEl) playthroughCountEl.textContent = COMMUNITY.playthroughCount;
 
-  // Restore label, hide personal extras
   const diffLblEl = document.getElementById('stat-difficulty-lbl');
   if (diffLblEl) diffLblEl.textContent = 'Difficulty';
   const personalDiffExtra = document.getElementById('personal-diff-extra');
@@ -3837,6 +3846,7 @@ function renderCommunityOverrides() {
   // Save original HTML the first time so we can restore it on re-entry to personal view.
   const factionCardEl = document.getElementById('personal-faction-content');
   if (factionCardEl) {
+    // Save original HTML for restoration on return to personal view
     if (!window._factionCardOrigHTML) window._factionCardOrigHTML = factionCardEl.innerHTML;
     if (COMMUNITY.factionDistribution && COMMUNITY.factionDistribution.length) {
       const allFactions = COMMUNITY.factionDistribution;
@@ -3889,7 +3899,6 @@ function renderCommunityOverrides() {
   if (startAreaCardEl) {
     if (!window._startAreaCardOrigHTML) window._startAreaCardOrigHTML = startAreaCardEl.innerHTML;
     if (COMMUNITY.startingAreaByFaction) {
-      // Sum player counts per area across all factions
       const areaTotals = {};
       for (const areas of Object.values(COMMUNITY.startingAreaByFaction)) {
         for (const a of areas) {
@@ -4030,7 +4039,6 @@ function renderToolsCard(st) {
     { key: 'gunsKit',  label: 'Gunsmithing Tools' },
     { key: 'drugKit',  label: 'Drug-making Kit' },
   ];
-  // Shared CSS for the two-column grid wrapper
   const gridWrap = 'display:grid;grid-template-columns:1fr 1fr;gap:0 20px;';
 
   if (isCommunity) {
@@ -4166,10 +4174,10 @@ function renderEmissionSurvival(st) {
   }
 }
 
-// Resets to false on every page load — tooltip shows once per load, not once per tab lifetime.
+// Resets to false on every page load — tooltip shows once per load.
 let _mcTooltipShown = false;
 
-// Shows once per page load when a multi-char file is uploaded, pointing at the community card.
+// Shows once per load when a multi-char file is uploaded, pointing at the community card.
 function showMultiCharTooltip() {
   if (_mcTooltipShown) return;
   const card = document.getElementById('community-data-card');
@@ -4201,7 +4209,7 @@ function showMultiCharTooltip() {
   }
   function onReposition() { positionTip(); }
 
-  // Slight delay so the upload button click itself doesn't immediately close it
+  // Slight delay so the upload button click doesn't immediately close the tooltip
   setTimeout(() => {
     document.addEventListener('click', onDocClick);
     window.addEventListener('scroll', onReposition, { passive: true, capture: true });
@@ -4210,8 +4218,7 @@ function showMultiCharTooltip() {
   document.getElementById('multichar-tooltip-dismiss').addEventListener('click', dismiss);
 }
 
-// Blanks cards that require a single character and shows inline "unavailable" notices.
-// Called instead of the old badge/tooltip system when user selects "See all stats".
+// Blanks single-character-only cards and shows inline "unavailable" notices.
 function applyMultiCharUnavailableState() {
   const NOTICE = '<div class="multi-char-unavail" style="border-top:1px solid #28323e;margin-top:10px;padding-top:10px;"><div style="font-size:0.62rem;color:#3a4a5e;line-height:1.5;">Only available when viewing a single character</div></div>';
 
@@ -4228,7 +4235,6 @@ function applyMultiCharUnavailableState() {
   const factionContent = document.getElementById('personal-faction-content');
   if (factionContent) factionContent.insertAdjacentHTML('beforeend', NOTICE);
 
-  // #personal-start-area-unavailable is kept hidden here; its text is used by hasFakeStart=false renders.
   const startAreaEl = document.getElementById('stat-start-area');
   if (startAreaEl) { startAreaEl.textContent = 'N/A'; startAreaEl.style.color = '#3a4a5e'; }
   const startAreaExtra = document.getElementById('personal-start-area-extra');
@@ -4334,14 +4340,13 @@ function renderStats(st) {
       const lbl   = document.getElementById('top20-btn-label');
       if (panel) panel.classList.remove('is-open');
       if (btn)   btn.setAttribute('aria-expanded', 'false');
-      if (lbl)   lbl.textContent = 'Most Used Weapons - Top 20';
+      if (lbl)   lbl.textContent = 'Most Used Weapons - Top 25';
       renderTop20();
     } else {
       top20Wrap.style.display = 'none';
     }
   }
 
-  // Clear notices injected by a previous render first.
   document.querySelectorAll('.multi-char-unavail').forEach(el => el.remove());
 
   if (!window._isCommunityPreview &&
@@ -4351,7 +4356,7 @@ function renderStats(st) {
     requestAnimationFrame(showMultiCharTooltip);
   }
 
-  // Snapshot flag now; showCommunityPreview may reset _isCommunityPreview synchronously before rAF fires.
+  // Snapshot _isCommunityPreview before rAF; showCommunityPreview may reset it synchronously.
   const _isCommunity = !!window._isCommunityPreview;
   requestAnimationFrame(() => { if (!_isCommunity) renderBellCurve(st); });
 }
@@ -4428,11 +4433,10 @@ function processFiles(files, submitToSupabase, nickname) {
     }
 
     if (showOutdated) showOutdatedModal();
-    // Execution continues regardless — stats are computed and shown
     const combined = texts.join('\n');
 
     const nonAsciiCount = (combined.match(/[^\x00-\x7F]/g) || []).length;
-    const hasIncompatibleChars = nonAsciiCount / combined.length > 0.02; // >2% non-ASCII suggests wrong language/encoding
+    const hasIncompatibleChars = nonAsciiCount / combined.length > 0.02; // >2% non-ASCII suggests wrong encoding/language
     if (hasIncompatibleChars) {
       showLanguageModal();
       submitToSupabase = false; // block upload regardless of which button was pressed
@@ -4472,8 +4476,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const btnOnly    = document.getElementById('btn-check-only');
     const readyLabel = document.getElementById('files-ready-label');
 
-    renderCommunityKillers();
-
     document.getElementById('version-modal-close-btn').addEventListener('click', hideVersionModal);
     document.getElementById('version-modal-overlay').addEventListener('click', function(e) {
       if (e.target === this) hideVersionModal();
@@ -4490,6 +4492,13 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     document.getElementById('btn-community-preview').addEventListener('click', toggleCommunityPreview);
+
+    document.getElementById('btn-top20-toggle').addEventListener('click', function() {
+      const panel = document.getElementById('top20-panel');
+      const expanded = this.getAttribute('aria-expanded') === 'true';
+      panel.classList.toggle('is-open', !expanded);
+      this.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+    });
 
     if (window.location.hash === '#community') {
       toggleCommunityPreview();
