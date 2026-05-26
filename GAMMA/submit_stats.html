@@ -811,6 +811,10 @@
     transform: rotate(180deg);
     animation: none;
   }
+  #area-time-card[aria-expanded="true"] .card-expand-chevron {
+    transform: rotate(180deg);
+    animation: none;
+  }
   @keyframes chevron-nudge {
     /* bounce 1 (0s – 0.65s mapped into 6.3s cycle) */
     0%      { transform: translateY(0); }
@@ -1310,16 +1314,16 @@
         <div id="campfire-personal" style="display:none;">
           <div style="display:flex;flex-direction:column;gap:5px;">
             <div style="display:flex;align-items:center;gap:8px;">
-              <div style="background:#151c26;border-radius:1px;padding:8px 8px;border:1px solid #28323e;width:80px;text-align:center;flex-shrink:0;">
-                <span style="font-size:1.05rem;font-weight:700;color:#e6edf3;line-height:1;font-family:'IBM Plex Mono',monospace;" id="campfire-total-time">--</span>
+              <div style="background:#151c26;border-radius:1px;padding:8px 8px;border:1px solid #28323e;min-width:80px;text-align:center;flex-shrink:0;">
+                <span style="font-size:1.05rem;font-weight:700;color:#e6edf3;line-height:1;font-family:'IBM Plex Mono',monospace;white-space:nowrap;" id="campfire-total-time">--</span>
               </div>
               <span style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.09em;color:#767b82;">Spent at campfires</span>
             </div>
             <div style="display:flex;align-items:center;gap:8px;">
-              <div style="background:#151c26;border-radius:1px;padding:8px 8px;border:1px solid #28323e;width:80px;text-align:center;flex-shrink:0;">
-                <span style="font-size:1.05rem;font-weight:700;color:#4a9a5e;line-height:1;font-family:'IBM Plex Mono',monospace;" id="campfire-total-hp">--</span>
+              <div style="background:#151c26;border-radius:1px;padding:8px 8px;border:1px solid #28323e;min-width:80px;text-align:center;flex-shrink:0;">
+                <span style="font-size:1.05rem;font-weight:700;color:#4a9a5e;line-height:1;font-family:'IBM Plex Mono',monospace;white-space:nowrap;" id="campfire-total-hp">--</span>
               </div>
-              <span style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.09em;color:#767b82;">HP Healed</span>
+              <span style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.09em;color:#767b82;">Healed</span>
             </div>
           </div>
           <p id="campfire-personal-sentence" style="font-size:0.75rem;color:#767b82;margin-top:8px;line-height:1.5;text-align:center;"></p>
@@ -1331,16 +1335,16 @@
         <div id="campfire-community" style="display:none;">
           <div style="display:flex;flex-direction:column;gap:5px;">
             <div style="display:flex;align-items:center;gap:8px;">
-              <div style="background:#151c26;border-radius:1px;padding:8px 8px;border:1px solid #28323e;width:80px;text-align:center;flex-shrink:0;">
-                <span style="font-size:1.05rem;font-weight:700;color:#e6edf3;line-height:1;font-family:'IBM Plex Mono',monospace;" id="comm-campfire-avg-stay">--</span>
+              <div style="background:#151c26;border-radius:1px;padding:8px 8px;border:1px solid #28323e;min-width:80px;text-align:center;flex-shrink:0;">
+                <span style="font-size:1.05rem;font-weight:700;color:#e6edf3;line-height:1;font-family:'IBM Plex Mono',monospace;white-space:nowrap;" id="comm-campfire-avg-stay">--</span>
               </div>
               <span style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.09em;color:#767b82;">Avg campfire stay</span>
             </div>
             <div style="display:flex;align-items:center;gap:8px;">
-              <div style="background:#151c26;border-radius:1px;padding:8px 8px;border:1px solid #28323e;width:80px;text-align:center;flex-shrink:0;">
-                <span style="font-size:1.05rem;font-weight:700;color:#4a9a5e;line-height:1;font-family:'IBM Plex Mono',monospace;" id="comm-campfire-avg-hp">--</span>
+              <div style="background:#151c26;border-radius:1px;padding:8px 8px;border:1px solid #28323e;min-width:80px;text-align:center;flex-shrink:0;">
+                <span style="font-size:1.05rem;font-weight:700;color:#4a9a5e;line-height:1;font-family:'IBM Plex Mono',monospace;white-space:nowrap;" id="comm-campfire-avg-hp">--</span>
               </div>
-              <span style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.09em;color:#767b82;">HP healed / Stay</span>
+              <span style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.09em;color:#767b82;">Healed / Stay</span>
             </div>
           </div>
           <p id="campfire-community-sentence" style="font-size:0.75rem;color:#767b82;margin-top:8px;line-height:1.5;text-align:center;"></p>
@@ -1362,6 +1366,18 @@
         </div>
       </div>
 
+    </div>
+
+    <div class="stat-card" id="area-time-card" style="margin-top:6px;display:none;cursor:pointer;user-select:none;" onclick="(function(){ const panel = document.getElementById('area-time-expand-panel'); if (!panel) return; const expanded = document.getElementById('area-time-card').getAttribute('aria-expanded') === 'true'; panel.classList.toggle('is-open', !expanded); document.getElementById('area-time-card').setAttribute('aria-expanded', expanded ? 'false' : 'true'); })()">
+      <div class="stat-card-title" style="display:flex;justify-content:space-between;align-items:center;">
+        <span><span class="icon">◈</span> Time Spent by Area</span>
+        <span id="area-time-chevron" class="card-expand-chevron" style="color:#6e7780;">▾</span>
+      </div>
+      <div id="area-time-list" style="display:flex;flex-direction:column;gap:3px;"></div>
+      <div id="area-time-expand-panel" class="card-expand-panel">
+        <div id="area-time-rest" style="padding-top:2px;display:flex;flex-direction:column;gap:3px;"></div>
+      </div>
+      <div id="area-time-nodata" class="no-data" style="display:none;">No session data found</div>
     </div>
 
     <hr class="section-divider">
@@ -1533,6 +1549,73 @@
 
     <hr class="section-divider">
 
+    <div class="section-label">Artefacts Hunting</div>
+    <div id="artefacts-personal" style="display:none;">
+      <div class="stat-grid three-col">
+
+        <div class="stat-card" id="artefacts-overview-card">
+          <div class="stat-card-title"><span class="icon">◈</span> Artefacts Found</div>
+          <div class="stat-big" id="s-artefacts-total" style="margin-top:auto;font-size:1.74rem;">--</div>
+          <div class="comparison" style="margin-top:8px;margin-bottom:auto;">
+            <div class="bar-track">
+              <div class="bar-comm-label" id="comm-label-artefacts-total">avg</div>
+              <div class="bar-track-inner">
+                <div class="bar-gradient-bg" id="grad-artefacts-total"></div>
+                <div class="bar-mask" id="bar-artefacts-total" style="width:100%"></div>
+              </div>
+              <div class="bar-comm-marker" id="marker-artefacts-total"></div>
+            </div>
+            <div class="bar-labels"><span>0</span><span id="artefacts-total-max-label">--</span></div>
+            <div class="bar-comm-value" id="comm-value-artefacts-total"></div>
+          </div>
+        </div>
+
+        <div class="stat-card" id="artefacts-rate-card">
+          <div class="stat-card-title"><span class="icon">◈</span> Artefacts / hr</div>
+          <div class="stat-big" id="s-artefacts-rate" style="margin-top:auto;font-size:1.74rem;">--</div>
+          <div class="comparison" style="margin-top:8px;margin-bottom:auto;">
+            <div class="bar-track">
+              <div class="bar-comm-label" id="comm-label-artefacts-rate">avg</div>
+              <div class="bar-track-inner">
+                <div class="bar-gradient-bg" id="grad-artefacts-rate"></div>
+                <div class="bar-mask" id="bar-artefacts-rate" style="width:100%"></div>
+              </div>
+              <div class="bar-comm-marker" id="marker-artefacts-rate"></div>
+            </div>
+            <div class="bar-labels"><span>0</span><span id="artefacts-rate-max-label">--</span></div>
+            <div class="bar-comm-value" id="comm-value-artefacts-rate"></div>
+          </div>
+        </div>
+
+        <div class="stat-card" id="artefacts-by-area-card">
+          <div class="stat-card-title"><span class="icon">◈</span> Top Artefact Hunting Spots</div>
+          <div id="artefacts-by-area-list" style="display:flex;flex-direction:column;gap:4px;"></div>
+          <div id="artefacts-by-area-nodata" class="no-data" style="display:none;">No artefacts found yet</div>
+        </div>
+
+      </div>
+
+      <div class="stat-grid" style="grid-template-columns:1fr;margin-top:6px;">
+        <div class="stat-card" id="artefacts-top-card" style="cursor:pointer;user-select:none;" onclick="(function(){ const panel = document.getElementById('artefacts-top-expand-panel'); if (!panel) return; const expanded = document.getElementById('artefacts-top-card').getAttribute('aria-expanded') === 'true'; panel.classList.toggle('is-open', !expanded); document.getElementById('artefacts-top-card').setAttribute('aria-expanded', expanded ? 'false' : 'true'); })()">
+          <div class="stat-card-title" style="display:flex;justify-content:space-between;align-items:center;">
+            <span><span class="icon">◈</span> Most Found Artefacts</span>
+            <span id="artefacts-top-chevron" class="card-expand-chevron" style="color:#6e7780;display:none;">▾</span>
+          </div>
+          <div id="artefacts-top-list" style="display:flex;flex-direction:column;gap:0;"></div>
+          <div id="artefacts-top-expand-panel" class="card-expand-panel">
+            <div id="artefacts-top-rest" style="padding-top:2px;display:flex;flex-direction:column;gap:0;"></div>
+          </div>
+          <div id="artefacts-top-nodata" class="no-data" style="display:none;">No artefacts found yet</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="artefacts-community" style="display:none;">
+      <!-- community artefact stats — populated once COMMUNITY.artefacts is filled -->
+      <div id="artefacts-comm-content"></div>
+    </div>
+    <hr class="section-divider">
+
     <div class="section-label">Save Scummer Awards</div>
     <div class="stat-card" style="margin-bottom:0;">
       <div class="stat-card-title"><span class="icon">◇</span> Save & Reload Behavior</div>
@@ -1599,17 +1682,7 @@
       </div>
     </div>
 
-    <hr class="section-divider">
 
-    <div class="section-label">Artefacts Hunting</div>
-    <div style="position:relative;overflow:hidden;background:rgba(22,30,40,0.63);border:1px solid #28323e;border-radius:2px;padding:18px 24px;">
-      <div style="height:80px;"></div>
-      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;">
-        <span style="font-size:0.62rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#f5c842;">Coming Soon</span>
-        <span style="font-size:0.82rem;font-weight:700;color:#d7dde3;letter-spacing:0.03em;">Artefacts Hunting</span>
-        <span style="font-size:0.72rem;color:rgba(255,255,255,0.5);text-align:center;padding:0 16px;line-height:1.5;">Your favorite spots to hunt for artefacts</span>
-      </div>
-    </div>
 
     <hr class="section-divider">
 
@@ -1942,6 +2015,52 @@ const COMMUNITY = {
     drugKit:     { avgHours: 7 + 29/60,  fastestHours: 20/60,      slowestHours: 22 + 11/60, players: 72 },
   },
 
+  // ── "--- Artefacts ---" ─────────────────────────────────────────────────────
+  // Sourced from 01_community_averages.txt — "--- Artefact Finds ---"
+  artefacts: {
+    avgTotal:   30.7,   // "Avg found per playthrough (avgTotal)"
+    avgPerHour: 1.19,   // "Avg finds / hr (avgPerHour)"
+    // Top 10 by community finds — name uses ARTEFACT_MAP display name, area is display string
+    top10: [
+      { id: 'af_soul',             name: 'Soul',          finds: 247, area: 'Garbage' },
+      { id: 'af_dummy_battery',    name: 'Battery',       finds: 242, area: 'Cordon' },
+      { id: 'af_electra_sparkler', name: 'Sparkler',      finds: 226, area: 'Yantar' },
+      { id: 'af_kislushka',        name: 'Sourpuss',      finds: 212, area: 'Garbage' },
+      { id: 'af_mincer_meat',      name: 'Meat Chunk',    finds: 170, area: 'Garbage' },
+      { id: 'af_ball',             name: 'Ball',          finds: 161, area: 'Garbage' },
+      { id: 'af_dummy_glassbeads', name: "Mama's Beads",  finds: 159, area: 'Wild Territory' },
+      { id: 'af_cristall_flower',  name: 'Stone Flower',  finds: 158, area: 'Garbage' },
+      { id: 'af_zhelch',           name: 'Scar',          finds: 147, area: 'Garbage' },
+      { id: 'af_sun',              name: 'Sun',           finds: 145, area: 'Garbage' },
+    ],
+    // 10 rarest by community finds
+    bottom10: [
+      { id: 'af_ice',           name: 'Snowflake',    finds: 5,  area: 'Garbage' },
+      { id: 'af_ah_h2',         name: 'Sponge',       finds: 5,  area: 'Jupiter' },
+      { id: 'af_fire_loop',     name: 'Knot',         finds: 6,  area: 'Rostok' },
+      { id: 'af_electra_flash', name: 'Flash',        finds: 7,  area: 'Lab X-16' },
+      { id: 'af_black_spray',   name: 'Black Spray',  finds: 7,  area: 'Army Warehouses' },
+      { id: 'monolith_shard',   name: 'Monolith Shard', finds: 7, area: 'Monolith Control Center' },
+      { id: 'af_baloon',        name: 'Bubble',       finds: 9,  area: 'Dark Valley' },
+      { id: 'af_dummy_dummy',   name: 'Shell',        finds: 10, area: 'Red Forest' },
+      { id: 'af_ah_o2',         name: 'Magnet',       finds: 10, area: 'Dark Valley' },
+      { id: 'af_fountain',      name: 'Fountain',     finds: 11, area: 'Great Swamps' },
+    ],
+    // Top 10 areas by total community artefact finds
+    areasRanked: [
+      { area: 'Garbage',          finds: 1188 },
+      { area: 'Cordon',           finds: 791  },
+      { area: 'Yantar',           finds: 474  },
+      { area: 'Great Swamps',     finds: 383  },
+      { area: 'Army Warehouses',  finds: 348  },
+      { area: 'Wild Territory',   finds: 346  },
+      { area: 'Red Forest',       finds: 324  },
+      { area: 'Jupiter',          finds: 286  },
+      { area: 'Truck Cemetery',   finds: 265  },
+      { area: 'Agroprom',         finds: 263  },
+    ],
+  },
+
   // ── "--- Difficulty distribution ---" ────────────────────────────────────────
   difficultyDistribution: [
     { label: 'Novice',  players: 46,  pct: 14, color: '#4a9a5e' },
@@ -2007,30 +2126,34 @@ const FACTION_MAP = {
 
 // AREA_MAP  — maps log area IDs → display name
 const AREA_MAP = {
-  l01_escape:           'Cordon',
-  l02_garbage:          'Garbage',
-  l03_agroprom:         'Agroprom',
-  l04_darkvalley:       'Dark Valley',
-  l05_bar:              'Rostok',
-  l06_rostok:           'Wild Territory',
-  l07_military:         'Army Warehouses',
-  l08_yantar:           'Yantar',
-  l09_deadcity:         'Dead City',
-  l10_limansk:          'Limansk',
-  l10_radar:            'Radar',
-  l10_red_forest:       'Red Forest',
-  l11_hospital:         'Hospital',
-  l11_pripyat:          'Pripyat (SoC)',
-  l12_stancia:          'CNPP (North)',
-  l12_stancia_2:        'CNPP (South)',
-  l13_generators:       'Generators',
-  jupiter:              'Jupiter',
-  zaton:                'Zaton',
-  pripyat:              'Pripyat (CoP)',
-  k00_marsh:            'Great Swamps',
-  k01_darkscape:        'Darkscape',
-  k02_trucks_cemetery:  'Truck Cemetery',
-  y04_pole:             'Meadow',
+  l01_escape:            'Cordon',
+  l02_garbage:           'Garbage',
+  l03_agroprom:          'Agroprom',
+  l04_darkvalley:        'Dark Valley',
+  l05_bar:               'Rostok',
+  l06_rostok:            'Wild Territory',
+  l07_military:          'Army Warehouses',
+  l08_yantar:            'Yantar',
+  l08u_brainlab:         'Lab X-16 (Miracle Machine)',
+  l09_deadcity:          'Dead City',
+  l10_limansk:           'Limansk',
+  l10_radar:             'Radar',
+  l10_red_forest:        'Red Forest',
+  l10u_bunker:           'Lab X-10 (Brain Scorcher)',
+  l11_hospital:          'Deserted Hospital',
+  l11_pripyat:           'Pripyat',
+  l12_stancia:           'CNPP South',
+  l12_stancia_2:         'CNPP North',
+  l12u_control_monolith: 'Monolith Control Center',
+  l13_generators:        'Generators',
+  l13u_warlab:           'Monolith War Lab',
+  jupiter:               'Jupiter',
+  zaton:                 'Zaton',
+  pripyat:               'Outskirts',
+  k00_marsh:             'Great Swamps',
+  k01_darkscape:         'Darkscape',
+  k02_trucks_cemetery:   'Truck Cemetery',
+  y04_pole:              'Meadow',
 };
 
 
@@ -2344,11 +2467,105 @@ const ANOMALY_COLORS = {
   'Fire':     '#b86840',
 };
 
+const ARTEFACT_MAP = {
+  af_ah_s1: 'Arot-8',
+  af_ah_g1: 'Lung',
+  af_ah_g2: 'Lung',
+  af_ah_o1: 'Magnet',
+  af_ah_o2: 'Magnet',
+  af_ah_r1: 'Mycelium',
+  af_ah_r2: 'Mycelium',
+  af_ah_r3: 'Mycelium',
+  af_ah_r4: 'Mycelium',
+  af_ah_r5: 'Mycelium',
+  af_ah_e1: 'Souvenir',
+  af_ah_e2: 'Souvenir',
+  af_ah_h1: 'Sponge',
+  af_ah_h2: 'Sponge',
+  af_ah_f1: 'Talking Stone',
+  af_atom: 'Atom',
+  af_ball: 'Ball',
+  af_vaselisk: 'Basilisk',
+  af_bat: 'Bat',
+  af_dummy_battery: 'Battery',
+  af_lighthouse: 'Beacon',
+  af_black_angel: 'Black Angel',
+  af_black_spray: 'Black Spray',
+  af_black: 'Black Stone',
+  af_bracelet: 'Bracelet',
+  af_baloon: 'Bubble',
+  af_cell: 'Cell',
+  af_chelust: 'Chain',
+  af_kogot: 'Claw',
+  af_cocoon: 'Cocoon',
+  af_compass: 'Compass',
+  af_cristall: 'Crystal',
+  af_death_lamp: 'Death Lamp',
+  af_dragon_eye: "Dragon's Eye",
+  af_elektron: 'Electron',
+  af_empty: 'Empty',
+  af_eye: 'Eye',
+  af_fireball: 'Fireball',
+  af_glass: 'Firefly',
+  af_fire: 'Flame',
+  af_electra_flash: 'Flash',
+  af_fountain: 'Fountain',
+  af_full_empty: 'Full Empty',
+  af_generator: 'Generator',
+  af_gimlet: 'Gimlet',
+  af_gold_fish: 'Goldfish',
+  af_grapes: 'Grapes',
+  af_gravi: 'Gravi',
+  af_ear: 'Heart',
+  af_oasis_heart: 'Heart of the Oasis',
+  af_geliy: 'Helium',
+  af_itcher: 'Itcher',
+  af_medusa: 'Jellyfish',
+  af_fire_loop: 'Knot',
+  af_fuzz_kolobok: 'Kolobok',
+  af_fonar: 'Lamp',
+  af_lobster_eyes: 'Lobster Eyes',
+  af_tlf_lost_soul: 'Lost Soul',
+  af_lucifer: 'Lucifer',
+  af_dummy_glassbeads: "Mama's Beads",
+  af_mincer_meat: 'Meat Chunk',
+  af_medallion: 'Medal',
+  af_skull_miser: "Miser's Skull",
+  af_peas: 'Moon',
+  af_electra_moonlight: 'Moonlight',
+  af_moh: 'Moss',
+  af_night_star: 'Nightstar',
+  af_star_phantom: 'Phantom Star',
+  af_pin: 'Pin',
+  af_tlf_prometheus: 'Prometheus',
+  af_ring: 'Ring',
+  af_sandstone: 'Sandstone',
+  af_zhelch: 'Scar',
+  af_serofim: 'Seraphim',
+  af_dummy_dummy: 'Shell',
+  af_signet: 'Signet',
+  af_ice: 'Snowflake',
+  af_soul: 'Soul',
+  af_kislushka: 'Sourpuss',
+  af_electra_sparkler: 'Sparkler',
+  af_spaika: 'Spike',
+  af_sponge: 'Sponge',
+  af_blood: 'Stone Blood',
+  af_cristall_flower: 'Stone Flower',
+  af_sun: 'Sun',
+  af_tapeworm: 'Tapeworm',
+  af_repei: 'Thistle',
+  af_monolith: 'Volat Emerald',
+  af_vyvert: 'Wrenched',
+};
+
 function parseLog(text) {
   const kills = [], deaths = [], saves = [], loads = [], campfires = [], firstFinds = [];
   const emissionEvents = []; // { ts, type: 'Emission'|'PsiStorm' }
+  const artefacts = [];
   const sessionData = [];
   let currentSession = null;
+  let currentAreaId = null;
   let justStartedSession = false;
   //  Rage quit: death + no save within 5 min before it + 30+ min gap to next session
   let lastDeathTs = null;
@@ -2405,6 +2622,13 @@ function parseLog(text) {
       lastDeathTs = null;
       lastSaveTs  = null;
 
+      // Track current area from every real (non-fake_start) header
+      if (!line.includes('fake_start')) {
+        const headerBody = line.replace(/^=== Session: [^|]+ \| /, '').replace(/ ===\s*$/, '');
+        const firstField = headerBody.split('|')[0].trim().toLowerCase();
+        if (firstField) currentAreaId = firstField;
+      }
+
       // Merge into previous session if header is within 5 min of its last event (reload, not new session)
       const lastSession = sessionData.length > 0 ? sessionData[sessionData.length - 1] : null;
       const headerTs = sessionTsMatch ? new Date(sessionTsMatch[1].trim()) : null;
@@ -2413,7 +2637,7 @@ function parseLog(text) {
           (headerTs - lastSession.end) < SESSION_MERGE_MS) {
         currentSession = lastSession; // continue the same session
       } else {
-        currentSession = { start: null, end: null };
+        currentSession = { start: null, end: null, areaId: currentAreaId };
         sessionData.push(currentSession);
       }
       justStartedSession = true;
@@ -2453,6 +2677,9 @@ function parseLog(text) {
     }
 
     if (type === 'Artefact') {
+      if (parts[2]) {
+        artefacts.push({ ts, section: parts[2].trim(), areaId: currentAreaId });
+      }
       continue;
     }
 
@@ -2502,7 +2729,7 @@ function parseLog(text) {
     }
   }
 
-  return { kills, deaths, saves, loads, campfires, firstFinds, sessionData, rageQuits, factionId, startAreaId, hasFakeStart, emissionEvents };
+  return { kills, deaths, saves, loads, campfires, firstFinds, sessionData, rageQuits, factionId, startAreaId, hasFakeStart, emissionEvents, artefacts };
 }
 
 // Splits combined log text into distinct characters following chunk/fake_start rules.
@@ -2699,7 +2926,7 @@ function normalizeMutantName(raw) {
 
 
 function computeStats(data) {
-  const { kills, deaths, saves, loads, campfires, firstFinds, sessionData, rageQuits, factionId, startAreaId, hasFakeStart, emissionEvents } = data;
+  const { kills, deaths, saves, loads, campfires, firstFinds, sessionData, rageQuits, factionId, startAreaId, hasFakeStart, emissionEvents, artefacts } = data;
   const sessions = sessionData.length;
 
   let totalHours = 0;
@@ -2707,6 +2934,32 @@ function computeStats(data) {
     if (s.start && s.end && s.end > s.start) {
       totalHours += (s.end - s.start) / 3600000;
     }
+  }
+
+  // Area time: total seconds spent in each zone
+  const areaTimeMap = {};
+  for (const s of sessionData) {
+    if (!s.start || !s.end || !s.areaId || s.end <= s.start) continue;
+    const secs = (s.end - s.start) / 1000;
+    areaTimeMap[s.areaId] = (areaTimeMap[s.areaId] || 0) + secs;
+  }
+
+  // Kills and deaths per area — matched by which session's time range the event falls in
+  const killsByArea = {};
+  const deathsByArea = {};
+  for (const k of kills) {
+    const kd = tsToDate(k.ts);
+    if (isNaN(kd)) continue;
+    const s = sessionData.find(s => s.start && s.end && s.areaId && kd >= s.start && kd <= s.end);
+    if (!s) continue;
+    killsByArea[s.areaId] = (killsByArea[s.areaId] || 0) + 1;
+  }
+  for (const d of deaths) {
+    const dd = tsToDate(d.ts);
+    if (isNaN(dd)) continue;
+    const s = sessionData.find(s => s.start && s.end && s.areaId && dd >= s.start && dd <= s.end);
+    if (!s) continue;
+    deathsByArea[s.areaId] = (deathsByArea[s.areaId] || 0) + 1;
   }
 
   const diffCount = {};
@@ -2871,6 +3124,21 @@ function computeStats(data) {
     anomalyDeaths[m[1]] = (anomalyDeaths[m[1]] || 0) + 1;
   }
 
+  // Artefact stats
+  const totalArtefacts   = artefacts.length;
+  const artefactsPerHour = totalHours > 0 ? totalArtefacts / totalHours : 0;
+
+  const artefactsByArea = {};
+  for (const a of artefacts) {
+    const aid = a.areaId || 'unknown';
+    artefactsByArea[aid] = (artefactsByArea[aid] || 0) + 1;
+  }
+
+  const artefactList = artefacts.map(a => ({
+    displayName: ARTEFACT_MAP[a.section] || a.section,
+    areaId: a.areaId,
+  }));
+
   // Hours of active play from game start to each First Find; requires hasFakeStart.
   const TOOL_SECTIONS = {
     itm_basickit:    'basicKit',
@@ -2936,6 +3204,13 @@ function computeStats(data) {
     emissionDeaths,
     psiStormSurvived,
     psiStormDeaths,
+    areaTimeMap,
+    killsByArea,
+    deathsByArea,
+    totalArtefacts,
+    artefactsPerHour,
+    artefactsByArea,
+    artefactList,
   };
 }
 
@@ -3182,7 +3457,7 @@ function renderAnomalies(st) {
     const pct = (count / maxVal * 100).toFixed(1);
     const glyph = emojiMap[type];
     const infoTips = {
-      Psi:   'Includes Emissions, Yantar/Radar Psi-fields, Phantoms and any other psi-related deaths',
+      Psi:   'Includes Yantar/Radar Psi-fields, Phantoms and any other psi-related deaths',
     };
     const infoIcon = infoTips[type]
       ? ` <span class="anomaly-info"><i class="anomaly-info-icon">i</i><span class="anomaly-info-tooltip">${infoTips[type]}</span></span>`
@@ -3852,20 +4127,18 @@ function renderCommunityOverrides() {
       const allFactions = COMMUNITY.factionDistribution;
       const top5 = allFactions.slice(0, 5);
       const maxPct = top5[0].pct;
-      const barColors = ['#9da8b0', '#7a8490', '#5e6b74', '#485258', '#343d42'];
       factionCardEl.innerHTML = `
         <div style="font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#767b82;margin-bottom:3px;">Faction</div>
         <div style="font-size:0.58rem;color:#64686e;margin-bottom:8px;">Most Popular Factions</div>
         ${top5.map((d, i) => {
           const fi = FACTION_MAP[d.id] || { name: d.id, color: '#9da3ac' };
-          const bc = barColors[i] || barColors[barColors.length - 1];
           return `<div style="margin-bottom:6px;">
             <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px;">
               <span style="font-size:0.68rem;font-weight:500;color:${fi.color};">${fi.name}</span>
               <span style="font-size:0.68rem;font-weight:700;color:${fi.color};">${d.pct}%</span>
             </div>
-            <div style="height:6px;background:#28323e;border-radius:0;overflow:hidden;">
-              <div style="width:${(d.pct / maxPct * 100).toFixed(1)}%;height:100%;background:${bc};border-radius:0;transition:width 0.6s ease;"></div>
+            <div style="height:3px;background:#28323e;border-radius:1px;overflow:hidden;">
+              <div style="width:${(d.pct / maxPct * 100).toFixed(1)}%;height:100%;background:#3d5068;border-radius:1px;transition:width 0.6s ease;"></div>
             </div>
           </div>`;
         }).join('')}
@@ -3916,15 +4189,13 @@ function renderCommunityOverrides() {
         <div style="font-size:0.58rem;color:#64686e;margin-bottom:8px;">Most Common Starting Areas</div>
         ${top5Areas.map((a, i) => {
           const aName = AREA_MAP[a.id] || a.id;
-          const colors = ['#9da8b0', '#7a8490', '#5e6b74', '#485258', '#343d42'];
-          const c = colors[i] || colors[colors.length - 1];
           return `<div style="margin-bottom:6px;">
             <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px;">
-              <span style="font-size:0.68rem;font-weight:500;color:${c};">${aName}</span>
-              <span style="font-size:0.68rem;font-weight:700;color:${c};">${a.pct}%</span>
+              <span style="font-size:0.68rem;font-weight:500;color:#9da3ac;">${aName}</span>
+              <span style="font-size:0.68rem;font-weight:700;color:#9da3ac;">${a.pct}%</span>
             </div>
-            <div style="height:6px;background:#28323e;border-radius:0;overflow:hidden;">
-              <div style="width:${(a.pct / maxAreaPct * 100).toFixed(1)}%;height:100%;background:${c};border-radius:0;transition:width 0.6s ease;"></div>
+            <div style="height:3px;background:#28323e;border-radius:1px;overflow:hidden;">
+              <div style="width:${(a.pct / maxAreaPct * 100).toFixed(1)}%;height:100%;background:#3d5068;border-radius:1px;transition:width 0.6s ease;"></div>
             </div>
           </div>`;
         }).join('')}
@@ -4260,6 +4531,283 @@ function applyMultiCharUnavailableState() {
     '<div class="multi-char-unavail no-data">Only available when viewing a single character</div>');
 }
 
+function renderArtefactsSection(st) {
+  const isCommunity  = !!window._isCommunityPreview;
+  const personalDiv  = document.getElementById('artefacts-personal');
+  const communityDiv = document.getElementById('artefacts-community');
+  const areaTimeCard = document.getElementById('area-time-card');
+  if (!personalDiv || !communityDiv) return;
+
+  if (isCommunity) {
+    personalDiv.style.display  = 'none';
+    communityDiv.style.display = 'block';
+    if (areaTimeCard) areaTimeCard.style.display = 'none';
+
+    const contentEl = document.getElementById('artefacts-comm-content');
+    if (!contentEl) return;
+
+    const af = COMMUNITY.artefacts;
+
+    // ── Summary strip ─────────────────────────────────────────────────────────
+    const summaryHTML = `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;">
+        <div style="background:#151c26;border:1px solid #28323e;border-radius:2px;padding:10px 12px;text-align:center;">
+          <div style="font-size:1.3rem;font-weight:700;color:#c9973a;line-height:1;font-family:'IBM Plex Mono',monospace;">${af.avgTotal}</div>
+          <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.1em;color:#767b82;margin-top:3px;">Avg Artefacts Found / Playthrough</div>
+        </div>
+        <div style="background:#151c26;border:1px solid #28323e;border-radius:2px;padding:10px 12px;text-align:center;">
+          <div style="font-size:1.3rem;font-weight:700;color:#c9973a;line-height:1;font-family:'IBM Plex Mono',monospace;">${af.avgPerHour}</div>
+          <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.1em;color:#767b82;margin-top:3px;">Avg Artefacts Found / Hour</div>
+        </div>
+      </div>`;
+
+    // ── Top hunting grounds ───────────────────────────────────────────────────
+    const maxAreaFinds = af.areasRanked[0] ? af.areasRanked[0].finds : 1;
+    function areaRowHTML(a, i) {
+      const pct = Math.round(a.finds / maxAreaFinds * 100);
+      return `<div style="margin-bottom:5px;">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px;">
+          <span style="font-size:0.68rem;color:#d7dde3;"><span style="font-size:0.6rem;color:#64686e;font-family:'IBM Plex Mono',monospace;margin-right:5px;">#${i+1}</span>${a.area}</span>
+          <span style="font-size:0.68rem;font-weight:700;color:#c9973a;font-family:'IBM Plex Mono',monospace;">${a.finds.toLocaleString()} finds</span>
+        </div>
+        <div style="height:3px;background:#28323e;border-radius:1px;overflow:hidden;"><div style="width:${pct}%;height:100%;background:#3d5068;border-radius:1px;transition:width 0.6s ease;"></div></div>
+      </div>`;
+    }
+    const areasVisible = af.areasRanked.slice(0, 5).map((a, i) => areaRowHTML(a, i)).join('');
+    const areasHidden  = af.areasRanked.slice(5).map((a, i)    => areaRowHTML(a, i + 5)).join('');
+    const areasHTML = `
+      <div style="background:rgba(33,43,55,0.63);border:1px solid #28323e;border-radius:2px;padding:10px 12px;margin-bottom:6px;cursor:pointer;user-select:none;" onclick="window._togAfCards()">
+        <div style="font-size:0.62rem;font-weight:700;letter-spacing:0.13em;text-transform:uppercase;color:#9da3ac;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;">
+          <span style="display:flex;align-items:center;gap:6px;"><span style="color:#c9973a;">◈</span> Top Artefact Hunting Spots</span>
+          ${areasHidden ? `<span class="card-expand-chevron" id="af-chev-areas" style="color:#6e7780;">▾</span>` : ''}
+        </div>
+        ${areasVisible}
+        ${areasHidden ? `<div class="card-expand-panel" id="af-panel-areas"><div style="padding-top:2px;">${areasHidden}</div></div>` : ''}
+      </div>`;
+
+    // ── Top 10 + Rarest 10 side by side ──────────────────────────────────────
+    function afRow(a, i, barColor, countColor, maxF) {
+      const pct  = Math.round(a.finds / maxF * 100);
+      return `<div style="margin-bottom:6px;">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px;">
+          <span style="font-size:0.68rem;color:#d7dde3;display:flex;align-items:baseline;gap:5px;min-width:0;overflow:hidden;">
+            <span style="font-size:0.6rem;color:#64686e;font-family:'IBM Plex Mono',monospace;flex-shrink:0;">#${i+1}</span>
+            <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${a.name}</span>
+          </span>
+          <span style="display:flex;gap:8px;align-items:baseline;flex-shrink:0;margin-left:8px;">
+            <span style="font-size:0.65rem;color:#64686e;font-family:'IBM Plex Mono',monospace;white-space:nowrap;">◈ ${a.area}</span>
+            <span style="font-size:0.68rem;font-weight:700;color:${countColor};font-family:'IBM Plex Mono',monospace;white-space:nowrap;">${a.finds}</span>
+          </span>
+        </div>
+        <div style="height:3px;background:#28323e;border-radius:1px;overflow:hidden;">
+          <div style="width:${pct}%;height:100%;background:${barColor};border-radius:1px;transition:width 0.4s ease;"></div>
+        </div>
+      </div>`;
+    }
+
+    const maxFinds     = af.top10[0]    ? af.top10[0].finds    : 1;
+    const maxRareFinds = af.bottom10[0] ? af.bottom10[0].finds : 1;
+
+    const top10Visible    = af.top10.slice(0, 5).map((a, i) => afRow(a, i,     '#c9973a', '#c9973a', maxFinds)).join('');
+    const top10Hidden     = af.top10.slice(5).map((a, i)    => afRow(a, i + 5, '#c9973a', '#c9973a', maxFinds)).join('');
+    const bottom10Visible = af.bottom10.slice(0, 5).map((a, i) => afRow(a, i,     '#3a6090', '#4d8fc9', maxRareFinds)).join('');
+    const bottom10Hidden  = af.bottom10.slice(5).map((a, i)    => afRow(a, i + 5, '#3a6090', '#4d8fc9', maxRareFinds)).join('');
+
+    const listsHTML = `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+        <div style="background:rgba(33,43,55,0.63);border:1px solid #28323e;border-radius:2px;padding:10px 12px;cursor:pointer;user-select:none;" onclick="window._togAfCards()">
+          <div style="font-size:0.62rem;font-weight:700;letter-spacing:0.13em;text-transform:uppercase;color:#9da3ac;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;">
+            <span style="display:flex;align-items:center;gap:5px;"><span style="color:#c9973a;">◈</span> Most Found</span>
+            ${top10Hidden ? `<span class="card-expand-chevron" id="af-chev-top" style="color:#6e7780;">▾</span>` : ''}
+          </div>
+          ${top10Visible}
+          ${top10Hidden ? `<div class="card-expand-panel" id="af-panel-top"><div style="padding-top:2px;">${top10Hidden}</div></div>` : ''}
+        </div>
+        <div style="background:rgba(33,43,55,0.63);border:1px solid #28323e;border-radius:2px;padding:10px 12px;cursor:pointer;user-select:none;" onclick="window._togAfCards()">
+          <div style="font-size:0.62rem;font-weight:700;letter-spacing:0.13em;text-transform:uppercase;color:#9da3ac;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;">
+            <span style="display:flex;align-items:center;gap:5px;"><span style="color:#3a6090;">◈</span> Rarest</span>
+            ${bottom10Hidden ? `<span class="card-expand-chevron" id="af-chev-rare" style="color:#6e7780;">▾</span>` : ''}
+          </div>
+          ${bottom10Visible}
+          ${bottom10Hidden ? `<div class="card-expand-panel" id="af-panel-rare"><div style="padding-top:2px;">${bottom10Hidden}</div></div>` : ''}
+        </div>
+      </div>`;
+
+    contentEl.innerHTML = summaryHTML + areasHTML + listsHTML;
+
+    // Reset state each time community view is (re-)rendered
+    window._afOpen = false;
+    window._togAfCards = function() {
+      window._afOpen = !window._afOpen;
+      ['af-panel-areas', 'af-panel-top', 'af-panel-rare'].forEach(function(id) {
+        const el = document.getElementById(id);
+        if (el) el.classList.toggle('is-open', window._afOpen);
+      });
+      ['af-chev-areas', 'af-chev-top', 'af-chev-rare'].forEach(function(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.style.transform = window._afOpen ? 'rotate(180deg)' : '';
+        el.style.animation = window._afOpen ? 'none' : '';
+      });
+    };
+    return;
+  }
+
+  communityDiv.style.display = 'none';
+  personalDiv.style.display  = 'block';
+  if (areaTimeCard) areaTimeCard.style.display = 'block';
+
+  // ── Overview cards ─────────────────────────────────────────────────────────
+  document.getElementById('s-artefacts-total').textContent = st.totalArtefacts;
+  document.getElementById('s-artefacts-rate').textContent  = fmt(st.artefactsPerHour, 2);
+
+  // Total artefacts comparison bar
+  const commAvgTotal = COMMUNITY.artefacts.avgTotal;
+  if (commAvgTotal) {
+    const totalMax = Math.max(st.totalArtefacts * 1.5, commAvgTotal * 2, 1);
+    document.getElementById('artefacts-total-max-label').textContent = Math.round(totalMax);
+    setBar('bar-artefacts-total', 'marker-artefacts-total', st.totalArtefacts, totalMax, commAvgTotal, false, Math.round(commAvgTotal).toString());
+  }
+
+  // Artefacts/hr comparison bar
+  const commAvgRate = COMMUNITY.artefacts.avgPerHour;
+  if (commAvgRate) {
+    const rateMax = Math.max(st.artefactsPerHour * 1.5, commAvgRate * 2, 1);
+    document.getElementById('artefacts-rate-max-label').textContent = fmt(rateMax, 2) + '/hr';
+    setBar('bar-artefacts-rate', 'marker-artefacts-rate', st.artefactsPerHour, rateMax, commAvgRate, false, fmt(commAvgRate, 2) + '/hr');
+  }
+
+  // ── Top hunting grounds card ───────────────────────────────────────────────
+  const byAreaList  = document.getElementById('artefacts-by-area-list');
+  const byAreaNone  = document.getElementById('artefacts-by-area-nodata');
+  const sorted = Object.entries(st.artefactsByArea)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5);
+
+  if (!sorted.length) {
+    byAreaList.innerHTML = '';
+    byAreaNone.style.display = 'block';
+  } else {
+    byAreaNone.style.display = 'none';
+    const maxCount = sorted[0][1];
+    byAreaList.innerHTML = sorted.map(([areaId, count]) => {
+      const name = AREA_MAP[areaId] || areaId;
+      const pct  = Math.round(count / maxCount * 100);
+      return `<div style="margin-bottom:4px;">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px;">
+          <span style="font-size:0.68rem;color:#d7dde3;">${name}</span>
+          <span style="font-size:0.68rem;font-weight:700;color:#c9973a;font-family:'IBM Plex Mono',monospace;">${count}</span>
+        </div>
+        <div style="height:3px;background:#28323e;border-radius:1px;overflow:hidden;">
+          <div style="width:${pct}%;height:100%;background:#c9973a;border-radius:1px;transition:width 0.6s ease;"></div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // ── Area time list ─────────────────────────────────────────────────────────
+  const timeList = document.getElementById('area-time-list');
+  const timeRest = document.getElementById('area-time-rest');
+  const timeNone = document.getElementById('area-time-nodata');
+  const sortedAreas = Object.entries(st.areaTimeMap)
+    .sort((a, b) => b[1] - a[1]);
+
+  if (!sortedAreas.length) {
+    timeList.innerHTML = '';
+    timeNone.style.display = 'block';
+  } else {
+    timeNone.style.display = 'none';
+    const maxSecs = sortedAreas[0][1];
+    const top5    = sortedAreas.slice(0, 5);
+    const rest    = sortedAreas.slice(5);
+
+    function areaRow(areaId, secs) {
+      const name   = AREA_MAP[areaId] || areaId;
+      const pct    = Math.round(secs / maxSecs * 100);
+      const kills  = st.killsByArea[areaId]  || 0;
+      const deaths = st.deathsByArea[areaId] || 0;
+      return `<div style="margin-bottom:6px;">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px;">
+          <span style="font-size:0.7rem;color:#d7dde3;">${name}</span>
+          <span style="display:flex;gap:10px;align-items:baseline;flex-shrink:0;margin-left:8px;">
+            <span style="font-size:0.68rem;font-weight:700;color:#9da3ac;font-family:'IBM Plex Mono',monospace;white-space:nowrap;">${fmtDuration(Math.round(secs))}</span>
+            <span style="font-size:0.65rem;color:#c9973a;font-family:'IBM Plex Mono',monospace;white-space:nowrap;">▲ ${kills} kills</span>
+            <span style="font-size:0.65rem;color:#c0484a;font-family:'IBM Plex Mono',monospace;white-space:nowrap;">↓ ${deaths} deaths</span>
+          </span>
+        </div>
+        <div style="height:3px;background:#28323e;border-radius:1px;overflow:hidden;">
+          <div style="width:${pct}%;height:100%;background:#3d5068;border-radius:1px;transition:width 0.6s ease;"></div>
+        </div>
+      </div>`;
+    }
+
+    timeList.innerHTML = top5.map(([id, secs]) => areaRow(id, secs)).join('');
+    if (timeRest) timeRest.innerHTML = rest.map(([id, secs]) => areaRow(id, secs)).join('');
+    // Hide card toggle affordance if nothing to expand
+    const card = document.getElementById('area-time-card');
+    if (card) card.style.cursor = rest.length ? 'pointer' : 'default';
+    const chevron = document.getElementById('area-time-chevron');
+    if (chevron) chevron.style.display = rest.length ? 'inline-block' : 'none';
+  }
+
+  // ── Top 20 artefacts by find count (with most common location) ────────────
+  const topList = document.getElementById('artefacts-top-list');
+  const topRest = document.getElementById('artefacts-top-rest');
+  const topNone = document.getElementById('artefacts-top-nodata');
+
+  // Build: displayName → { count, areaCounts: { areaId: n } }
+  const afData = {};
+  for (const a of st.artefactList) {
+    if (!afData[a.displayName]) afData[a.displayName] = { count: 0, areaCounts: {} };
+    afData[a.displayName].count++;
+    if (a.areaId) {
+      afData[a.displayName].areaCounts[a.areaId] =
+        (afData[a.displayName].areaCounts[a.areaId] || 0) + 1;
+    }
+  }
+  const topSorted = Object.entries(afData)
+    .sort((a, b) => b[1].count - a[1].count)
+    .slice(0, 20);
+
+  if (!topSorted.length) {
+    topList.innerHTML = '';
+    topNone.style.display = 'block';
+  } else {
+    topNone.style.display = 'none';
+    const maxTopCount = topSorted[0][1].count;
+    function afPersonalRow([name, data], i) {
+      const count = data.count;
+      const pct   = Math.round(count / maxTopCount * 100);
+      const topAreaEntry = Object.entries(data.areaCounts).sort((a, b) => b[1] - a[1])[0];
+      const topAreaLabel = topAreaEntry ? (AREA_MAP[topAreaEntry[0]] || topAreaEntry[0]) : null;
+      return `<div style="margin-bottom:5px;">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px;">
+          <span style="font-size:0.68rem;color:#d7dde3;display:flex;align-items:baseline;gap:5px;min-width:0;overflow:hidden;">
+            <span style="font-size:0.6rem;color:#64686e;font-family:'IBM Plex Mono',monospace;flex-shrink:0;">#${i + 1}</span>
+            <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${name}</span>
+          </span>
+          <span style="display:flex;gap:8px;align-items:baseline;flex-shrink:0;margin-left:8px;">
+            ${topAreaLabel ? `<span style="font-size:0.65rem;color:#64686e;font-family:'IBM Plex Mono',monospace;white-space:nowrap;">◈ ${topAreaLabel}</span>` : ''}
+            <span style="font-size:0.68rem;font-weight:700;color:#c9973a;font-family:'IBM Plex Mono',monospace;white-space:nowrap;">${count}</span>
+          </span>
+        </div>
+        <div style="height:3px;background:#28323e;border-radius:1px;overflow:hidden;">
+          <div style="width:${pct}%;height:100%;background:#3d5068;border-radius:1px;transition:width 0.6s ease;"></div>
+        </div>
+      </div>`;
+    }
+    topList.innerHTML = topSorted.slice(0, 5).map(afPersonalRow).join('');
+    if (topRest) topRest.innerHTML = topSorted.slice(5).map(afPersonalRow).join('');
+    const topChevron = document.getElementById('artefacts-top-chevron');
+    if (topChevron) topChevron.style.display = topSorted.length > 5 ? 'inline-block' : 'none';
+    // Reset collapse state on each render
+    const topCard = document.getElementById('artefacts-top-card');
+    const topPanel = document.getElementById('artefacts-top-expand-panel');
+    if (topCard)  { topCard.setAttribute('aria-expanded', 'false'); topCard.style.cursor = topSorted.length > 5 ? 'pointer' : 'default'; }
+    if (topPanel) topPanel.classList.remove('is-open');
+  }
+}
+
 function renderStats(st) {
   document.getElementById('stat-kills').textContent = fmtInt(st.killCount);
   document.getElementById('stat-deaths').textContent = fmtInt(st.deathCount);
@@ -4326,6 +4874,8 @@ function renderStats(st) {
   renderToolsCard(st);
 
   renderEmissionSurvival(st);
+
+  renderArtefactsSection(st);
 
   document.getElementById('results').style.display = 'block';
   document.getElementById('upload-wrapper').style.display = 'none';
