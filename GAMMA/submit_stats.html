@@ -1731,8 +1731,8 @@ async function submitRawLog(rawText, nickname) {
     return;
   }
 
-  if (rawText.length > 1 * 1024 * 1024) {
-    showSubmitBanner('File too large to submit (max 1 MB). You can still check your stats using the other button.', true);
+  if (rawText.length > 2 * 1024 * 1024) {
+    showSubmitBanner('File too large to submit (max 2 MB). You can still check your stats using the other button.', true);
     return;
   }
 
