@@ -1822,23 +1822,23 @@ function startRateLimitCountdown(unlockAt) {
 const COMMUNITY = {
 
   // ── "=== COMMUNITY AVERAGES ===" ─────────────────────────────────────────────
-  contributorCount:  399,    // "Submitters (real people)"
-  playthroughCount:  488,    // "Playthroughs (playerCount)"
+  contributorCount:  429,    // "Unique submissions (files)"
+  playthroughCount:  535,    // "Playthroughs (playerCount)"
 
   // ── "--- Core stats ---" ──────────────────────────────────────────────────────
   // Use "Kill entries" (deduped), NOT "Total Kill entries"
-  newFormatKillEntries: 140949,  // "Kill entries"
-  newFormatTotalDeaths:  14536,  // "Total Deaths"
+  newFormatKillEntries: 173532,  // "Kill entries"
+  newFormatTotalDeaths:  17604,  // "Total Deaths"
   avgAccuracyPct:   69.5,        // "Avg accuracy (avgAccuracyPct)"
-  avgDistanceM:     24.5,        // "Avg distance (avgDistanceM)"
-  avgHeadshotPct:   26.6,        // "Avg headshot % (avgHeadshotPct)"
-  avgDeathsPerHour: 1.9,         // "Avg deaths/hr (avgDeathsPerHour)"
-  avgOverkillPct:   52.9,        // "Avg overkill (avgOverkillPct)"
-  avgSavesPerHour:  16.2,        // "Avg saves/hr (avgSavesPerHour)"
-  avgLoadsPerHour:  8.1,         // "Avg loads/hr (avgLoadsPerHour)"
-  avgNpcKD:         6.2,         // Median of per-player KD ratios (recommended line)
-  maxStreakAll:     1362,         // "Longest streak all (maxStreakAll)"
-  maxStreakStalker: 1091,         // "Longest streak stalker (maxStreakStalker)"
+  avgDistanceM:     24.8,        // "Avg distance (avgDistanceM)"
+  avgHeadshotPct:   27.3,        // "Avg headshot % (avgHeadshotPct)"
+  avgDeathsPerHour: 2.3,         // "Avg deaths/hr (avgDeathsPerHour)"
+  avgOverkillPct:   52.7,        // "Avg overkill (avgOverkillPct)"
+  avgSavesPerHour:  18.0,        // "Avg saves/hr (avgSavesPerHour)"
+  avgLoadsPerHour:  9.3,         // "Avg loads/hr (avgLoadsPerHour)"
+  avgNpcKD:         5.8,         // Median of per-player KD ratios (recommended line)
+  maxStreakAll:     1721,         // "Longest streak all (maxStreakAll)"
+  maxStreakStalker: 1334,         // "Longest streak stalker (maxStreakStalker)"
 
   // ── "--- Kill composition ---" ────────────────────────────────────────────────
   stalkerFrac:      0.71,         // "NPC kill fraction (stalkerFrac)"
@@ -1847,22 +1847,22 @@ const COMMUNITY = {
   // ── "--- Environmental deaths (topKillers.deaths) ---" ───────────────────────
   // fallDeaths is stored separately — it maps to the dedicated "Fall damage" stat, not the anomaly list.
   topKillers: [
-    { label: '◉ Psi Anomaly',      color: '#6a5a98', deaths: 569 },
-    { label: '▲ Fire Anomaly',     color: '#8a5030', deaths: 413 },
-    { label: '◆ Physical Anomaly', color: '#8a7040', deaths: 462 },
-    { label: '☢ Radiation',        color: '#4a8a60', deaths: 352 },
-    { label: '∿ Shock Anomaly',    color: '#3a6a9a', deaths: 330 },
-    { label: '☣ Chemical Anomaly', color: '#507a70', deaths: 63  },
+    { label: '◉ Psi Anomaly',      color: '#6a5a98', deaths: 682 },
+    { label: '▲ Fire Anomaly',     color: '#8a5030', deaths: 498 },
+    { label: '◆ Physical Anomaly', color: '#8a7040', deaths: 549 },
+    { label: '☢ Radiation',        color: '#4a8a60', deaths: 448 },
+    { label: '∿ Shock Anomaly',    color: '#3a6a9a', deaths: 399 },
+    { label: '☣ Chemical Anomaly', color: '#507a70', deaths: 76  },
   ],
-  fallDeaths: 209,   // "Fall/Strike" row — same section as topKillers above
+  fallDeaths: 244,   // "Fall/Strike" row — same section as topKillers above
 
   // ── "--- NPC deaths ---" ──────────────────────────────────────────────────────
-  totalNpcDeaths:    5564,   // top 5 factions only
-  npcDeathsBreakdown: { 'Monolith': 1399, 'Military': 1259, 'Bandit': 1216, 'Mercenary': 957, 'Renegade': 733 },
+  totalNpcDeaths:    6753,   // top 5 factions only
+  npcDeathsBreakdown: { 'Monolith': 1816, 'Military': 1496, 'Bandit': 1371, 'Mercenary': 1181, 'Renegade': 889 },
 
   // ── "--- Mutant deaths ---" ───────────────────────────────────────────────────
-  totalMutantDeaths: 1684,   // top 5 mutants only
-  mutantDeathsBreakdown: { 'Chimera': 454, 'Pseudogiant': 419, 'Boar': 369, 'Controller': 222, 'Bloodsucker': 213 },
+  totalMutantDeaths: 2024,   // top 5 mutants only
+  mutantDeathsBreakdown: { 'Chimera': 571, 'Pseudogiant': 493, 'Boar': 428, 'Controller': 285, 'Bloodsucker': 247 },
 
   // ─── WEAPON CATEGORY CARDS ───────────────────────────────────────────────────
   // SOURCE: "--- Top 10 weapons by category ---" in 01_community_averages.txt
@@ -1870,76 +1870,76 @@ const COMMUNITY = {
   // Melee lives here too — it is NOT in top25 (ranged-only).
   topWeaponsByCat: {
     'Melee': [
-      { name: '6h4 Bayonet',          players: 104, pct: 24, totalKills:  432 },
-      { name: 'Hunting Knife',        players:  79, pct: 18, totalKills:  306 },
-      { name: 'OTs-4 Combat Knife',   players:  53, pct: 12, totalKills:  277 },
-      { name: 'Kukri',                players:  41, pct:  9, totalKills:  360 },
-      { name: 'M9 Bayonet',           players:  29, pct:  7, totalKills:  189 },
-      { name: 'Spetsnaz Switchblade', players:  26, pct:  6, totalKills:  113 },
-      { name: 'Knife/Other',          players:  22, pct:  5, totalKills:   80 },
-      { name: 'Monolith Blade',       players:  21, pct:  5, totalKills:  234 },
+      { name: '6h4 Bayonet',          players: 124, pct: 23, totalKills:  494 },
+      { name: 'Hunting Knife',        players:  94, pct: 18, totalKills:  376 },
+      { name: 'OTs-4 Combat Knife',   players:  60, pct: 11, totalKills:  304 },
+      { name: 'Kukri',                players:  48, pct:  9, totalKills:  394 },
+      { name: 'Spetsnaz Switchblade', players:  32, pct:  6, totalKills:  127 },
+      { name: 'M9 Bayonet',           players:  31, pct:  6, totalKills:  195 },
+      { name: 'Knife/Other',          players:  28, pct:  5, totalKills:   87 },
+      { name: 'Monolith Blade',       players:  25, pct:  5, totalKills:  251 },
       { name: 'Sledgehammer',         players:   9, pct:  2, totalKills:   14 },
-      { name: 'NR-40 Scout Knife',    players:   8, pct:  2, totalKills:   11 },
+      { name: 'NR-40 Scout Knife',    players:   9, pct:  2, totalKills:   12 },
     ],
     'Pistol': [
-      { name: 'Colt M45A1 .45 ACP',               players: 40, pct:  9, totalKills: 1711 },
-      { name: 'HK MK23',                          players: 32, pct:  7, totalKills: 3029 },
-      { name: 'Glock 19 "Hornet"',                players: 32, pct:  7, totalKills: 1895 },
-      { name: 'L.A.R. Grizzly Win Mag .357',      players: 29, pct:  7, totalKills: 1112 },
-      { name: 'FNX-45',                           players: 18, pct:  4, totalKills: 1214 },
-      { name: 'FN Five-seveN',                    players: 18, pct:  4, totalKills:  984 },
-      { name: 'MP-443 Grach',                     players: 16, pct:  4, totalKills:  789 },
-      { name: 'Desert Eagle',                     players: 16, pct:  4, totalKills:  584 },
-      { name: 'Colt 1911 Nightsword Custom (NSC)', players: 15, pct:  3, totalKills:  705 },
-      { name: 'Upgraded PB 9x18 Silenced Pistol', players: 14, pct:  3, totalKills:  764 },
+      { name: 'HK MK23',                           players: 44, pct:  8, totalKills: 3776 },
+      { name: 'Colt M45A1 .45 ACP',               players: 41, pct:  8, totalKills: 1880 },
+      { name: 'L.A.R. Grizzly Win Mag .357',      players: 38, pct:  7, totalKills: 1396 },
+      { name: 'Glock 19 "Hornet"',                players: 36, pct:  7, totalKills: 2111 },
+      { name: 'FN Five-seveN',                    players: 28, pct:  5, totalKills: 1233 },
+      { name: 'FNX-45',                           players: 18, pct:  3, totalKills: 1313 },
+      { name: 'Upgraded PB 9x18 Silenced Pistol', players: 17, pct:  3, totalKills:  872 },
+      { name: 'Colt 1911 Nightsword Custom (NSC)', players: 17, pct:  3, totalKills:  860 },
+      { name: 'Desert Eagle',                     players: 17, pct:  3, totalKills:  594 },
+      { name: 'MP-443 Grach',                     players: 16, pct:  3, totalKills:  793 },
     ],
     'Shotgun': [
-      { name: 'Saiga-12 Tactical',       players: 50, pct: 12, totalKills: 3634 },
-      { name: 'Mossberg 590A1',          players: 45, pct: 10, totalKills: 3079 },
-      { name: 'Saiga-12',                players: 31, pct:  7, totalKills: 2030 },
-      { name: 'M1014',                   players: 29, pct:  7, totalKills: 1414 },
-      { name: 'KSG-23',                  players: 28, pct:  6, totalKills: 2335 },
-      { name: 'TOZ-34 "Chimera Hunter"', players: 21, pct:  5, totalKills: 1305 },
-      { name: 'TOZ-106',                 players: 20, pct:  5, totalKills: 1001 },
-      { name: 'KS-23',                   players: 20, pct:  5, totalKills:  824 },
-      { name: 'KS-23M "Vorkuta"',        players: 18, pct:  4, totalKills: 1409 },
-      { name: 'Remington 870',           players: 18, pct:  4, totalKills:  950 },
+      { name: 'Saiga-12 Tactical',       players: 59, pct: 11, totalKills: 4016 },
+      { name: 'Mossberg 590A1',          players: 49, pct:  9, totalKills: 3378 },
+      { name: 'M1014',                   players: 37, pct:  7, totalKills: 2189 },
+      { name: 'Saiga-12',                players: 35, pct:  7, totalKills: 2508 },
+      { name: 'KSG-23',                  players: 31, pct:  6, totalKills: 2545 },
+      { name: 'KS-23',                   players: 26, pct:  5, totalKills: 1028 },
+      { name: 'MTS-255',                 players: 24, pct:  4, totalKills: 1092 },
+      { name: 'TOZ-34 "Chimera Hunter"', players: 22, pct:  4, totalKills: 1328 },
+      { name: 'SPAS-12',                 players: 22, pct:  4, totalKills: 1147 },
+      { name: 'KS-23M "Vorkuta"',        players: 21, pct:  4, totalKills: 1933 },
     ],
     'SMG': [
-      { name: 'PP-19-01 Vityaz',      players: 75, pct: 17, totalKills: 5828 },
-      { name: 'MP5A3',                players: 46, pct: 11, totalKills: 3779 },
-      { name: 'MP5A3 "Frasier"',      players: 34, pct:  8, totalKills: 2909 },
-      { name: 'OTs-02 Kiparis',       players: 30, pct:  7, totalKills: 1785 },
-      { name: 'Upgraded OTs-02 Kiparis', players: 28, pct:  6, totalKills: 2508 },
-      { name: 'SR-2M Veresk',         players: 27, pct:  6, totalKills: 2183 },
-      { name: 'UMP45',                players: 26, pct:  6, totalKills: 1808 },
-      { name: 'MP5SD6',               players: 24, pct:  6, totalKills: 1882 },
-      { name: 'PPSh-41',              players: 23, pct:  5, totalKills: 1475 },
-      { name: 'PP-19 Bizon',          players: 21, pct:  5, totalKills: 1760 },
+      { name: 'PP-19-01 Vityaz',         players: 82, pct: 15, totalKills: 6550 },
+      { name: 'MP5A3',                   players: 53, pct: 10, totalKills: 4102 },
+      { name: 'MP5A3 "Frasier"',         players: 41, pct:  8, totalKills: 3407 },
+      { name: 'OTs-02 Kiparis',          players: 40, pct:  7, totalKills: 2307 },
+      { name: 'Upgraded OTs-02 Kiparis', players: 37, pct:  7, totalKills: 3719 },
+      { name: 'SR-2M Veresk',            players: 34, pct:  6, totalKills: 2579 },
+      { name: 'MP5SD6',                  players: 28, pct:  5, totalKills: 2035 },
+      { name: 'UMP45',                   players: 28, pct:  5, totalKills: 2001 },
+      { name: 'PPSh-41',                 players: 27, pct:  5, totalKills: 1703 },
+      { name: 'FN P90',                  players: 26, pct:  5, totalKills: 1600 },
     ],
     'Rifle': [
-      { name: 'M4A1 "Protector"',      players: 45, pct: 10, totalKills: 7000 },
-      { name: 'AK-74 "PMC"',           players: 44, pct: 10, totalKills: 3696 },
-      { name: 'RPK-16 LMG',            players: 27, pct:  6, totalKills: 2306 },
-      { name: 'BRN-180',               players: 26, pct:  6, totalKills: 2484 },
-      { name: 'VSS Vintorez',          players: 24, pct:  6, totalKills: 1814 },
-      { name: 'AEK-971',               players: 22, pct:  5, totalKills: 1778 },
-      { name: 'MSBS Grot C16A2 (FDE)', players: 21, pct:  5, totalKills: 1927 },
-      { name: 'AKS-74U "Tactician"',   players: 21, pct:  5, totalKills: 1717 },
-      { name: 'ShAK-12',               players: 21, pct:  5, totalKills: 1547 },
-      { name: 'RD-939',                players: 20, pct:  5, totalKills: 2301 },
+      { name: 'M4A1 "Protector"',    players: 58, pct: 11, totalKills: 9527 },
+      { name: 'AK-74 "PMC"',         players: 45, pct:  8, totalKills: 3784 },
+      { name: 'BRN-180',             players: 31, pct:  6, totalKills: 2743 },
+      { name: 'VSS Vintorez',        players: 30, pct:  6, totalKills: 1986 },
+      { name: 'RPK-16 LMG',          players: 28, pct:  5, totalKills: 2552 },
+      { name: 'RD-939',              players: 25, pct:  5, totalKills: 2780 },
+      { name: 'SIG SG 550',          players: 25, pct:  5, totalKills: 2590 },
+      { name: 'SA-58 OSW',           players: 24, pct:  4, totalKills: 2659 },
+      { name: 'AEK-971',             players: 24, pct:  4, totalKills: 2202 },
+      { name: 'AKS-74U "Tactician"', players: 24, pct:  4, totalKills: 1976 },
     ],
     'Sniper': [
-      { name: 'SKS Molot',                   players: 33, pct:  8, totalKills: 2098 },
-      { name: 'Mosin Nagant',                players: 30, pct:  7, totalKills: 1559 },
-      { name: 'SVD',                         players: 29, pct:  7, totalKills: 1738 },
-      { name: 'Remington 700 "Magpul PRO"',  players: 28, pct:  6, totalKills: 1768 },
-      { name: 'Winchester Model 1873',       players: 26, pct:  6, totalKills: 2303 },
-      { name: 'Karabiner 98k Forester mk.2', players: 23, pct:  5, totalKills: 1412 },
-      { name: 'SV98',                        players: 23, pct:  5, totalKills: 1054 },
-      { name: 'Mauser 98k Forester mk.1',    players: 19, pct:  4, totalKills: 1269 },
-      { name: 'Karabiner 98k',               players: 17, pct:  4, totalKills:  874 },
-      { name: 'OTs-03 SVU',                  players: 17, pct:  4, totalKills:  690 },
+      { name: 'Remington 700 "Magpul PRO"',  players: 38, pct:  7, totalKills: 2343 },
+      { name: 'SKS Molot',                   players: 37, pct:  7, totalKills: 2505 },
+      { name: 'Mosin Nagant',                players: 36, pct:  7, totalKills: 1702 },
+      { name: 'SVD',                         players: 31, pct:  6, totalKills: 1962 },
+      { name: 'SV98',                        players: 28, pct:  5, totalKills: 1391 },
+      { name: 'Winchester Model 1873',       players: 27, pct:  5, totalKills: 2318 },
+      { name: 'Karabiner 98k Forester mk.2', players: 27, pct:  5, totalKills: 1590 },
+      { name: 'Mauser 98k Forester mk.1',    players: 23, pct:  4, totalKills: 1483 },
+      { name: 'OTs-03 SVU',                  players: 20, pct:  4, totalKills:  835 },
+      { name: 'SVDS',                        players: 19, pct:  4, totalKills: 1830 },
     ],
   },
 
@@ -1947,125 +1947,125 @@ const COMMUNITY = {
   // SOURCE: "--- Top 25 weapons by player reach ---" in 01_community_averages.txt
   // Powers the "Most Used Weapons - Top 25" expanded panel only (not category cards).
   top25: [
-    { name: 'PP-19-01 Vityaz',             cat: 'SMG',     players: 75, pct: 17, totalKills: 5828 },
-    { name: 'Saiga-12 Tactical',           cat: 'Shotgun', players: 50, pct: 12, totalKills: 3634 },
-    { name: 'MP5A3',                       cat: 'SMG',     players: 46, pct: 11, totalKills: 3779 },
-    { name: 'M4A1 "Protector"',            cat: 'Rifle',   players: 45, pct: 10, totalKills: 7000 },
-    { name: 'Mossberg 590A1',              cat: 'Shotgun', players: 45, pct: 10, totalKills: 3079 },
-    { name: 'AK-74 "PMC"',                 cat: 'Rifle',   players: 44, pct: 10, totalKills: 3696 },
-    { name: 'Colt M45A1 .45 ACP',          cat: 'Pistol',  players: 40, pct:  9, totalKills: 1711 },
-    { name: 'MP5A3 "Frasier"',             cat: 'SMG',     players: 34, pct:  8, totalKills: 2909 },
-    { name: 'SKS Molot',                   cat: 'Sniper',  players: 33, pct:  8, totalKills: 2098 },
-    { name: 'HK MK23',                     cat: 'Pistol',  players: 32, pct:  7, totalKills: 3029 },
-    { name: 'Glock 19 "Hornet"',           cat: 'Pistol',  players: 32, pct:  7, totalKills: 1895 },
-    { name: 'Saiga-12',                    cat: 'Shotgun', players: 31, pct:  7, totalKills: 2030 },
-    { name: 'Mosin Nagant',                cat: 'Sniper',  players: 30, pct:  7, totalKills: 1559 },
-    { name: 'OTs-02 Kiparis',              cat: 'SMG',     players: 30, pct:  7, totalKills: 1785 },
-    { name: 'SVD',                         cat: 'Sniper',  players: 29, pct:  7, totalKills: 1738 },
-    { name: 'M1014',                       cat: 'Shotgun', players: 29, pct:  7, totalKills: 1414 },
-    { name: 'L.A.R. Grizzly Win Mag .357', cat: 'Pistol',  players: 29, pct:  7, totalKills: 1112 },
-    { name: 'Upgraded OTs-02 Kiparis',     cat: 'SMG',     players: 28, pct:  6, totalKills: 2508 },
-    { name: 'KSG-23',                      cat: 'Shotgun', players: 28, pct:  6, totalKills: 2335 },
-    { name: 'Remington 700 "Magpul PRO"',  cat: 'Sniper',  players: 28, pct:  6, totalKills: 1768 },
-    { name: 'RPK-16 LMG',                  cat: 'Rifle',   players: 27, pct:  6, totalKills: 2306 },
-    { name: 'SR-2M Veresk',                cat: 'SMG',     players: 27, pct:  6, totalKills: 2183 },
-    { name: 'BRN-180',                     cat: 'Rifle',   players: 26, pct:  6, totalKills: 2484 },
-    { name: 'Winchester Model 1873',       cat: 'Sniper',  players: 26, pct:  6, totalKills: 2303 },
-    { name: 'UMP45',                       cat: 'SMG',     players: 26, pct:  6, totalKills: 1808 },
+    { name: 'PP-19-01 Vityaz',             cat: 'SMG',     players: 82, pct: 15, totalKills: 6550 },
+    { name: 'Saiga-12 Tactical',           cat: 'Shotgun', players: 59, pct: 11, totalKills: 4016 },
+    { name: 'M4A1 "Protector"',            cat: 'Rifle',   players: 58, pct: 11, totalKills: 9527 },
+    { name: 'MP5A3',                       cat: 'SMG',     players: 53, pct: 10, totalKills: 4102 },
+    { name: 'Mossberg 590A1',              cat: 'Shotgun', players: 49, pct:  9, totalKills: 3378 },
+    { name: 'AK-74 "PMC"',                 cat: 'Rifle',   players: 45, pct:  8, totalKills: 3784 },
+    { name: 'HK MK23',                     cat: 'Pistol',  players: 44, pct:  8, totalKills: 3776 },
+    { name: 'MP5A3 "Frasier"',             cat: 'SMG',     players: 41, pct:  8, totalKills: 3407 },
+    { name: 'Colt M45A1 .45 ACP',          cat: 'Pistol',  players: 41, pct:  8, totalKills: 1880 },
+    { name: 'OTs-02 Kiparis',              cat: 'SMG',     players: 40, pct:  7, totalKills: 2307 },
+    { name: 'Remington 700 "Magpul PRO"',  cat: 'Sniper',  players: 38, pct:  7, totalKills: 2343 },
+    { name: 'L.A.R. Grizzly Win Mag .357', cat: 'Pistol',  players: 38, pct:  7, totalKills: 1396 },
+    { name: 'SKS Molot',                   cat: 'Sniper',  players: 37, pct:  7, totalKills: 2505 },
+    { name: 'Upgraded OTs-02 Kiparis',     cat: 'SMG',     players: 37, pct:  7, totalKills: 3719 },
+    { name: 'Mosin Nagant',                cat: 'Sniper',  players: 36, pct:  7, totalKills: 1702 },
+    { name: 'Glock 19 "Hornet"',           cat: 'Pistol',  players: 36, pct:  7, totalKills: 2111 },
+    { name: 'Saiga-12',                    cat: 'Shotgun', players: 35, pct:  7, totalKills: 2508 },
+    { name: 'SR-2M Veresk',                cat: 'SMG',     players: 34, pct:  6, totalKills: 2579 },
+    { name: 'SVD',                         cat: 'Sniper',  players: 31, pct:  6, totalKills: 1962 },
+    { name: 'BRN-180',                     cat: 'Rifle',   players: 31, pct:  6, totalKills: 2743 },
+    { name: 'KSG-23',                      cat: 'Shotgun', players: 31, pct:  6, totalKills: 2545 },
+    { name: 'VSS Vintorez',                cat: 'Rifle',   players: 30, pct:  6, totalKills: 1986 },
+    { name: 'SV98',                        cat: 'Sniper',  players: 28, pct:  5, totalKills: 1391 },
+    { name: 'MP5SD6',                      cat: 'SMG',     players: 28, pct:  5, totalKills: 2035 },
+    { name: 'RPK-16 LMG',                  cat: 'Rifle',   players: 28, pct:  5, totalKills: 2552 },
   ],
 
   // ── "--- Kills by weapon category ---" — use avg per player, not bloc total
-  baseKillsByCategory: { Melee: 5, Pistol: 48, Shotgun: 63, SMG: 85, Rifle: 174, Sniper: 53 },
+  baseKillsByCategory: { Melee: 4, Pistol: 45, Shotgun: 59, SMG: 82, Rifle: 168, Sniper: 51 },
 
   // ── "--- Playtime ---" ────────────────────────────────────────────────────────
-  communityTotalPlaytime: '10253h 14m', // "Total playtime (communityTotalPlaytime)"
-  avgPlayerDuration:      '26h 30m',    // "Avg submitted duration (avgPlayerDuration)"
-  avgPlayerDurationHours:  26 + 30/60,  // DERIVED: avgPlayerDuration as decimal hours
-  avgSessionLength:        '59m',       // "Avg session (avgSessionLength)"
+  communityTotalPlaytime: '12642h 02m', // "Total playtime (communityTotalPlaytime)"
+  avgPlayerDuration:      '25h 51m',    // "Avg submitted duration (avgPlayerDuration)"
+  avgPlayerDurationHours:  25 + 51/60,  // DERIVED: avgPlayerDuration as decimal hours
+  avgSessionLength:        '57m',       // "Avg session (avgSessionLength)"
 
   // ── "--- Campfire ---" ────────────────────────────────────────────────────────
   campfireAvgStayDuration:  39,         // "Avg campfire stay duration" (seconds)
   campfireAvgHpPerStay:     13,         // "Avg HP healed per stay"
   // DERIVED — communityTotalPlaytime_hours × per-hour rates from txt. Recalculate on update.
-  campfireTotalTime: '336h 3m',
-  campfireTotalHp:    246072,
+  campfireTotalTime: '421h 24m',
+  campfireTotalHp:    303409,
 
   // ── "--- Emission / Psi Storm ---" ───────────────────────────────────────────
   // "Emissions survived : X / Y (Z%)" → survived=X, total=Y. Deaths = total − survived.
-  emissionSurvived:     2164,
-  emissionDeaths:         25,
-  emissionTotal:        2189,   // DERIVED
+  emissionSurvived:     2781,
+  emissionDeaths:         29,
+  emissionTotal:        2810,   // DERIVED
   emissionSurvivalPct:    99,
-  psiStormSurvived:      893,
-  psiStormDeaths:         50,
-  psiStormTotal:         943,   // DERIVED
-  psiStormSurvivalPct:    95,
-  totalEmPsiSurvived:   3057,   // DERIVED
-  totalEmPsiDeaths:       75,   // DERIVED
-  totalEmPsiTotal:      3132,   // DERIVED
-  totalEmPsiSurvivalPct:  98,
+  psiStormSurvived:      1161,
+  psiStormDeaths:          74,
+  psiStormTotal:         1235,   // DERIVED
+  psiStormSurvivalPct:     94,
+  totalEmPsiSurvived:    3942,   // DERIVED
+  totalEmPsiDeaths:       103,   // DERIVED
+  totalEmPsiTotal:       4045,   // DERIVED
+  totalEmPsiSurvivalPct:   97,
 
   // ── "--- Tool discovery times ---" ───────────────────────────────────────────
   // Times as decimal hours: "4h 22m" → 4 + 22/60.
   toolDiscovery: {
-    basicKit:    { avgHours: 4 + 20/60,  fastestHours: 21/60,      slowestHours: 10 + 11/60, players: 135 },
-    advancedKit: { avgHours: 10 + 11/60, fastestHours: 1 + 12/60,  slowestHours: 23 + 50/60, players: 95  },
-    expertKit:   { avgHours: 28 + 40/60, fastestHours: 4 + 5/60,   slowestHours: 89 + 23/60, players: 27  },
-    gunsKit:     { avgHours: 7 + 3/60,   fastestHours: 36/60,      slowestHours: 18 + 32/60, players: 113 },
-    drugKit:     { avgHours: 7 + 35/60,  fastestHours: 15/60,      slowestHours: 22 + 11/60, players: 109 },
+    basicKit:    { avgHours: 4 + 17/60,  fastestHours: 21/60,      slowestHours: 10 + 11/60, players: 135 },
+    advancedKit: { avgHours: 10 + 28/60, fastestHours: 1 + 12/60,  slowestHours: 23 + 50/60, players: 95  },
+    expertKit:   { avgHours: 29 + 40/60, fastestHours: 4 + 5/60,   slowestHours: 89 + 23/60, players: 27  },
+    gunsKit:     { avgHours: 7 + 8/60,   fastestHours: 36/60,      slowestHours: 18 + 32/60, players: 113 },
+    drugKit:     { avgHours: 7 + 42/60,  fastestHours: 15/60,      slowestHours: 22 + 11/60, players: 109 },
   },
 
   // ── "--- Artefacts ---" ─────────────────────────────────────────────────────
   // Sourced from 01_community_averages.txt — "--- Artefact Finds ---"
   artefacts: {
-    avgTotal:   35.3,   // "Avg found per playthrough (avgTotal)"
-    avgPerHour: 1.32,   // "Avg finds / hr (avgPerHour)"
+    avgTotal:   33.5,   // "Avg found per playthrough (avgTotal)"
+    avgPerHour: 1.33,   // "Avg finds / hr (avgPerHour)"
     // Top 10 by community finds — name uses ARTEFACT_MAP display name, area is display string
     top10: [
-      { id: 'af_soul',             name: 'Soul',          finds: 550, area: 'Garbage' },
-      { id: 'af_dummy_battery',    name: 'Battery',       finds: 443, area: 'Cordon' },
-      { id: 'af_electra_sparkler', name: 'Sparkler',      finds: 433, area: 'Yantar' },
-      { id: 'af_kislushka',        name: 'Sourpuss',      finds: 413, area: 'Garbage' },
-      { id: 'af_mincer_meat',      name: 'Meat Chunk',    finds: 362, area: 'Garbage' },
-      { id: 'af_cristall_flower',  name: 'Stone Flower',  finds: 343, area: 'Jupiter' },
-      { id: 'af_dummy_glassbeads', name: "Mama's Beads",  finds: 322, area: 'Wild Territory' },
-      { id: 'af_ball',             name: 'Ball',          finds: 313, area: 'Garbage' },
-      { id: 'af_zhelch',           name: 'Scar',          finds: 282, area: 'Garbage' },
-      { id: 'af_ear',              name: 'Ear',           finds: 273, area: 'Garbage' },
+      { id: 'af_soul',             name: 'Soul',          finds: 686, area: 'Garbage' },
+      { id: 'af_dummy_battery',    name: 'Battery',       finds: 539, area: 'Cordon' },
+      { id: 'af_electra_sparkler', name: 'Sparkler',      finds: 533, area: 'Yantar' },
+      { id: 'af_kislushka',        name: 'Sourpuss',      finds: 517, area: 'Garbage' },
+      { id: 'af_mincer_meat',      name: 'Meat Chunk',    finds: 466, area: 'Garbage' },
+      { id: 'af_cristall_flower',  name: 'Stone Flower',  finds: 435, area: 'Jupiter' },
+      { id: 'af_dummy_glassbeads', name: "Mama's Beads",  finds: 418, area: 'Wild Territory' },
+      { id: 'af_ball',             name: 'Ball',          finds: 374, area: 'Garbage' },
+      { id: 'af_black_angel',      name: 'Black Angel',   finds: 345, area: 'Garbage' },
+      { id: 'af_ear',              name: 'Heart',         finds: 331, area: 'Garbage' },
     ],
     // 10 rarest by community finds
     bottom10: [
-      { id: 'af_ice',           name: 'Snowflake',    finds: 5,  area: 'Garbage' },
-      { id: 'af_ah_h2',         name: 'Sponge',       finds: 5,  area: 'Jupiter' },
-      { id: 'af_fire_loop',     name: 'Knot',         finds: 6,  area: 'Rostok' },
-      { id: 'af_electra_flash', name: 'Flash',        finds: 7,  area: 'Lab X-16' },
-      { id: 'af_black_spray',   name: 'Black Spray',  finds: 7,  area: 'Army Warehouses' },
-      { id: 'monolith_shard',   name: 'Monolith Shard', finds: 7, area: 'Monolith Control Center' },
-      { id: 'af_baloon',        name: 'Bubble',       finds: 9,  area: 'Dark Valley' },
-      { id: 'af_dummy_dummy',   name: 'Shell',        finds: 10, area: 'Red Forest' },
-      { id: 'af_ah_o2',         name: 'Magnet',       finds: 10, area: 'Dark Valley' },
-      { id: 'af_fountain',      name: 'Fountain',     finds: 11, area: 'Great Swamps' },
+      { id: 'af_compass',  name: 'Compass',       finds:  6, area: 'Zaton' },
+      { id: 'af_ah_f1',    name: 'Talking Stone', finds:  6, area: 'Generators' },
+      { id: 'af_fire',     name: 'Flame',         finds:  8, area: 'Great Swamps' },
+      { id: 'af_fire_loop',name: 'Knot',          finds: 10, area: 'Rostok' },
+      { id: 'af_ah_r1',    name: 'Mycelium',      finds: 11, area: 'Radar' },
+      { id: 'af_atom',     name: 'Atom',          finds: 11, area: 'Yantar' },
+      { id: 'af_ah_r2',    name: 'Mycelium',      finds: 12, area: 'Radar' },
+      { id: 'af_ah_s1',    name: 'Arot-8',        finds: 12, area: 'Limansk' },
+      { id: 'af_ah_r3',    name: 'Mycelium',      finds: 14, area: 'Radar' },
+      { id: 'af_ice',      name: 'Snowflake',     finds: 15, area: 'Wild Territory' },
     ],
     // Top 10 areas by total community artefact finds
     areasRanked: [
-      { area: 'Garbage',          finds: 2193 },
-      { area: 'Cordon',           finds: 1449 },
-      { area: 'Yantar',           finds: 976  },
-      { area: 'Red Forest',       finds: 820  },
-      { area: 'Great Swamps',     finds: 741  },
-      { area: 'Jupiter',          finds: 715  },
-      { area: 'Wild Territory',   finds: 690  },
-      { area: 'Army Warehouses',  finds: 672  },
-      { area: 'Agroprom',         finds: 620  },
-      { area: 'Truck Cemetery',   finds: 497  },
+      { area: 'Garbage',          finds: 2631 },
+      { area: 'Cordon',           finds: 1687 },
+      { area: 'Yantar',           finds: 1214 },
+      { area: 'Red Forest',       finds: 1027 },
+      { area: 'Jupiter',          finds:  976 },
+      { area: 'Army Warehouses',  finds:  890 },
+      { area: 'Wild Territory',   finds:  872 },
+      { area: 'Great Swamps',     finds:  868 },
+      { area: 'Agroprom',         finds:  728 },
+      { area: 'Truck Cemetery',   finds:  672 },
     ],
   },
 
   // ── "--- Difficulty distribution ---" ────────────────────────────────────────
   difficultyDistribution: [
-    { label: 'Novice',  players:  54, pct: 12, color: '#4a9a5e' },
-    { label: 'Stalker', players:  95, pct: 21, color: '#c9973a' },
-    { label: 'Veteran', players: 301, pct: 67, color: '#c0484a' },
+    { label: 'Novice',  players:  70, pct: 13, color: '#4a9a5e' },
+    { label: 'Stalker', players: 102, pct: 19, color: '#c9973a' },
+    { label: 'Veteran', players: 373, pct: 68, color: '#c0484a' },
   ],
 
   // ── "--- Faction distribution ---" ───────────────────────────────────────────
@@ -2073,35 +2073,35 @@ const COMMUNITY = {
   // Duty→dolg, Clear Sky→csky, Bandits→bandit, Military→army, UNISG→isg, Renegades→renegade,
   // Ecologists→ecolog, Sin→greh, Monolith→monolith
   factionDistribution: [
-    { id: 'stalker',  players: 127, pct: 39 },
-    { id: 'killer',   players:  53, pct: 16 },
-    { id: 'dolg',     players:  40, pct: 12 },
-    { id: 'csky',     players:  37, pct: 11 },
-    { id: 'bandit',   players:  16, pct:  5 },
-    { id: 'army',     players:  26, pct:  8 },
-    { id: 'isg',      players:   5, pct:  2 },
-    { id: 'freedom',  players:   9, pct:  3 },
+    { id: 'stalker',  players: 154, pct: 36 },
+    { id: 'killer',   players:  90, pct: 21 },
+    { id: 'dolg',     players:  49, pct: 11 },
+    { id: 'csky',     players:  43, pct: 10 },
+    { id: 'bandit',   players:  19, pct:  4 },
+    { id: 'army',     players:  31, pct:  7 },
+    { id: 'isg',      players:   9, pct:  2 },
+    { id: 'freedom',  players:  12, pct:  3 },
     { id: 'renegade', players:   4, pct:  1 },
-    { id: 'ecolog',   players:   5, pct:  2 },
-    { id: 'greh',     players:   2, pct:  1 },
-    { id: 'monolith', players:   1, pct:  0 },
+    { id: 'ecolog',   players:   7, pct:  2 },
+    { id: 'greh',     players:   5, pct:  1 },
+    { id: 'monolith', players:   5, pct:  1 },
   ],
 
   // ── "--- Starting area by faction ---" ───────────────────────────────────────
   // id must match keys in AREA_MAP below.
   startingAreaByFaction: {
-    stalker:  [ { id: 'l01_escape', pct: 61, players: 45 }, { id: 'l05_bar', pct: 30, players: 22 }, { id: 'k00_marsh', pct: 9, players: 7 } ],
-    csky:     [ { id: 'k00_marsh', pct: 78, players: 18 }, { id: 'l01_escape', pct: 22, players: 5 } ],
-    killer:   [ { id: 'l09_deadcity', pct: 90, players: 35 }, { id: 'l06_rostok', pct: 10, players: 4 } ],
-    dolg:     [ { id: 'l05_bar', pct: 100, players: 25 } ],
-    ecolog:   [ { id: 'l08_yantar', pct: 100, players: 1 } ],
-    freedom:  [ { id: 'l07_military', pct: 67, players: 4 }, { id: 'l09_deadcity', pct: 17, players: 1 }, { id: 'k02_trucks_cemetery', pct: 17, players: 1 } ],
-    army:     [ { id: 'l03_agroprom', pct: 92, players: 23 }, { id: 'l01_escape', pct: 4, players: 1 }, { id: 'l04_darkvalley', pct: 4, players: 1 } ],
+    stalker:  [ { id: 'l01_escape', pct: 62, players: 59 }, { id: 'l05_bar', pct: 26, players: 25 }, { id: 'k00_marsh', pct: 11, players: 11 } ],
+    csky:     [ { id: 'k00_marsh', pct: 81, players: 22 }, { id: 'l01_escape', pct: 19, players: 5 } ],
+    killer:   [ { id: 'l09_deadcity', pct: 95, players: 71 }, { id: 'l06_rostok', pct: 5, players: 4 } ],
+    dolg:     [ { id: 'l05_bar', pct: 100, players: 32 } ],
+    ecolog:   [ { id: 'l03_agroprom', pct: 67, players: 2 }, { id: 'l08_yantar', pct: 33, players: 1 } ],
+    freedom:  [ { id: 'l07_military', pct: 67, players: 6 }, { id: 'l09_deadcity', pct: 22, players: 2 }, { id: 'k02_trucks_cemetery', pct: 11, players: 1 } ],
+    army:     [ { id: 'l03_agroprom', pct: 89, players: 25 }, { id: 'l01_escape', pct: 4, players: 1 }, { id: 'l04_darkvalley', pct: 4, players: 1 }, { id: 'l03u_agr_underground', pct: 4, players: 1 } ],
     renegade: [ { id: 'k00_marsh', pct: 50, players: 2 }, { id: 'y04_pole', pct: 50, players: 2 } ],
-    greh:     [ { id: 'l10_radar', pct: 100, players: 2 } ],
-    bandit:   [ { id: 'l04_darkvalley', pct: 100, players: 12 } ],
-    monolith: [ { id: 'l11_pripyat', pct: 100, players: 1 } ],
-    isg:      [ { id: 'k01_darkscape', pct: 100, players: 3 } ],
+    greh:     [ { id: 'l10_red_forest', pct: 60, players: 3 }, { id: 'l10_radar', pct: 40, players: 2 } ],
+    bandit:   [ { id: 'l04_darkvalley', pct: 100, players: 15 } ],
+    monolith: [ { id: 'l11_pripyat', pct: 100, players: 5 } ],
+    isg:      [ { id: 'k01_darkscape', pct: 100, players: 6 } ],
   },
 };
 // ============================================================
@@ -2129,6 +2129,7 @@ const AREA_MAP = {
   l01_escape:            'Cordon',
   l02_garbage:           'Garbage',
   l03_agroprom:          'Agroprom',
+  l03u_agr_underground:  'Agroprom Underground',
   l04_darkvalley:        'Dark Valley',
   l05_bar:               'Rostok',
   l06_rostok:            'Wild Territory',
@@ -4587,12 +4588,13 @@ function renderArtefactsSection(st) {
 
     // ── Top 10 + Rarest 10 side by side ──────────────────────────────────────
     function afRow(a, i, barColor, countColor, maxF) {
-      const pct  = Math.round(a.finds / maxF * 100);
+      const pct         = Math.round(a.finds / maxF * 100);
+      const displayName = ARTEFACT_MAP[a.id] || a.name || a.id;
       return `<div style="margin-bottom:6px;">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px;">
           <span style="font-size:0.68rem;color:#d7dde3;display:flex;align-items:baseline;gap:5px;min-width:0;overflow:hidden;">
             <span style="font-size:0.6rem;color:#64686e;font-family:'IBM Plex Mono',monospace;flex-shrink:0;">#${i+1}</span>
-            <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${a.name}</span>
+            <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${displayName}</span>
           </span>
           <span style="display:flex;gap:8px;align-items:baseline;flex-shrink:0;margin-left:8px;">
             <span style="font-size:0.65rem;color:#64686e;font-family:'IBM Plex Mono',monospace;white-space:nowrap;">◈ ${a.area}</span>
