@@ -861,6 +861,7 @@
   /* hide panel box border while collapsed so only the button shows */
   #top20-panel:not(.is-open) { border: none; }
 </style>
+<link rel="stylesheet" href="map-viewer.css">
 </head>
 <body>
 
@@ -1687,13 +1688,158 @@
     <hr class="section-divider">
 
     <div class="section-label">Activity Heatmap</div>
-    <div style="position:relative;overflow:hidden;background:rgba(22,30,40,0.63);border:1px solid #28323e;border-radius:2px;padding:18px 24px;">
-      <div style="height:260px;background:#0e1117;filter:blur(3px);pointer-events:none;user-select:none;opacity:0.3;"></div>
-      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;">
-        <span style="font-size:0.62rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#f5c842;">Coming Soon</span>
-        <span style="font-size:0.82rem;font-weight:700;color:#d7dde3;letter-spacing:0.03em;">Activity Heatmap</span>
-        <span style="font-size:0.72rem;color:rgba(255,255,255,0.5);text-align:center;padding:0 16px;line-height:1.5;">Explore the map of the zone and visualize everything that happened to you so far</span>
+    <div id="mv-mount">
+    <div class="app-shell">
+
+      <!-- Main layout -->
+      <div class="main-layout">
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+          <div class="sidebar-scroll">
+
+            <!-- Stats -->
+            <div class="sidebar-section">
+              <div class="section-label">Session Stats</div>
+              <div class="stats-grid">
+                <div class="stat-cell kills">
+                  <span class="stat-cell-val" id="mv-stat-stalker-kills">0</span>
+                  <span class="stat-cell-lbl">Stalker Kills</span>
+                </div>
+                <div class="stat-cell kills-mutant">
+                  <span class="stat-cell-val" id="mv-stat-mutant-kills">0</span>
+                  <span class="stat-cell-lbl">Mutant Kills</span>
+                </div>
+                <div class="stat-cell deaths">
+                  <span class="stat-cell-val" id="mv-stat-deaths">0</span>
+                  <span class="stat-cell-lbl">Deaths</span>
+                </div>
+                <div class="stat-cell artifacts">
+                  <span class="stat-cell-val" id="mv-stat-artifacts">0</span>
+                  <span class="stat-cell-lbl">Artefacts</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Layer Toggles -->
+            <div class="sidebar-section">
+              <div class="section-label">Layers</div>
+              <div class="layer-toggle active" data-layer="killsStalker">
+                <span class="toggle-dot" style="color:#4fa35a;"></span>
+                <span class="toggle-label">Stalker Kills</span>
+                <span class="toggle-count" id="mv-layer-count-stalker"></span>
+              </div>
+              <div class="layer-toggle active" data-layer="killsMutant">
+                <span class="toggle-dot" style="color:#a07ac9;"></span>
+                <span class="toggle-label">Mutant Kills</span>
+                <span class="toggle-count" id="mv-layer-count-mutant"></span>
+              </div>
+              <div class="layer-toggle active" data-layer="deaths">
+                <span class="toggle-dot" style="color:#c0392b;"></span>
+                <span class="toggle-label">Deaths</span>
+                <span class="toggle-count" id="mv-layer-count-deaths">0</span>
+              </div>
+              <div class="layer-toggle active" data-layer="artifacts">
+                <span class="toggle-dot" style="color:#c9973a;"></span>
+                <span class="toggle-label">Artefacts</span>
+                <span class="toggle-count" id="mv-layer-count-artifacts">0</span>
+              </div>
+            </div>
+
+            <!-- Display Options -->
+            <div class="sidebar-section">
+              <div class="section-label">Display Options</div>
+              <div class="layer-toggle active" data-layer="levelBoxes" style="--dot-color: #4a6e55;">
+                <span class="toggle-dot" style="color:#4a6e55; border-color:#4a6e55;"></span>
+                <span class="toggle-label">Level Names</span>
+              </div>
+              <div class="layer-toggle" data-layer="heatmapKills">
+                <span class="toggle-dot" style="color:#4fa35a;"></span>
+                <span class="toggle-label">Kill Heatmap</span>
+              </div>
+              <div class="layer-toggle" data-layer="heatmapDeaths">
+                <span class="toggle-dot" style="color:#c0392b;"></span>
+                <span class="toggle-label">Danger Heatmap</span>
+              </div>
+              <div class="layer-toggle" data-layer="heatmapArtifacts">
+                <span class="toggle-dot" style="color:#c9973a;"></span>
+                <span class="toggle-label">Artefact Heatmap</span>
+              </div>
+              <div class="layer-toggle" data-layer="movementTrail">
+                <span class="toggle-dot" style="color:#9da3ac;"></span>
+                <span class="toggle-label">Movement Trail</span>
+              </div>
+              <div class="layer-toggle" data-layer="soundEffects">
+                <span class="toggle-dot" style="color:#3a8fbf;"></span>
+                <span class="toggle-label">Sound Effects</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Map column: map + timeline -->
+        <div class="map-column">
+
+          <!-- Map area -->
+          <div class="map-area" id="mv-map-area">
+            <canvas id="mv-map-canvas"></canvas>
+            <div class="map-hud">
+              <button class="btn-fit" id="mv-btn-fit" title="Fit all levels on screen">⊡ Fit</button>
+              <div class="coord-tracker" id="mv-coord-tracker">
+                <span><span class="coord-label">X</span> <span class="coord-val" id="mv-coord-x">—</span></span>
+                <span><span class="coord-label">Y</span> <span class="coord-val" id="mv-coord-y">—</span></span>
+              </div>
+              <div class="zoom-indicator" id="mv-zoom-indicator">100%</div>
+            </div>
+            <!-- Empty / Coming-soon overlay states (toggled by MapViewer.showEmpty() / showComingSoon()) -->
+            <div class="mv-overlay-state" id="mv-overlay-empty">
+              <span class="mv-overlay-eyebrow">No Data Yet</span>
+              <span class="mv-overlay-title">Activity Heatmap</span>
+              <span class="mv-overlay-sub">Upload a log above to see everywhere you fought, died, and found artefacts.</span>
+            </div>
+            <div class="mv-overlay-state" id="mv-overlay-comingsoon" style="display:none;">
+              <span class="mv-overlay-eyebrow">Coming Soon</span>
+              <span class="mv-overlay-title">Community Heatmap</span>
+              <span class="mv-overlay-sub">Aggregate kill, death, and artefact locations from every submitted log.</span>
+            </div>
+          </div>
+
+          <!-- Timeline scrubber -->
+          <div class="timeline-bar no-data" id="mv-timeline-bar">
+            <div class="tl-label">Timeline</div>
+            <button class="tl-play-btn" id="mv-btn-static-view" title="Reset to full activity view">↺</button>
+            <button class="tl-play-btn" id="mv-tl-play-btn" title="Play / Pause">▶</button>
+            <div class="tl-track-wrap">
+              <div class="tl-track-bg"></div>
+              <div class="tl-track-fill" id="mv-tl-track-fill"></div>
+              <input class="tl-range" id="mv-tl-range" type="range" min="0" max="1000" value="1000">
+            </div>
+            <div class="tl-time" id="mv-tl-time">—</div>
+          </div>
+
+        </div><!-- /map-column -->
+
       </div>
+
+    </div><!-- /app-shell -->
+
+    <!-- Tooltip -->
+    <div id="mv-tooltip"></div>
+
+    <!-- Level popup -->
+    <div id="mv-level-popup" style="display:none;">
+      <div class="lp-header">
+        <span class="lp-title" id="mv-lp-title">—</span>
+        <button class="lp-close" id="mv-lp-close">×</button>
+      </div>
+      <div class="lp-stat-grid">
+        <div class="lp-stat k"><span class="lp-stat-val" id="mv-lp-kills">0</span><span class="lp-stat-lbl">Kills</span></div>
+        <div class="lp-stat d"><span class="lp-stat-val" id="mv-lp-deaths">0</span><span class="lp-stat-lbl">Deaths</span></div>
+        <div class="lp-stat a"><span class="lp-stat-val" id="mv-lp-arts">0</span><span class="lp-stat-lbl">Artefacts</span></div>
+      </div>
+      <div class="lp-extra" id="mv-lp-extra"></div>
+    </div>
     </div>
 
     <hr class="section-divider">
@@ -1701,7 +1847,9 @@
     Cheeki's Mods Archive · <a href="https://linktr.ee/cheekibreekii" target="_blank" rel="noopener noreferrer">Check me Out!</a>
   </footer>
 
-</div><script>
+</div>
+<script src="map-viewer.js"></script>
+<script>
 
 // ============================================================
 // SUPABASE CONFIG
@@ -4911,7 +5059,24 @@ function renderStats(st) {
   // Snapshot _isCommunityPreview before rAF; showCommunityPreview may reset it synchronously.
   const _isCommunity = !!window._isCommunityPreview;
   requestAnimationFrame(() => { if (!_isCommunity) renderBellCurve(st); });
+
+  renderActivityMap();
 }
+
+// Feeds the embedded MapViewer (map-viewer.js) off whatever text the rest of
+// renderStats() is currently using — single hook covers initial upload,
+// character-tab switching, and the community toggle, since all three funnel
+// through renderStats().
+function renderActivityMap() {
+  if (typeof MapViewer === 'undefined') return;
+  if (window._isCommunityPreview) { MapViewer.showComingSoon(); return; }
+  const text = window._activeCharIdx !== null && window._parsedCharacters
+    ? (window._parsedCharacters[window._activeCharIdx] || {}).textSlice
+    : window._mergedCombined;
+  if (text) MapViewer.loadEvents(text);
+  else MapViewer.showEmpty();
+}
+
 
 function showError(msg) {
   const el = document.getElementById('error-box');
@@ -5021,6 +5186,11 @@ function processFiles(files, submitToSupabase, nickname) {
 document.addEventListener('DOMContentLoaded', function () {
   try {
     initSupabase();
+
+    if (typeof MapViewer !== 'undefined') {
+      MapViewer.init();
+      MapViewer.showEmpty();
+    }
 
     const zone       = document.getElementById('upload-zone');
     const input      = document.getElementById('file-input');
